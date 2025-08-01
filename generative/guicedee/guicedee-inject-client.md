@@ -197,7 +197,7 @@ public @interface INotInjectable {
 Implements IGuiceModule to configure the Guice injector with bindings for the client module.
 
 ```java
-@Log
+@Log4j2
 public class GuicedEEClientModule extends AbstractModule implements IGuiceModule<GuicedEEClientModule> {
     @Override
     protected void configure() {
@@ -211,7 +211,7 @@ public class GuicedEEClientModule extends AbstractModule implements IGuiceModule
 Implements IGuicePreStartup to configure the scanning options before the Guice injector is created.
 
 ```java
-@Log
+@Log4j2
 public class GuicedEEClientStartup implements IGuicePreStartup<GuicedEEClientStartup> {
     @Override
     public List<Future<Boolean>> onStartup() {
