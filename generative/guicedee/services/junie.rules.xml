@@ -96,10 +96,6 @@
             <artifact original="org.hibernate.validator:hibernate-validator" replacement="com.guicedee.services:hibernate-validator" module="org.hibernate.validator" />
         </category>
 
-        <category name="JBoss Logging">
-            <artifact original="org.jboss.logmanager:jboss-logmanager" replacement="com.guicedee.services:jboss-logmanager" module="org.jboss.logmanager" />
-        </category>
-
         <category name="JCache">
             <artifact original="org.jsr107.ri:cache-annotations-ri-common" replacement="com.guicedee.services:cache-annotations-ri-common" module="org.jsr107.ri.annotations.common" />
             <artifact original="org.jsr107.ri:cache-annotations-ri-guice" replacement="com.guicedee.services:cache-annotations-ri-guice" module="org.jsr107.ri.annotations.guice" />
@@ -171,5 +167,74 @@
     <category name="Transaction Management">
         <artifact original="org.codehaus.btm:btm" replacement="com.guicedee.services:btm" module="org.codehaus.btm" />
     </category>
+
+    
+    <!-- UI Guidelines captured from recent learnings (2025-09-21 18:21) -->
+    <ui-guidelines module="UWE-Web-Assist">
+        <rule id="line-details-header">
+            Collapsed header must show line name, station range and count, and packing group name.
+            If there are no stations, show "no stations" and omit range/count. If no group, show "No Packing Group".
+        </rule>
+        <rule id="danger-callout-visibility">
+            Show the danger callout only when there is no packing group name AND all five instructions are unset.
+            Do not show once any instruction is set, even if the group name remains empty.
+        </rule>
+        <rule id="instruction-selection">
+            Selecting an instruction sets packInstructionGroupDTO.instruction{1..5} by clickedIndex and closes the dialog.
+        </rule>
+        <rule id="add-session-line-event">
+            Read click attributes case-insensitively; support from/to range with swap when to &lt; from.
+            Build selectedGraders [{graderNumber:n, selected:true}] inclusive; include fromStation/toStation in message data.
+        </rule>
+    </ui-guidelines>
+
+    <!-- Server guidelines captured from recent learnings (2025-09-21 21:34) -->
+    <server-guidelines module="UWE-Sessions-Server">
+        <rule id="actions-preferred-over-listeners">
+            Prefer invoking Actions directly from the web client for single-step mutations that do not require coordination.
+            Bypass listener layers that only forward to an Action. Listeners must not mutate core state or call updateCache directly.
+        </rule>
+        <rule id="save-session-line-action">
+            Use the SaveSessionLine action and event when persisting line edits that do not change the packing group ID.
+            Event: SaveSessionLine. Payload: UWEServerMessage with data["sessionLine"] (PackingSessionLineDTO) and standard envelope IDs.
+            The action resolves enterprise→system→identityToken, applies edits to the session, updates cache, then publishes PackingSessionDataFetch.
+        </rule>
+        <rule id="set-line-packing-group-action">
+            When the user selects a packing group for a line, publish directly to SetSessionLinePackingGroup with sessionLineId and packingGroupId.
+            The action will set the line.packInstructionGroupID and each station.packInstructionGroupID, update cache, and publish PackingSessionDataFetch.
+        </rule>
+    </server-guidelines>
+
+    
+    <!-- Global Actions & Listeners guidelines replicated for additional modules (2025-09-21 21:36) -->
+    <server-guidelines module="UWE-Staff-Server">
+        <rule id="actions-only-mutate">
+            Only Actions may mutate core state and call updateCache. Resolve enterprise→system→identityToken within each action and publish the appropriate DataFetch after updates.
+        </rule>
+        <rule id="actions-preferred-over-listeners">
+            Prefer invoking Actions directly from the web client for single-step mutations that do not require coordination. Listeners validate/orchestrate but must not call updateCache directly.
+        </rule>
+        <rule id="typed-payloads">
+            Prefer strongly-typed payloads on the event bus; support Map-based legacy emitters defensively using DefaultObjectMapper when necessary.
+        </rule>
+        <rule id="reactive-lifecycle">
+            Execute writes inside sessionFactory.withTransaction and return Uni from performReactive; do not subscribe inside actions.
+        </rule>
+    </server-guidelines>
+
+    <server-guidelines module="UWE-Web-Server">
+        <rule id="actions-only-mutate">
+            Only Actions may mutate core state and call updateCache. After mutations, publish the appropriate DataFetch to refresh the client.
+        </rule>
+        <rule id="actions-preferred-over-listeners">
+            For single-step operations initiated by the web, publish directly to the Action address. Retain listeners only for input normalization, fan-out, or read-only DataFetch.
+        </rule>
+        <rule id="typed-payloads">
+            Prefer typed DTOs over generic maps on the event bus. Use DefaultObjectMapper defensively for legacy interop.
+        </rule>
+        <rule id="reactive-lifecycle">
+            Actions run within sessionFactory.withTransaction and return Uni; avoid internal subscriptions.
+        </rule>
+    </server-guidelines>
 
 </junie-rules>
