@@ -8,7 +8,7 @@ This guide covers how to set up and use Lombok in Maven projects, with special c
 
 ## Latest Version
 
-The latest version of Lombok is **1.18.38**, which is required for JDK 24 and above.
+The latest version of Lombok is **1.18.40**, which is required for JDK 24 and above.
 
 ## Basic Maven Configuration
 
@@ -16,7 +16,7 @@ Add the following to your `pom.xml`:
 
 ```xml
 <properties>
-    <lombok.version>1.18.38</lombok.version>
+    <lombok.version>1.18.40</lombok.version>
 </properties>
 
 <dependencies>
@@ -45,7 +45,7 @@ For Lombok to work properly in your IDE, you need to install the Lombok plugin:
 
 ```xml
 <properties>
-    <lombok.version>1.18.38</lombok.version>
+    <lombok.version>1.18.40</lombok.version>
     <mapstruct.version>1.6.3.Final</mapstruct.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 </properties>

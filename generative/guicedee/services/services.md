@@ -142,13 +142,6 @@ These are shaded versions of third-party libraries with added module-info.java d
 | org.hibernate.reactive:hibernate-reactive-core | com.guicedee.services:hibernate-reactive | org.hibernate.reactive |
 | org.hibernate.validator:hibernate-validator | com.guicedee.services:hibernate-validator | org.hibernate.validator |
 
-#### JBoss
-- **Logging**: jboss-logmanager
-
-| Original Coordinates | GuicedEE Coordinates | Module Name |
-|----------------------|----------------------|-------------|
-| org.jboss.logmanager:jboss-logmanager | com.guicedee.services:jboss-logmanager | org.jboss.logmanager |
-
 #### JCache
 - **Caching**: cache-annotations-ri-common, cache-annotations-ri-guice, cache-api, hazelcast, hazelcast-hibernate
 
