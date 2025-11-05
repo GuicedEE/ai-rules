@@ -86,4 +86,4 @@ None.
 
 ## Related
 
-* [Menu Rules](../menu/menu.rules.md)
+* [Menu Rules](./menu.rules.md)

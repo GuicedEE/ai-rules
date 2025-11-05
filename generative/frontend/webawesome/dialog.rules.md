@@ -30,6 +30,15 @@ Each input should accept string form bindings as well (`[lightDismiss]="true"` o
 | `waHide`      | \`CustomEvent<{ source: HTMLElement | 'overlay'                                  | 'escape' | 'programmatic' }>\` | Emitted before dialog closes. Can call `event.preventDefault()` to cancel. |
 | `waAfterHide` | `CustomEvent<void>`                 | Emitted after closing animations complete. |          |                     |                                                                            |
 
+### React wrapper event props
+
+For React 3.0.0 wrappers, subscribe to dialog lifecycle events using these prop names:
+
+- onWaShow
+- onWaAfterShow
+- onWaHide
+- onWaAfterHide
+
 ### Methods
 
 | Method   | Returns | Description                         |
@@ -92,8 +101,8 @@ To prevent close behavior (e.g. for validation or confirmation), listen to `waHi
 
 This component depends on:
 
-* [`<wa-icon>`](../icon/icon.rules.md)
-* [`<wa-icon-button>`](../icon-button/icon-button.rules.md)
+* [`<wa-icon>`](./icon.rules.md)
+* [`<wa-icon-button>`](./icon-button.rules.md)
 
 ### Examples
 
@@ -106,7 +115,7 @@ This component depends on:
 <wa-button (click)="isOpen = true">Open Dialog</wa-button>
 ```
 
-```ts
+```
 @ViewChild('myDialog') dialogRef: ElementRef;
 
 openDialog() {

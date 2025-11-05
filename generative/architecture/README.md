@@ -5,6 +5,5 @@ Select an architecture topic below to open its topic index. Each topic index lin
 Topics
 - DDD — ./ddd/README.md
 - Micro Frontends — ./microfronts/README.md (if present)
-- Activity Master — ./activity-master/README.md
 
 See also: ../README.md — Master Index.

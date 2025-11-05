@@ -23,6 +23,7 @@ Modular Guides (recommended)
 
 
 ## Notes
+- Group: Frontend → Standard — ../README.md
 - This topic now uses modular entry files optimized for generative AI; deep-dive monoliths have been removed to simplify navigation.
 - Component-specific rule files may live in framework-specific folders (e.g., JWebMP WebAwesome) and use the .rules.md suffix there.
 - From prompts like “custom elements” or “shadow dom”, open the Modular Core Standards first. From prompts like “Angular Web Components”, open the Angular 20 Modular Guides.

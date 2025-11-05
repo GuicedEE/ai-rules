@@ -108,4 +108,4 @@ Use with:
 
 ---
 
-See related components like [Button](../button/button.rules.md) or [Callout](../callout/callout.rules.md) for examples of icon integration.
+See related components like [Button](./button.rules.md) or [Callout](./callout.rules.md) for examples of icon integration.

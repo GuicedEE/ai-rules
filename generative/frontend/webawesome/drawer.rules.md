@@ -36,6 +36,15 @@ waDrawer
 
 ---
 
+### React wrapper event props
+
+For React 3.0.0 wrappers, subscribe to drawer lifecycle events using these prop names:
+
+- onWaShow
+- onWaAfterShow
+- onWaHide
+- onWaAfterHide
+
 ## Methods
 
 | Method   | Returns | Description                         |
@@ -95,8 +104,8 @@ Exposed shadow DOM parts for theming:
 
 ## Dependencies
 
-* [`<wa-icon>`](../icon/icon.rules.md)
-* [`<wa-icon-button>`](../icon-button/icon-button.rules.md)
+* [`<wa-icon>`](./icon.rules.md)
+* [`<wa-icon-button>`](./icon-button.rules.md)
 
 ---
 

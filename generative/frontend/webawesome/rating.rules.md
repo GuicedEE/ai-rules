@@ -119,5 +119,5 @@ Accessible via `@ViewChild` or `ElementRef`:
 
 ## 🔗 Related Rules
 
-* Depends on: [`<wa-icon>`](../icon/icon.rules.md)
-* Often used inside: [`<wa-card>`](../card/card.rules.md), [`<wa-form>`](../form/form.rules.md)
+* Depends on: [`<wa-icon>`](./icon.rules.md)
+* Often used inside: [`<wa-card>`](./card.rules.md)

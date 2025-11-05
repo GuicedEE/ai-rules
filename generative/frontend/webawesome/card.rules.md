@@ -108,9 +108,9 @@ All values are mapped to corresponding CSS custom properties if applicable.
 
 ## Related Components
 
-* [Button](../button/button.rules.md)
-* [Rating](../rating/rating.rules.md)
-* [Icon Button](../icon-button/icon-button.rules.md)
+* [Button](./button.rules.md)
+* [Rating](./rating.rules.md)
+* [Icon Button](./icon-button.rules.md)
 
 ## SSR Tips
 

@@ -69,14 +69,14 @@ Expose design tokens and custom part styling via Angular host bindings or encaps
 
 Declare and import Angular wrappers for the following Web Awesome components:
 
-* [`wa-button`](../button/button.rules.md)
-* [`wa-button-group`](../button-group/button-group.rules.md)
-* [`wa-dropdown`](../dropdown/dropdown.rules.md)
-* [`wa-icon`](../icon/icon.rules.md)
-* [`wa-input`](../input/input.rules.md)
-* [`wa-popup`](../popup/popup.rules.md)
-* [`wa-spinner`](../spinner/spinner.rules.md)
-* [`wa-visually-hidden`](../visually-hidden/visually-hidden.rules.md)
+* [`wa-button`](./button.rules.md)
+* [`wa-button-group`](./buttongroup.rules.md)
+* [`wa-dropdown`](./dropdown.rules.md)
+* [`wa-icon`](./icon.rules.md)
+* [`wa-input`](./input.rules.md)
+* [`wa-popup`](./popup.rules.md)
+* [`wa-spinner`](./spinner.rules.md)
+* wa-visually-hidden
 
 Ensure these are registered or available in your module if not using autoloader.
 

@@ -116,6 +116,23 @@ These are shaded versions of third-party libraries with added module-info.java d
 | com.microsoft.sqlserver:mssql-jdbc | com.guicedee.services:mssql-jdbc | com.microsoft.sqlserver.jdbc |
 | com.microsoft.azure:msal4j | com.guicedee.services:msal4j | com.microsoft.azure.msal4j |
 
+Policy (PostgreSQL + JPMS):
+- Do not shade the PostgreSQL driver in host projects. Always consume the GuicedEE Services JPMS artifact.
+- Maven:
+```xml
+<dependency>
+  <groupId>com.guicedee.services</groupId>
+  <artifactId>postgresql</artifactId>
+  <version>${guicedee.services.version}</version>
+</dependency>
+```
+- module-info.java:
+```java
+module your.module {
+  requires org.postgresql;
+}
+```
+
 #### Google
 - **Core**: aop, guava, guice-assistedinject, guice-core, guice-grapher, guice-jmx, guice-jndi, guice-persist, guice-servlet
 

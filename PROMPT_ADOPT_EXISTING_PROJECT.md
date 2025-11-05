@@ -2,7 +2,7 @@
 
 Paste this prompt into your AI tool to migrate an existing repository to the RulesRepository methodology. The AI will analyze the repo, add the RulesRepository submodule, establish Pact → Rules → Guides → Implementation, and refactor docs to the modular, forward-only model.
 
-Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude.
+Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
 
 ---
 
@@ -15,12 +15,17 @@ Fill before running.
 - License (if missing or to change): <LICENSE>
 - Primary languages: <LANGUAGES>
 - Detected/Chosen tech topics (tick):
-  - Backend: [ ] Vert.x 5  [ ] Hibernate Reactive 7  [ ] DDD  [ ] MapStruct  [ ] Lombok  [ ] Logging
-  - Frontend: [ ] Angular 20  [ ] Web Components  [ ] JWebMP  [ ] WebAwesome
+  - Backend Reactive: [ ] Vert.x 5  [ ] Hibernate Reactive 7
+  - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
+  - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
+  - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
+  - Frontend (Standard): [ ] Web Components  [ ] JWebMP  [ ] WebAwesome
+  - Frontend (Reactive): [ ] Angular 20  [ ] React  [ ] Next.js
   - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
-- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends
-- AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude
+  - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
+- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD
+- AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
 - Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
 
 Policies (must honor):
@@ -32,6 +37,15 @@ Policies (must honor):
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode: remove/replace legacy docs as needed; update all references.
 - For Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing these constraints.
+- For ChatGPT/Claude:
+  - Start with system note: "Follow RulesRepository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
+  - Owner mode (this RulesRepository repository is the active workspace; not used as a submodule):
+    - Do not refer to this repository as a submodule.
+    - Load and pin ./skills.md; use project-scoped Skills under .claude/skills/.
+  - Host project mode (a downstream project adopting these rules):
+    - Use this repository as a Git submodule and link to it from host artifacts.
+  - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
+- For Roo: create a pinned workspace policy note at the repository root summarizing RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled.
 
 ---
 
@@ -52,9 +66,15 @@ When approved, execute the plan as one change set.
 3. Create/Update project RULES.md (outside submodule):
    - Declare scope, chosen stacks, and any project-specific conventions.
    - Link to relevant topic indexes:
+     - rules/generative/frontend/react/README.md
+     - rules/generative/frontend/nextjs/README.md
      - rules/generative/frontend/webcomponents/README.md
      - rules/generative/backend/hibernate/README.md
+     - rules/generative/backend/security-reactive/README.md
      - rules/generative/frontend/webawesome/README.md
+     - rules/generative/platform/observability/README.md
+     - rules/generative/architecture/README.md
+     - rules/generative/platform/security-auth/README.md
 4. Create/Update GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions, CRUD; Web Components custom-elements/shadow-dom; Angular producing/consuming; WebAwesome Button/Input rules).
 5. Create/Update IMPLEMENTATION.md explaining current modules, code layout, and back-links to guides.
 6. Refactor legacy docs to modular model where feasible:
@@ -66,6 +86,15 @@ When approved, execute the plan as one change set.
    - Add/update minimal GitHub Actions workflows for build/test and document required secrets.
 9. README updates
    - State adoption of RulesRepository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION.
+
+- WebAwesome prompt language alignment (if selected)
+  - When prompting, use WebAwesome component names to enforce alignment:
+    - “button” → say “WaButton” (see rules/generative/frontend/webawesome/button.rules.md)
+    - “icon button” → say “WaIconButton” (see rules/generative/frontend/webawesome/icon-button.rules.md)
+    - “input” → say “WaInput” (see rules/generative/frontend/webawesome/input.rules.md)
+    - “row” (layout) → say “WaCluster”
+    - “column/stack” (layout) → say “WaStack”
+  - If a variant has no dedicated file, link to the subsection under the broader rule (e.g., WaInput → #number-input).
 
 ---
 

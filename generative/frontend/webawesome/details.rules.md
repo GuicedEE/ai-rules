@@ -93,7 +93,7 @@ With slot for HTML summary:
 
 ### Related Components
 
-* [`wa-icon`](../icon/icon.rules.md)
+* [`wa-icon`](./icon.rules.md)
 
 ---
 

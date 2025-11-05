@@ -2,7 +2,7 @@
 
 📌 This directive assumes compliance with general [Web Awesome Angular Rules](../../../RULES.md).
 
-📎 This component wraps [`<wa-button>`](../button/button.rules.md), and those buttons inherit size and variant unless overridden.
+📎 This component wraps [`<wa-button>`](./button.rules.md), and those buttons inherit size and variant unless overridden.
 
 `<wa-button-group>` is a container component for grouping related `<wa-button>` elements. It supports shared attributes (like `size`, `variant`, `orientation`) and works with slots and accessibility features.
 
@@ -33,7 +33,7 @@ All inputs should support string values even when bound dynamically (e.g., `[siz
 
 Use the default slot for projecting `<wa-button>` elements or any component with compatible button behavior:
 
-* [`<wa-button>`](../button/button.rules.md)
+* [`<wa-button>`](./button.rules.md)
 * Native `<button>` (with styling)
 * `<wa-dropdown>` with button triggers
 

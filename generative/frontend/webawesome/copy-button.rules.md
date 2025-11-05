@@ -101,6 +101,6 @@ For common styles:
 
 ### Dependencies
 
-* [wa-icon](../icon/icon.rules.md)
-* [wa-tooltip](../tooltip/tooltip.rules.md)
-* [wa-popup](../popup/popup.rules.md)
+* [wa-icon](./icon.rules.md)
+* [wa-tooltip](./tooltip.rules.md)
+* [wa-popup](./popup.rules.md)

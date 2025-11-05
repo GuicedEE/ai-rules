@@ -94,5 +94,5 @@ Any content can be slotted in. Often `<img>` or textual/HTML blocks.
 
 ## See Also
 
-* [Button rules](../button/button.rules.md)
-* [Icon rules](../icon/icon.rules.md)
+* [Button rules](./button.rules.md)
+* [Icon rules](./icon.rules.md)

@@ -82,7 +82,7 @@ This component exposes several CSS custom properties and parts:
 
 This component imports and requires:
 
-* [`<wa-icon>`](../icon/icon.rules.md)
+* [`<wa-icon>`](./icon.rules.md)
 
 ---
 

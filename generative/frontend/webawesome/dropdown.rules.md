@@ -48,6 +48,16 @@ This component supports template-driven forms using `[(ngModel)]` on the selecte
 * `afterHideEvent: Event` → `(wa-after-hide)` – Fires after dropdown is fully closed.
 * `selectEvent: CustomEvent` → `(wa-select)` – Fires when a menu item is selected. Emits `{ item: HTMLElement }` in `event.detail`.
 
+#### React wrapper event props
+
+When using the React 3.0.0 wrappers, subscribe with these prop names:
+
+- `onWaShow`
+- `onWaAfterShow`
+- `onWaHide`
+- `onWaAfterHide`
+- `onWaSelect`
+
 ### Methods
 
 * `show(): void` – Programmatically open the dropdown.
@@ -78,8 +88,10 @@ This component supports template-driven forms using `[(ngModel)]` on the selecte
 
 Also depends on the rules of:
 
-* [Menu](../menu/menu.rules.md)
-* [Button](../button/button.rules.md) (for trigger)
+* [Menu](./menu.rules.md)
+* [Dropdown Item](./dropdown-item.rules.md)
+* [Popup](./popup.rules.md)
+* [Button](./button.rules.md) (for trigger)
 
 ### Usage Example
 
