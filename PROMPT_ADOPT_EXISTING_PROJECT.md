@@ -1,6 +1,6 @@
-# 🔄 Starter Prompt — Adopt RulesRepository in an Existing Project
+# 🔄 Starter Prompt — Adopt Rules Repository in an Existing Project
 
-Paste this prompt into your AI tool to migrate an existing repository to the RulesRepository methodology. The AI will analyze the repo, add the RulesRepository submodule, establish Pact → Rules → Guides → Implementation, and refactor docs to the modular, forward-only model.
+Paste this prompt into your AI tool to migrate an existing repository to the Rules Repository methodology. The AI will analyze the repo, add the Rules Repository submodule, establish Pact → Rules → Guides → Implementation, and refactor docs to the modular, forward-only model.
 
 Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
 
@@ -61,7 +61,7 @@ When approved, execute the plan as one change set.
 ---
 
 ## 3) Required Changes
-1. Add RulesRepository submodule (rules/ or docs/rules-repository) and document usage in README.
+1. Add Rules Repository submodule (rules/ or docs/rules-repository) and document usage in README.
 2. Create PACT.md (root or docs/) based on rules/creative/pact.md. Fill project details and cross-links.
 3. Create/Update project RULES.md (outside submodule):
    - Declare scope, chosen stacks, and any project-specific conventions.
@@ -85,7 +85,7 @@ When approved, execute the plan as one change set.
 8. CI alignments
    - Add/update minimal GitHub Actions workflows for build/test and document required secrets.
 9. README updates
-   - State adoption of RulesRepository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION.
+   - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION.
 
 - WebAwesome prompt language alignment (if selected)
   - When prompting, use WebAwesome component names to enforce alignment:
