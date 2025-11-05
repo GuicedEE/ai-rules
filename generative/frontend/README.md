@@ -12,6 +12,7 @@ Standard (standards-based, framework-agnostic)
 
 Reactive (framework-driven, reactive UI)
 - Angular — ./angular/README.md
+- Angular Awesome — ./angular-awesome/README.md
 - React — ./react/README.md
 - Next.js — ./nextjs/README.md
 

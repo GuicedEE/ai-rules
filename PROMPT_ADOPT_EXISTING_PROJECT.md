@@ -16,11 +16,13 @@ Fill before running.
 - Primary languages: <LANGUAGES>
 - Detected/Chosen tech topics (tick):
   - Backend Reactive: [ ] Vert.x 5  [ ] Hibernate Reactive 7
+  - Backend Reactive (GuicedEE) : Core [ ] Web [ ] Rest [ ] Persistence [ ] RabbitMQ [ ] Cerial [ ] OpenAPI [ ] Sockets [ ]  (Dependencies: if Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7)
   - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
   - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
   - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-  - Frontend (Standard): [ ] Web Components  [ ] JWebMP  [ ] WebAwesome
-  - Frontend (Reactive): [ ] Angular 20  [ ] React  [ ] Next.js
+  - Frontend (Standard): [ ] Web Components
+  - Frontend Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
+  - Frontend (Reactive): [ ] Angular 20  [ ] React  [ ] Next.js  [ ] Angular Awesome (Angular 19+ plugin)
   - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
   - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
@@ -45,7 +47,7 @@ Policies (must honor):
   - Host project mode (a downstream project adopting these rules):
     - Use this repository as a Git submodule and link to it from host artifacts.
   - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
-- For Roo: create a pinned workspace policy note at the repository root summarizing RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled.
+- For Roo: load and pin ROO_WORKSPACE_POLICY.md at the repository root. If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled. Update all references affected by a change in the same forward-only change set.
 
 ---
 
@@ -63,29 +65,39 @@ When approved, execute the plan as one change set.
 ## 3) Required Changes
 1. Add Rules Repository submodule (rules/ or docs/rules-repository) and document usage in README.
 2. Create PACT.md (root or docs/) based on rules/creative/pact.md. Fill project details and cross-links.
-3. Create/Update project RULES.md (outside submodule):
+3. Create GLOSSARY.md (root or docs/):
+   - Populate from the topics selected above. Copy any enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton, WaInput, WaCluster, WaStack).
+   - Use as the single source of truth for terminology across RULES, GUIDES, and IMPLEMENTATION.
+4. Create/Update project RULES.md (outside submodule):
    - Declare scope, chosen stacks, and any project-specific conventions.
    - Link to relevant topic indexes:
      - rules/generative/frontend/react/README.md
      - rules/generative/frontend/nextjs/README.md
      - rules/generative/frontend/webcomponents/README.md
+     - rules/generative/frontend/angular-awesome/README.md
      - rules/generative/backend/hibernate/README.md
+     - rules/generative/backend/guicedee/README.md
+     - If GuicedEE Core is selected: also include rules/generative/backend/vertx/README.md
+     - If Backend Reactive (GuicedEE) options are selected: link chosen function rules under rules/generative/backend/guicedee/functions/ (guiced-injection-rules.md, guiced-vertx-web-rules.md, guiced-vertx-rest-rules.md, guiced-vertx-persistence-rules.md, guiced-rabbit-rules.md, guiced-cerial-rules.md, guiced-swagger-openapi-rules.md, guiced-vertx-sockets-rules.md)
+     - If GuicedEE Persistence is selected: ensure Hibernate Reactive 7 is selected/linked (rules/generative/backend/hibernate/README.md)
      - rules/generative/backend/security-reactive/README.md
      - rules/generative/frontend/webawesome/README.md
+     - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
      - rules/generative/platform/observability/README.md
      - rules/generative/architecture/README.md
      - rules/generative/platform/security-auth/README.md
-4. Create/Update GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions, CRUD; Web Components custom-elements/shadow-dom; Angular producing/consuming; WebAwesome Button/Input rules).
-5. Create/Update IMPLEMENTATION.md explaining current modules, code layout, and back-links to guides.
-6. Refactor legacy docs to modular model where feasible:
+   - Reference GLOSSARY.md for naming/terminology alignment.
+5. Create/Update GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions, CRUD; Web Components custom-elements/shadow-dom; Angular producing/consuming; WebAwesome Button/Input rules). Use glossary-aligned terms consistently.
+6. Create/Update IMPLEMENTATION.md explaining current modules, code layout, and back-links to guides. Ensure implementation names and labels adhere to GLOSSARY.md.
+7. Refactor legacy docs to modular model where feasible:
    - Split overly large monoliths into focused docs or replace with links to the submodule’s modular entries (preferred).
    - Remove deprecated/duplicate documents per Forward-Only policy; update all inbound links.
-7. Environment alignment
+8. Environment alignment
    - Create or update .env.example using rules/generative/platform/secrets-config/env-variables.md as the source of truth.
-8. CI alignments
+9. CI alignments
    - Add/update minimal GitHub Actions workflows for build/test and document required secrets.
-9. README updates
-   - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION.
+10. README updates
+   - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY.
 
 - WebAwesome prompt language alignment (if selected)
   - When prompting, use WebAwesome component names to enforce alignment:

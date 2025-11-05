@@ -44,7 +44,7 @@ Policies (must honor):
   - Host project mode (a downstream project consuming these rules):
     - Use this repository as a Git submodule and link to it from host artifacts.
   - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
-- If Roo, create a pinned workspace policy note at the repository root summarizing RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled.
+- If Roo, load and pin ROO_WORKSPACE_POLICY.md at the repository root. If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled. Update all references affected by a change in the same forward-only change set.
 
 ---
 
@@ -81,6 +81,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - JWebMP: rules/generative/frontend/jwebmp/README.md
   - Frontend (Reactive):
     - Angular: rules/generative/frontend/angular/README.md
+    - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
     - React: rules/generative/frontend/react/README.md
     - Next.js (App Router): rules/generative/frontend/nextjs/README.md
   - Backend:
@@ -101,6 +102,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 
 6. README (library root) updates
    - Add “How to use these rules” section pointing to your topic index and to the RulesRepository submodule usage.
+   - Add a short “Prompt Language Alignment & Glossary” note: state the aligned names (if any) and instruct host projects to copy them into their GLOSSARY.md so prompts and docs share terminology.
 
 ---
 

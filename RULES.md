@@ -67,6 +67,7 @@ Authoritative categories for topics under generative/:
 - generative/frontend/
   - webcomponents/
   - angular/
+  - angular-awesome/
   - webawesome/
   - jwebmp/
 - generative/backend/

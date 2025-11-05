@@ -17,11 +17,13 @@ Fill in the fields below before running the prompt.
 - Primary languages: <LANGUAGES> (e.g., Java 21, TypeScript)
 - Tech stack (tick all that apply):
   - Backend Reactive: [ ] Vert.x 5  [ ] Hibernate Reactive 7
+  - Backend Reactive (GuicedEE) : Core [ ] Web [ ] Rest [ ] Persistence [ ] RabbitMQ [ ] Cerial [ ] OpenAPI [ ] Sockets [ ]  (Dependencies: if Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7)
   - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
   - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
   - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-  - Frontend (Standard): [ ] Web Components  [ ] JWebMP  [ ] WebAwesome
-  - Frontend (Reactive): [ ] Angular 20  [ ] React  [ ] Next.js
+  - Frontend (Standard): [ ] Web Components
+  - Frontend Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
+  - Frontend (Reactive): [ ] Angular 20  [ ] React  [ ] Next.js  [ ] Angular Awesome (Angular 19+ plugin)
   - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
   - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
@@ -64,8 +66,8 @@ The AI must configure itself for this workspace before generating files.
   - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
 
 - If Roo:
-  - Create a workspace policy note pinned to the repository root summarizing: follow RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). No backwards compatibility; update all references in the same change.
-  - Ensure conversations are scoped to the repository root and include file paths in responses. Confirm repo context is loaded and forward-only mode is enabled.
+  - Load and pin ROO_WORKSPACE_POLICY.md at the repository root. If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). No backwards compatibility; update all references in the same change.
+  - Ensure conversations are scoped to the repository root, include file paths in responses, and confirm forward-only mode is enabled.
 
 Outcome: AI confirms it has applied these constraints.
 
@@ -83,12 +85,14 @@ Produce the following changes as a single, forward-only change set.
 
 2. Create core artifacts in the host project (outside submodule)
    - PACT.md — derive from rules/creative/pact.md, substitute fields (project name, authors, date). Keep section mapping to RULES and GUIDES.
+   - GLOSSARY.md — create a project glossary populated from the selected topics in this prompt. Copy any enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton, WaInput, WaCluster, WaStack). Use the glossary as the single source of truth for terminology across RULES, GUIDES, and IMPLEMENTATION.
    - RULES.md (project-specific) — extend the enterprise RULES:
      - Declare project scope, overrides, chosen stacks.
      - Link to submodule topics you selected (examples below).
+     - Reference GLOSSARY.md for naming/terminology alignment.
    - GUIDES.md — entry index for project guides:
-     - Backend picks: link to rules/generative/backend/hibernate/README.md, rules/generative/architecture/ddd/, etc.
-     - Frontend picks: link to rules/generative/frontend/react/README.md, rules/generative/frontend/nextjs/README.md, rules/generative/frontend/webcomponents/README.md, or rules/generative/frontend/webawesome/README.md.
+     - Backend picks: link to rules/generative/backend/hibernate/README.md, rules/generative/architecture/ddd/, etc. If Backend Reactive (GuicedEE) is selected, also link to rules/generative/backend/guicedee/README.md and chosen function rules (Core/Web/Rest/Persistence/RabbitMQ/Cerial/OpenAPI/Sockets) under rules/generative/backend/guicedee/functions/. If GuicedEE Core is selected, also include rules/generative/backend/vertx/README.md. If GuicedEE Persistence is selected, also ensure Hibernate Reactive 7 is selected/linked (rules/generative/backend/hibernate/README.md).
+     - Frontend picks: link to rules/generative/frontend/react/README.md, rules/generative/frontend/nextjs/README.md, rules/generative/frontend/webcomponents/README.md, rules/generative/frontend/angular-awesome/README.md (Angular Awesome), or rules/generative/frontend/webawesome/README.md. If JWebMP with WebAwesome plugin is selected, reference rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md instead of the generic WebAwesome index.
    - IMPLEMENTATION.md — describe initial modules, code layout, and back-links to relevant guides.
 
 3. Establish directory structure
@@ -119,30 +123,33 @@ Produce the following changes as a single, forward-only change set.
     - nextjs-overview.md, nextjs-routing-data.md, nextjs-ssr-ssg.md, nextjs-web-components.md, nextjs-security.md
   - Hibernate 7 Reactive
     - rules/generative/backend/hibernate/README.md and modular entries (setup, transactions, CRUD, testing, threading, anti-patterns)
+  - GuicedEE (Reactive)
+    - rules/generative/backend/guicedee/README.md
+    - Core — rules/generative/backend/guicedee/functions/guiced-injection-rules.md (Note: Selecting GuicedEE Core implies Vert.x 5; include rules/generative/backend/vertx/README.md)
+    - Web — rules/generative/backend/guicedee/functions/guiced-vertx-web-rules.md
+    - Rest — rules/generative/backend/guicedee/functions/guiced-vertx-rest-rules.md
+    - Persistence — rules/generative/backend/guicedee/functions/guiced-vertx-persistence-rules.md (Note: Selecting GuicedEE Persistence implies Hibernate Reactive 7; include rules/generative/backend/hibernate/README.md)
+    - RabbitMQ — rules/generative/backend/guicedee/functions/guiced-rabbit-rules.md
+    - Cerial — rules/generative/backend/guicedee/functions/guiced-cerial-rules.md
+    - OpenAPI — rules/generative/backend/guicedee/functions/guiced-swagger-openapi-rules.md
+    - Sockets — rules/generative/backend/guicedee/functions/guiced-vertx-sockets-rules.md
   - WebAwesome components
     - rules/generative/frontend/webawesome/README.md (e.g., button.rules.md, input.rules.md#number-input)
+    - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
   - Observability
     - rules/generative/platform/observability/README.md
     - health.md, tracing.md, openapi-map.md, wireshark.md
 
-- WebAwesome prompt language alignment (if selected)
-  - When prompting, use WebAwesome component names to enforce alignment:
-    - “button” → say “WaButton” (see rules/generative/frontend/webawesome/button.rules.md)
-    - “icon button” → say “WaIconButton” (see rules/generative/frontend/webawesome/icon-button.rules.md)
-    - “input” → say “WaInput” (see rules/generative/frontend/webawesome/input.rules.md)
-    - “row” (layout) → say “WaCluster”
-    - “column/stack” (layout) → say “WaStack”
-  - If a variant has no dedicated file, link to the subsection under the broader rule (e.g., WaInput → #number-input).
-  - Security (Reactive)
-    - rules/generative/backend/security-reactive/README.md
-  - Platform Security & Auth (OIDC/GCP/Firebase/Microsoft)
-    - rules/generative/platform/security-auth/README.md
-  - Architecture
-    - rules/generative/architecture/README.md
-    - ddd/README.md, microfronts/README.md
-  - Data
-    - rules/generative/data/README.md
-    - activity-master/README.md
+- Security (Reactive)
+  - rules/generative/backend/security-reactive/README.md
+- Platform Security & Auth (OIDC/GCP/Firebase/Microsoft)
+  - rules/generative/platform/security-auth/README.md
+- Architecture
+  - rules/generative/architecture/README.md
+  - ddd/README.md, microfronts/README.md
+- Data
+  - rules/generative/data/README.md
+  - activity-master/README.md
 
 7. Licensing and repo housekeeping
    - Ensure LICENSE is set (<LICENSE>)

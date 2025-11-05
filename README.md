@@ -28,6 +28,11 @@ Then reference content from your project's artifacts using relative links (see S
 
 See RULES.md — 6. Forward-Only Change Policy for the authoritative statement.
 
+### Roo workspace policy (pinned)
+
+Roo is a supported AI engine for this repository. To ensure Roo follows the same constraints and prompt language as other engines, a pinned workspace policy is provided at the repository root:
+- ROO_WORKSPACE_POLICY.md — repository-scoped policy for Roo covering RULES.md sections 4, 5, Document Modularity Policy, and 6 (Forward-Only). Operate at repo root, include file paths in responses, and apply forward-only edits updating all references in the same change.
+
 ## 2. Principles
 
 🧭 Continuity
@@ -65,6 +70,7 @@ We don’t leave threads dangling — we close each conceptual loop.
 | Layer          | Description                                        | Artifact           |
 |----------------|----------------------------------------------------|--------------------|
 | Pact           | Defines our language, ethos, and continuity.       | PACT.md            |
+| Glossary       | Canonical terms and prompt-aligned labels.         | GLOSSARY.md        |
 | Rules          | Define technical and stylistic standards per domain.| RULES.md           |
 | Guides         | Describe the “how” — scaffolding, step-by-step, and process. | GUIDES.md          |
 | Implementation | The tangible code, structure, or design output.    | IMPLEMENTATION.md  |
@@ -75,22 +81,30 @@ We don’t leave threads dangling — we close each conceptual loop.
   - Create at the host project root or under `docs/`.
   - Establish shared language, ethos, and continuity for the project.
   - You may draw from or link to the template/ideas in `creative/pact.md` within this repository.
+- GLOSSARY.md
+  - Create at the host project root or under `docs/`.
+  - Populate from topics selected during prompting (see PROMPT_NEW_PROJECT.md / PROMPT_ADOPT_EXISTING_PROJECT.md) and copy any enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton, WaInput).
+  - Use as the single source of truth for terminology across RULES, GUIDES, and IMPLEMENTATION.
 - RULES.md (project-specific)
   - Lives in the host project (outside the submodule).
   - Extends/overrides enterprise rules; link back to specific sections of this submodule (e.g., `/path/to/submodule/RULES.md#section`).
+  - Reference GLOSSARY.md for naming/terminology constraints.
 - GUIDES.md (+ guide files)
   - Host project guidance on how to apply rules, scaffolding, and processes.
   - Link back to enterprise guides under the submodule's `generative/` directory where relevant.
+  - Use glossary-aligned terms consistently.
 - IMPLEMENTATION.md
   - Links to concrete code, structures, and design artifacts.
   - Close the loop by linking back to the rule or guide that justified the implementation.
+  - Ensure implementation names and labels adhere to GLOSSARY.md.
 
 ### Linking guidance (closing loops)
 
-- From PACT → RULES: define the language/ethos that informs your standards.
-- From RULES → GUIDES: show how to apply each standard with step-by-step guidance.
-- From GUIDES → IMPLEMENTATION: link to the code and design produced.
-- From IMPLEMENTATION → back-links: reference the guide and rule that informed the solution.
+- From PACT → GLOSSARY: establish shared language; record canonical terms and aligned labels.
+- From GLOSSARY → RULES: reference glossary terms where naming/terminology is enforced.
+- From RULES → GUIDES: show how to apply each standard with step-by-step guidance using glossary-aligned terms.
+- From GUIDES → IMPLEMENTATION: link to the code and design produced, maintaining glossary-aligned terminology.
+- From IMPLEMENTATION → back-links: reference the guide and rule that informed the solution and keep names consistent with GLOSSARY.md.
 
 By following the above, client projects retain local autonomy while staying aligned with enterprise standards provided by this repository.
 
