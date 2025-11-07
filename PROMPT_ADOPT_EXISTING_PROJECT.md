@@ -46,6 +46,44 @@ Policies (must honor):
 - Glossary policy (topic-first): Compose the host GLOSSARY.md from topic-scoped glossaries for all selected topics. Topic glossaries take precedence over the root glossary. Minimize duplication by linking to each topic’s GLOSSARY.md and rules; copy only enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton/WaInput).
 ---
 
+## Documentation-First, Stage-Gated Workflow (Mandatory)
+
+- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo).
+- The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+
+Stage 1 — Architecture & Foundations (Docs only)
+- Deliver:
+  - PACT draft/updates; architecture overview; C4 or ADRs where appropriate
+  - Sequence diagrams for key flows; async/system flow diagrams
+  - Data flow diagrams; threat model summary and trust boundaries
+  - Dependency/integration map (internal/external services)
+  - Glossary composition plan (topic-first, precedence and anchors)
+- Output format: Markdown docs placed in host docs (outside rules/), with links to enterprise rules indexes.
+- STOP: Request explicit user approval to proceed to Stage 2.
+
+Stage 2 — Guides & Design Validation (Docs only)
+- Deliver:
+  - RULES mapping to selected stacks; GUIDES with “how to apply”
+  - API surface sketches and contracts (OpenAPI, types) where applicable
+  - UI flows/wireframes (if applicable) and component mapping
+  - Migration notes, test strategy outline, acceptance criteria
+- STOP: Request explicit user approval to proceed to Stage 3.
+
+Stage 3 — Implementation Plan (No code yet)
+- Deliver:
+  - Scaffolding plan and module/file tree
+  - Build/annotation-processor wiring, CI workflow plan, env/config plan
+  - Rollout plan (phased), risk items, validation approach
+- STOP: Request explicit user approval to proceed to Stage 4.
+
+Stage 4 — Implementation & Scaffolding (Code allowed)
+- Scope: Only after explicit approval.
+- Approach: Generate minimal scaffolding first, then iterate in small, reviewable steps. After each step, present diffs and validation, then ask to continue.
+
+Universal STOP rule
+- If approval is not granted, revise docs; do not produce code.
+- Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
+
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode: remove/replace legacy docs as needed; update all references.
 - For Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing these constraints.
@@ -150,6 +188,10 @@ When approved, execute the plan as one change set.
 ---
 
 ## 4) Output Checklist
+- [ ] Stage 1 (Architecture & Foundations) docs produced and user-approved (STOP gate passed)
+- [ ] Stage 2 (Guides & Design Validation) docs produced and user-approved (STOP gate passed)
+- [ ] Stage 3 (Implementation Plan) produced and user-approved (STOP gate passed)
+- [ ] Stage 4 (Code/Scaffolding) executed only after explicit approval; diffs presented with validation and links
 - [ ] Submodule added and referenced in README
 - [ ] PACT.md present and linked
 - [ ] Project RULES.md present, linking to enterprise RULES and topic indexes
@@ -169,10 +211,80 @@ When approved, execute the plan as one change set.
 
 ---
 
-## 6) AI Response Format
-1) Proposed migration plan with inventory and diffs
-2) Questions (if any)
-3) Final diffs/files content
-4) Post-migration validation notes (broken links check summary)
+## 6) AI Response Format (Stage-Gated)
+1) Stage N deliverables (docs or plans only until Stage 4), with file paths and working links
+2) Open questions, decisions required, risks
+3) STOP — Request explicit approval to proceed to Stage N+1
+   - Required approval phrasing: “APPROVED Stage N → Stage N+1”
+4) If approved, provide next-stage plan; if not, revise and re-submit Stage N
 
 End of prompt.
+## Diagrams and Docs-as-Code Policy (Mandatory)
+
+Purpose
+- When adopting the Rules Repository, the existing system must be documented with architecture diagrams and technical flows that are reviewable by humans and consumable by AI.
+- These documents are version-controlled first-class artifacts, referenced by this and future prompts for the project.
+
+Required artifacts (Docs-as-Code)
+- C4 Architecture Diagrams (text-based)
+  - Level 1 (Context): system context and external dependencies
+  - Level 2 (Container): major containers/services and responsibilities
+  - Level 3 (Component): key components within each container (per bounded context)
+  - Optional Level 4 (Code): for deep drill-down where necessary
+- Sequence Diagrams
+  - Critical flows (auth, business transactions, error paths, background jobs)
+  - Include async steps and boundaries (bus, schedulers)
+- ERDs (Entity-Relationship Diagrams)
+  - Core domain model and relationships
+  - Ownership/bounded contexts and data lifecycles
+- Deployment/Runtime
+  - Topology (edge, API, workers), environments, regions, significant infra
+
+Format and storage (Docs as Code)
+- Use text formats that diff well:
+  - Mermaid (preferred) in Markdown fenced blocks (```mermaid)
+  - PlantUML (.puml) or fenced blocks (```plantuml)
+- Storage conventions in host repo (outside rules/):
+  - docs/architecture/README.md — architecture index linking all diagrams
+  - docs/architecture/c4-context.md — C4 L1
+  - docs/architecture/c4-container.md — C4 L2
+  - docs/architecture/c4-component-<bounded-context>.md — C4 L3 files
+  - docs/architecture/sequence-<flow>.md — sequence diagrams
+  - docs/architecture/erd-<domain>.md — ERD diagrams
+  - Optional rendered images under docs/architecture/img/ derived from sources; do not commit images without sources
+- Version control mandate
+  - Commit all diagram sources (Mermaid/PlantUML). Images never replace sources.
+
+Adoption specifics (reverse-engineering)
+- Inventory the current system, produce C4 L1/L2 from code/services/deploy manifests.
+- Establish at least one L3 for a critical bounded context and two key sequence diagrams.
+- Draft initial ERD for the core domain from schema/migrations.
+- Link all artifacts from docs/architecture/README.md for discoverability.
+
+Prompt seeding and traceability
+- Create docs/PROMPT_REFERENCE.md that:
+  - Records selected stacks (languages/frameworks/plugins) and glossary composition (topic-first precedence)
+  - Links to all diagrams under docs/architecture/
+  - Is referenced by future prompts for this project; AI must load and honor it
+- Close the documentation loop: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION must reference and reuse these diagrams.
+
+Stage-gates alignment (reinforced)
+- Stage 1 (Architecture & Foundations) must produce:
+  - C4 L1/L2 and initial L3 for critical bounded contexts
+  - Sequence diagrams for at least two key flows
+  - Initial ERD for the core domain
+  - docs/architecture/README.md and docs/PROMPT_REFERENCE.md
+- Stage 2 may refine/extend diagrams; Stage 3/4 must not proceed without Stage 1/2 approval.
+
+Checklist addendum (Docs & Diagrams)
+- [ ] docs/architecture/README.md exists and links all diagrams
+- [ ] docs/architecture/c4-context.md committed (Mermaid/PlantUML source)
+- [ ] docs/architecture/c4-container.md committed (Mermaid/PlantUML source)
+- [ ] docs/architecture/c4-component-*.md committed for critical bounded contexts
+- [ ] docs/architecture/sequence-*.md committed for critical flows
+- [ ] docs/architecture/erd-*.md committed for core domain(s)
+- [ ] docs/PROMPT_REFERENCE.md created with links to the above and selected stacks
+- [ ] PACT/RULES/GUIDES/IMPLEMENTATION link to these diagrams (closing the loop)
+
+Note
+- These documents are part of all present and future prompts for this project and must remain under version control. Any AI system acting on this repository must load and respect them before proposing or generating code.

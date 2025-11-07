@@ -40,6 +40,40 @@ Policies (must honor):
 
 ---
 
+## Documentation-First, Stage-Gated Workflow (Mandatory)
+
+- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo).
+- The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+
+Stage 1 — Health Check Plan (Docs only)
+- Deliver:
+  - Scope confirmation and inventory approach
+  - Rule/topic mapping plan and evidence collection approach
+  - Risks and assumptions
+- Output format: Markdown plan in host docs (outside rules/), with links to enterprise rule indexes.
+- STOP: Request explicit user approval to proceed to Stage 2.
+
+Stage 2 — Findings & Documentation (Docs only)
+- Deliver:
+  - Compliance matrix draft with evidence links (no code changes)
+  - Documentation fixes proposals (Doc Modularity, link integrity), diffs as text only
+  - Risk notes and migration implications (forward-only)
+- STOP: Request explicit user approval to proceed to Stage 3.
+
+Stage 3 — Proposed Diffs (No code applied yet)
+- Deliver:
+  - Single change set proposal with unified diffs
+  - Migration notes and validation plan (tests, link checks) for after application
+- STOP: Request explicit user approval to proceed to Stage 4.
+
+Stage 4 — Apply Diffs (Code allowed)
+- Scope: Only after explicit approval.
+- Approach: Apply the single change set; present results, run validations, report outcomes. For further changes, repeat Stage 3/4.
+
+Universal STOP rule
+- If approval is not granted, revise docs/findings; do not produce or apply code.
+- Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
+
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode; update references in the same change.
 - Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing constraints.
@@ -163,7 +197,10 @@ Produce a comprehensive health report with:
 ---
 
 ## 5) Output Checklist
-- [ ] Health check plan approved
+- [ ] Stage 1 (Health Check Plan) produced and user-approved (STOP gate passed)
+- [ ] Stage 2 (Findings & Documentation) produced and user-approved (STOP gate passed)
+- [ ] Stage 3 (Proposed Diffs) produced and user-approved (STOP gate passed)
+- [ ] Stage 4 (Apply Diffs) executed only after explicit approval; results validated with links and evidence
 - [ ] Inventory and rule mapping completed
 - [ ] Compliance matrix produced with links and evidence
 - [ ] Proposed diffs prepared (single forward-only change set)
@@ -185,16 +222,14 @@ Produce a comprehensive health report with:
 
 ---
 
-## 7) AI Response Format
+## 7) AI Response Format (Stage-Gated)
 Reply in this structure:
 
-1) Health check plan (bullets)
-2) Inventory and rule mapping (tables/lists)
-3) Compliance matrix (with per-item links/evidence)
-4) Proposed diffs and file list
-5) Risk/migration notes
-6) Prioritized remediation plan
-7) Link integrity summary
+1) Stage N deliverables (docs or plans only until Stage 4), with file paths and working links
+2) Open questions, decisions required, risks
+3) STOP — Request explicit approval to proceed to Stage N+1
+   - Required approval phrasing: “APPROVED Stage N → Stage N+1”
+4) If approved, provide next-stage plan; if not, revise and re-submit Stage N
 
 End of prompt.
 
@@ -292,3 +327,59 @@ Deliverables for this section
 - Overrides vs Enterprise summary table
 - Topic coverage status and loop-closure findings
 - Migration/forward-only notes (if applicable)
+
+## Diagrams and Docs-as-Code Policy (Mandatory)
+
+Purpose
+- When running a health check against a repository using the Rules Repository, the system’s architecture and key flows must be documented in text-based diagrams that are reviewable by humans and consumable by AI.
+- These documents are first-class, version-controlled artifacts and must be referenced by this and future prompts/actions on the project.
+
+Required artifacts (Docs-as-Code)
+- C4 Architecture Diagrams (text-based)
+  - Level 1 (Context): system context and external dependencies
+  - Level 2 (Container): major containers/services and responsibilities
+  - Level 3 (Component): key components within each container (per bounded context)
+  - Optional Level 4 (Code): deep drill-down when necessary
+- Sequence Diagrams
+  - Critical flows (auth, business transactions, error paths, background jobs)
+  - Include async steps and boundaries (bus, schedulers)
+- ERDs (Entity-Relationship Diagrams)
+  - Core domain model and relationships
+  - Ownership/bounded contexts and data lifecycles
+- Deployment/Runtime
+  - Topology (edge, API, workers), environments, regions, significant infra
+
+Format and storage (Docs as Code)
+- Use text formats that diff well:
+  - Mermaid (preferred) in Markdown fenced blocks (```mermaid)
+  - PlantUML (.puml) or fenced blocks (```plantuml)
+- Storage conventions in host repo (outside rules/):
+  - docs/architecture/README.md — architecture index linking all diagrams
+  - docs/architecture/c4-context.md — C4 L1
+  - docs/architecture/c4-container.md — C4 L2
+  - docs/architecture/c4-component-<bounded-context>.md — C4 L3 files
+  - docs/architecture/sequence-<flow>.md — sequence diagrams
+  - docs/architecture/erd-<domain>.md — ERD diagrams
+  - Optional rendered images under docs/architecture/img/ derived from sources; do not commit images without their sources
+- Version control mandate
+  - Commit all diagram sources (Mermaid/PlantUML). Images must never replace sources.
+
+Prompt seeding and traceability
+- Create docs/PROMPT_REFERENCE.md that:
+  - Records selected stacks (languages/frameworks/plugins) and glossary composition (topic-first precedence)
+  - Links to all diagrams under docs/architecture/
+  - Is referenced by future prompts for this project; AI must load and honor it
+- Close the documentation loop: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION must reference and reuse these diagrams.
+
+Checklist addendum (Docs & Diagrams)
+- [ ] docs/architecture/README.md exists and links all diagrams
+- [ ] docs/architecture/c4-context.md committed (Mermaid/PlantUML source)
+- [ ] docs/architecture/c4-container.md committed (Mermaid/PlantUML source)
+- [ ] docs/architecture/c4-component-*.md committed for critical bounded contexts
+- [ ] docs/architecture/sequence-*.md committed for critical flows
+- [ ] docs/architecture/erd-*.md committed for core domain(s)
+- [ ] docs/PROMPT_REFERENCE.md created with links to the above and selected stacks
+- [ ] PACT/RULES/GUIDES/IMPLEMENTATION link to these diagrams (closing the loop)
+
+Note
+- These documents form part of all present and future prompts for this project and must remain under version control. Any AI system acting on this repository must load and respect them before proposing or generating code.
