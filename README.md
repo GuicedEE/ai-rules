@@ -1,4 +1,4 @@
-# RulesRepository
+# Rules Repository
 
 Enterprise-wide rules and guides for AI-assisted and human development. This repository is designed to be consumed as a Git submodule inside client/host projects. It provides a versioned canonical source of truth for shared rules and guides across the organization.
 
@@ -13,7 +13,7 @@ Enterprise-wide rules and guides for AI-assisted and human development. This rep
 
 ```bash
 # Choose an appropriate target folder (e.g., rules/)
-git submodule add <RulesRepository repository URL> rules/
+git submodule add <Rules Repository repository URL> rules/
 git submodule update --init --recursive
 ```
 
@@ -233,7 +233,7 @@ Claude Code auto-discovers Agent Skills from three sources:
 - Project: .claude/skills/ (this repository includes one for conventions)
 - Plugins: bundled with installed plugins
 
-In this repository, we provide a project Skill to help Claude apply the RulesRepository conventions automatically:
+In this repository, we provide a project Skill to help Claude apply the Rules Repository conventions automatically:
 - .claude/skills/rules-repo-conventions/SKILL.md
 
 Owner mode (this repository is the active workspace; not used as a submodule):

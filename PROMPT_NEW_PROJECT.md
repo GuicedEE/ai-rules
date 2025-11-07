@@ -1,6 +1,6 @@
 # 🚀 Starter Prompt — New Project Using the Rules Repository
 
-Paste this prompt into your AI tool to bootstrap a new repository aligned to the RulesRepository methodology. The AI will scaffold a modular, forward-only documentation structure (Pact → Rules → Guides → Implementation), set up topic indexes, and generate minimal starter code where requested.
+Paste this prompt into your AI tool to bootstrap a new repository aligned to the Rules Repository methodology. The AI will scaffold a modular, forward-only documentation structure (Pact → Rules → Guides → Implementation), set up topic indexes, and generate minimal starter code where requested.
 
 Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
 
@@ -30,7 +30,7 @@ Fill before running.
   - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
   - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
-- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD
+- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
 - Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
 
@@ -90,8 +90,8 @@ Universal STOP rule
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode: update all affected references in the same change.
 - For Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing these constraints.
 - For ChatGPT/Claude:
-  - Start with system note: "Follow RulesRepository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
-  - Owner mode (this RulesRepository repository is the active workspace; not used as a submodule):
+  - Start with system note: "Follow Rules Repository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
+  - Owner mode (this Rules Repository repository is the active workspace; not used as a submodule):
     - Do not refer to this repository as a submodule.
     - Load and pin ./skills.md; use project-scoped Skills under .claude/skills/.
   - Host project mode (a downstream project adopting these rules):
@@ -135,7 +135,7 @@ Language selection → generation rules
 Produce a short plan with:
 - Scopes selected (languages, frameworks, plugins, structural, platform).
 - Initial repository structure (packages, apps, modules), build tool, CI, env files, docs (PACT, RULES, GUIDES, IMPLEMENTATION, GLOSSARY).
-- Actions: initialize repo; add RulesRepository submodule; create modular docs; set up language/framework skeletons; update links; CI/env alignment.
+- Actions: initialize repo; add Rules Repository submodule; create modular docs; set up language/framework skeletons; update links; CI/env alignment.
 - Risk notes: any forward-only decisions affecting defaults.
 
 When approved, execute the plan as one change set.
@@ -171,6 +171,9 @@ When approved, execute the plan as one change set.
        - Lombok — [README](rules/generative/backend/lombok/README.md), [GLOSSARY](rules/generative/backend/lombok/GLOSSARY.md)
        - JSpecify — [GLOSSARY](rules/generative/backend/jspecify/GLOSSARY.md)
        - Fluent API — [README](rules/generative/backend/fluent-api/README.md)
+     - Architecture:
+       - TDD — [README](rules/generative/architecture/tdd/README.md)
+       - BDD — [README](rules/generative/architecture/bdd/README.md)
      - Platform:
        - Observability — [README](rules/generative/platform/observability/README.md)
        - Security & Auth — [README](rules/generative/platform/security-auth/README.md)

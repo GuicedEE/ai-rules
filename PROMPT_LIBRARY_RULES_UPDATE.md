@@ -1,6 +1,6 @@
 # 🧰 Starter Prompt — Library Rules Update (Framework/Component Libraries)
 
-Use this prompt when you maintain a library (e.g., JWebMP, EntityAssist, WebAwesome) and need to update or (re)create its rules, indexes, and guides to align with the RulesRepository. This drives a forward-only, modular documentation model and ensures host projects can navigate component/topic rules easily.
+Use this prompt when you maintain a library (e.g., JWebMP, EntityAssist, WebAwesome) and need to update or (re)create its rules, indexes, and guides to align with the Rules Repository. This drives a forward-only, modular documentation model and ensures host projects can navigate component/topic rules easily.
 
 Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
 
@@ -24,7 +24,7 @@ Fill before running.
 - Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
 - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
 - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
-- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD
+- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
 - Observability/Diagnostics: [ ] Wireshark
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
 - Release impact: [x] Forward-only (breaking changes allowed)  [ ] Backcompat required (only if explicitly demanded)
@@ -84,8 +84,8 @@ Universal STOP rule
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode.
 - If Copilot/Cursor, create a workspace note or .cursor/rules.md summarizing constraints.
 - If ChatGPT/Claude:
-  - Start with system note: "Follow RulesRepository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
-  - Owner mode (this RulesRepository repository is the active workspace; not used as a submodule):
+  - Start with system note: "Follow Rules Repository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
+  - Owner mode (this Rules Repository repository is the active workspace; not used as a submodule):
     - Do not refer to this repository as a submodule.
     - Load and pin ./skills.md; use project-scoped Skills under .claude/skills/.
   - Host project mode (a downstream project consuming these rules):
@@ -124,7 +124,7 @@ Language selection → generation rules
 ---
 
 ## 2) Library Documentation Tasks
-Perform as a single, forward-only change set. The exact target paths depend on your library repo structure (e.g., docs/, guides/, or packages/<lib>/docs/). Do NOT put library-specific docs inside the RulesRepository submodule directory.
+Perform as a single, forward-only change set. The exact target paths depend on your library repo structure (e.g., docs/, guides/, or packages/<lib>/docs/). Do NOT put library-specific docs inside the Rules Repository submodule directory.
 
 1. Topic index (parent README)
    - Create or update a topic index README for this library’s rules directory.
@@ -149,7 +149,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
      - See-also links (index, related rules)
 
 4. Cross-links to enterprise topics
-- Link to relevant RulesRepository indexes in your README to aid host projects:
+- Link to relevant Rules Repository indexes in your README to aid host projects:
   - Frontend (Standard):
     - Web Components: rules/generative/frontend/webcomponents/README.md
     - WebAwesome: rules/generative/frontend/webawesome/README.md
@@ -166,7 +166,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - Platform Observability: rules/generative/platform/observability/README.md
     - Platform Security & Auth: rules/generative/platform/security-auth/README.md
     - Env variables: rules/generative/platform/secrets-config/env-variables.md
-  - Architecture: rules/generative/architecture/README.md (e.g., ddd/README.md, microfronts/README.md)
+  - Architecture: rules/generative/architecture/README.md (e.g., ddd/README.md, microfronts/README.md, tdd/README.md, bdd/README.md)
   - Data:
     - rules/generative/data/README.md
     - rules/generative/data/activity-master/README.md
@@ -176,7 +176,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
    - Update CHANGELOG.md and bump version appropriately.
 
 6. README (library root) updates
-- Add “How to use these rules” section pointing to your topic index and to the RulesRepository submodule usage.
+- Add “How to use these rules” section pointing to your topic index and to the Rules Repository submodule usage.
 - Add “Prompt Language Alignment & Glossary” note:
   - Link to your library’s topic GLOSSARY.md and state that it is the authoritative, minimal glossary for this topic with LLM interpretation guidance (topic-first).
   - List any enforced aligned names (if applicable) and instruct host projects to copy only those into their root GLOSSARY.md; for all other terms, host projects should link back to your topic GLOSSARY.md/rules instead of duplicating definitions.
@@ -204,7 +204,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - [ ] Parent topic README index created/updated with full component/topic coverage
 - [ ] Modular .md files created and linked; monoliths removed per Forward-Only policy
 - [ ] Component .rules.md files created/updated with usage, patterns, and see-also links
-- [ ] Cross-links to RulesRepository topic indexes included
+- [ ] Cross-links to Rules Repository topic indexes included
 - [ ] Fluent API Strategy declared (CRTP vs Builder) and reflected in library rules/examples; Lombok usage aligned to selection
 - [ ] Topic GLOSSARY.md created/updated (topic-first, minimal duplication) with LLM interpretation guidance; README includes “Prompt Language Alignment & Glossary” note linking to it
 - [ ] Release notes and version bump prepared (if applicable)
@@ -215,7 +215,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 
 ## 5) Guardrails
 - No backwards compatibility stubs unless explicitly required; apply Forward-Only Change Policy fully.
-- Keep library docs in the library repo (outside any RulesRepository submodule).
+- Keep library docs in the library repo (outside any Rules Repository submodule).
 - Close loops: indexes ↔ rules files ↔ examples/implementations.
 
 ---

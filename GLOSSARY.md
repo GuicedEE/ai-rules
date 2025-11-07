@@ -1,4 +1,4 @@
-# Enterprise Glossary — RulesRepository Canonical Terms
+# Enterprise Glossary — Rules Repository Canonical Terms
 
 Purpose
 - Canonical, human-readable definitions for terms, components, acronyms, product names, and prompt-aligned labels used across this repository and host projects.

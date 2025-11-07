@@ -28,7 +28,7 @@ Fill before running.
   - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
   - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
-- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD
+- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
 - Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
 
@@ -88,8 +88,8 @@ Universal STOP rule
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode: remove/replace legacy docs as needed; update all references.
 - For Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing these constraints.
 - For ChatGPT/Claude:
-  - Start with system note: "Follow RulesRepository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
-  - Owner mode (this RulesRepository repository is the active workspace; not used as a submodule):
+  - Start with system note: "Follow Rules Repository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
+  - Owner mode (this Rules Repository repository is the active workspace; not used as a submodule):
     - Do not refer to this repository as a submodule.
     - Load and pin ./skills.md; use project-scoped Skills under .claude/skills/.
   - Host project mode (a downstream project adopting these rules):
@@ -162,6 +162,8 @@ When approved, execute the plan as one change set.
      - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
      - rules/generative/platform/observability/README.md
      - rules/generative/architecture/README.md
+     - rules/generative/architecture/tdd/README.md
+     - rules/generative/architecture/bdd/README.md
      - rules/generative/platform/security-auth/README.md
    - Reference GLOSSARY.md for naming/terminology alignment.
 5. Create/Update GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions, CRUD; Web Components custom-elements/shadow-dom; Angular producing/consuming; WebAwesome Button/Input rules). Use glossary-aligned terms consistently.

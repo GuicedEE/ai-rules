@@ -1,6 +1,6 @@
 # 🩺 Starter Prompt — Codebase Health Check and Standards Compliance
 
-Use this prompt to perform a full repository health check, assess compliance against the enterprise RulesRepository, detect gaps and deviations, and generate a prioritized remediation plan with proposed diffs. Supports use in owner mode (this repository) and host projects that consume it as a submodule.
+Use this prompt to perform a full repository health check, assess compliance against the enterprise Rules Repository, detect gaps and deviations, and generate a prioritized remediation plan with proposed diffs. Supports use in owner mode (this repository) and host projects that consume it as a submodule.
 
 Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
 
@@ -24,6 +24,7 @@ Fill before running.
   - Frameworks (JWebMP): Core [ ] WebAwesome [ ]
   - Platform: [ ] Observability/Health  [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)  [ ] Secrets & Env
   - Data: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
+  - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
 - Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
 
@@ -129,6 +130,7 @@ B. Rule Mapping and Scope Confirmation
   - Frontend: [webcomponents](rules/generative/frontend/webcomponents/README.md), [webawesome](rules/generative/frontend/webawesome/README.md), [angular](rules/generative/language/angular/angular17.md), [react](rules/generative/language/react/README.md), [nextjs](rules/generative/frontend/nextjs/README.md).
   - Backend: [hibernate](rules/generative/backend/hibernate/README.md), [vertx](rules/generative/backend/vertx/README.md), [guicedee](rules/generative/backend/guicedee/README.md), [mapstruct](rules/generative/backend/mapstruct/README.md), [lombok](rules/generative/backend/lombok/README.md), [logging](rules/generative/backend/logging/README.md).
   - Platform: [security-auth](rules/generative/platform/security-auth/README.md), [secrets-config](rules/generative/platform/secrets-config/README.md), [observability](rules/generative/platform/observability/README.md).
+  - Architecture: [architecture](rules/generative/architecture/README.md), [tdd](rules/generative/architecture/tdd/README.md), [bdd](rules/generative/architecture/bdd/README.md).
 - For each mapping, enumerate applicable rules and checks.
 
 C. Language and Framework Checks
@@ -267,7 +269,7 @@ Scope discovery
   - Guides: GUIDES.md (+ local modular guides)
   - Implementation: IMPLEMENTATION.md
 - Assert placement:
-  - All host artifacts must live outside the RulesRepository submodule per [README.md](rules/README.md).
+  - All host artifacts must live outside the Rules Repository submodule per [README.md](rules/README.md).
   - If any host-specific docs are detected under the submodule path, flag as violation.
 
 Starting prompt reconciliation
