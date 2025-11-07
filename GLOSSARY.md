@@ -295,3 +295,110 @@ See also
 - Full guide — [rules/generative/backend/lombok/lombok.md](rules/generative/backend/lombok/lombok.md)
 - MapStruct — [rules/generative/backend/mapstruct/README.md](rules/generative/backend/mapstruct/README.md)
 - JSpecify — [rules/generative/backend/jspecify/README.md](rules/generative/backend/jspecify/README.md), [rules/generative/backend/jspecify/jspecify.rules.md](rules/generative/backend/jspecify/jspecify.rules.md)
+
+## Glossary Precedence Policy (Topic‑First)
+
+- Definition — Host projects compose their root glossary from topic-scoped glossaries. When a topic glossary and the root define the same term, the topic version wins for its scope.
+- Policy anchors — See RULES: Document Modularity and Generative Topic Taxonomy for structure and precedence.
+- Host usage — The host GLOSSARY.md acts as an index/aggregator with minimal duplication; copy only enforced Prompt Language Alignment mappings and otherwise link to topic files/anchors.
+
+See also
+- RULES — ./RULES.md
+- Structure of Work (Glossary role) — ./README.md
+
+## Stage‑Gated Workflow — Canonical Terms
+
+- Stage 1: Architecture & Foundations — Produce Pact, architecture overview, C4 L1/L2/L3 (initial), key sequence diagrams, ERDs, dependency map, glossary composition plan. No code. STOP gate required.
+- Stage 2: Guides & Design Validation — RULES mapping, GUIDES (“how to apply”), API surface sketches/contracts, UI flows/components, test strategy, acceptance criteria. STOP gate required.
+- Stage 3: Implementation Plan — Scaffolding plan, module/file tree, build/processor wiring, CI and env plan, rollout and risks. STOP gate required.
+- Stage 4: Implementation & Scaffolding — Code allowed only after explicit approval; iterate in small reviewable steps; present diffs and validation after each step.
+- STOP gate (approval phrase) — Required approval phrasing: “APPROVED Stage N → Stage N+1”.
+- Universal STOP rule — If approval is not granted, revise docs; do not produce code.
+
+See also
+- Repository policy (stage‑gated) — ./README.md
+- Prompt templates (gated flow) — ./PROMPT_NEW_PROJECT.md, ./PROMPT_ADOPT_EXISTING_PROJECT.md, ./PROMPT_CODEBASE_HEALTH_CHECK.md, ./PROMPT_LIBRARY_RULES_UPDATE.md
+
+## Docs‑as‑Code Diagrams — Canonical Terms
+
+- C4 Level 1 (Context) — System and external dependencies.
+- C4 Level 2 (Container) — Major services/containers and responsibilities.
+- C4 Level 3 (Component) — Key components per bounded context.
+- C4 Level 4 (Code, optional) — Deep drill‑down for select components.
+- Sequence Diagram — Critical flow of interactions, including async boundaries (bus/schedulers).
+- ERD — Entity‑relationship diagram showing core domain, ownership, and lifecycles.
+- Mermaid — Preferred text diagram syntax in fenced markdown blocks.
+- PlantUML — Alternative text diagram syntax (fenced or .puml).
+- Docs placement — Host repository under docs/architecture/*; images optional and must not replace sources.
+
+See also
+- Docs‑as‑Code policy — ./README.md#docs-as-code-diagrams-policy
+
+## Fluent API Strategy — CRTP vs Builder (Canonical)
+
+- CRTP (Curiously Recurring Template Pattern) — Generic self‑type pattern enabling fluent APIs that return the most specific subclass type. Manual setters return J via unchecked cast; do not use Lombok @Builder under CRTP. Enforced when GuicedEE or JWebMP is selected.
+- Builder Pattern — Object construction via builders (Lombok @Builder or manual). If Builder is selected, do not apply CRTP chaining rules.
+- Enforcement — Exactly one strategy must be chosen. If GuicedEE/JWebMP is present, CRTP is implied and Builder is disallowed for those fluent APIs.
+- Lombok interop — With CRTP, prefer explicit setters and @Getter; avoid @Data and @Builder. With Builder, ensure processor ordering (Lombok before framework processors; MapStruct last).
+
+See also
+- Lombok topic — ./generative/backend/lombok/README.md
+- MapStruct topic — ./generative/backend/mapstruct/README.md
+
+## Testing Architectures — TDD and BDD
+
+- TDD (Test‑Driven Development) — Red → Green → Refactor loop. Write a failing test (red), implement minimal code to pass (green), then refactor to improve design. Emphasizes unit tests, fast feedback, and incremental design.
+  - Topic index — ./generative/architecture/tdd/README.md
+- BDD (Behavior‑Driven Development) — Discovery → Formulation → Automation. Specify behaviors in ubiquitous language (Given/When/Then), then automate with executable specs (e.g., Cucumber) and end‑to‑end tools (e.g., Playwright).
+  - Topic index — ./generative/architecture/bdd/README.md
+
+## Frontend Policies — Angular Versioning (Single Selection)
+
+- Single‑version rule — Select exactly one Angular version (17/19/20) per repository.
+- Base + overrides — Use base Angular rules plus exactly one version override; do not mix APIs across versions in a single project.
+- Links — Base: ./generative/language/angular/README.md; Overrides: ./generative/language/angular/angular-17.rules.md | ./generative/language/angular/angular-19.rules.md | ./generative/language/angular/angular-20.rules.md
+- Plugins — Angular Awesome is additive to the selected version; follow plugin topic index and glossary.
+
+## Frontend — Next.js Execution Model (Canonical)
+
+- SSR (Server‑Side Rendering) — Render at request time on the server.
+- SSG (Static‑Site Generation) — Pre‑render at build time.
+- ISR (Incremental Static Regeneration) — Rebuild static pages incrementally in production.
+- RSC (React Server Components) — Server‑executed components for data fetching and streaming UX.
+- Streaming — Progressive rendering of server responses for improved TTFB and interactivity.
+- App Router — Modern routing/data‑fetching model recommended by this repository.
+
+See also
+- Next.js overview — ./generative/frontend/nextjs/nextjs-overview.md
+- SSR/SSG/ISR — ./generative/frontend/nextjs/nextjs-ssr-ssg.md
+- Security — ./generative/frontend/nextjs/nextjs-security.md
+- Web Components interop — ./generative/frontend/nextjs/nextjs-web-components.md
+
+## Platform — CI/CD Providers (Canonical)
+
+- GitHub Actions — See ./generative/platform/ci-cd/providers/github-actions.md
+- GitLab CI — See ./generative/platform/ci-cd/providers/gitlab-ci.md
+- Jenkins — See ./generative/platform/ci-cd/providers/jenkins.md
+- TeamCity — See ./generative/platform/ci-cd/providers/teamcity.md
+- Google Cloud Build — See ./generative/platform/ci-cd/providers/google-cloud-build.md
+- Azure Pipelines — See ./generative/platform/ci-cd/providers/azure-pipelines.md
+- AWS CodeBuild/CodePipeline — See ./generative/platform/ci-cd/providers/aws-codebuild-codepipeline.md
+- Octopus Deploy — See ./generative/platform/ci-cd/providers/octopus-deploy.md
+
+Guidance
+- Declare chosen providers in host RULES.md.
+- Provide minimal build/test and deploy pipelines, with secure secret handling and environment promotion.
+
+## Platform — Security/Auth Providers (Canonical)
+
+- OpenID Connect (OIDC) — Identity layer over OAuth2 for authentication and ID tokens. See ./generative/platform/security-auth/openid-connect.md
+- Google Cloud (IAP/OIDC) — Identity‑Aware Proxy and OIDC integrations on GCP. See ./generative/platform/security-auth/gcp-auth.md
+- Firebase Auth — Authentication for web/mobile with token validation patterns. See ./generative/platform/security-auth/firebase-auth.md
+- Microsoft Entra ID (Azure AD) — OIDC/OAuth2 with Microsoft identity platform. See ./generative/platform/security-auth/microsoft-auth.md
+
+## LLM Interpretation Guidance (Glossary Usage)
+
+- Purpose — Provide minimal canonical terms and routing hints that AI must honor when generating docs or code.
+- Routing — Use topic indexes and glossary anchors to select the correct module/variant (e.g., versioned Angular overrides; WebAwesome component anchors).
+- Consistency — Use glossary terms in RULES, GUIDES, and IMPLEMENTATION; avoid synonyms; update forward‑only.
+- Traceability — Close loops across Pact ↔ Glossary ↔ Rules ↔ Guides ↔ Implementation; keep links working and up‑to‑date in the same change.

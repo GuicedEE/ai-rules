@@ -129,7 +129,7 @@ B. Rule Mapping and Scope Confirmation
 - Map detected stacks to indexes:
   - Frontend: [webcomponents](rules/generative/frontend/webcomponents/README.md), [webawesome](rules/generative/frontend/webawesome/README.md), [angular](rules/generative/language/angular/angular17.md), [react](rules/generative/language/react/README.md), [nextjs](rules/generative/frontend/nextjs/README.md).
   - Backend: [hibernate](rules/generative/backend/hibernate/README.md), [vertx](rules/generative/backend/vertx/README.md), [guicedee](rules/generative/backend/guicedee/README.md), [mapstruct](rules/generative/backend/mapstruct/README.md), [lombok](rules/generative/backend/lombok/README.md), [logging](rules/generative/backend/logging/README.md).
-  - Platform: [security-auth](rules/generative/platform/security-auth/README.md), [secrets-config](rules/generative/platform/secrets-config/README.md), [observability](rules/generative/platform/observability/README.md).
+  - Platform: [security-auth](rules/generative/platform/security-auth/README.md), [secrets-config](rules/generative/platform/secrets-config/README.md), [observability](rules/generative/platform/observability/README.md), [ci-cd](rules/generative/platform/ci-cd/README.md).
   - Architecture: [architecture](rules/generative/architecture/README.md), [tdd](rules/generative/architecture/tdd/README.md), [bdd](rules/generative/architecture/bdd/README.md).
 - For each mapping, enumerate applicable rules and checks.
 

@@ -17,13 +17,14 @@ Fill before running.
 
 - Component/topic areas (list): <TOPICS>
 - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-- Fluent API Strategy (choose exactly one): [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)  [ ] Builder pattern (Lombok @Builder/manual). Only one may be selected; if GuicedEE or JWebMP is selected, CRTP is enforced.
+- Fluent API Strategy (choose exactly one): [ ] CRTP  [ ] Builder pattern (Lombok @Builder/manual). 
 - Frontend (Standard): [ ] Web Components
 - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
 - Frontend (Angular Plugins): [ ] Angular Awesome
 - Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
 - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
 - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
+- CI/CD Providers: [ ] GitHub Actions  [ ] GitLab CI  [ ] Jenkins  [ ] TeamCity  [ ] Google Cloud Build  [ ] Azure Pipelines  [ ] AWS CodeBuild/CodePipeline
 - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
 - Observability/Diagnostics: [ ] Wireshark
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
@@ -163,6 +164,15 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - Hibernate (ORM/Reactive): rules/generative/backend/hibernate/README.md
     - Security (Reactive): rules/generative/backend/security-reactive/README.md
   - Platform:
+    - CI/CD: rules/generative/platform/ci-cd/README.md
+      - If CI/CD Providers are selected, also link provider docs:
+        - GitHub Actions — rules/generative/platform/ci-cd/providers/github-actions.md
+        - GitLab CI — rules/generative/platform/ci-cd/providers/gitlab-ci.md
+        - Jenkins — rules/generative/platform/ci-cd/providers/jenkins.md
+        - TeamCity — rules/generative/platform/ci-cd/providers/teamcity.md
+        - Google Cloud Build — rules/generative/platform/ci-cd/providers/google-cloud-build.md
+        - Azure Pipelines — rules/generative/platform/ci-cd/providers/azure-pipelines.md
+        - AWS CodeBuild/CodePipeline — rules/generative/platform/ci-cd/providers/aws-codebuild-codepipeline.md
     - Platform Observability: rules/generative/platform/observability/README.md
     - Platform Security & Auth: rules/generative/platform/security-auth/README.md
     - Env variables: rules/generative/platform/secrets-config/env-variables.md

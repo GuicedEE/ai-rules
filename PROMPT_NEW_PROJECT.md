@@ -27,7 +27,8 @@ Fill before running.
   - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
   - Frontend (Angular Plugins): [ ] Angular Awesome
   - Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
-  - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
+  - CI/CD Providers: [ ] GitHub Actions  [ ] GitLab CI  [ ] Jenkins  [ ] TeamCity  [ ] Google Cloud Build  [ ] Azure Pipelines  [ ] AWS CodeBuild/CodePipeline
+  - Infra/Deploy: [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
   - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
 - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
@@ -175,6 +176,15 @@ When approved, execute the plan as one change set.
        - TDD — [README](rules/generative/architecture/tdd/README.md)
        - BDD — [README](rules/generative/architecture/bdd/README.md)
      - Platform:
+       - CI/CD — [README](rules/generative/platform/ci-cd/README.md)
+         - If selected, also link provider docs:
+           - GitHub Actions — [github-actions.md](rules/generative/platform/ci-cd/providers/github-actions.md)
+           - GitLab CI — [gitlab-ci.md](rules/generative/platform/ci-cd/providers/gitlab-ci.md)
+           - Jenkins — [jenkins.md](rules/generative/platform/ci-cd/providers/jenkins.md)
+           - TeamCity — [teamcity.md](rules/generative/platform/ci-cd/providers/teamcity.md)
+           - Google Cloud Build — [google-cloud-build.md](rules/generative/platform/ci-cd/providers/google-cloud-build.md)
+           - Azure Pipelines — [azure-pipelines.md](rules/generative/platform/ci-cd/providers/azure-pipelines.md)
+           - AWS CodeBuild/CodePipeline — [aws-codebuild-codepipeline.md](rules/generative/platform/ci-cd/providers/aws-codebuild-codepipeline.md)
        - Observability — [README](rules/generative/platform/observability/README.md)
        - Security & Auth — [README](rules/generative/platform/security-auth/README.md)
        - Secrets & Env — [README](rules/generative/platform/secrets-config/README.md)

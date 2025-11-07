@@ -25,7 +25,8 @@ Fill before running.
   - Frontend Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
   - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
   - Frontend (Angular Plugins): [ ] Angular Awesome
-  - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
+  - CI/CD Providers: [ ] GitHub Actions  [ ] GitLab CI  [ ] Jenkins  [ ] TeamCity  [ ] Google Cloud Build  [ ] Azure Pipelines  [ ] AWS CodeBuild/CodePipeline
+  - Infra/Deploy: [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
   - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
 - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
@@ -160,6 +161,15 @@ When approved, execute the plan as one change set.
      - rules/generative/backend/security-reactive/README.md
      - rules/generative/frontend/webawesome/README.md
      - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
+     - rules/generative/platform/ci-cd/README.md
+       - If CI/CD Providers are selected, also link provider docs:
+         - GitHub Actions — rules/generative/platform/ci-cd/providers/github-actions.md
+         - GitLab CI — rules/generative/platform/ci-cd/providers/gitlab-ci.md
+         - Jenkins — rules/generative/platform/ci-cd/providers/jenkins.md
+         - TeamCity — rules/generative/platform/ci-cd/providers/teamcity.md
+         - Google Cloud Build — rules/generative/platform/ci-cd/providers/google-cloud-build.md
+         - Azure Pipelines — rules/generative/platform/ci-cd/providers/azure-pipelines.md
+         - AWS CodeBuild/CodePipeline — rules/generative/platform/ci-cd/providers/aws-codebuild-codepipeline.md
      - rules/generative/platform/observability/README.md
      - rules/generative/architecture/README.md
      - rules/generative/architecture/tdd/README.md
