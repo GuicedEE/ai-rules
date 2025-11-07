@@ -20,7 +20,7 @@ Fill before running.
   - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
   - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
   - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-  - Fluent API Strategy (choose exactly one): [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP, Lombok used, no @Setter)  [ ] Builder pattern (Lombok @Builder/manual). Only one may be selected; if GuicedEE or JWebMP is selected, CRTP is enforced.
+  - Fluent API Strategy (choose exactly one): [ ] CRTP [ ] Builder pattern (Lombok @Builder/manual).
   - Frontend (Standard): [ ] Web Components
   - Frontend Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
   - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js

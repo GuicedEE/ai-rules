@@ -160,7 +160,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - React: rules/generative/language/react/README.md
     - Next.js (App Router): rules/generative/frontend/nextjs/README.md
   - Backend:
-    - Hibernate 7 Reactive: rules/generative/backend/hibernate/README.md
+    - Hibernate (ORM/Reactive): rules/generative/backend/hibernate/README.md
     - Security (Reactive): rules/generative/backend/security-reactive/README.md
   - Platform:
     - Platform Observability: rules/generative/platform/observability/README.md

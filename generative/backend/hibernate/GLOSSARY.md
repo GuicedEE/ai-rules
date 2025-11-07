@@ -1,138 +1,84 @@
-# Hibernate Reactive Glossary (Topic-first)
+# Hibernate Glossary (ORM and Reactive, Topic-first)
 
 Purpose
-- Topic-first glossary for Hibernate 7 Reactive usage in JVM projects.
-- Precedence: this glossary overrides the root glossary for the Hibernate topic and minimizes duplication by linking to modular rules in this directory.
-- Audience: developers and AI systems generating or reviewing code and docs that use Hibernate Reactive with Mutiny APIs.
+- Topic-first glossary for Hibernate across classic ORM (blocking JDBC) and Hibernate 7 Reactive (Mutiny/Vert.x).
+- Precedence: within the Hibernate topic, this glossary overrides root terms. Per-approach modular docs (ORM vs Reactive) provide specifics; choose exactly one approach per code path.
+- Audience: developers and AI systems generating or reviewing persistence logic and documentation.
 
-Scope
-- Focuses on Hibernate 7 Reactive (Mutiny API) for relational databases.
-- Assumes non-blocking/reactive application stacks (e.g., Vert.x 5, GuicedEE reactive functions).
-- Coordinates with JPMS, Testcontainers, and repository-specific policies.
+Routing (index and modules)
+- Topic index — [README.md](rules/generative/backend/hibernate/README.md)
+- ORM (blocking):
+  - Overview — [hibernate-orm-overview.md](rules/generative/backend/hibernate/hibernate-orm-overview.md)
+  - Setup — [hibernate-orm-setup.md](rules/generative/backend/hibernate/hibernate-orm-setup.md)
+  - EntityManager/Session & SessionFactory — [hibernate-orm-entitymanager-session.md](rules/generative/backend/hibernate/hibernate-orm-entitymanager-session.md)
+  - Transactions — [hibernate-orm-transactions.md](rules/generative/backend/hibernate/hibernate-orm-transactions.md)
+  - CRUD — [hibernate-orm-crud.md](rules/generative/backend/hibernate/hibernate-orm-crud.md)
+  - Caching — hibernate-orm-caching.md (if present)
+  - Testing — hibernate-orm-testing.md (if present)
+  - Anti-Patterns — hibernate-orm-antipatterns.md (if present)
+  - Upgrade — hibernate-orm-upgrade.md (if present)
+- Reactive (non-blocking):
+  - Overview — [hibernate-7-reactive-overview.md](rules/generative/backend/hibernate/hibernate-7-reactive-overview.md)
+  - Setup — [hibernate-7-reactive-setup.md](rules/generative/backend/hibernate/hibernate-7-reactive-setup.md)
+  - SessionFactory — [hibernate-7-reactive-session-factory.md](rules/generative/backend/hibernate/hibernate-7-reactive-session-factory.md)
+  - Transactions — [hibernate-7-reactive-transactions.md](rules/generative/backend/hibernate/hibernate-7-reactive-transactions.md)
+  - CRUD — [hibernate-7-reactive-crud.md](rules/generative/backend/hibernate/hibernate-7-reactive-crud.md)
+  - Threading — [hibernate-7-reactive-threading.md](rules/generative/backend/hibernate/hibernate-7-reactive-threading.md)
+  - Testing — [hibernate-7-reactive-testing.md](rules/generative/backend/hibernate/hibernate-7-reactive-testing.md)
+  - Anti-Patterns — [hibernate-7-reactive-antipatterns.md](rules/generative/backend/hibernate/hibernate-7-reactive-antipatterns.md)
+  - Upgrade — [hibernate-7-reactive-upgrade.md](rules/generative/backend/hibernate/hibernate-7-reactive-upgrade.md)
 
-Version and Routing
-- Primary references live in:
-  - [hibernate-7-reactive-overview.md](rules/generative/backend/hibernate/hibernate-7-reactive-overview.md)
-  - [hibernate-7-reactive-setup.md](rules/generative/backend/hibernate/hibernate-7-reactive-setup.md)
-  - [hibernate-7-reactive-session-factory.md](rules/generative/backend/hibernate/hibernate-7-reactive-session-factory.md)
-  - [hibernate-7-reactive-transactions.md](rules/generative/backend/hibernate/hibernate-7-reactive-transactions.md)
-  - [hibernate-7-reactive-crud.md](rules/generative/backend/hibernate/hibernate-7-reactive-crud.md)
-  - [hibernate-7-reactive-threading.md](rules/generative/backend/hibernate/hibernate-7-reactive-threading.md)
-  - [hibernate-7-reactive-testing.md](rules/generative/backend/hibernate/hibernate-7-reactive-testing.md)
-  - [hibernate-7-reactive-antipatterns.md](rules/generative/backend/hibernate/hibernate-7-reactive-antipatterns.md)
-  - [hibernate-7-reactive-upgrade.md](rules/generative/backend/hibernate/hibernate-7-reactive-upgrade.md)
-  - Index: [README.md](rules/generative/backend/hibernate/README.md)
-
-Precedence and Policy
-- Topic-first precedence: this glossary governs Hibernate terms and expectations for its scope and supersedes generic language or persistence glossaries.
-- JPMS posture and PostgreSQL driver policy: prefer GuicedEE Services artifacts and do not shade the driver in host projects (see details in repository rules and backend services policies).
+Policy and Precedence
+- Choose ORM for blocking, JDBC-based stacks (thread-per-request) and Reactive for non-blocking stacks (event-loop based). Do not mix both in the same transaction path.
+- JPMS posture and PostgreSQL driver policy: prefer GuicedEE Services artifacts for JPMS; do not shade drivers in host projects.
 
 Core Concepts (anchor wording)
-- Reactive Persistence Context
-  - A non-blocking variant of the persistence context. It maintains entity identity and tracks changes within the scope of a reactive session, deferring writes to flush/transaction boundaries.
-- SessionFactory (Reactive)
-  - A singleton, lazily-created factory for reactive sessions. Must be configured once per application; thread-safe; should be lifecycle-managed by the DI container or app bootstrap.
-- Reactive Session
-  - A lightweight, non-thread-safe unit that tracks entities during operations. Do not share across threads or requests. Obtain within a reactive flow and keep lifetime minimal.
-- Transaction (Reactive)
-  - Non-blocking unit of work that ensures atomicity. Use framework-provided helpers to wrap operations; on failure, automatic rollback is expected.
-- Mutiny Uni
-  - A lazy, single-result reactive type. Compose chains for DB interactions without blocking; subscribe or await only in test harnesses with explicit timeouts.
-- Mutiny Multi
-  - A lazy, multi-result reactive type for streaming results. Use cautiously for large data sets; apply operators to bound memory.
+- Persistence Context (1st-level cache)
+  - Tracks managed entities and identity within a Session/EntityManager (ORM) or Reactive Session. Scope is per unit-of-work; not thread-safe.
+- Session / EntityManager
+  - Per-unit-of-work API (Hibernate Session or JPA EntityManager). Open per request/use-case, close deterministically. Not thread-safe.
+- SessionFactory / EntityManagerFactory
+  - Application-wide factory (thread-safe). Create once and reuse; dispose on shutdown.
+- Transaction
+  - ORM (blocking): JTA or resource-local; begin → work → commit/rollback. Reactive: non-blocking, compose within Uni chains.
 - Flush
-  - Synchronizes in-memory entity changes with the database within the current transaction. In reactive, flush is non-blocking and occurs explicitly or at defined points by the framework.
-- Dirty Checking
-  - Hibernate detects entity state changes automatically and computes SQL updates. In reactive, semantics are analogous but non-blocking; avoid mutating detached objects unpredictably.
-- Fetch Strategy: Lazy vs Eager
-  - Lazy: defers loading associations; Eager: loads associations immediately. Reactive design favors explicit fetch joins or structured queries to avoid N+1 and unpredictable IO.
-- N+1 Selects
-  - Anti-pattern where loading a collection triggers one query per element. Prevent with explicit fetch joins, batch fetching, or DTO projections.
+  - Synchronizes in-memory changes with the DB in an active transaction (auto at commit; explicit when needed).
+- Fetch Strategy (Lazy/Eager), Fetch Join, N+1
+  - Default to LAZY; use explicit fetch joins or DTO projections to avoid N+1 and excessive joins.
 - DTO Projection
-  - Selecting custom row shapes (not entities) for read-only flows; avoids entity tracking overhead and often reduces queries.
-- Connection Pool (Reactive)
-  - The underlying pool for non-blocking connections; must be tuned for event-loop concurrency. Ensure pool sizing aligns with the number of concurrent reactive operations without blocking.
-- Backpressure (Concept)
-  - The strategy to handle fast producers and slow consumers. While Mutiny supports it at an operator level, design endpoints to bound data (paging/limits) to avoid memory pressure.
+  - Read-only result mapping for API payloads; reduces loading full aggregates and improves performance.
+- Connection Pool
+  - ORM: JDBC pool (e.g., HikariCP) sized for workload. Reactive: non-blocking pool tuned for event-loop concurrency.
+- Concurrency Control
+  - Prefer optimistic locking via @Version; use pessimistic locks sparingly for hot rows/critical sections.
+- Backpressure (Reactive)
+  - Bound streaming with pagination/limits; avoid unbounded Multi.
 
 Design Principles
-- Non-Blocking Semantics
-  - Never invoke blocking APIs in reactive flows (e.g., do not call future.get(), Thread.sleep()). All database IO must flow through reactive APIs and composition.
-- Composition over Awaiting
-  - Compose Uni chains instead of awaiting results in production code. Only tests may await with timeouts for convenience.
-- Transaction Boundaries
-  - Wrap related operations in a single, explicit reactive transaction. Define clear begin → operations → commit/rollback paths; manage resources deterministically.
-- Deterministic Sessions
-  - Keep sessions short-lived and tied to a flow. Do not cache or reuse across unrelated requests or threads.
-- Explicit Fetching
-  - Avoid accidental eager cascades. Use fetch joins or projections intentionally; prefer reads that match UI/API use cases.
+- ORM (blocking): Keep transactions short; avoid long-running, non-DB work inside transactions; prefer projections and fetch joins; avoid global/shared EM/Session.
+- Reactive (non-blocking): No blocking calls in reactive flows; compose Uni chains; short-lived sessions; explicit transaction helpers; explicit fetching.
 
 Testing Principles
-- Containers over In-Memory
-  - Prefer Testcontainers for relational DBs. Avoid H2 for reactive behavior parity.
-- Reactive Test Patterns
-  - Keep tests non-blocking; if awaiting, limit to the test harness and set explicit timeouts. Use transaction helpers for setup/teardown data.
-- Deterministic Data
-  - Seed fixtures through migrations or seed scripts. Isolate per-test schemas/containers as needed to avoid cross-test interference.
+- Use Testcontainers for DB parity; avoid H2 for reactive behavior tests.
+- ORM: transactional tests with rollback or schema cleanup. Reactive: await only in tests with explicit timeouts; non-blocking patterns in harness.
 
 Anti-Patterns (summary)
-- Blocking calls in reactive flows (future.get(), sleep, JDBC usage in reactive code paths).
-- Sharing a reactive Session across threads or requests.
-- Implicit lazy loads in latency-sensitive paths causing unexpected N+1.
-- Mixed blocking and non-blocking DB clients in the same transaction flow.
-- Relying on detached entities with side effects instead of clear read→modify→write flows.
+- ORM: EAGER everywhere, long transactions, shared EM/Session across threads, relying on hbm2ddl.auto in prod.
+- Reactive: Blocking calls (future.get/sleep/JDBC), sharing reactive Session across requests, implicit lazy loads in latency-sensitive paths, mixing blocking and non-blocking DB clients in the same flow.
 
 LLM Interpretation Guidance
-- When generating Hibernate Reactive code:
-  - Use Uni chains for CRUD and compose operations within explicit transactions.
-  - Keep session lifetime scoped to the reactive flow; no static singletons of sessions.
-  - Favor explicit fetch plans or DTO projections to avoid N+1 queries.
-  - Do not use blocking constructs; if an external API forces blocking, isolate it in executeBlocking-style helpers outside the reactive DB path (and document the trade-offs).
-- When writing tests:
-  - Prefer Testcontainers; avoid H2. Seed via migrations or scripts. Await only in tests with clear timeouts.
-- When documenting:
-  - Route to the modular files listed above; do not duplicate definitions from this glossary; link to the relevant rule page and keep glossary terms consistent with anchors here.
-
-Performance and Concurrency Guidelines
-- Pool Sizing
-  - Size reactive connection pools based on expected concurrent operations. Avoid saturating event loops with excessive synchronous work.
-- Batching and Streaming
-  - Use Multi for controlled streaming; bound result sets via pagination and use database-side limits to avoid application memory growth.
-- Caching
-  - Evaluate reactive-compatible caching strategies; ensure that caches do not introduce blocking calls into reactive paths.
-
-JPMS and Dependencies
-- Module Design
-  - Export only necessary packages; keep internals encapsulated. Prefer test-time opens (e.g., surefire argLine) instead of weakening production module-info.
-- PostgreSQL Driver Policy
-  - In JPMS contexts, prefer the enterprise services distribution and declare explicit requires entries in module descriptors. Avoid shaded drivers in host projects.
+- When asked to implement persistence:
+  - Decide ORM vs Reactive based on stack; route to the corresponding modular docs.
+  - For ORM: show EM/Session lifecycle per unit-of-work; explicit transactions; DTOs/fetch joins for reads.
+  - For Reactive: use Uni composition; explicit reactive transactions; no blocking; explicit fetch plans/projections.
+- When generating tests:
+  - Prefer Testcontainers; seed deterministically (migrations/fixtures). Await only in tests (reactive) with timeouts.
 
 Observability
-- Correlation
-  - Propagate request identifiers through reactive chains. Ensure logs include correlation IDs across DB calls.
-- Metrics
-  - Record latencies, error rates, and pool utilization. Alert on timeouts and slow queries.
-
-Migration & Upgrade Notes
-- See:
-  - [hibernate-7-reactive-upgrade.md](rules/generative/backend/hibernate/hibernate-7-reactive-upgrade.md)
-
-Frequently Used Patterns (brief)
-- Create/Update
-  - Build entity in-memory, start transaction, persist/merge within one reactive session, and commit. For updates, load entity or projection then apply changes in a safe path.
-- Read
-  - Use explicit queries with projections for read-heavy paths; avoid accidental loading of large graphs.
-- Transactions
-  - Use helper methods to enforce transaction boundaries and handle rollback on failures consistently.
-
-Related Topics
-- Vert.x 5 reactive client usage and event loop rules (see repository’s Vert.x rules and reactive transaction patterns).
-- Mapping libraries for DTO transformations (e.g., MapStruct) to isolate entity models from API payloads.
+- Correlation IDs across DB calls; metrics for latency, errors, and pool utilization; alerts for timeouts/slow queries.
 
 Anchor Terms (canonical)
-- Reactive Persistence Context, SessionFactory (Reactive), Reactive Session, Reactive Transaction, Mutiny Uni, Mutiny Multi, Flush, Dirty Checking, Lazy/Eager Fetch, Fetch Join, N+1 Selects, DTO Projection, Connection Pool (Reactive), Backpressure, Testcontainers (Reactive), Non-Blocking Semantics, Composition over Awaiting, Deterministic Sessions.
+- Persistence Context, EntityManager/Session, EntityManagerFactory/SessionFactory, Transaction (JTA/Resource-Local/Reactive), Flush, Lazy/Eager Fetch, Fetch Join, N+1 Selects, DTO Projection, Connection Pool, Optimistic/Pessimistic Locking, Backpressure (Reactive), Testcontainers.
 
 Compliance
-- Follow the modular rules linked above for implementations.
-- Respect this glossary’s precedence for terminology.
-- Document any deviations in project RULES.md with rationale and links to the superseded sections.
+- Follow modular rules linked above. Document deviations in host RULES.md with rationale and links.

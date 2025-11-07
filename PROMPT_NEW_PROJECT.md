@@ -22,7 +22,7 @@ Fill before running.
   - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
   - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
   - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-  - Fluent API Strategy (choose exactly one): [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)  [ ] Builder pattern (Lombok @Builder/manual). Only one may be selected; if GuicedEE or JWebMP is selected, CRTP is enforced.
+  - Fluent API Strategy (choose exactly one): [ ] CRTP [ ] Builder pattern (Lombok @Builder/manual).
   - Frontend (Standard): [ ] Web Components
   - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
   - Frontend (Angular Plugins): [ ] Angular Awesome
@@ -164,7 +164,7 @@ When approved, execute the plan as one change set.
        - Next.js — [README](rules/generative/frontend/nextjs/README.md), [GLOSSARY](rules/generative/frontend/nextjs/GLOSSARY.md)
      - Backend:
        - GuicedEE — [README](rules/generative/backend/guicedee/README.md)
-       - Hibernate 7 Reactive — [README](rules/generative/backend/hibernate/README.md)
+       - Hibernate (ORM/Reactive) — [README](rules/generative/backend/hibernate/README.md)
        - Vert.x — [README](rules/generative/backend/vertx/README.md)
      - Structural:
        - MapStruct — [README](rules/generative/backend/mapstruct/README.md), [GLOSSARY](rules/generative/backend/mapstruct/GLOSSARY.md)
