@@ -1,191 +1,187 @@
-# 🚀 Starter Prompt — New Project Scaffolding with RulesRepository
+# 🚀 Starter Prompt — New Project Using the Rules Repository
 
-This is a paste-into-your-AI prompt for creating a brand-new project aligned to the RulesRepository enterprise rules. It scaffolds Pact → Rules → Guides → Implementation, configures the chosen AI engine, and links in the RulesRepository submodule.
+Paste this prompt into your AI tool to bootstrap a new repository aligned to the RulesRepository methodology. The AI will scaffold a modular, forward-only documentation structure (Pact → Rules → Guides → Implementation), set up topic indexes, and generate minimal starter code where requested.
 
-Use this prompt with: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
+Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
 
 ---
 
 ## 0) Provide Inputs
-Fill in the fields below before running the prompt.
+Fill before running.
 
 - Organization: <ORG_NAME>
 - Project name: <PROJECT_NAME>
 - Short description: <ONE_LINE_DESCRIPTION>
 - Repository host + URL: <GIT_HOST>/<REPO_URL>
 - License: <LICENSE> (e.g., Apache-2.0)
-- Primary languages: <LANGUAGES> (e.g., Java 21, TypeScript)
-- Tech stack (tick all that apply):
+
+
+- Selected tech topics (tick):
   - Backend Reactive: [ ] Vert.x 5  [ ] Hibernate Reactive 7
   - Backend Reactive (GuicedEE) : Core [ ] Web [ ] Rest [ ] Persistence [ ] RabbitMQ [ ] Cerial [ ] OpenAPI [ ] Sockets [ ]  (Dependencies: if Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7)
   - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
   - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
   - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
+  - Fluent API Strategy (choose exactly one): [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)  [ ] Builder pattern (Lombok @Builder/manual). Only one may be selected; if GuicedEE or JWebMP is selected, CRTP is enforced.
   - Frontend (Standard): [ ] Web Components
-  - Frontend Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
-  - Frontend (Reactive): [ ] Angular 20  [ ] React  [ ] Next.js  [ ] Angular Awesome (Angular 19+ plugin)
+  - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
+  - Frontend (Angular Plugins): [ ] Angular Awesome
+  - Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
   - Infra/CI: [ ] GitHub Actions  [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
   - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
 - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD
-- Security: [ ] Keycloak (OIDC) Realm: <REALM>  Issuer: <ISSUER_URL>
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
-- Authors: ["<YOUR_NAME>", "AI"]
+- Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
 
-Constraints and policies (do not change):
-- Use Markdown for docs. Respect RulesRepository RULES.md sections: Behavioral Agreements, Technical Commitments, Document Modularity Policy, and 6. Forward-Only Change Policy (no backwards compatibility).
-- Do not place project-specific docs inside the RulesRepository submodule directory.
-- Generated artifacts are read-only. Do not propose or perform edits on compiled outputs (e.g., TS/HTML/site bundles). For JWebMP projects specifically, do not generate or reference separate TS/HTML components for missing views; render dialogs/tables directly from Java (cell renderers/components).
-- In JWebMP, avoid inline string HTML; express markup using JWebMP components (Div, Paragraph, Span, Table, H1–H6, etc.).
-- PostgreSQL (JPMS): Do not shade the driver. Use GuicedEE Services artifacts (com.guicedee.services:postgresql) and require org.postgresql in module-info.java.
+Policies (must honor):
+- Use Markdown for docs. Follow [RULES.md](rules/RULES.md) sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).
+- Do NOT place project-specific docs inside the submodule directory.
+- Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is selected. Align Lombok usage accordingly:
+  - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
+  - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
+- Angular version policy: Select exactly one Angular version (17/19/20). Use base + override model:
+  - Base — [angular.md](rules/generative/language/angular/angular.md)
+  - Overrides — [angular-17.rules.md](rules/generative/language/angular/angular-17.rules.md) | [angular-19.rules.md](rules/generative/language/angular/angular-19.rules.md) | [angular-20.rules.md](rules/generative/language/angular/angular-20.rules.md)
+- Angular Plugins policy: Select Angular plugins (e.g., Angular Awesome) from the “Frontend (Angular Plugins)” list. Treat plugins as additive to the chosen Angular version; link to the plugin’s topic index and glossary.
+- Glossary policy (topic-first): Compose the host GLOSSARY.md from topic-scoped glossaries for selected topics. Topic glossaries take precedence over the root glossary. Minimize duplication by linking to each topic’s GLOSSARY.md and rules; copy only enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton/WaInput).
 
 ---
 
 ## 1) Self‑Configure the AI Engine
-The AI must configure itself for this workspace before generating files.
-
-- If JetBrains AI (Junie):
-  - Load repository context. Pin links to ./RULES.md#4-behavioral-agreements, ./RULES.md#5-technical-commitments, ./RULES.md#document-modularity-policy, ./RULES.md#6-forward-only-change-policy.
-  - Adopt forward-only edits. Close loops: PACT ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
-
-- If GitHub Copilot Chat:
-  - Create a workspace note/pinned message: "Follow repo RULES.md (sections 4,5, Document Modularity, 6). No backwards compatibility. Use submodule model."
-  - Prefer conversations scoped to the repository root, include file paths in responses.
-
-- If Cursor:
-  - Create .cursor/rules.md with links to RULES.md sections above and a reminder: “No BC, update all references in each change”.
-  - Enable Repo Map and include this prompt in the session context.
-
-- If ChatGPT/Claude:
+- Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode: update all affected references in the same change.
+- For Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing these constraints.
+- For ChatGPT/Claude:
   - Start with system note: "Follow RulesRepository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
   - Owner mode (this RulesRepository repository is the active workspace; not used as a submodule):
     - Do not refer to this repository as a submodule.
     - Load and pin ./skills.md; use project-scoped Skills under .claude/skills/.
-  - Host project mode (a downstream project consuming these rules):
+  - Host project mode (a downstream project adopting these rules):
     - Use this repository as a Git submodule and link to it from host artifacts.
   - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
+- For Roo: load and pin [ROO_WORKSPACE_POLICY.md](rules/ROO_WORKSPACE_POLICY.md). If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled. Update all references affected by a change in the same forward-only change set.
 
-- If Roo:
-  - Load and pin ROO_WORKSPACE_POLICY.md at the repository root. If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). No backwards compatibility; update all references in the same change.
-  - Ensure conversations are scoped to the repository root, include file paths in responses, and confirm forward-only mode is enabled.
+Language Selection (configure here)
+- Languages
+  - Java (choose exactly one LTS)
+    - [ ] Java 17 LTS
+    - [ ] Java 21 LTS
+    - [ ] Java 25 LTS
+  - Web
+    - [ ] TypeScript
+      - [ ] Angular (TypeScript)
+      - [ ] React (TypeScript)
+      - [ ] Next.js (TypeScript)
+    - [ ] JavaScript
+  - Kotlin
+    - [ ] Kotlin
+    - [ ] Ktor (requires Kotlin)
+  - Other: <OTHER_LANGUAGES>
 
-Outcome: AI confirms it has applied these constraints.
-
----
-
-## 2) Scaffolding Tasks (Generate and Apply)
-Produce the following changes as a single, forward-only change set.
-
-1. Add Rules Repository as a Git submodule
-   - Target path suggestion: rules/ or docs/rules-repository
-   - Example:
-     - git submodule add <THIS_REPO_URL> rules/
-     - git submodule update --init --recursive
-   - Document this in README.md under "Enterprise rules submodule".
-
-2. Create core artifacts in the host project (outside submodule)
-   - PACT.md — derive from rules/creative/pact.md, substitute fields (project name, authors, date). Keep section mapping to RULES and GUIDES.
-   - GLOSSARY.md — create a project glossary populated from the selected topics in this prompt. Copy any enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton, WaInput, WaCluster, WaStack). Use the glossary as the single source of truth for terminology across RULES, GUIDES, and IMPLEMENTATION.
-   - RULES.md (project-specific) — extend the enterprise RULES:
-     - Declare project scope, overrides, chosen stacks.
-     - Link to submodule topics you selected (examples below).
-     - Reference GLOSSARY.md for naming/terminology alignment.
-   - GUIDES.md — entry index for project guides:
-     - Backend picks: link to rules/generative/backend/hibernate/README.md, rules/generative/architecture/ddd/, etc. If Backend Reactive (GuicedEE) is selected, also link to rules/generative/backend/guicedee/README.md and chosen function rules (Core/Web/Rest/Persistence/RabbitMQ/Cerial/OpenAPI/Sockets) under rules/generative/backend/guicedee/functions/. If GuicedEE Core is selected, also include rules/generative/backend/vertx/README.md. If GuicedEE Persistence is selected, also ensure Hibernate Reactive 7 is selected/linked (rules/generative/backend/hibernate/README.md).
-     - Frontend picks: link to rules/generative/frontend/react/README.md, rules/generative/frontend/nextjs/README.md, rules/generative/frontend/webcomponents/README.md, rules/generative/frontend/angular-awesome/README.md (Angular Awesome), or rules/generative/frontend/webawesome/README.md. If JWebMP with WebAwesome plugin is selected, reference rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md instead of the generic WebAwesome index.
-   - IMPLEMENTATION.md — describe initial modules, code layout, and back-links to relevant guides.
-
-3. Establish directory structure
-   - /docs/ (project docs including PACT.md, RULES.md, GUIDES.md, IMPLEMENTATION.md if you prefer under docs/)
-   - /backend/ or /service-<name>/ (if microservices) with src layout
-   - /frontend/ (Angular/Web Components) if applicable
-   - /infrastructure/terraform/ (optional)
-   - Ensure README.md links to each artifact and the submodule.
-
-4. Environment and configuration
-   - Copy or reference env variables: rules/generative/platform/secrets-config/env-variables.md
-   - Create .env.example aligned with env-variables.md
-
-5. CI/CD (if selected)
-   - Add a minimal GitHub Actions workflow (e.g., build/test) and document secrets.
-
-6. Topic-specific link wiring (examples)
-  - Web Components
-    - rules/generative/frontend/webcomponents/README.md
-    - custom-elements.md, shadow-dom.md, html-templates.md, es-modules.md
-  - Angular 20 + Web Components
-    - angular20-overview.md, angular20-producing-web-components.md, angular20-consuming-web-components.md, microfronts-overview.md
-  - React
-    - rules/generative/frontend/react/README.md
-    - react-overview.md, react-web-components.md, react-ssr-options.md
-  - Next.js (App Router)
-    - rules/generative/frontend/nextjs/README.md
-    - nextjs-overview.md, nextjs-routing-data.md, nextjs-ssr-ssg.md, nextjs-web-components.md, nextjs-security.md
-  - Hibernate 7 Reactive
-    - rules/generative/backend/hibernate/README.md and modular entries (setup, transactions, CRUD, testing, threading, anti-patterns)
-  - GuicedEE (Reactive)
-    - rules/generative/backend/guicedee/README.md
-    - Core — rules/generative/backend/guicedee/functions/guiced-injection-rules.md (Note: Selecting GuicedEE Core implies Vert.x 5; include rules/generative/backend/vertx/README.md)
-    - Web — rules/generative/backend/guicedee/functions/guiced-vertx-web-rules.md
-    - Rest — rules/generative/backend/guicedee/functions/guiced-vertx-rest-rules.md
-    - Persistence — rules/generative/backend/guicedee/functions/guiced-vertx-persistence-rules.md (Note: Selecting GuicedEE Persistence implies Hibernate Reactive 7; include rules/generative/backend/hibernate/README.md)
-    - RabbitMQ — rules/generative/backend/guicedee/functions/guiced-rabbit-rules.md
-    - Cerial — rules/generative/backend/guicedee/functions/guiced-cerial-rules.md
-    - OpenAPI — rules/generative/backend/guicedee/functions/guiced-swagger-openapi-rules.md
-    - Sockets — rules/generative/backend/guicedee/functions/guiced-vertx-sockets-rules.md
-  - WebAwesome components
-    - rules/generative/frontend/webawesome/README.md (e.g., button.rules.md, input.rules.md#number-input)
-    - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
-  - Observability
-    - rules/generative/platform/observability/README.md
-    - health.md, tracing.md, openapi-map.md, wireshark.md
-
-- Security (Reactive)
-  - rules/generative/backend/security-reactive/README.md
-- Platform Security & Auth (OIDC/GCP/Firebase/Microsoft)
-  - rules/generative/platform/security-auth/README.md
-- Architecture
-  - rules/generative/architecture/README.md
-  - ddd/README.md, microfronts/README.md
-- Data
-  - rules/generative/data/README.md
-  - activity-master/README.md
-
-7. Licensing and repo housekeeping
-   - Ensure LICENSE is set (<LICENSE>)
-   - Add .editorconfig and .gitattributes (optional)
-
-8. README.md (root) — update
-   - Project overview, architecture choice, selected tech stack
-   - “Structure of Work” table (Pact → Rules → Guides → Implementation)
-   - Link to the RulesRepository submodule and to local artifacts
+Language selection → generation rules
+- If Java 17/21/25 is selected:
+  - Apply the corresponding LTS rules and toolchains — [java-17.rules.md](rules/generative/language/java/java-17.rules.md), [java-21.rules.md](rules/generative/language/java/java-21.rules.md), [java-25.rules.md](rules/generative/language/java/java-25.rules.md).
+  - Include build integration via [build-tooling.md](rules/generative/language/java/build-tooling.md).
+- If Web → TypeScript is selected:
+  - Include language rules link: [TypeScript README](rules/generative/language/typescript/README.md).
+  - If Angular is also selected: include [Angular README](rules/generative/language/angular/README.md) and scaffold Angular app structure when requested; enforce a single version override.
+  - If React is also selected: include [React README](rules/generative/language/react/README.md) and scaffold when requested.
+  - If Next.js is selected: include [Next.js README](rules/generative/frontend/nextjs/README.md) and adhere to App Router guidance.
+- If Kotlin is selected:
+  - Include language rules link: [Kotlin README](rules/generative/language/kotlin/README.md).
+  - If Ktor is also selected, scaffold a minimal Ktor service module and wire guides accordingly.
 
 ---
 
-## 3) Output Checklist (AI must confirm)
-- [ ] Submodule added and referenced in README
-- [ ] PACT.md created with project details and cross-links
-- [ ] Project RULES.md created referencing enterprise RULES and chosen topics
-- [ ] GUIDES.md and IMPLEMENTATION.md created with proper back/forward links
-- [ ] Env: .env.example or env notes aligned to rules/generative/platform/secrets-config/env-variables.md
-- [ ] CI file added (if selected)
-- [ ] README updated with architecture, links, and instructions
-- [ ] All links resolve; no files placed inside the submodule directory
+## 2) Project Plan (AI must draft first)
+Produce a short plan with:
+- Scopes selected (languages, frameworks, plugins, structural, platform).
+- Initial repository structure (packages, apps, modules), build tool, CI, env files, docs (PACT, RULES, GUIDES, IMPLEMENTATION, GLOSSARY).
+- Actions: initialize repo; add RulesRepository submodule; create modular docs; set up language/framework skeletons; update links; CI/env alignment.
+- Risk notes: any forward-only decisions affecting defaults.
+
+When approved, execute the plan as one change set.
 
 ---
 
-## 4) Guardrails (Do Not Skip)
-- Follow RULES.md → 4. Behavioral Agreements, 5. Technical Commitments, Document Modularity Policy, and 6. Forward-Only Change Policy.
-- No backwards compatibility stubs; apply the requested new structure in full.
-- Every artifact must link back to its parent layer (close loops).
+## 3) Required Artifacts
+1. Initialize repository and add the Rules Repository submodule at rules/ (or docs/rules-repository) and document usage in README.
+2. Create PACT.md (root or docs/) starting from [creative/pact.md](rules/creative/pact.md). Fill project details and cross-links.
+3. Create root GLOSSARY.md
+   - Compose from topic glossaries (topic-first). For each selected topic, link to its topic GLOSSARY.md and adopt its canonical terms; these take precedence over root terms for that scope.
+   - Copy only enforced Prompt Language Alignment mappings into the host glossary (e.g., WebAwesome names like WaButton/WaInput/WaCluster/WaStack). For all other terms, link to the topic file/anchor instead of duplicating definitions.
+   - Document a “Glossary Precedence Policy”: topic glossaries override root for their scope; the host GLOSSARY.md acts as an index and aggregator with minimal duplication and LLM interpretation guidance (e.g., CRTP vs Builder routing, JSpecify defaults).
+4. Create project RULES.md (outside submodule):
+   - Declare scope, chosen stacks, plugin selections (Angular Plugins), and any project-specific conventions.
+   - Link topic indexes:
+     - Frontend (Standard):
+       - Web Components — [README](rules/generative/frontend/webcomponents/README.md)
+       - WebAwesome — [README](rules/generative/frontend/webawesome/README.md)
+     - Frontend (Angular):
+       - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
+       - Angular Plugins:
+         - Angular Awesome — [README](rules/generative/frontend/angular-awesome/README.md), [GLOSSARY](rules/generative/frontend/angular-awesome/GLOSSARY.md)
+     - Frontend (React/Next):
+       - React — [README](rules/generative/language/react/README.md)
+       - Next.js — [README](rules/generative/frontend/nextjs/README.md), [GLOSSARY](rules/generative/frontend/nextjs/GLOSSARY.md)
+     - Backend:
+       - GuicedEE — [README](rules/generative/backend/guicedee/README.md)
+       - Hibernate 7 Reactive — [README](rules/generative/backend/hibernate/README.md)
+       - Vert.x — [README](rules/generative/backend/vertx/README.md)
+     - Structural:
+       - MapStruct — [README](rules/generative/backend/mapstruct/README.md), [GLOSSARY](rules/generative/backend/mapstruct/GLOSSARY.md)
+       - Lombok — [README](rules/generative/backend/lombok/README.md), [GLOSSARY](rules/generative/backend/lombok/GLOSSARY.md)
+       - JSpecify — [GLOSSARY](rules/generative/backend/jspecify/GLOSSARY.md)
+       - Fluent API — [README](rules/generative/backend/fluent-api/README.md)
+     - Platform:
+       - Observability — [README](rules/generative/platform/observability/README.md)
+       - Security & Auth — [README](rules/generative/platform/security-auth/README.md)
+       - Secrets & Env — [README](rules/generative/platform/secrets-config/README.md)
+5. Create GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions; Web Components custom-elements/shadow-dom; Angular producing/consuming; Angular Awesome component usage; Next.js data fetching). Use glossary-aligned terms consistently.
+6. Create IMPLEMENTATION.md explaining current modules, code layout, and back-links to guides. Ensure implementation names and labels adhere to GLOSSARY.md.
+7. Environment alignment
+   - Create .env.example per [env-variables.md](rules/generative/platform/secrets-config/env-variables.md).
+8. CI alignments
+   - Add/update minimal GitHub Actions workflows; enumerate required secrets.
+9. README updates
+   - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY. Declare selected Angular version and Angular Plugins (if any).
+
+- WebAwesome prompt language alignment (if selected)
+  - When prompting, align terms:
+    - “button” → say “WaButton” (see [button.rules.md](rules/generative/frontend/webawesome/button.rules.md))
+    - “input” → say “WaInput” (see [input.rules.md](rules/generative/frontend/webawesome/input.rules.md))
+    - “row” (layout) → say “WaCluster”
+    - “column/stack” (layout) → say “WaStack”
+  - If a variant has no dedicated file, link to the subsection under the broader rule.
 
 ---
 
-## 5) AI Response Format
-When you execute this prompt, reply with:
-1) Summary plan (bullet points)
-2) Proposed file/diff list
-3) Any clarifying questions about inputs
-4) Then produce the files and updated README content
+## 4) Output Checklist
+- [ ] Repo initialized; submodule added and referenced in README
+- [ ] PACT.md present and linked
+- [ ] Project RULES.md present, linking to enterprise RULES and topic indexes (including Angular Plugins group where applicable)
+- [ ] Fluent API Strategy declared (CRTP vs Builder) and reflected in RULES.md and GLOSSARY.md; Lombok usage aligned to selection
+- [ ] GLOSSARY.md composed topic-first: links to selected topic glossaries; Glossary Precedence Policy documented; minimal duplication; enforced mappings copied
+- [ ] GUIDES.md and IMPLEMENTATION.md present with back/forward links
+- [ ] .env.example aligned to env-variables.md
+- [ ] CI updated/added
+- [ ] Angular version selected (exactly one) and, if applicable, Angular Plugins listed; all links resolve
+- [ ] No project files placed inside the submodule
+
+---
+
+## 5) Guardrails
+- Apply Forward-Only Change Policy fully.
+- No backwards-compat stubs/anchors.
+- Close loops between artifacts (traceability in both directions).
+- Do not modify compiled outputs or generated bundles.
+
+---
+
+## 6) AI Response Format
+1) Proposed project plan (bullets)
+2) Questions (if any)
+3) Final diffs/files content
+4) Post-scaffold validation notes (link checks and selections summary)
 
 End of prompt.

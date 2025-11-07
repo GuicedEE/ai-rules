@@ -14,9 +14,14 @@ Fill before running.
 - Repository URL / path: <REPO_URL_OR_PATH>
 - Short description: <ONE_LINE_DESCRIPTION>
 - Type: [ ] UI component library  [ ] Data/ORM  [ ] Service/Framework  [ ] Other: <OTHER>
-- Primary language(s): <LANGUAGES>
+
 - Component/topic areas (list): <TOPICS>
 - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
+- Fluent API Strategy (choose exactly one): [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)  [ ] Builder pattern (Lombok @Builder/manual). Only one may be selected; if GuicedEE or JWebMP is selected, CRTP is enforced.
+- Frontend (Standard): [ ] Web Components
+- Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
+- Frontend (Angular Plugins): [ ] Angular Awesome
+- Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
 - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
 - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
 - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD
@@ -30,6 +35,10 @@ Policies (must honor):
 - In JWebMP, avoid inline string HTML; express markup using JWebMP components (Div, Paragraph, Span, Table, H1–H6, etc.).
 - PostgreSQL (JPMS): Do not shade the driver. Use GuicedEE Services artifacts (com.guicedee.services:postgresql) and require org.postgresql in module-info.java.
 - For component-driven topics, provide a parent README index that links to each component .rules.md or subsection anchors.
+- Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is selected. Align Lombok usage accordingly:
+  - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
+  - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
+- Glossary policy (topic-first): Provide and maintain a topic-scoped GLOSSARY.md for your library with minimal canonical terms and “LLM interpretation guidance”. Avoid duplicating definitions in host projects. Host projects compose their root GLOSSARY.md by linking to your topic GLOSSARY.md and copying only enforced Prompt Language Alignment mappings (e.g., WebAwesome names); all other terms should be linked to your topic files/anchors.
 
 ---
 
@@ -45,6 +54,34 @@ Policies (must honor):
     - Use this repository as a Git submodule and link to it from host artifacts.
   - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
 - If Roo, load and pin ROO_WORKSPACE_POLICY.md at the repository root. If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled. Update all references affected by a change in the same forward-only change set.
+
+Language Selection (configure here)
+- Languages
+  - Java (choose exactly one LTS)
+    - [ ] Java 17 LTS
+    - [ ] Java 21 LTS
+    - [ ] Java 25 LTS
+  - Web
+    - [ ] TypeScript
+      - [ ] Angular (TypeScript)
+      - [ ] React (TypeScript)
+    - [ ] JavaScript
+  - Kotlin
+    - [ ] Kotlin
+    - [ ] Ktor (requires Kotlin)
+  - Other: <OTHER_LANGUAGES>
+
+Language selection → generation rules
+- If Java 17/21/25 is selected:
+  - Apply the corresponding LTS rules and toolchains (link to the selected: rules/generative/language/java/java-17.rules.md, rules/generative/language/java/java-21.rules.md, or rules/generative/language/java/java-25.rules.md).
+  - Include build integration via rules/generative/language/java/build-tooling.md.
+- If Web → TypeScript is selected:
+  - Include language rules link: rules/generative/language/typescript/README.md.
+  - If Angular is also selected: include rules/generative/language/angular/README.md and scaffold Angular app structure when requested.
+  - If React is also selected: include rules/generative/language/react/README.md and scaffold React app structure when requested.
+- If Kotlin is selected:
+  - Include language rules link: rules/generative/language/kotlin/README.md.
+  - If Ktor is also selected, scaffold a minimal Ktor service module and wire guides accordingly.
 
 ---
 
@@ -80,9 +117,9 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - WebAwesome: rules/generative/frontend/webawesome/README.md
     - JWebMP: rules/generative/frontend/jwebmp/README.md
   - Frontend (Reactive):
-    - Angular: rules/generative/frontend/angular/README.md
+    - Angular: rules/generative/language/angular/README.md
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
-    - React: rules/generative/frontend/react/README.md
+    - React: rules/generative/language/react/README.md
     - Next.js (App Router): rules/generative/frontend/nextjs/README.md
   - Backend:
     - Hibernate 7 Reactive: rules/generative/backend/hibernate/README.md
@@ -101,9 +138,10 @@ Perform as a single, forward-only change set. The exact target paths depend on y
    - Update CHANGELOG.md and bump version appropriately.
 
 6. README (library root) updates
-   - Add “How to use these rules” section pointing to your topic index and to the RulesRepository submodule usage.
-   - Add a short “Prompt Language Alignment & Glossary” note: state the aligned names (if any) and instruct host projects to copy them into their GLOSSARY.md so prompts and docs share terminology.
-
+- Add “How to use these rules” section pointing to your topic index and to the RulesRepository submodule usage.
+- Add “Prompt Language Alignment & Glossary” note:
+  - Link to your library’s topic GLOSSARY.md and state that it is the authoritative, minimal glossary for this topic with LLM interpretation guidance (topic-first).
+  - List any enforced aligned names (if applicable) and instruct host projects to copy only those into their root GLOSSARY.md; for all other terms, host projects should link back to your topic GLOSSARY.md/rules instead of duplicating definitions.
 ---
 
 ## 3) Special Guidance by Library Type
@@ -125,6 +163,8 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - [ ] Modular .md files created and linked; monoliths removed per Forward-Only policy
 - [ ] Component .rules.md files created/updated with usage, patterns, and see-also links
 - [ ] Cross-links to RulesRepository topic indexes included
+- [ ] Fluent API Strategy declared (CRTP vs Builder) and reflected in library rules/examples; Lombok usage aligned to selection
+- [ ] Topic GLOSSARY.md created/updated (topic-first, minimal duplication) with LLM interpretation guidance; README includes “Prompt Language Alignment & Glossary” note linking to it
 - [ ] Release notes and version bump prepared (if applicable)
 - [ ] Root README updated with navigation and usage instructions
 - [ ] All links resolve

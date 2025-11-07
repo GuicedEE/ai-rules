@@ -11,5 +11,6 @@ Topics
 - GuicedEE — ./guicedee/README.md
 - Lombok — ./lombok/README.md
 - JSpecify — ./jspecify/README.md
+- Fluent API — ./fluent-api/README.md
 
 See also: ../README.md — Master Index.

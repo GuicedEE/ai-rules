@@ -83,8 +83,9 @@ We don’t leave threads dangling — we close each conceptual loop.
   - You may draw from or link to the template/ideas in `creative/pact.md` within this repository.
 - GLOSSARY.md
   - Create at the host project root or under `docs/`.
-  - Populate from topics selected during prompting (see PROMPT_NEW_PROJECT.md / PROMPT_ADOPT_EXISTING_PROJECT.md) and copy any enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton, WaInput).
-  - Use as the single source of truth for terminology across RULES, GUIDES, and IMPLEMENTATION.
+  - Compose topic-first from the selected topics: for each selected topic, link to its topic GLOSSARY.md and adopt its canonical terms; topic glossaries take precedence over the root glossary for their scope.
+  - Copy only enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton, WaInput, WaCluster, WaStack); for all other terms, link to the topic file/anchor instead of duplicating definitions.
+  - Use as the single index of terminology across RULES, GUIDES, and IMPLEMENTATION with minimal duplication. Include brief LLM interpretation guidance where relevant (e.g., CRTP vs Builder routing, JSpecify defaults).
 - RULES.md (project-specific)
   - Lives in the host project (outside the submodule).
   - Extends/overrides enterprise rules; link back to specific sections of this submodule (e.g., `/path/to/submodule/RULES.md#section`).
@@ -105,6 +106,7 @@ We don’t leave threads dangling — we close each conceptual loop.
 - From RULES → GUIDES: show how to apply each standard with step-by-step guidance using glossary-aligned terms.
 - From GUIDES → IMPLEMENTATION: link to the code and design produced, maintaining glossary-aligned terminology.
 - From IMPLEMENTATION → back-links: reference the guide and rule that informed the solution and keep names consistent with GLOSSARY.md.
+- Glossary precedence: topic-scoped GLOSSARY.md documents override root terms for their scope; the host project’s GLOSSARY.md aggregates links to topic glossaries and avoids duplicating definitions.
 
 By following the above, client projects retain local autonomy while staying aligned with enterprise standards provided by this repository.
 
@@ -139,8 +141,8 @@ Example: Hibernate 7 Reactive topic index — generative/backend/hibernate/READM
 - “Number input (WebAwesome)” → generative/frontend/webawesome/input.rules.md#number-input
 - “Custom elements” → generative/frontend/webcomponents/custom-elements.md
 - “Angular 20 consuming web components” → generative/frontend/webcomponents/angular20-consuming-web-components.md
-- “React overview” → generative/frontend/react/react-overview.md
-- “Web Components in React” → generative/frontend/react/react-web-components.md
+- “React overview” → generative/language/react/react-overview.md
+- “Web Components in React” → generative/language/react/react-web-components.md
 - “Next.js overview” → generative/frontend/nextjs/nextjs-overview.md
 - “Next.js SSR vs SSG” → generative/frontend/nextjs/nextjs-ssr-ssg.md
 - “Next.js security” → generative/frontend/nextjs/nextjs-security.md

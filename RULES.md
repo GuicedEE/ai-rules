@@ -195,7 +195,7 @@ Located in the `generative/` directory, these guides provide detailed instructio
 - Reactive programming with RxJS
 - Angular routing and navigation
 
-**Location**: `generative/frontend/angular/`
+**Location**: `generative/language/angular/`
 
 ##### Angular 20
 
@@ -216,7 +216,7 @@ Located in the `generative/` directory, these guides provide detailed instructio
 - Streamlined Dependency Injection
 - Web Components Integration
 
-**Location**: `generative/frontend/angular/angular20-overview.md`
+**Location**: `generative/language/angular/angular20-overview.md`
 
 #### 1.2 Domain-Driven Design (DDD)
 
