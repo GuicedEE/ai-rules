@@ -14,19 +14,92 @@ Fill before running.
 - Short description: <ONE_LINE_DESCRIPTION>
 - License (if missing or to change): <LICENSE>
 - Scope focus (tick all that apply):
-  - Backend Reactive: [ ] Vert.x 5  [ ] Hibernate Reactive 7
-  - Backend Reactive (GuicedEE): Core [ ] Web [ ] Rest [ ] Persistence [ ] RabbitMQ [ ] Cerial [ ] OpenAPI [ ] Sockets [ ] (Dependencies: if Core → also select Vert.x 5; if Persistence → also select Hibernate Reactive 7)
-  - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-  - Fluent API Strategy (choose exactly one): [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)  [ ] Builder pattern (Lombok @Builder/manual). Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
-  - Frontend (Standard): [ ] Web Components
-  - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
-  - Frontend (Angular Plugins): [ ] Angular Awesome (Angular 19+ plugin)
-  - Frameworks (JWebMP): Core [ ] WebAwesome [ ]
-  - Platform: [ ] Observability/Health  [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)  [ ] Secrets & Env
-  - Data: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
-  - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
-- AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
-- Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
+  - Backend Reactive:
+    - [ ] Vert.x 5
+    - [ ] Hibernate Reactive 7
+  - Backend (Spring MVC):
+    - [ ] Core MVC/Web
+    - [ ] Validation (Bean Validation)
+    - [ ] Data JPA (Hibernate ORM)
+    - [ ] Security (non-reactive)
+    - [ ] Actuator (ops endpoints)
+    - [ ] OpenAPI (springdoc)
+    - [ ] Micrometer/Tracing (OTel exporters optional)
+    - [ ] Caching
+    - [ ] Scheduling & Async
+    - [ ] Batch
+    - [ ] Mail
+    - [ ] Messaging
+    - Database migrations:
+      - [ ] Flyway
+      - [ ] Liquibase
+    - [ ] Testing
+    - [ ] Packaging & Deployment
+    - Reference: ./generative/backend/spring/overview-setup.md
+  - Backend Reactive (GuicedEE):
+    - [ ] Core
+    - [ ] Web
+    - [ ] Rest
+    - [ ] Persistence
+    - [ ] RabbitMQ
+    - [ ] Cerial
+    - [ ] OpenAPI
+    - [ ] Sockets
+    - Note: Dependencies — if Core → also select Vert.x 5; if Persistence → also select Hibernate Reactive 7
+  - Structural:
+    - [ ] MapStruct
+    - [ ] Lombok
+    - [ ] Logging
+    - [ ] JSpecify
+  - Fluent API Strategy (choose exactly one):
+    - [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)
+    - [ ] Builder pattern (Lombok @Builder/manual)
+    - Note: Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
+  - Frontend (Standard):
+    - [ ] Web Components
+  - Frontend (Reactive):
+    - Angular (choose exactly one)
+      - [ ] Angular 17
+      - [ ] Angular 19
+      - [ ] Angular 20
+    - Other frameworks
+      - [ ] React
+      - [ ] Next.js
+  - Frontend (Angular Plugins):
+    - [ ] Angular Awesome (Angular 19+ plugin)
+  - Frameworks (JWebMP):
+    - [ ] Core
+    - [ ] WebAwesome
+  - Platform:
+    - [ ] Observability/Health
+    - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)
+    - [ ] Secrets & Env
+    - OpenAPI Provider (choose one; default = Swagger)
+      - [x] Swagger (default)
+      - [ ] MicroProfile OpenAPI
+      - [ ] Springdoc OpenAPI (Spring Boot)
+    - Health endpoints default to MicroProfile: /health, /health/ready, /health/live (Spring Actuator endpoints supported but not default)
+  - Data:
+    - [ ] PostgreSQL
+    - [ ] MySQL
+    - [ ] Other: <DB_OTHER>
+  - Architecture:
+    - [ ] Monolith
+    - [ ] Microservices
+    - [ ] Micro Frontends
+    - [ ] DDD
+    - [ ] TDD (docs-first, test-first)
+    - [ ] BDD (docs-first, executable specs)
+- AI engine used:
+  - [ ] JetBrains Junie
+  - [ ] GitHub Copilot
+  - [ ] Cursor
+  - [ ] ChatGPT
+  - [ ] Claude
+  - [ ] Roo
+- Level of change:
+  - [x] Forward-only (default)
+  - [ ] Conservative (only if explicitly required)
 
 Policies (must honor):
 - Use Markdown for docs. Follow [RULES.md](rules/RULES.md) sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).

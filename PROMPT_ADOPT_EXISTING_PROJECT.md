@@ -15,23 +15,110 @@ Fill before running.
 - License (if missing or to change): <LICENSE>
 
 - Detected/Chosen tech topics (tick):
-  - Backend Reactive: [ ] Vert.x 5  [ ] Hibernate Reactive 7
-  - Backend Reactive (GuicedEE) : Core [ ] Web [ ] Rest [ ] Persistence [ ] RabbitMQ [ ] Cerial [ ] OpenAPI [ ] Sockets [ ]  (Dependencies: if Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7)
-  - Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
-  - Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
-  - Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-  - Fluent API Strategy (choose exactly one): [ ] CRTP [ ] Builder pattern (Lombok @Builder/manual).
-  - Frontend (Standard): [ ] Web Components
-  - Frontend Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
-  - Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
-  - Frontend (Angular Plugins): [ ] Angular Awesome
-  - CI/CD Providers: [ ] GitHub Actions  [ ] GitLab CI  [ ] Jenkins  [ ] TeamCity  [ ] Google Cloud Build  [ ] Azure Pipelines  [ ] AWS CodeBuild/CodePipeline
-  - Infra/Deploy: [ ] Terraform  [ ] GCP Cloud Run
-  - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
-  - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI   [ ] Wireshark
-- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
-- AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
-- Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
+  - Backend Reactive:
+    - [ ] Vert.x 5
+    - [ ] Hibernate Reactive 7
+  - Backend (Spring MVC):
+    - [ ] Core MVC/Web
+    - [ ] Validation (Bean Validation)
+    - [ ] Data JPA (Hibernate ORM)
+    - [ ] Security (non-reactive)
+    - [ ] Actuator (ops endpoints)
+    - [ ] OpenAPI (springdoc)
+    - [ ] Micrometer/Tracing (OTel exporters optional)
+    - [ ] Caching
+    - [ ] Scheduling & Async
+    - [ ] Batch
+    - [ ] Mail
+    - [ ] Messaging
+    - Database migrations:
+      - [ ] Flyway
+      - [ ] Liquibase
+    - [ ] Testing
+    - [ ] Packaging & Deployment
+    - Reference: ./generative/backend/spring/overview-setup.md
+  - Backend Reactive (GuicedEE):
+    - [ ] Core
+    - [ ] Web
+    - [ ] Rest
+    - [ ] Persistence
+    - [ ] RabbitMQ
+    - [ ] Cerial
+    - [ ] OpenAPI
+    - [ ] Sockets
+    - Note: Dependencies — if Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7
+  - Security (Reactive):
+    - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Security/Auth Providers:
+    - [ ] OpenID Connect (generic)
+    - [ ] GCP (IAP/OIDC)
+    - [ ] Firebase Auth
+    - [ ] Microsoft Entra ID (Azure AD)
+  - Structural:
+    - [ ] MapStruct
+    - [ ] Lombok
+    - [ ] Logging
+    - [ ] JSpecify
+  - Fluent API Strategy (choose exactly one):
+    - [ ] CRTP
+    - [ ] Builder pattern (Lombok @Builder/manual)
+  - Frontend (Standard):
+    - [ ] Web Components
+  - Frameworks (JWebMP):
+    - [ ] Core
+    - [ ] WebAwesome
+  - Frontend (Reactive):
+    - Angular (choose exactly one)
+      - [ ] Angular 17
+      - [ ] Angular 19
+      - [ ] Angular 20
+    - Other frameworks
+      - [ ] React
+      - [ ] Next.js
+  - Frontend (Angular Plugins):
+    - [ ] Angular Awesome
+  - CI/CD Providers:
+    - [ ] GitHub Actions
+    - [ ] GitLab CI
+    - [ ] Jenkins
+    - [ ] TeamCity
+    - [ ] Google Cloud Build
+    - [ ] Azure Pipelines
+    - [ ] AWS CodeBuild/CodePipeline
+  - Infra/Deploy:
+    - [ ] Terraform
+    - [ ] GCP Cloud Run
+  - Database:
+    - [ ] PostgreSQL
+    - [ ] MySQL
+    - [ ] Other: <DB_OTHER>
+  - Observability/Diagnostics:
+    - [ ] Health endpoints
+    - [ ] Tracing
+    - [ ] OpenAPI
+    - [ ] Wireshark
+    - OpenAPI Provider (choose one; default = Swagger)
+      - [x] Swagger (default)
+      - [ ] MicroProfile OpenAPI
+      - [ ] Springdoc OpenAPI (Spring Boot)
+    - Health endpoints default to MicroProfile: /health, /health/ready, /health/live (Spring Actuator endpoints supported but not default)
+- Architecture:
+  - [ ] Monolith
+  - [ ] Microservices
+  - [ ] Micro Frontends
+  - [ ] DDD
+  - [ ] TDD (docs-first, test-first)
+  - [ ] BDD (docs-first, executable specs)
+- AI engine used:
+  - [ ] JetBrains Junie
+  - [ ] GitHub Copilot
+  - [ ] Cursor
+  - [ ] ChatGPT
+  - [ ] Claude
+  - [ ] Roo
+- Level of change:
+  - [x] Forward-only (default)
+  - [ ] Conservative (only if explicitly required)
 
 Policies (must honor):
 - Use Markdown for docs. Follow RULES.md sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).

@@ -13,22 +13,70 @@ Fill before running.
 - Current/new version: <VERSION>
 - Repository URL / path: <REPO_URL_OR_PATH>
 - Short description: <ONE_LINE_DESCRIPTION>
-- Type: [ ] UI component library  [ ] Data/ORM  [ ] Service/Framework  [ ] Other: <OTHER>
+- Type:
+  - [ ] UI component library
+  - [ ] Data/ORM
+  - [ ] Service/Framework
+  - [ ] Other: <OTHER>
 
 - Component/topic areas (list): <TOPICS>
-- Structural: [ ] MapStruct  [ ] Lombok  [ ] Logging  [ ] JSpecify
-- Fluent API Strategy (choose exactly one): [ ] CRTP  [ ] Builder pattern (Lombok @Builder/manual). 
-- Frontend (Standard): [ ] Web Components
-- Frontend (Reactive): Angular (choose exactly one) [ ] Angular 17  [ ] Angular 19  [ ] Angular 20  [ ] React  [ ] Next.js
-- Frontend (Angular Plugins): [ ] Angular Awesome
-- Frameworks (JWebMP) : Core [ ] WebAwesome [ ]
-- Security (Reactive): [ ] Vert.x Web Auth/JWT/OAuth2
-- Security/Auth Providers: [ ] OpenID Connect (generic)  [ ] GCP (IAP/OIDC)  [ ] Firebase Auth  [ ] Microsoft Entra ID (Azure AD)
-- CI/CD Providers: [ ] GitHub Actions  [ ] GitLab CI  [ ] Jenkins  [ ] TeamCity  [ ] Google Cloud Build  [ ] Azure Pipelines  [ ] AWS CodeBuild/CodePipeline
-- Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
-- Observability/Diagnostics: [ ] Wireshark
-- AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
-- Release impact: [x] Forward-only (breaking changes allowed)  [ ] Backcompat required (only if explicitly demanded)
+- Structural:
+  - [ ] MapStruct
+  - [ ] Lombok
+  - [ ] Logging
+  - [ ] JSpecify
+- Fluent API Strategy (choose exactly one):
+  - [ ] CRTP
+  - [ ] Builder pattern (Lombok @Builder/manual)
+- Frontend (Standard):
+  - [ ] Web Components
+- Frontend (Reactive):
+  - Angular (choose exactly one)
+    - [ ] Angular 17
+    - [ ] Angular 19
+    - [ ] Angular 20
+  - Other frameworks
+    - [ ] React
+    - [ ] Next.js
+- Frontend (Angular Plugins):
+  - [ ] Angular Awesome
+- Frameworks (JWebMP):
+  - [ ] Core
+  - [ ] WebAwesome
+- Security (Reactive):
+  - [ ] Vert.x Web Auth/JWT/OAuth2
+- Security/Auth Providers:
+  - [ ] OpenID Connect (generic)
+  - [ ] GCP (IAP/OIDC)
+  - [ ] Firebase Auth
+  - [ ] Microsoft Entra ID (Azure AD)
+- CI/CD Providers:
+  - [ ] GitHub Actions
+  - [ ] GitLab CI
+  - [ ] Jenkins
+  - [ ] TeamCity
+  - [ ] Google Cloud Build
+  - [ ] Azure Pipelines
+  - [ ] AWS CodeBuild/CodePipeline
+- Architecture:
+  - [ ] Monolith
+  - [ ] Microservices
+  - [ ] Micro Frontends
+  - [ ] DDD
+  - [ ] TDD (docs-first, test-first)
+  - [ ] BDD (docs-first, executable specs)
+- Observability/Diagnostics:
+  - [ ] Wireshark
+- AI engine used:
+  - [ ] JetBrains Junie
+  - [ ] GitHub Copilot
+  - [ ] Cursor
+  - [ ] ChatGPT
+  - [ ] Claude
+  - [ ] Roo
+- Release impact:
+  - [x] Forward-only (breaking changes allowed)
+  - [ ] Backcompat required (only if explicitly demanded)
 
 Policies (must honor):
 - Follow RULES.md sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).

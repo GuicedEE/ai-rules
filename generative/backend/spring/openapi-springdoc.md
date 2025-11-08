@@ -3,6 +3,7 @@
 Scope
 - Non-reactive Spring MVC OpenAPI 3 documentation using springdoc-openapi.
 - Covers dependencies, UI and endpoints, grouping, JSON/YAML generation, security schemes, pagination/error models, versioning, and CI publishing.
+- Provider posture: The Rules Repository supports three OpenAPI providers — Swagger (default), MicroProfile OpenAPI, and Springdoc (this page). For cross‑stack standards, see ../../platform/observability/openapi.md. Health endpoints default to MicroProfile (/health, /health/ready, /health/live); Spring Actuator endpoints are supported but not the default.
 
 Dependencies
 - org.springdoc:springdoc-openapi-starter-webmvc-ui (UI + endpoints)

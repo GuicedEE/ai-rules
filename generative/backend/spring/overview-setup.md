@@ -381,6 +381,7 @@ Database migrations (choose one)
 OpenAPI (springdoc)
 - Dependency: org.springdoc:springdoc-openapi-starter-webmvc-ui
 - Default UI path /swagger-ui/index.html; restrict access by profile or security rules in production.
+- Provider posture: Enterprise default provider is Swagger, with MicroProfile health endpoints preferred by default. Springdoc is supported for Spring Boot services. See cross‑stack rules: ../../platform/observability/openapi.md
 - Document DTO constraints and error payloads. See: ./openapi-springdoc.md
 
 Testing strategy (high level)
