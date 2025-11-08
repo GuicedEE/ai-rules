@@ -5,6 +5,7 @@ Select a backend topic below to open its topic index. Each topic index links to 
 Topics
 - Hibernate (Reactive 7) — ./hibernate/README.md
 - Vert.x 5 — ./vertx/README.md
+- Spring (Boot MVC) — ./spring/README.md
 - Security (Reactive) — ./security-reactive/README.md
 - MapStruct — ./mapstruct/README.md
 - Logging — ./logging/README.md

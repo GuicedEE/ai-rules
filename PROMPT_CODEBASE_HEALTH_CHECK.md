@@ -161,7 +161,7 @@ D. Quality, Security, and Platform
 - Testing: unit/integration setup; Testcontainers for DB; coverage gates.
 - Security & Auth: OIDC/OAuth flows; token validation; provider-specific configs (GCP/Firebase/Microsoft).
 - Secrets & Env: presence and correctness of .env.example per [env-variables.md](rules/generative/platform/secrets-config/env-variables.md).
-- Observability: health endpoints, tracing, OpenAPI map; logging configuration.
+- Observability: health endpoints, tracing, OpenAPI ; logging configuration.
 
 E. Documentation and Link Integrity
 - Document Modularity: split oversized docs; replace monoliths with modular entries; update all references.

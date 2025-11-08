@@ -28,7 +28,7 @@ Fill before running.
   - CI/CD Providers: [ ] GitHub Actions  [ ] GitLab CI  [ ] Jenkins  [ ] TeamCity  [ ] Google Cloud Build  [ ] Azure Pipelines  [ ] AWS CodeBuild/CodePipeline
   - Infra/Deploy: [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
-  - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
+  - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI   [ ] Wireshark
 - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
 - Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)

@@ -6,7 +6,7 @@ Guides
 - Health endpoints and conventions — ./health.md
 - Tracing — ./tracing.md
 - Wireshark — ./wireshark.md
-- OpenAPI map — ./openapi-map.md
+- OpenAPI  — ./openapi-map.md
 
 See also
 - Platform category index — ../README.md

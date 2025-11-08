@@ -30,7 +30,7 @@ Fill before running.
   - CI/CD Providers: [ ] GitHub Actions  [ ] GitLab CI  [ ] Jenkins  [ ] TeamCity  [ ] Google Cloud Build  [ ] Azure Pipelines  [ ] AWS CodeBuild/CodePipeline
   - Infra/Deploy: [ ] Terraform  [ ] GCP Cloud Run
   - Database: [ ] PostgreSQL  [ ] MySQL  [ ] Other: <DB_OTHER>
-  - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI map  [ ] Wireshark
+  - Observability/Diagnostics: [ ] Health endpoints  [ ] Tracing  [ ] OpenAPI   [ ] Wireshark
 - Architecture: [ ] Monolith  [ ] Microservices  [ ] Micro Frontends  [ ] DDD  [ ] TDD (docs-first, test-first)  [ ] BDD (docs-first, executable specs)
 - AI engine used: [ ] JetBrains Junie  [ ] GitHub Copilot  [ ] Cursor  [ ] ChatGPT  [ ] Claude  [ ] Roo
 - Level of change: [x] Forward-only (default)  [ ] Conservative (only if explicitly required)
@@ -45,7 +45,7 @@ Policies (must honor):
   - Base — [angular.md](rules/generative/language/angular/angular.md)
   - Overrides — [angular-17.rules.md](rules/generative/language/angular/angular-17.rules.md) | [angular-19.rules.md](rules/generative/language/angular/angular-19.rules.md) | [angular-20.rules.md](rules/generative/language/angular/angular-20.rules.md)
 - Angular Plugins policy: Select Angular plugins (e.g., Angular Awesome) from the “Frontend (Angular Plugins)” list. Treat plugins as additive to the chosen Angular version; link to the plugin’s topic index and glossary.
-- Glossary policy (topic-first): Compose the host GLOSSARY.md from topic-scoped glossaries for selected topics. Topic glossaries take precedence over the root glossary. Minimize duplication by linking to each topic’s GLOSSARY.md and rules; copy only enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton/WaInput).
+- Glossary policy (topic-first): Compose the host GLOSSARY.md from topic-scoped glossaries for selected topics. Topic glossaries take precedence over the root glossary. Minimize duplication by linking to each topic’s GLOSSARY.md and rules; copy all Prompt Language Alignment mappings (e.g., WebAwesome: WaButton/WaInput).
 
 ---
 
