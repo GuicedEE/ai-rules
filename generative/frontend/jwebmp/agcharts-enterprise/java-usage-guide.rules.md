@@ -38,7 +38,8 @@ Prerequisites
 
 2) Verify Page Configurator discovery
 - The enterprise plugin contributes a Page Configurator that declares the NPM dependency: `ag-charts-enterprise` via `@TsDependency`.
-- At build, the generated Angular workspace should include `ag-charts-enterprise` in package.json.
+- Angular Boot Import References ensure proper module imports: `AgChartsEnterprise` and `AgChartsModule`.
+- At build time, the generated Angular workspace should include `ag-charts-enterprise` and `ag-charts-angular` in package.json.
 
 3) Create a chart in Java
 ```text
