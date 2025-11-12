@@ -13,6 +13,7 @@ Quick links
 - Plugin overview and integration — ./agcharts-enterprise-integration.rules.md
 - Page Configurator — ./page-configurator.rules.md
 - Licensing & Activation — ./licensing-and-activation.rules.md
+- Java Usage Guide (Java-only) — ./java-usage-guide.rules.md
 - Usage Examples (CRTP) — ./usage-examples.rules.md
 - Troubleshooting — ./troubleshooting.rules.md
 - Glossary — ./GLOSSARY.md
