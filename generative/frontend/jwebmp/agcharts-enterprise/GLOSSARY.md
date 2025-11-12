@@ -8,7 +8,7 @@ Terms
 - AgCharts Enterprise: The paid edition providing additional chart types and features; enabled via this plugin.
 - Page Configurator: An auto-discovered JWebMP component that contributes frontend dependencies and settings, including TypeScript libs via annotations.
 - @TsDependency: Annotation used to declare a TypeScript/NPM dependency (e.g., name = "ag-charts-enterprise").
-- CRTP (Curiously Recurring Template Pattern): Fluent API pattern used across JWebMP/GuicedEE where setters return (J)this.
+- CRTP (Curiously Recurring Template Pattern): Fluent API pattern used across JWebMP/GuicedEE where setters return (J)this. All JWebMP components are extensible (never final) to enable type-safe client customization.
 
 AG Charts terms
 - Series: A collection of data points of the same visual type (e.g., line, bar/column, area, pie, treemap, waterfall).

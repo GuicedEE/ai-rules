@@ -235,9 +235,12 @@ CRTP fluent setters (generic self type)
     }
   }
   ```
-- Subclass:
+- Subclass (JWebMP/GuicedEE - extensible):
   ```java
-  public final class User extends Base<User> { }
+  public class User<J extends User<J>> extends Base<J> { 
+    @SuppressWarnings("unchecked")
+    public J setAge(int age) { return (J) this; }
+  }
   ```
 - Notes:
   - Do not put Lombok `@Setter` on these fields; if present globally, disable per-field (`@Setter(AccessLevel.NONE)`) and keep `@Getter` if desired.

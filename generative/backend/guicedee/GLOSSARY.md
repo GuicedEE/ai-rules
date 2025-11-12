@@ -10,7 +10,7 @@ Canonical terms
   - IGuiceModule, IGuicePreStartup, IGuicePostStartup, IGuicePreDestroy, plus module-specific SPIs (e.g., VertxConfigurator, VertxRouterConfigurator). See SPIs under each function’s rules.
 - Lifecycle phases — Structured hooks for DI + infra:
   - Pre-startup → Startup → Post-startup → Pre-destroy (shutdown). Registered via SPI providers.
-- CRTP policy — GuicedEE implies CRTP for fluent APIs. Extensible bases use CRTP; concrete non-extensible classes are final. See: ../fluent-api/crtp.rules.md
+- CRTP policy — GuicedEE implies CRTP for fluent APIs. ALL CRTP classes are extensible (never final) to enable type-safe client extension. See: ../fluent-api/crtp.rules.md
 - JPMS (module-info) — Modules declare “requires …” and register SPI via “provides … with …”. Avoid declaring “uses IGuiceModule” in your modules (GuicedInjection already does). See: guidance in function rules.
 - Service discovery/registration — Prefer Java ServiceLoader and JPMS “provides … with …”; META-INF/services may be used in addition. See: functions rules and examples.
 - GuicedEE Services (shaded JPMS libs) — JPMS-aligned replacements for popular third-party libraries with stable module names and BOM alignment. See: ./services/services.md
@@ -49,7 +49,7 @@ LLM interpretation guidance (how to apply these terms)
   - Prefer module-info “provides … with …” to register SPI implementations; optionally duplicate via META-INF/services for non-module consumers.
   - Do not declare “uses com.guicedee.guicedinjection.interfaces.IGuiceModule” in your module — GuicedInjection already does; rely on it to discover providers.
 - Class design policy (CRTP)
-  - Extensible bases MUST be CRTP (abstract Base<J extends Base<J>>) so fluent chains preserve subtype. Non-extensible types MUST be final.
+  - Extensible bases MUST be CRTP (abstract Base<J extends Base<J>>) so fluent chains preserve subtype. All CRTP classes remain extensible (never final) for client extension.
 - Nullness
   - Adopt @org.jspecify.annotations.NullMarked; annotate @org.jspecify.annotations.Nullable only where null is part of the contract. Avoid @Nullable Optional<T> and returning null collections/optionals.
 
