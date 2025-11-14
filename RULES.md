@@ -77,6 +77,7 @@ Authoritative categories for topics under generative/:
   - logging/
   - guicedee/
   - lombok/
+  - quarkus/
 - generative/data/
   - database/
   - entityassist/ (future)

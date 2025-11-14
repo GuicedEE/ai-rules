@@ -2,7 +2,7 @@
 
 Use this prompt when you maintain a library (e.g., JWebMP, EntityAssist, WebAwesome) and need to update or (re)create its rules, indexes, and guides to align with the Rules Repository. This drives a forward-only, modular documentation model and ensures host projects can navigate component/topic rules easily.
 
-Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
+Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
 ---
 
@@ -19,18 +19,123 @@ Fill before running.
   - [ ] Service/Framework
   - [ ] Other: <OTHER>
 
+- AI engine used:
+  - [ ] Junie
+  - [ ] GitHub Copilot
+  - [ ] Cursor
+  - [ ] ChatGPT
+  - [ ] Claude
+  - [ ] Roo
+  - [ ] Codex
+  - [ ] AI Assistant
+  - Note: Select every engine participating in the release and ensure rules/templates are configured for each.
+    - AI Assistant consumes rules from `.aiassistant/rules/`; replicate enforced policies there.
+
+- Architecture:
+  - [x] Specification-Driven Design (SDD) (mandatory)
+  - [x] Documentation-as-Code (mandatory)
+  - [ ] Monolith
+  - [ ] Microservices
+  - [ ] Micro Frontends
+  - [ ] DDD
+  - [ ] TDD (docs-first, test-first)
+  - [ ] BDD (docs-first, executable specs)
+- Language selection (configure here)
+  - Languages
+    - Java (choose exactly one LTS)
+      - [ ] Java 17 LTS
+      - [ ] Java 21 LTS
+      - [ ] Java 25 LTS
+    - Web
+      - [ ] TypeScript
+        - [ ] Angular (TypeScript)
+        - [ ] React (TypeScript)
+        - [ ] Next.js (TypeScript)
+      - [ ] JavaScript
+    - Kotlin
+      - [ ] Kotlin
+      - [ ] Ktor (requires Kotlin)
+    - Other: <OTHER_LANGUAGES>
+  - Build engines
+    - Java/Kotlin builds
+      - [ ] Maven
+      - [ ] Gradle (Groovy DSL)
+      - [ ] Gradle (Kotlin DSL)
+      - [ ] Apache Ivy
+    - Web builds
+      - [ ] npm / package.json scripts
+      - [ ] pnpm
+      - [ ] yarn
+      - [ ] Babel (transpile configuration lives in package.json/babel.config.*)
+    - Other build tooling: <OTHER_BUILDS>
+  - Dependency declarations
+    - JVM: document artifact coordinates only (groupId:artifactId:version); detailed build configuration belongs in build-tooling topics.
+    - JavaScript/Web: document package names + versions (npm/pnpm/yarn/Babel) and leave script wiring to language/build guides.
+
 - Component/topic areas (list): <TOPICS>
+- Backend Reactive:
+  - Core stacks:
+    - [ ] Vert.x 5 — ./generative/backend/vertx/README.md
+    - [ ] Hibernate Reactive 7 — ./generative/backend/hibernate/README.md
+  - Quarkus:
+    - [ ] Core project setup
+    - [ ] RESTEasy Reactive APIs
+    - [ ] Persistence (Hibernate/Panache)
+    - [ ] Reactive messaging
+    - [ ] Security/OIDC
+    - [ ] Dev Services & local tooling
+    - [ ] Native build & packaging
+    - [ ] Testing strategy
+    - Note: Quarkus currently embeds Vert.x 4; pick Vert.x 5 only for direct Vert.x API usage.
+  - GuicedEE:
+    - [ ] Core
+    - [ ] Web
+    - [ ] Rest
+    - [ ] Persistence
+    - [ ] RabbitMQ
+    - [ ] Cerial
+    - [ ] OpenAPI
+    - [ ] Sockets
+    - Note: If Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7.
+- Backend:
+  - Spring MVC
+    - [ ] Core MVC/Web
+    - [ ] Validation (Bean Validation)
+    - [ ] Data JPA (Hibernate ORM)
+    - [ ] Security (non-reactive)
+    - [ ] Actuator (ops endpoints)
+    - [ ] OpenAPI (springdoc)
+    - [ ] Micrometer/Tracing (OTel exporters optional)
+    - [ ] Caching
+    - [ ] Scheduling & Async
+    - [ ] Batch
+    - [ ] Mail
+    - [ ] Messaging
+    - Database migrations:
+      - [ ] Flyway
+      - [ ] Liquibase
+    - [ ] Testing
+    - [ ] Packaging & Deployment
+  - JDBC Databases:
+    - [ ] PostgreSQL
+    - [ ] MySQL
+    - [ ] Oracle
+    - [ ] MSSQL
+    - [ ] MariaDB
+    - [ ] IBM DB2
+    - [ ] SQLite
+    - [ ] Other: <DB_OTHER>
 - Structural:
   - [ ] MapStruct
   - [ ] Lombok
   - [ ] Logging
   - [ ] JSpecify
 - Testing & Coverage:
-  - [ ] Jacoco (coverage gates — ./generative/platform/testing/jacoco.rules.md)
-  - [ ] SonarQube (quality gates — ./generative/platform/testing/sonarqube.rules.md)
-  - [ ] Java Micro Harness (integration harness — ./generative/platform/testing/java-micro-harness.rules.md)
-  - [ ] Cypress (UI E2E — ./generative/platform/testing/cypress.rules.md)
-  - [ ] BrowserStack (cross-browser cloud — ./generative/platform/testing/browserstack.rules.md)
+  - [ ] Jacoco
+  - [ ] SonarQube
+  - [ ] Java Micro Harness
+  - [ ] Cypress
+  - [ ] BrowserStack
 - Fluent API Strategy (choose exactly one):
   - [ ] CRTP
   - [ ] Builder pattern (Lombok @Builder/manual)
@@ -49,8 +154,6 @@ Fill before running.
 - Frameworks (JWebMP):
   - [ ] Core
   - [ ] WebAwesome
-- Security (Reactive):
-  - [ ] Vert.x Web Auth/JWT/OAuth2
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)
@@ -64,23 +167,8 @@ Fill before running.
   - [ ] Google Cloud Build
   - [ ] Azure Pipelines
   - [ ] AWS CodeBuild/CodePipeline
-- Architecture:
-  - [ ] Monolith
-  - [ ] Microservices
-  - [ ] Micro Frontends
-  - [ ] DDD
-  - [ ] TDD (docs-first, test-first)
-  - [ ] BDD (docs-first, executable specs)
 - Observability/Diagnostics:
   - [ ] Wireshark
-- AI engine used:
-  - [ ] JetBrains Junie
-  - [ ] GitHub Copilot
-  - [ ] Cursor
-  - [ ] ChatGPT
-  - [ ] Claude
-  - [ ] Roo
-  - [ ] Codex
 - Release impact:
   - [x] Forward-only (breaking changes allowed)
   - [ ] Backcompat required (only if explicitly demanded)
@@ -173,10 +261,12 @@ Language selection → generation rules
 - If Java 17/21/25 is selected:
   - Apply the corresponding LTS rules and toolchains (link to the selected: rules/generative/language/java/java-17.rules.md, rules/generative/language/java/java-21.rules.md, or rules/generative/language/java/java-25.rules.md).
   - Include build integration via rules/generative/language/java/build-tooling.md.
+  - When Maven, Gradle (Groovy/Kotlin DSL), or Apache Ivy is selected, document artifact coordinates only (groupId:artifactId:version) and rely on build-tooling.md for plugin/configuration wiring.
 - If Web → TypeScript is selected:
   - Include language rules link: rules/generative/language/typescript/README.md.
   - If Angular is also selected: include rules/generative/language/angular/README.md and scaffold Angular app structure when requested.
   - If React is also selected: include rules/generative/language/react/README.md and scaffold React app structure when requested.
+  - When npm, pnpm, yarn, or Babel is selected, list package@version dependencies only; defer bundler/transpiler configuration to the TypeScript/JS build guides.
 - If Kotlin is selected:
   - Include language rules link: rules/generative/language/kotlin/README.md.
   - If Ktor is also selected, scaffold a minimal Ktor service module and wire guides accordingly.
@@ -221,7 +311,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - Next.js (App Router): rules/generative/frontend/nextjs/README.md
   - Backend:
     - Hibernate (ORM/Reactive): rules/generative/backend/hibernate/README.md
-    - Security (Reactive): rules/generative/backend/security-reactive/README.md
+    - Quarkus: rules/generative/backend/quarkus/README.md
   - Platform:
     - CI/CD: rules/generative/platform/ci-cd/README.md
       - If CI/CD Providers are selected, also link provider docs:
