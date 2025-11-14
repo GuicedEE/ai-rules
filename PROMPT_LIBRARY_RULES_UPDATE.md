@@ -25,6 +25,12 @@ Fill before running.
   - [ ] Lombok
   - [ ] Logging
   - [ ] JSpecify
+- Testing & Coverage:
+  - [ ] Jacoco (coverage gates — ./generative/platform/testing/jacoco.rules.md)
+  - [ ] SonarQube (quality gates — ./generative/platform/testing/sonarqube.rules.md)
+  - [ ] Java Micro Harness (integration harness — ./generative/platform/testing/java-micro-harness.rules.md)
+  - [ ] Cypress (UI E2E — ./generative/platform/testing/cypress.rules.md)
+  - [ ] BrowserStack (cross-browser cloud — ./generative/platform/testing/browserstack.rules.md)
 - Fluent API Strategy (choose exactly one):
   - [ ] CRTP
   - [ ] Builder pattern (Lombok @Builder/manual)

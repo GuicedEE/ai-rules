@@ -79,6 +79,12 @@ Fill before running.
       - [ ] MicroProfile OpenAPI
       - [ ] Springdoc OpenAPI (Spring Boot)
     - Health endpoints default to MicroProfile: /health, /health/ready, /health/live (Spring Actuator endpoints supported but not default)
+  - Testing & Coverage:
+    - [ ] Jacoco (coverage gates — ./generative/platform/testing/jacoco.rules.md)
+    - [ ] SonarQube (quality gates — ./generative/platform/testing/sonarqube.rules.md)
+    - [ ] Java Micro Harness (integration harness — ./generative/platform/testing/java-micro-harness.rules.md)
+    - [ ] Cypress (UI E2E — ./generative/platform/testing/cypress.rules.md)
+    - [ ] BrowserStack (cross-browser cloud — ./generative/platform/testing/browserstack.rules.md)
   - Data:
     - [ ] PostgreSQL
     - [ ] MySQL
