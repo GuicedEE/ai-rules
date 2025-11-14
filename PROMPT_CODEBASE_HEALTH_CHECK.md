@@ -2,7 +2,7 @@
 
 Use this prompt to perform a full repository health check, assess compliance against the enterprise Rules Repository, detect gaps and deviations, and generate a prioritized remediation plan with proposed diffs. Supports use in owner mode (this repository) and host projects that consume it as a submodule.
 
-Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
+Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
 ---
 
@@ -97,6 +97,7 @@ Fill before running.
   - [ ] ChatGPT
   - [ ] Claude
   - [ ] Roo
+  - [ ] Codex
 - Level of change:
   - [x] Forward-only (default)
   - [ ] Conservative (only if explicitly required)
@@ -116,7 +117,7 @@ Policies (must honor):
 
 ## Documentation-First, Stage-Gated Workflow (Mandatory)
 
-- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo).
+- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 
 Stage 1 — Health Check Plan (Docs only)
@@ -155,6 +156,9 @@ Universal STOP rule
   - Start with system note enforcing the above sections. Close loops across artifacts.
   - Owner mode (this repository as active workspace): do not refer to it as a submodule; load and pin ./skills.md if available.
   - Host project mode: use this repository as a submodule and link to it from host artifacts.
+- Codex CLI (Codex agent):
+  - Load ./RULES.md anchors plus README context; confirm forward-only and Document Modularity constraints are pinned in the Codex CLI workspace.
+  - Follow Codex CLI harness instructions: run shell commands with `bash -lc` and explicit `workdir`, prefer `rg` for scans, honor sandbox/approval settings, and use the plan tool for multi-step work.
 - Roo: pin [ROO_WORKSPACE_POLICY.md](rules/ROO_WORKSPACE_POLICY.md) if present; otherwise create it per [README.md](rules/README.md#roo-workspace-policy-pinned).
 
 Language Selection (configure here)

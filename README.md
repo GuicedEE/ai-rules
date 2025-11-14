@@ -35,7 +35,7 @@ Roo is a supported AI engine for this repository. To ensure Roo follows the same
 
 ## Documentation-First, Stage-Gated Workflow (Mandatory)
 
-This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo). AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex). AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 
 - Stage 1 — Architecture & Foundations (Docs only)
   - Deliver: PACT draft/updates; architecture overview; C4 diagrams; sequence diagrams for key flows; ERDs for core domains; dependency/integration map; glossary composition plan (topic-first, precedence, anchors).
