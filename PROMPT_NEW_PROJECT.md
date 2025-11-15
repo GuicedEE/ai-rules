@@ -72,6 +72,9 @@ Fill before running.
     - JavaScript/Web: record package name + version (npm/pnpm/yarn/Babel). Defer script wiring to language/build-topic rules.
 
 - Selected tech topics (tick):
+  - Fluent API Strategy (choose exactly one):
+    - [ ] CRTP
+    - [ ] Builder pattern (Lombok @Builder/manual)
   - Backend Reactive:
     - Core stacks:
       - [ ] Vert.x 5
@@ -153,9 +156,6 @@ Fill before running.
     - [ ] Java Micro Harness
     - [ ] Cypress
     - [ ] BrowserStack
-  - Fluent API Strategy (choose exactly one):
-    - [ ] CRTP
-    - [ ] Builder pattern (Lombok @Builder/manual)
   - Frontend (Standard):
     - [ ] Web Components
   - Frontend (Reactive):
@@ -217,6 +217,7 @@ Policies (must honor):
 - This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 - Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
+- Junie exception: If Junie is the active AI engine, do not pause for stage approvals; treat each stage as auto-approved while documenting that Junie bypasses STOP gates.
 
 Stage 1 — Architecture & Foundations (Docs only)
 - Deliver:
