@@ -5,7 +5,8 @@ Use this topic for health endpoints, diagnostics, metrics, and tracing.
 Guides
 - Health endpoints and conventions — ./health.md
 - Tracing — ./tracing.md
-- OpenAPI map — ./openapi-map.md
+- Wireshark — ./wireshark.md
+- OpenAPI  — ./openapi-map.md
 
 See also
 - Platform category index — ../README.md

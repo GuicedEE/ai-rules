@@ -279,6 +279,40 @@ Here are the recommended Lombok annotations for our projects:
 6. **Specify Version**: Always specify the Lombok version explicitly to avoid compatibility issues.
 7. **Keep Lombok Updated**: Regularly update to the latest version for bug fixes and new features.
 
+### CRTP fluent setters (generic self type) — manual implementation required
+
+- For CRTP patterns where a base type encodes the "self" type parameter (e.g., `Base<J extends Base<J>>`), fluent setters must return the CRTP type `J`.
+- Lombok `@Setter` (even with `@Accessors(chain=true)` or `lombok.accessors.chain=true`) returns the declaring class type, not the CRTP parameter. Do not rely on Lombok to generate these setters.
+- Implement such setters manually and cast the receiver to the CRTP type; annotate the method to suppress the unchecked cast warning.
+
+Manual setter pattern (base)
+```java
+@org.jspecify.annotations.NullMarked
+public abstract class Base<J extends Base<J>> {
+  private String name;
+
+  @SuppressWarnings("unchecked")
+  public J setName(String name) {
+    this.name = name;
+    return (J) this;
+  }
+}
+```
+
+Subclass usage (JWebMP/GuicedEE pattern)
+```java
+public class User<J extends User<J>> extends Base<J> { 
+  @SuppressWarnings("unchecked")
+  public J setAge(int age) { return (J) this; }
+}
+```
+
+Rules
+- Do not generate Lombok setters for these properties. Omit `@Setter` or add `@Setter(AccessLevel.NONE)` on the field and keep `@Getter` if desired.
+- Global `lombok.accessors.chain=true` does not change return types for CRTP; the manual override remains required.
+- Prefer keeping parameter non-null under `@NullMarked`; annotate `@org.jspecify.annotations.Nullable` where null is part of the contract.
+- MapStruct: call the manual setter (it will chain as `J`); configure `NullValueCheckStrategy`/`NullValueMappingStrategy` as needed.
+
 ## Troubleshooting
 
 ### Common Issues

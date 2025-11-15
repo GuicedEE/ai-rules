@@ -6,6 +6,12 @@ JWebMP (Java Web Markup Processor) is a powerful Java-based web framework that e
 
 This guide is intended for AI systems that need to generate code for JWebMP applications, understand the framework's architecture, and create components that follow JWebMP's design patterns and best practices.
 
+Important policy for generators and maintainers (JWebMP projects):
+- Do not touch or propose edits to generated artifacts (compiled TS, HTML, site bundles). Treat all generated files as read-only build outputs.
+- We do not generate or reference separate TS/HTML components for missing views. Render dialogs, tables, and similar UI directly from Java (JWebMP) in the appropriate page/component or cell renderer. Example: a “missing graders stations” view must be produced directly from Java renderers, not via a standalone TS/HTML component.
+- If any Angular/TypeScript output exists, it is generated from Java sources. Never hand-edit generated TS/HTML; make changes in Java so the generator produces the desired result.
+- Avoid inline string HTML in Java. Always express markup using JWebMP components (Div, Paragraph, Span, Table, H1–H6, etc.).
+
 ## JWebMP Architecture Overview
 
 JWebMP follows a component-based architecture that allows developers to create web applications using Java objects that represent HTML elements and their behaviors. The framework consists of three main modules:
@@ -470,3 +476,53 @@ This guide provides a comprehensive overview of generating JWebMP components and
 
 - [JWebMP Official Documentation](https://jwebmp.com/documentation)
 - [Vert.x Documentation](https://vertx.io/docs/)
+
+## Inline HTML Policy: Use Components Only
+
+Avoid inline string HTML anywhere in Java when building JWebMP UIs. Represent all markup with JWebMP components. This ensures correctness, safety, accessibility, theming, and generator compatibility.
+
+Don’t (inline HTML strings):
+```java
+Div container = new Div();
+container.setText("<h1>Dashboard</h1><p>Welcome, user.</p>"); // ❌ inline HTML
+container.add(new Div().setText("<span class='badge'>3</span>")); // ❌ injecting tags as text
+```
+
+Do (compose with components):
+```java
+Div container = new Div();
+container.add(new H1("Dashboard"));
+container.add(new Paragraph("Welcome, user."));
+Span badge = new Span("3");
+badge.addClass("badge");
+container.add(badge);
+```
+
+Tables (example):
+```java
+Table table = new Table();
+THead thead = new THead();
+TR header = new TR();
+header.add(new TH("Name"));
+header.add(new TH("Status"));
+thead.add(header);
+
+TBody tbody = new TBody();
+TR row = new TR();
+row.add(new TD("Station A"));
+TD status = new TD();
+status.add(new Span("Missing").addClass("status status-missing"));
+row.add(status);
+
+tbody.add(row);
+
+table.add(thead);
+table.add(tbody);
+```
+
+Rare exception:
+- It is acceptable to set plain text without tags (the framework will escape it). Do not include HTML tags in setText values.
+- When interoperating with third-party sanitized HTML, wrap it in a dedicated component/renderer that handles sanitization and explicitly documents the source and guarantees. Prefer component composition instead.
+
+Notes:
+- This policy aligns with “do not touch generated artifacts” and “no separate TS/HTML” rules. All UI must be produced from Java components/cell renderers so generators can produce consistent outputs.

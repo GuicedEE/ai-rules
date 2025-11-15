@@ -6,6 +6,12 @@ This guide provides comprehensive information for AI systems to generate Angular
 
 JWebMP's Angular integration allows developers to create Angular applications using pure Java code, which is then compiled to TypeScript. This guide is intended for AI systems that need to understand the framework's architecture and generate code that follows JWebMP's design patterns and best practices for Angular 20 applications.
 
+Important policy for generators and maintainers (JWebMP + Angular):
+- Generated TypeScript/HTML is a build output and must not be hand-edited. Make changes in the Java source that feeds the generator.
+- Some projects disable separate Angular component generation entirely; for those, render dialogs, tables, and other UI directly from Java (JWebMP) within page/components or cell renderers. Do not introduce separate TS/HTML components for missing views (e.g., “missing graders stations”).
+- Never propose edits to checked-in generated site/bundle files.
+- Avoid inline string HTML in Java. Always express markup using JWebMP components (Div, Paragraph, Span, Table, H1–H6, etc.).
+
 ## JWebMP Angular Architecture Overview
 
 JWebMP's Angular integration consists of two main modules:

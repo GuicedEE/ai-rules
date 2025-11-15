@@ -4,6 +4,7 @@ This index lists the top-level categories for generative topics and links to the
 
 Categories
 - Frontend — ./frontend/README.md
+- Language — ./language/README.md
 - Backend — ./backend/README.md
 - Data — ./data/README.md
 - Architecture — ./architecture/README.md

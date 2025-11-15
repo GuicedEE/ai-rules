@@ -7,10 +7,18 @@ This document serves as the primary reference topic rule for the Rules Repositor
 ## Enterprise Scope and Usage
 
 - Enterprise-wide repository: This repository is the canonical, organization-wide source of rules and guides.
-- Consumption model: It is intended to be consumed as a Git submodule within host/client projects.
+- Consumption model: Typically consumed as a Git submodule within host/client projects, but when maintaining this repository directly (owner mode), it is the active workspace and not used as a submodule.
 - Do not colocate project rules here: Project-specific rules or documentation must not be placed or committed inside the submodule directory where this file lives.
 - Where to put project rules: Place project artifacts (PACT.md, project RULES.md, GUIDES.md, IMPLEMENTATION.md, etc.) in the host project repository, outside the submodule (for example, under docs/ or at the repository root).
 - Extending/overriding: If a project needs to extend or override guidance, create or update the host project's RULES.md and link to the relevant sections in this repository; do not modify files inside the submodule.
+
+Owner vs Host modes:
+- Owner mode (maintainers working in this repository directly):
+  - Do not refer to this repository as a submodule.
+  - When Claude is selected, load and pin ./skills.md; use project-scoped Skills under .claude/skills/; apply forward-only edits and close loops (Pact ↔ Rules ↔ Guides ↔ Implementation).
+- Host project mode (downstream projects consuming these rules):
+  - Use this repository as a Git submodule and link to it from host artifacts.
+
 - Getting started as a submodule (example):
   - git submodule add <Rules Repository repository URL> docs/rules-repository
   - git submodule update --init --recursive
@@ -59,6 +67,7 @@ Authoritative categories for topics under generative/:
 - generative/frontend/
   - webcomponents/
   - angular/
+  - angular-awesome/
   - webawesome/
   - jwebmp/
 - generative/backend/
@@ -68,17 +77,21 @@ Authoritative categories for topics under generative/:
   - logging/
   - guicedee/
   - lombok/
+  - quarkus/
 - generative/data/
   - database/
   - entityassist/ (future)
+  - activity-master/
 - generative/architecture/
   - ddd/
   - microfronts/
-  - activity-master/
+  - tdd/
+  - bdd/
 - generative/platform/ (optional now)
   - ci-cd/
   - observability/
   - secrets-config/
+  - testing/
 
 Indexing rule: Each category and each topic MUST provide a README.md that serves as an index and navigator.
 
@@ -167,7 +180,7 @@ Located in the `generative/` directory, these guides provide detailed instructio
 - Reactive programming with Mutiny (Uni<T> and Multi<T>)
 - Domain-specific services and entities
 
-**Location**: `generative/architecture/activity-master/activity-master-rules.md`, `generative/architecture/activity-master/interface_hierarchies.md`, `generative/architecture/activity-master/warehouse_table_hierarchy.md`, `generative/architecture/activity-master/warehouse_core_table_hierarchy.md`, `generative/architecture/activity-master/querybuilder_scd_hierarchy.md`
+**Location**: `generative/data/activity-master/activity-master-rules.md`, `generative/data/activity-master/interface_hierarchies.md`, `generative/data/activity-master/warehouse_table_hierarchy.md`, `generative/data/activity-master/warehouse_core_table_hierarchy.md`, `generative/data/activity-master/querybuilder_scd_hierarchy.md`
 
 #### 1.2 Angular
 
@@ -186,7 +199,7 @@ Located in the `generative/` directory, these guides provide detailed instructio
 - Reactive programming with RxJS
 - Angular routing and navigation
 
-**Location**: `generative/angular/`
+**Location**: `generative/language/angular/`
 
 ##### Angular 20
 
@@ -207,7 +220,7 @@ Located in the `generative/` directory, these guides provide detailed instructio
 - Streamlined Dependency Injection
 - Web Components Integration
 
-**Location**: `generative/angular/angular20.md`
+**Location**: `generative/language/angular/angular20-overview.md`
 
 #### 1.2 Domain-Driven Design (DDD)
 
@@ -326,6 +339,12 @@ Located in the `generative/` directory, these guides provide detailed instructio
 - The shaded artifacts include all transitive dependencies
 - Version alignment is managed through the guicedee-bom
 - Module names typically match the main package of the original library
+
+**PostgreSQL JPMS Policy**:
+- Do not shade the PostgreSQL driver in host projects. Use the GuicedEE Services artifact instead.
+- Maven: <dependency>com.guicedee.services:postgresql</dependency>
+- module-info.java: requires org.postgresql;
+- See also: generative/data/database/postgres-database.md and generative/backend/guicedee/services/services.md (Database → postgresql)
 
 **Location**: `generative/backend/guicedee/services/services.md`, `generative/backend/guicedee/services/junie.rules.xml`
 
@@ -691,6 +710,12 @@ When implementing GuicedEE applications, these function documentation files shou
 - Vert.x integration
 
 **Location**: `generative/frontend/jwebmp/jwebmp_ai_guide.md`
+
+**Generation Policy (JWebMP projects)**:
+- Do not modify or propose edits to generated artifacts (compiled TS, HTML, site bundles). Treat them as read‑only build outputs.
+- Do not introduce separate TS/HTML components for missing views. Render dialogs, tables, and other UI directly from Java (JWebMP) within relevant page/components/cell renderers.
+- If Angular/TypeScript generation is enabled, all changes must originate from Java sources that feed the generator; never hand‑edit the generated TS.
+- Avoid inline string HTML in Java. Always express markup using JWebMP components (e.g., Div, Paragraph, Span, Table, H1–H6, etc.).
 
 ##### JWebMP Angular Integration
 
