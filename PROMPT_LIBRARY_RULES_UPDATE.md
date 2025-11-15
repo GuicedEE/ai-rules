@@ -195,6 +195,7 @@ Policies (must honor):
 
 - This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+- Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
 
 Stage 1 — Architecture & Foundations (Docs only)
 - Deliver:
@@ -204,7 +205,7 @@ Stage 1 — Architecture & Foundations (Docs only)
   - Dependency/integration map (internal/external, peer libs, generators)
   - Glossary composition plan (topic-first, precedence and anchors)
 - Output format: Markdown docs placed in the library repo’s docs (outside rules/), with links to enterprise rules indexes.
-- STOP: Request explicit user approval to proceed to Stage 2.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 2. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 2 — Rules/Guides Design (Docs only)
 - Deliver:
@@ -212,21 +213,21 @@ Stage 2 — Rules/Guides Design (Docs only)
   - RULES mapping to selected stacks; GUIDES with “how to apply” steps
   - API surface sketches/contracts (where relevant), examples plan, testing strategy
   - Migration/Release notes outline and breaking change summary (if forward-only)
-- STOP: Request explicit user approval to proceed to Stage 3.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 3. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 3 — Implementation Plan (No code yet)
 - Deliver:
   - File and module tree plan for rules/docs; lint/link-check plan
   - CI/docs publishing plan (if applicable); versioning/release steps
   - Rollout plan (phased), risk items, validation approach
-- STOP: Request explicit user approval to proceed to Stage 4.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 4. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 4 — Implementation (Docs and/or Code allowed)
-- Scope: Only after explicit approval.
+- Scope: Only after explicit approval unless the user has already waived stage approvals or granted blanket approval for the run.
 - Approach: Generate minimal, reviewable changes per module. After each step, present diffs and validation, then ask to continue.
 
 Universal STOP rule
-- If approval is not granted, revise docs; do not produce code.
+- If the user requires staged approvals and approval is not granted, revise docs; if the user waived staged approvals, continue but be ready to revise when feedback arrives.
 - Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
 
 ## 1) Self‑Configure the AI Engine
@@ -368,10 +369,10 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 ---
 
 ## 4) Output Checklist
-- [ ] Stage 1 (Architecture & Foundations) docs produced and user-approved (STOP gate passed)
-- [ ] Stage 2 (Rules/Guides Design) docs produced and user-approved (STOP gate passed)
-- [ ] Stage 3 (Implementation Plan) produced and user-approved (STOP gate passed)
-- [ ] Stage 4 (Implementation) executed only after explicit approval; diffs presented with validation and links
+- [ ] Stage 1 (Architecture & Foundations) docs produced; capture user approval if they require the STOP gate
+- [ ] Stage 2 (Rules/Guides Design) docs produced; capture user approval if they require the STOP gate
+- [ ] Stage 3 (Implementation Plan) produced; capture user approval if they require the STOP gate
+- [ ] Stage 4 (Implementation) executed only after explicit approval unless the user granted blanket approval; diffs presented with validation and links
 - [ ] Parent topic README index created/updated with full component/topic coverage
 - [ ] Modular .md files created and linked; monoliths removed per Forward-Only policy
 - [ ] Component .rules.md files created/updated with usage, patterns, and see-also links
@@ -394,9 +395,9 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 ## 6) AI Response Format (Stage-Gated)
 1) Stage N deliverables (docs or plans only until Stage 4), with file paths and working links
 2) Open questions, decisions required, risks
-3) STOP — Request explicit approval to proceed to Stage N+1
-   - Required approval phrasing: “APPROVED Stage N → Stage N+1”
-4) If approved, provide next-stage plan; if not, revise and re-submit Stage N
+3) STOP — Offer an optional review checkpoint before Stage N+1; if the user wants staged approvals, request explicit approval
+   - Capture explicit phrasing (e.g., “APPROVED Stage N → Stage N+1”) when the user requires it; otherwise note that the user opted out or granted blanket approval
+4) If approval is required and granted, provide the next-stage plan; if not granted, revise and re-submit Stage N; if the user opted out, continue with the next-stage plan
 
 End of prompt.
 ## Diagrams and Docs-as-Code Policy (Mandatory)
@@ -448,7 +449,7 @@ Stage-gates alignment (reinforced)
   - Sequence diagrams for at least two core flows
   - ERD or equivalent (if applicable)
   - docs/architecture/README.md and docs/PROMPT_REFERENCE.md
-- Stage 2 may refine/extend diagrams; Stage 3/4 must not proceed without Stage 1/2 approval.
+- Stage 2 may refine/extend diagrams; Stage 3/4 must not proceed without Stage 1/2 approval when the user requests staged reviews.
 
 Checklist addendum (Docs & Diagrams)
 - [ ] docs/architecture/README.md exists and links to all diagrams

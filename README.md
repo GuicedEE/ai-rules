@@ -36,23 +36,24 @@ Roo is a supported AI engine for this repository. To ensure Roo follows the same
 ## Documentation-First, Stage-Gated Workflow (Mandatory)
 
 This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex). AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+- Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
 
 - Stage 1 — Architecture & Foundations (Docs only)
   - Deliver: PACT draft/updates; architecture overview; C4 diagrams; sequence diagrams for key flows; ERDs for core domains; dependency/integration map; glossary composition plan (topic-first, precedence, anchors).
   - Output: Markdown docs in host repo (outside rules/), with links to enterprise rules indexes.
-  - STOP: Request explicit user approval to proceed to Stage 2.
+  - STOP (user review optional): Offer a review/approval checkpoint before Stage 2. Continue without waiting only if the user has opted out or granted blanket approval.
 - Stage 2 — Guides & Design Validation (Docs only)
   - Deliver: RULES mapping to selected stacks; GUIDES with “how to apply”; API surface sketches/contracts; UI flows/wireframes and component mapping (if applicable); migration notes; test strategy; acceptance criteria.
-  - STOP: Request explicit user approval to proceed to Stage 3.
+  - STOP (user review optional): Offer a review/approval checkpoint before Stage 3. Continue without waiting only if the user has opted out or granted blanket approval.
 - Stage 3 — Implementation Plan (No code yet)
   - Deliver: Scaffolding plan and module/file tree; build/annotation-processor wiring; CI workflow plan; env/config plan; rollout plan; risks; validation approach.
-  - STOP: Request explicit user approval to proceed to Stage 4.
+  - STOP (user review optional): Offer a review/approval checkpoint before Stage 4. Continue without waiting only if the user has opted out or granted blanket approval.
 - Stage 4 — Implementation & Scaffolding (Code allowed)
-  - Scope: Only after explicit approval.
+  - Scope: Only after explicit approval unless the user has already waived stage approvals or granted blanket approval for the run.
   - Approach: Generate minimal scaffolding first, then iterate in small, reviewable steps. After each step, present diffs and validation, then ask to continue.
 
 Universal STOP rule
-- If approval is not granted, revise docs; do not produce code.
+- If the user requires staged approvals and approval is not granted, revise docs; if the user waived staged approvals, continue but incorporate feedback when it arrives.
 - Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
 
 ## Docs-as-Code Diagrams Policy
