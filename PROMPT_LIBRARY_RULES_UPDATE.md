@@ -75,6 +75,9 @@ Fill before running.
     - JavaScript/Web: document package names + versions (npm/pnpm/yarn/Babel) and leave script wiring to language/build guides.
 
 - Component/topic areas (list): <TOPICS>
+- Fluent API Strategy (choose exactly one):
+  - [ ] CRTP
+  - [ ] Builder pattern (Lombok @Builder/manual)
 - Backend Reactive:
   - Core stacks:
     - [ ] Vert.x 5 — ./generative/backend/vertx/README.md
@@ -138,9 +141,6 @@ Fill before running.
   - [ ] Java Micro Harness
   - [ ] Cypress
   - [ ] BrowserStack
-- Fluent API Strategy (choose exactly one):
-  - [ ] CRTP
-  - [ ] Builder pattern (Lombok @Builder/manual)
 - Frontend (Standard):
   - [ ] Web Components
 - Frontend (Reactive):
@@ -196,6 +196,7 @@ Policies (must honor):
 - This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 - Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
+- Junie exception: If Junie is the active AI engine, never pause for stage approvals; treat each stage as auto-approved while noting Junie’s no-review policy.
 
 Stage 1 — Architecture & Foundations (Docs only)
 - Deliver:

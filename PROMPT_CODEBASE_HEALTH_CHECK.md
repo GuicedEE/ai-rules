@@ -69,6 +69,10 @@ Fill before running.
     - JavaScript/Web: provide package names + versions (npm/pnpm/yarn/Babel); build scripts/config belong to the language/build topics.
 
 - Scope focus (tick all that apply):
+  - Fluent API Strategy (choose exactly one):
+    - [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)
+    - [ ] Builder pattern (Lombok @Builder/manual)
+    - Note: Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
   - Backend Reactive:
     - Core stacks:
       - [ ] Vert.x 5
@@ -139,10 +143,6 @@ Fill before running.
     - [ ] Lombok
     - [ ] Logging
     - [ ] JSpecify
-  - Fluent API Strategy (choose exactly one):
-    - [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)
-    - [ ] Builder pattern (Lombok @Builder/manual)
-    - Note: Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
   - Frontend (Standard):
     - [ ] Web Components
   - Frontend (Reactive):
@@ -197,6 +197,7 @@ Policies (must honor):
 - This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 - Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
+- Junie exception: If Junie is the active AI engine, do not request stage approvals; proceed automatically and record that Junie bypasses STOP gates.
 
 Stage 1 — Health Check Plan (Docs only)
 - Deliver:

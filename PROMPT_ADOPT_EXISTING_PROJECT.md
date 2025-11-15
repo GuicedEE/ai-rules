@@ -70,6 +70,9 @@ Fill before running.
     - JavaScript/Web: capture package names + versions (npm/pnpm/yarn/Babel); do not restate full build scripts here.
 
 - Detected/Chosen tech topics (tick):
+  - Fluent API Strategy (choose exactly one):
+    - [ ] CRTP
+    - [ ] Builder pattern (Lombok @Builder/manual)
   - Backend Reactive:
     - Core stacks:
       - [ ] Vert.x 5
@@ -151,9 +154,6 @@ Fill before running.
     - [ ] Java Micro Harness
     - [ ] Cypress
     - [ ] BrowserStack
-  - Fluent API Strategy (choose exactly one):
-    - [ ] CRTP
-    - [ ] Builder pattern (Lombok @Builder/manual)
   - Frontend (Standard):
     - [ ] Web Components
   - Frameworks (JWebMP):
@@ -215,6 +215,8 @@ Policies (must honor):
 - This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 - Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, in which case continue after documenting the opt-out.
+- Junie exception: If Junie is the active AI engine, bypass all stage approval pauses and document that Junie auto-approves each stage.
+- Documentation fidelity for existing projects: Always describe the actual host repository observed on disk. Do not invent new systems, rename components without evidence, or introduce imagined architecture beyond what the project already contains; align every artifact to discovered facts and note any unknowns explicitly.
 
 Stage 1 — Architecture & Foundations (Docs only)
 - Deliver:
@@ -223,6 +225,7 @@ Stage 1 — Architecture & Foundations (Docs only)
   - Data flow diagrams; threat model summary and trust boundaries
   - Dependency/integration map (internal/external services)
   - Glossary composition plan (topic-first, precedence and anchors)
+  - Evidence capture: base every description on repository discovery (source tree, existing docs, config). Where details are missing, highlight questions instead of fabricating architecture.
 - Output format: Markdown docs placed in host docs (outside rules/), with links to enterprise rules indexes.
 - STOP (user review optional): Offer a review/approval checkpoint before Stage 2. If the user has opted out or granted blanket approval, note it and continue without waiting.
 
@@ -232,6 +235,7 @@ Stage 2 — Guides & Design Validation (Docs only)
   - API surface sketches and contracts (OpenAPI, types) where applicable
   - UI flows/wireframes (if applicable) and component mapping
   - Migration notes, test strategy outline, acceptance criteria
+  - Alignment rule: mirror actual modules/components in the host repo; do not introduce hypothetical stacks or flows unless clearly marked as proposals derived from repo evidence.
 - STOP (user review optional): Offer a review/approval checkpoint before Stage 3. Proceed immediately only if the user has opted out or granted blanket approval.
 
 Stage 3 — Implementation Plan (No code yet)
@@ -239,11 +243,12 @@ Stage 3 — Implementation Plan (No code yet)
   - Scaffolding plan and module/file tree
   - Build/annotation-processor wiring, CI workflow plan, env/config plan
   - Rollout plan (phased), risk items, validation approach
+  - Validation rule: plans must map to existing directories/services; flag delta work explicitly rather than redefining the system.
 - STOP (user review optional): Offer a review/approval checkpoint before Stage 4. Continue without delay only if the user has opted out or granted blanket approval.
 
 Stage 4 — Implementation & Scaffolding (Code allowed)
 - Scope: Only after explicit approval unless the user has already waived stage approvals or granted blanket approval for the run.
-- Approach: Generate minimal scaffolding first, then iterate in small, reviewable steps. After each step, present diffs and validation, then ask to continue.
+- Approach: Generate minimal scaffolding first, then iterate in small, reviewable steps tied to actual repository artifacts. After each step, present diffs and validation, then ask to continue; do not author fictional modules or rename components without host repo evidence.
 
 Universal STOP rule
 - If the user requires staged approvals and approval is not granted, revise docs; if the user waived staged approvals, continue but be ready to revise when feedback arrives.
