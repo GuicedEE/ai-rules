@@ -44,7 +44,9 @@ Fill before running.
       - [ ] TypeScript
         - [ ] Angular (TypeScript)
         - [ ] React (TypeScript)
-        - [ ] Next.js (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
       - [ ] JavaScript
     - Kotlin
       - [ ] Kotlin
@@ -150,7 +152,9 @@ Fill before running.
       - [ ] Angular 20
     - Other frameworks
       - [ ] React
-      - [ ] Next.js
+        - [ ] Next.js
+      - [ ] Vue
+        - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome (Angular 19+ plugin)
   - Frameworks (JWebMP):
@@ -244,6 +248,9 @@ Language Selection (configure here)
     - [ ] TypeScript
       - [ ] Angular (TypeScript)
       - [ ] React (TypeScript)
+        - [ ] Next.js (TypeScript)
+      - [ ] Vue (TypeScript)
+        - [ ] Nuxt (TypeScript)
     - [ ] JavaScript
   - Kotlin
     - [ ] Kotlin
@@ -253,7 +260,7 @@ Language Selection (configure here)
 Language selection → evaluation rules
 - If Java 17/21/25 is selected: apply the corresponding LTS rules and build tooling — see [java-17.rules.md](rules/generative/language/java/java-17.rules.md), [java-21.rules.md](rules/generative/language/java/java-21.rules.md), [java-25.rules.md](rules/generative/language/java/java-25.rules.md), plus [build-tooling.md](rules/generative/language/java/build-tooling.md).
   - When Maven, Gradle (Groovy/Kotlin DSL), or Apache Ivy is selected, report artifact coordinates only (groupId:artifactId:version) and rely on build-tooling.md for configuration review (no full build scripts here).
-- If Web → TypeScript: include [TypeScript rules](rules/generative/language/typescript/README.md); add Angular/React indexes if selected.
+- If Web → TypeScript: include [TypeScript rules](rules/generative/language/typescript/README.md); add Angular/React/Vue indexes (and Next.js/Nuxt topics) if selected.
   - When npm, pnpm, yarn, or Babel is selected, capture package@version dependencies only and defer bundler/transpiler verification to the TypeScript/JS build guides.
 - If Kotlin: include [Kotlin rules](rules/generative/language/kotlin/README.md); add Ktor checks if selected.
 
@@ -279,7 +286,7 @@ A. Repository Inventory and Structure
 
 B. Rule Mapping and Scope Confirmation
 - Map detected stacks to indexes:
-  - Frontend: [webcomponents](rules/generative/frontend/webcomponents/README.md), [webawesome](rules/generative/frontend/webawesome/README.md), [angular](rules/generative/language/angular/angular17.md), [react](rules/generative/language/react/README.md), [nextjs](rules/generative/frontend/nextjs/README.md).
+  - Frontend: [webcomponents](rules/generative/frontend/webcomponents/README.md), [webawesome](rules/generative/frontend/webawesome/README.md), [angular](rules/generative/language/angular/angular17.md), [react](rules/generative/language/react/README.md), [vue](rules/generative/language/vue/README.md), [nextjs](rules/generative/frontend/nextjs/README.md), [nuxt](rules/generative/frontend/nuxt/README.md).
   - Backend: [hibernate](rules/generative/backend/hibernate/README.md), [vertx](rules/generative/backend/vertx/README.md), [guicedee](rules/generative/backend/guicedee/README.md), [mapstruct](rules/generative/backend/mapstruct/README.md), [lombok](rules/generative/backend/lombok/README.md), [logging](rules/generative/backend/logging/README.md).
   - Platform: [security-auth](rules/generative/platform/security-auth/README.md), [secrets-config](rules/generative/platform/secrets-config/README.md), [observability](rules/generative/platform/observability/README.md), [ci-cd](rules/generative/platform/ci-cd/README.md).
   - Architecture: [architecture](rules/generative/architecture/README.md), [tdd](rules/generative/architecture/tdd/README.md), [bdd](rules/generative/architecture/bdd/README.md).
@@ -306,8 +313,8 @@ C. Language and Framework Checks
   - Language rules; Ktor module shape; coroutines best practices.
 - Web Components / WebAwesome:
   - Component usage; Prompt Language Alignment (WaButton, WaInput, WaCluster, WaStack); index links resolve.
-- Angular/React/Next.js:
-  - Structure, routing, SSR/SSG (Next.js); web components integration (Angular Elements); security.
+- Angular/React/Vue/Next.js/Nuxt:
+  - Structure, routing, SSR/SSG (Next.js/Nuxt); web components integration (Angular Elements/Vue wrappers); security.
 
 D. Quality, Security, and Platform
 - Testing: unit/integration setup; Testcontainers for DB; coverage gates.
@@ -428,7 +435,7 @@ Starting prompt reconciliation
 - If a saved copy of the starting prompt exists (new/adopt/library), parse the selected topics/tech to establish the intended scope.
 - If not saved, infer selections via repository signals:
   - Build files, module descriptors, dependencies
-  - Presence of framework markers (Vert.x, Hibernate Reactive, GuicedEE, Angular/React/Next.js, Web Components/WebAwesome, Kotlin/Ktor)
+  - Presence of framework markers (Vert.x, Hibernate Reactive, GuicedEE, Angular/React/Vue/Next.js/Nuxt, Web Components/WebAwesome, Kotlin/Ktor)
   - CI, env, and provider configs
 - For each selected/intended topic:
   - Verify host RULES.md declares scope and links to corresponding enterprise topic indexes under generative/.

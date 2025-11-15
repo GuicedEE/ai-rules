@@ -1,6 +1,6 @@
 # 🧰 Starter Prompt — Library Rules Update (Framework/Component Libraries)
 
-Use this prompt when you maintain a library (e.g., JWebMP, EntityAssist, WebAwesome) and need to update or (re)create its rules, indexes, and guides to align with the Rules Repository. This drives a forward-only, modular documentation model and ensures host projects can navigate component/topic rules easily.
+Ask your AI tool to copy this template and align with the Rules Repository whenever you maintain a library (e.g., UI Kits, etc) and need to update or (re)create its rules, indexes, and guides. This drives a forward-only, modular documentation model and ensures host projects can navigate component/topic rules easily.
 
 Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
@@ -50,7 +50,9 @@ Fill before running.
       - [ ] TypeScript
         - [ ] Angular (TypeScript)
         - [ ] React (TypeScript)
-        - [ ] Next.js (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
       - [ ] JavaScript
     - Kotlin
       - [ ] Kotlin
@@ -148,7 +150,9 @@ Fill before running.
     - [ ] Angular 20
   - Other frameworks
     - [ ] React
-    - [ ] Next.js
+      - [ ] Next.js
+    - [ ] Vue
+      - [ ] Nuxt
 - Frontend (Angular Plugins):
   - [ ] Angular Awesome
 - Frameworks (JWebMP):
@@ -251,6 +255,9 @@ Language Selection (configure here)
     - [ ] TypeScript
       - [ ] Angular (TypeScript)
       - [ ] React (TypeScript)
+        - [ ] Next.js (TypeScript)
+      - [ ] Vue (TypeScript)
+        - [ ] Nuxt (TypeScript)
     - [ ] JavaScript
   - Kotlin
     - [ ] Kotlin
@@ -266,6 +273,9 @@ Language selection → generation rules
   - Include language rules link: rules/generative/language/typescript/README.md.
   - If Angular is also selected: include rules/generative/language/angular/README.md and scaffold Angular app structure when requested.
   - If React is also selected: include rules/generative/language/react/README.md and scaffold React app structure when requested.
+  - If React → Next.js is selected: include rules/generative/frontend/nextjs/README.md and apply App Router guidance.
+  - If Vue is also selected: include rules/generative/language/vue/README.md and scaffold Vue app structure when requested.
+  - If Vue → Nuxt is selected: include rules/generative/frontend/nuxt/README.md and follow Nuxt SSR/SSG rules.
   - When npm, pnpm, yarn, or Babel is selected, list package@version dependencies only; defer bundler/transpiler configuration to the TypeScript/JS build guides.
 - If Kotlin is selected:
   - Include language rules link: rules/generative/language/kotlin/README.md.
@@ -309,6 +319,8 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
     - React: rules/generative/language/react/README.md
     - Next.js (App Router): rules/generative/frontend/nextjs/README.md
+    - Vue: rules/generative/language/vue/README.md
+    - Nuxt: rules/generative/frontend/nuxt/README.md
   - Backend:
     - Hibernate (ORM/Reactive): rules/generative/backend/hibernate/README.md
     - Quarkus: rules/generative/backend/quarkus/README.md

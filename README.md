@@ -195,9 +195,14 @@ Example: Hibernate 7 Reactive topic index — generative/backend/hibernate/READM
 - “Angular 20 consuming web components” → generative/frontend/webcomponents/angular20-consuming-web-components.md
 - “React overview” → generative/language/react/react-overview.md
 - “Web Components in React” → generative/language/react/react-web-components.md
+- “Vue overview” → generative/language/vue/vue-overview.md
+- “Vue Composition API guide” → generative/language/vue/vue-composition-api.md
+- “Web Components in Vue” → generative/language/vue/vue-web-components.md
 - “Next.js overview” → generative/frontend/nextjs/nextjs-overview.md
 - “Next.js SSR vs SSG” → generative/frontend/nextjs/nextjs-ssr-ssg.md
 - “Next.js security” → generative/frontend/nextjs/nextjs-security.md
+- “Nuxt overview” → generative/frontend/nuxt/nuxt-overview.md
+- “Nuxt routing/data” → generative/frontend/nuxt/nuxt-routing-data.md
 - “Hibernate 7 Reactive transactions” → generative/backend/hibernate/hibernate-7-reactive-transactions.md
 - “Postgres setup docs” → generative/data/database/postgres-database.md
 

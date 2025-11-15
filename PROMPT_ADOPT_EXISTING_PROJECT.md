@@ -1,6 +1,6 @@
 # 🔄 Starter Prompt — Adopt Rules Repository in an Existing Project
 
-Paste this prompt into your AI tool to migrate an existing repository to the Rules Repository methodology. The AI will analyze the repo, add the Rules Repository submodule, establish Pact → Rules → Guides → Implementation, and refactor docs to the modular, forward-only model.
+Ask your AI tool to copy this template and align with the Rules Repository. The AI will analyze the repo, add the Rules Repository submodule, establish Pact → Rules → Guides → Implementation, and refactor docs to the modular, forward-only model.
 
 Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
@@ -45,7 +45,9 @@ Fill before running.
       - [ ] TypeScript
         - [ ] Angular (TypeScript)
         - [ ] React (TypeScript)
-        - [ ] Next.js (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
       - [ ] JavaScript
     - Kotlin
       - [ ] Kotlin
@@ -164,7 +166,9 @@ Fill before running.
       - [ ] Angular 20
     - Other frameworks
       - [ ] React
-      - [ ] Next.js
+        - [ ] Next.js
+      - [ ] Vue
+        - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome
   - CI/CD Providers:
@@ -270,6 +274,9 @@ Language Selection (configure here)
     - [ ] TypeScript
       - [ ] Angular (TypeScript)
       - [ ] React (TypeScript)
+        - [ ] Next.js (TypeScript)
+      - [ ] Vue (TypeScript)
+        - [ ] Nuxt (TypeScript)
     - [ ] JavaScript
   - Kotlin
     - [ ] Kotlin
@@ -285,6 +292,9 @@ Language selection → generation rules
   - Include language rules link: rules/generative/language/typescript/README.md.
   - If Angular is also selected: include rules/generative/language/angular/README.md and scaffold Angular app structure when requested.
   - If React is also selected: include rules/generative/language/react/README.md and scaffold React app structure when requested.
+  - If React → Next.js is selected: include rules/generative/frontend/nextjs/README.md and align routing/data fetching to that guide.
+  - If Vue is also selected: include rules/generative/language/vue/README.md and scaffold Vue structure when requested.
+  - If Vue → Nuxt is selected: include rules/generative/frontend/nuxt/README.md and follow SSR/SSG routing guidance.
   - When npm, pnpm, yarn, or Babel is selected, list package@version dependencies only; defer bundler/transpiler setup to the TypeScript/JS build guides.
 - If Kotlin is selected:
   - Include language rules link: rules/generative/language/kotlin/README.md.
@@ -312,10 +322,12 @@ When approved, execute the plan as one change set.
    - Document a “Glossary Precedence Policy”: topic glossaries override root for their scope; the host GLOSSARY.md acts as an index and aggregator with minimal duplication and LLM interpretation guidance (e.g., CRTP vs Builder routing, JSpecify defaults).
 4. Create/Update project RULES.md (outside submodule):
    - Declare scope, chosen stacks, and any project-specific conventions.
-   - Link to relevant topic indexes:
-     - rules/generative/language/react/README.md
-     - rules/generative/frontend/nextjs/README.md
-     - rules/generative/frontend/webcomponents/README.md
+  - Link to relevant topic indexes:
+    - rules/generative/language/react/README.md
+    - rules/generative/frontend/nextjs/README.md
+    - rules/generative/language/vue/README.md
+    - rules/generative/frontend/nuxt/README.md
+    - rules/generative/frontend/webcomponents/README.md
      - rules/generative/frontend/angular-awesome/README.md
      - rules/generative/backend/hibernate/README.md
      - rules/generative/backend/guicedee/README.md

@@ -377,6 +377,34 @@ See also
 - Security — ./generative/frontend/nextjs/nextjs-security.md
 - Web Components interop — ./generative/frontend/nextjs/nextjs-web-components.md
 
+## Frontend — Vue 3 Composition Model (Canonical)
+
+- Composition API — Prefer `<script setup>` with `ref`, `reactive`, `computed`, and composables; Options API reserved for legacy interop.
+- Single File Components — Keep logic slim; move business logic into composables or Pinia stores.
+- Pinia Stores — Define via `defineStore` returning typed refs/computed values; avoid mutating shared reactive objects without actions.
+- Web Components interop — Wrap custom elements inside Vue components to normalize props/events; guard registration when SSR is involved.
+
+See also
+- Vue overview — ./generative/language/vue/vue-overview.md
+- Composition API guide — ./generative/language/vue/vue-composition-api.md
+- Web Components in Vue — ./generative/language/vue/vue-web-components.md
+- Vue TDD — ./generative/language/vue/tdd.md
+- Vue BDD — ./generative/language/vue/bdd.md
+
+## Frontend — Nuxt Execution Model (Canonical)
+
+- File-based routing — `pages/` directory defines routes; `[param].vue` for dynamic segments, layouts wrap via `layouts/`.
+- Data fetching — `useAsyncData`/`useFetch` orchestrate server/client data loads; Nitro server routes live under `server/api/`.
+- Rendering modes — Mix SSR, SSG, and ISR per route via `routeRules`; document adapter choice and runtime config separation (server vs public).
+- Runtime config and plugins — Secrets under `runtimeConfig`, client-safe under `runtimeConfig.public`; plugins annotated `.client`/`.server`.
+
+See also
+- Nuxt overview — ./generative/frontend/nuxt/nuxt-overview.md
+- Routing & data guide — ./generative/frontend/nuxt/nuxt-routing-data.md
+- SSR vs SSG strategy — ./generative/frontend/nuxt/nuxt-ssr-ssg.md
+- Nuxt security — ./generative/frontend/nuxt/nuxt-security.md
+- Web Components in Nuxt — ./generative/frontend/nuxt/nuxt-web-components.md
+
 ## Platform — CI/CD Providers (Canonical)
 
 - GitHub Actions — See ./generative/platform/ci-cd/providers/github-actions.md

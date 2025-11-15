@@ -2,11 +2,11 @@
 
 Purpose
 - Provide TypeScript-specific TDD rules that extend and override the Base TDD architecture.
-- Precedence: TypeScript TDD supersedes [Base TDD](rules/generative/architecture/tdd/README.md) for TypeScript projects; framework-specific TDD (Angular, React, Next.js, Angular Awesome, Web Components) supersedes this file.
+- Precedence: TypeScript TDD supersedes [Base TDD](rules/generative/architecture/tdd/README.md) for TypeScript projects; framework-specific TDD (Angular, React, Vue, Next.js, Nuxt, Angular Awesome, Web Components) supersedes this file.
 
 Scope
 - Applies to Node- and browser-targeted TypeScript libraries/apps.
-- Coordinates with topic rules (Angular, React, Next.js, Web Components) where tests touch framework surfaces.
+- Coordinates with topic rules (Angular, React, Vue, Next.js, Nuxt, Web Components) where tests touch framework surfaces.
 
 Precedence and Links
 - Base TDD (general) → [TDD Architecture](rules/generative/architecture/tdd/README.md)
@@ -163,12 +163,14 @@ CI Integration (matrix)
 Framework Interop and Overrides
 - Angular (framework override) — use Angular TestBed, Testing Library for Angular, harnesses, and SSR/hydration guards for web components; see [Angular TDD](rules/generative/language/angular/tdd.md)
 - React (framework override) — use React Testing Library, user-event, and SSR nuances; see [React TDD](rules/generative/language/react/tdd.md)
+- Vue (framework override) — use Vue Test Utils, Testing Library Vue, Pinia test harness, and Composition API exports; see [Vue TDD](rules/generative/language/vue/tdd.md)
 - Next.js (framework override) — Server/Client Components, Route Handlers, caching; see [Next.js TDD](rules/generative/frontend/nextjs/tdd.md)
+- Nuxt (framework override) — Hybrid SSR/SSG, Nitro server routes, runtime config; see [Nuxt TDD](rules/generative/frontend/nuxt/tdd.md)
 - Web Components (topic supplement) — DOM-level tests with @testing-library/dom, customElements, events, slots, CSS parts; see [Web Components TDD](rules/generative/frontend/webcomponents/tdd.md)
 - Angular Awesome (plugin supplement) — directive wrappers and wa-* components; see [Angular Awesome TDD](rules/generative/frontend/angular-awesome/tdd.md)
 
 SSR/Hydration Considerations (brief)
-- If SSR present (Next.js/Angular Universal):
+- If SSR present (Next.js/Nuxt/Angular Universal):
   - Prefer acceptance tests that verify SSR output and hydration success
   - Use DOM content checks that are resilient to streaming; avoid brittle timing
   - For Web Components, prefer Declarative Shadow DOM checks where supported, otherwise assert post-hydration markers
@@ -187,6 +189,8 @@ See Also
 - Base TDD — [README](rules/generative/architecture/tdd/README.md)
 - Angular TDD — [tdd.md](rules/generative/language/angular/tdd.md)
 - React TDD — [tdd.md](rules/generative/language/react/tdd.md)
+- Vue TDD — [tdd.md](rules/generative/language/vue/tdd.md)
 - Next.js TDD — [tdd.md](rules/generative/frontend/nextjs/tdd.md)
+- Nuxt TDD — [tdd.md](rules/generative/frontend/nuxt/tdd.md)
 - Web Components TDD — [tdd.md](rules/generative/frontend/webcomponents/tdd.md)
 - Angular Awesome TDD — [tdd.md](rules/generative/frontend/angular-awesome/tdd.md)

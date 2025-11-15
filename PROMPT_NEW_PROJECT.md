@@ -1,6 +1,6 @@
 # 🚀 Starter Prompt — New Project Using the Rules Repository
 
-Paste this prompt into your AI tool to bootstrap a new repository aligned to the Rules Repository methodology. The AI will scaffold a modular, forward-only documentation structure (Pact → Rules → Guides → Implementation), set up topic indexes, and generate minimal starter code where requested.
+Ask your AI tool to copy this template and align with the Rules Repository. The AI will scaffold a modular, forward-only documentation structure (Pact → Rules → Guides → Implementation), set up topic indexes, and generate minimal starter code where requested.
 
 Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
@@ -47,7 +47,9 @@ Fill before running.
       - [ ] TypeScript
         - [ ] Angular (TypeScript)
         - [ ] React (TypeScript)
-        - [ ] Next.js (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
       - [ ] JavaScript
     - Kotlin
       - [ ] Kotlin
@@ -163,7 +165,9 @@ Fill before running.
       - [ ] Angular 20
     - Other frameworks
       - [ ] React
-      - [ ] Next.js
+        - [ ] Next.js
+      - [ ] Vue
+        - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome
   - Frameworks (JWebMP):
@@ -268,12 +272,14 @@ Language Selection (configure here)
     - [ ] Java 17 LTS
     - [ ] Java 21 LTS
     - [ ] Java 25 LTS
-  - Web
-    - [ ] TypeScript
-      - [ ] Angular (TypeScript)
-      - [ ] React (TypeScript)
-      - [ ] Next.js (TypeScript)
-    - [ ] JavaScript
+    - Web
+      - [ ] TypeScript
+        - [ ] Angular (TypeScript)
+        - [ ] React (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
+      - [ ] JavaScript
   - Kotlin
     - [ ] Kotlin
     - [ ] Ktor (requires Kotlin)
@@ -288,7 +294,9 @@ Language selection → generation rules
   - Include language rules link: [TypeScript README](rules/generative/language/typescript/README.md).
   - If Angular is also selected: include [Angular README](rules/generative/language/angular/README.md) and scaffold Angular app structure when requested; enforce a single version override.
   - If React is also selected: include [React README](rules/generative/language/react/README.md) and scaffold when requested.
-  - If Next.js is selected: include [Next.js README](rules/generative/frontend/nextjs/README.md) and adhere to App Router guidance.
+  - If React → Next.js is selected: include [Next.js README](rules/generative/frontend/nextjs/README.md) and adhere to App Router guidance.
+  - If Vue is also selected: include [Vue README](rules/generative/language/vue/README.md) and scaffold when requested.
+  - If Vue → Nuxt is selected: include [Nuxt README](rules/generative/frontend/nuxt/README.md) and follow SSR/SSG routing guidance.
   - When npm, pnpm, yarn, or Babel is selected, record package@version requirements only; rely on the TypeScript/JS build guides for configuring bundlers/transpilers.
 - If Kotlin is selected:
   - Include language rules link: [Kotlin README](rules/generative/language/kotlin/README.md).
@@ -324,9 +332,11 @@ When approved, execute the plan as one change set.
        - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
        - Angular Plugins:
          - Angular Awesome — [README](rules/generative/frontend/angular-awesome/README.md), [GLOSSARY](rules/generative/frontend/angular-awesome/GLOSSARY.md)
-     - Frontend (React/Next):
+     - Frontend (React/Vue/Next/Nuxt):
        - React — [README](rules/generative/language/react/README.md)
        - Next.js — [README](rules/generative/frontend/nextjs/README.md), [GLOSSARY](rules/generative/frontend/nextjs/GLOSSARY.md)
+       - Vue — [README](rules/generative/language/vue/README.md), [GLOSSARY](rules/generative/language/vue/GLOSSARY.md)
+       - Nuxt — [README](rules/generative/frontend/nuxt/README.md), [GLOSSARY](rules/generative/frontend/nuxt/GLOSSARY.md)
      - Backend:
        - GuicedEE — [README](rules/generative/backend/guicedee/README.md)
        - Hibernate (ORM/Reactive) — [README](rules/generative/backend/hibernate/README.md)
@@ -352,7 +362,7 @@ When approved, execute the plan as one change set.
        - Observability — [README](rules/generative/platform/observability/README.md)
        - Security & Auth — [README](rules/generative/platform/security-auth/README.md)
        - Secrets & Env — [README](rules/generative/platform/secrets-config/README.md)
-5. Create GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions; Web Components custom-elements/shadow-dom; Angular producing/consuming; Angular Awesome component usage; Next.js data fetching). Use glossary-aligned terms consistently.
+5. Create GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions; Web Components custom-elements/shadow-dom; Angular producing/consuming; Angular Awesome component usage; Next.js or Nuxt data fetching). Use glossary-aligned terms consistently.
 6. Create IMPLEMENTATION.md explaining current modules, code layout, and back-links to guides. Ensure implementation names and labels adhere to GLOSSARY.md.
 7. Environment alignment
    - Create .env.example per [env-variables.md](rules/generative/platform/secrets-config/env-variables.md).
