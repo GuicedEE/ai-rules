@@ -1,3 +1,5 @@
+> This document is deprecated. See consolidated DI rules under: ../../frameworks/guicedee/di.rules.md
+
 # GuicedEE Inject Client
 
 ## Overview

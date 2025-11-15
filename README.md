@@ -1,4 +1,4 @@
-# RulesRepository
+# Rules Repository
 
 Enterprise-wide rules and guides for AI-assisted and human development. This repository is designed to be consumed as a Git submodule inside client/host projects. It provides a versioned canonical source of truth for shared rules and guides across the organization.
 
@@ -13,7 +13,7 @@ Enterprise-wide rules and guides for AI-assisted and human development. This rep
 
 ```bash
 # Choose an appropriate target folder (e.g., rules/)
-git submodule add <RulesRepository repository URL> rules/
+git submodule add <Rules Repository repository URL> rules/
 git submodule update --init --recursive
 ```
 
