@@ -2,11 +2,11 @@
 
 Purpose
 - Provide TypeScript-specific BDD rules that extend and override the Base BDD architecture.
-- Precedence: TypeScript BDD supersedes [BDD Architecture](rules/generative/architecture/bdd/README.md) for TypeScript projects; framework-specific BDD (Angular, React, Next.js, Angular Awesome, Web Components) supersedes this file.
+- Precedence: TypeScript BDD supersedes [BDD Architecture](rules/generative/architecture/bdd/README.md) for TypeScript projects; framework-specific BDD (Angular, React, Vue, Next.js, Nuxt, Angular Awesome, Web Components) supersedes this file.
 
 Scope
 - Applies to Node and browser targets.
-- Coordinates with Angular/React/Next.js/Web Components where scenarios exercise those surfaces.
+- Coordinates with Angular/React/Vue/Next.js/Nuxt/Web Components where scenarios exercise those surfaces.
 
 Precedence and Links
 - Base BDD → [BDD Architecture](rules/generative/architecture/bdd/README.md)
@@ -201,7 +201,7 @@ CI pipeline (suggested)
 - Fail on undefined/pending steps; archive reports; ensure determinism.
 
 SSR/Hydration and Web Components
-- For SSR (Next.js/Angular Universal), include steps that assert SSR content present before hydration.
+- For SSR (Next.js/Nuxt/Angular Universal), include steps that assert SSR content present before hydration.
 - For Web Components, assert public contract (attributes/properties/events/slots/parts); avoid shadow internals.
 
 LLM Interpretation Guidance (TypeScript BDD)
@@ -219,6 +219,8 @@ See Also
 - TypeScript TDD — [tdd.md](rules/generative/language/typescript/tdd.md)
 - Angular BDD — [bdd.md](rules/generative/language/angular/bdd.md)
 - React BDD — [bdd.md](rules/generative/language/react/bdd.md)
+- Vue BDD — [bdd.md](rules/generative/language/vue/bdd.md)
 - Next.js BDD — [bdd.md](rules/generative/frontend/nextjs/bdd.md)
+- Nuxt BDD — [bdd.md](rules/generative/frontend/nuxt/bdd.md)
 - Web Components BDD — [bdd.md](rules/generative/frontend/webcomponents/bdd.md)
 - Angular Awesome BDD — [bdd.md](rules/generative/frontend/angular-awesome/bdd.md)

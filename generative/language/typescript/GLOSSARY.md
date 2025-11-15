@@ -19,7 +19,7 @@ LLM interpretation guidance (how to apply these terms)
   - Prefer string literal unions + const objects with "as const" over enums for runtime-light libs; use enums (or const enums with care) only when interop demands.
 - Routing:
   - Language index → ./README.md
-  - Angular/React specifics → ../angular/README.md, ../react/README.md
+  - Angular/React/Vue specifics → ../angular/README.md, ../react/README.md, ../vue/README.md
   - Web Components fundamentals → ../../frontend/webcomponents/README.md
 
 Canonical terms
@@ -132,7 +132,7 @@ Prompt alignment
   - Generate tsconfig.json with strict-first defaults and ESM module settings aligned to the chosen runtime (NodeNext/Bundler).
   - Use unknown, narrowing, and discriminated unions in generated code; avoid any and non-null assertion.
   - Add ESLint (typescript-eslint) and Prettier scaffolding if linting is in scope.
-  - For frameworks, route to their language topics (Angular/React) and apply TypeScript idioms consistently.
+  - For frameworks, route to their language topics (Angular/React/Vue) and apply TypeScript idioms consistently; defer to Next.js/Nuxt topics for meta-framework rules.
 
 See also
 - Topic index — ./README.md

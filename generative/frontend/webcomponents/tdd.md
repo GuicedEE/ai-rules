@@ -8,7 +8,7 @@ Purpose
 
 Scope
 - Applies to authoring and consuming Custom Elements with Shadow DOM, slots, CSS parts, and custom events across frameworks (vanilla, Angular, React, Next.js).
-- For framework projects, also see the framework’s TDD override (e.g., Angular/React/Next.js TDD) which supersedes this file where guidance differs.
+- For framework projects, also see the framework’s TDD override (e.g., Angular/React/Vue/Next.js/Nuxt TDD) which supersedes this file where guidance differs.
 
 Core TDD Workflow (inherits)
 - Red → Green → Refactor, focusing on observable behavior of the custom element contract:

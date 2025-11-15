@@ -27,18 +27,27 @@ public abstract class Base<J extends Base<J>> {
 }
 
 // Concrete subtype binds the type parameter to itself
-public final class User extends Base<User> {
+public class User<J extends User<J>> extends Base<J> {
   private int age;
 
   @SuppressWarnings("unchecked")
-  public User setAge(int age) {
+  public J setAge(int age) {
     this.age = age;
-    return (User) this;
+    return (J) this;
   }
 }
 
 // Usage: type-safe chaining across inheritance
-User u = new User().setName("Ada").setAge(37);
+User<?> u = new User<>().setName("Ada").setAge(37);
+
+// Client extension example
+public class ExtendedUser extends User<ExtendedUser> {
+  public ExtendedUser setCustomProperty(String value) {
+    return this;
+  }
+}
+
+ExtendedUser eu = new ExtendedUser().setName("Bob").setAge(25).setCustomProperty("value");
 ```
 
 Rules
@@ -64,6 +73,44 @@ Rules
 
 6) Project exclusivity
 - CRTP and Builder are mutually exclusive per project. If GuicedEE or JWebMP is selected, CRTP is enforced.
+
+7) Comprehensive JavaDoc requirements
+- ALL getters and setters (including fluent CRTP setters) MUST have comprehensive JavaDoc documentation.
+- JavaDoc MUST include @param tags for all parameters with meaningful descriptions.
+- JavaDoc MUST include @return tags for all non-void methods with clear return descriptions.
+- For CRTP fluent setters, @return should specify "this instance for method chaining" or similar.
+- Property descriptions should explain purpose, constraints, and any side effects.
+- Use @throws tags where applicable for validation exceptions.
+- Example:
+  ```java
+  /**
+   * Sets the user's age with validation.
+   * <p>
+   * The age must be between 0 and 150 years. Setting the age may trigger
+   * age-related validations in dependent systems.
+   *
+   * @param age the user's age in years, must be between 0 and 150
+   * @return this instance for method chaining
+   * @throws IllegalArgumentException if age is negative or exceeds 150
+   */
+  @SuppressWarnings("unchecked")
+  public J setAge(int age) {
+    if (age < 0 || age > 150) {
+      throw new IllegalArgumentException("Age must be between 0 and 150");
+    }
+    this.age = age;
+    return (J) this;
+  }
+
+  /**
+   * Gets the user's current age.
+   *
+   * @return the user's age in years, or 0 if not set
+   */
+  public int getAge() {
+    return this.age;
+  }
+  ```
 
 Lombok integration policy
 - Do NOT use @Builder on CRTP types.
@@ -116,21 +163,28 @@ public abstract class Entity<J extends Entity<J>> {
 
 Subtype and usage
 ```java
-public final class Customer extends Entity<Customer> {
+public class Customer<J extends Customer<J>> extends Entity<J> {
   private int tier;
 
   @SuppressWarnings("unchecked")
-  public Customer setTier(int tier) {
+  public J setTier(int tier) {
     this.tier = tier;
-    return (Customer) this;
+    return (J) this;
   }
 }
 
-// Chain:
-Customer c = new Customer()
+// Direct usage:
+Customer<?> c = new Customer<>()
     .setId("C-1")
     .setDescription(null)
     .setTier(2);
+
+// Client extension:
+public class PremiumCustomer extends Customer<PremiumCustomer> {
+  public PremiumCustomer setPremiumLevel(int level) {
+    return this;
+  }
+}
 ```
 
 Testing checklist
@@ -157,10 +211,10 @@ See also
 - MapStruct — ../mapstruct/README.md
 - GuicedEE — ../guicedee/README.md
 - JWebMP — ../../frontend/jwebmp/README.md
-## Class design policy (abstract vs final)
+## Class design policy (JWebMP/GuicedEE Pattern)
 
-Extensibility rules
-- Extensible types MUST be declared using the CRTP pattern so chained methods preserve the concrete subtype across the hierarchy.
+Extensibility rules (JWebMP/GuicedEE Ecosystems)
+- ALL types using CRTP MUST be declared as extensible (NOT final) to enable type-safe client extension.
   - Abstract base (class):
     ```java
     public abstract class Base<J extends Base<J>> {
@@ -168,11 +222,19 @@ Extensibility rules
       public J setName(String name) { /* ... */ return (J) this; }
     }
     ```
-  - Concrete subtype:
+  - Concrete extensible subtype:
     ```java
-    public final class User extends Base<User> {
+    public class User<J extends User<J>> extends Base<J> {
       @SuppressWarnings("unchecked")
-      public User setAge(int age) { /* ... */ return (User) this; }
+      public J setAge(int age) { /* ... */ return (J) this; }
+    }
+    ```
+  - Client extension capability:
+    ```java
+    public class ExtendedUser extends User<ExtendedUser> {
+      public ExtendedUser setCustomField(String value) { 
+        return this; 
+      }
     }
     ```
   - Interface form (where appropriate):
@@ -181,22 +243,23 @@ Extensibility rules
       J setName(String name);
     }
     ```
-- Non‑extensible types MUST be declared final.
-  - If the project strategy is CRTP, you may still bind to a CRTP base for consistency (e.g., `final class User extends Base<User>`), but it is not required when there is no inheritance surface to preserve.
-  - If providing fluent setters on a final type without a CRTP base, return the concrete type (not `this` as a generic) and keep the class final to avoid accidental extension.
+
+JWebMP/GuicedEE specific guidance
+- **DO NOT use `final` on CRTP classes**: All JWebMP and GuicedEE components are designed for client extension
+- **Library classes are intentionally extensible**: This enables type-safe customization by client applications
+- **Concrete implementations remain generic**: Use `User<J extends User<J>>` pattern even for concrete classes
+- **Client code flexibility**: Applications can extend any library class while maintaining type safety
 
 Prohibitions and guidance
+- Do NOT make CRTP classes `final` in JWebMP/GuicedEE ecosystems
 - Do NOT publish non‑CRTP base classes intended to be extended. All bases intended for subclassing must be CRTP‑parameterized (`abstract class Base<J extends Base<J>>`).
-- Prefer sealed CRTP bases when the subtype set is known and fixed (Java 17+):
-  ```java
-  public sealed abstract class Base<J extends Base<J>> permits SubA, SubB { /* ... */ }
-  public final class SubA extends Base<SubA> { /* ... */ }
-  public final class SubB extends Base<SubB> { /* ... */ }
-  ```
+- Avoid sealed classes in JWebMP/GuicedEE (conflicts with client extensibility)
 - Keep fluent mutators handwritten with method‑level `@SuppressWarnings("unchecked")` and `return (J) this;`. Do not use Lombok‑generated setters for CRTP return types.
 - Under `@org.jspecify.annotations.NullMarked`, mark only truly nullable values with `@org.jspecify.annotations.Nullable`.
 
-LLM routing and checks
-- When generating a base intended for extension, emit an abstract CRTP base by default and ensure all fluent setters return `J`.
-- When generating a class not intended for extension, emit `final` and avoid introducing inheritance; if fluent setters are required, return the concrete type or bind to a CRTP base tied to self for uniformity.
-- Flag as violation: non‑final, non‑CRTP classes that expose fluent setters and are externally extensible.
+LLM routing and checks (JWebMP/GuicedEE)
+- When generating ANY CRTP class in JWebMP/GuicedEE context, NEVER emit `final`
+- Ensure all CRTP classes use the generic self-type pattern: `Class<J extends Class<J>>`
+- All fluent setters must return `J` (not the concrete type)
+- Flag as violation: `final` CRTP classes in JWebMP/GuicedEE projects
+- Flag as violation: non‑CRTP classes that expose fluent setters and should be extensible

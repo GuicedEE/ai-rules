@@ -35,7 +35,7 @@ Roo is a supported AI engine for this repository. To ensure Roo follows the same
 
 ## Documentation-First, Stage-Gated Workflow (Mandatory)
 
-This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo). AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex). AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 
 - Stage 1 — Architecture & Foundations (Docs only)
   - Deliver: PACT draft/updates; architecture overview; C4 diagrams; sequence diagrams for key flows; ERDs for core domains; dependency/integration map; glossary composition plan (topic-first, precedence, anchors).
@@ -195,9 +195,14 @@ Example: Hibernate 7 Reactive topic index — generative/backend/hibernate/READM
 - “Angular 20 consuming web components” → generative/frontend/webcomponents/angular20-consuming-web-components.md
 - “React overview” → generative/language/react/react-overview.md
 - “Web Components in React” → generative/language/react/react-web-components.md
+- “Vue overview” → generative/language/vue/vue-overview.md
+- “Vue Composition API guide” → generative/language/vue/vue-composition-api.md
+- “Web Components in Vue” → generative/language/vue/vue-web-components.md
 - “Next.js overview” → generative/frontend/nextjs/nextjs-overview.md
 - “Next.js SSR vs SSG” → generative/frontend/nextjs/nextjs-ssr-ssg.md
 - “Next.js security” → generative/frontend/nextjs/nextjs-security.md
+- “Nuxt overview” → generative/frontend/nuxt/nuxt-overview.md
+- “Nuxt routing/data” → generative/frontend/nuxt/nuxt-routing-data.md
 - “Hibernate 7 Reactive transactions” → generative/backend/hibernate/hibernate-7-reactive-transactions.md
 - “Postgres setup docs” → generative/data/database/postgres-database.md
 

@@ -1,7 +1,7 @@
 # TypeScript (Latest) — DDD, Type Safety, Reactive Chaining, and Testing Standards
 
 Scope
-- Audience: Engineers and AI systems generating or reviewing TypeScript code for both frontend (Angular/React/Next.js/Web Components) and backend (Node.js) contexts.
+- Audience: Engineers and AI systems generating or reviewing TypeScript code for both frontend (Angular/React/Vue/Next.js/Nuxt/Web Components) and backend (Node.js) contexts.
 - Goals: Enforce Domain-Driven Design (DDD), strict type safety (never use `any` unless explicitly requested), reactive chaining patterns (prefer RxJS or Promise combinators), and strict enumerations for fixed-value sets (<16 values).
 - Version: Target the latest stable TypeScript (configure CI to stay within the latest minor, and run type-checking in CI).
 
@@ -395,5 +395,5 @@ References
 - Stryker Mutator: https://stryker-mutator.io/
 
 Back/Forward Links
-- Back to rules: see RULES.md — Technical Commitments for TypeScript and Angular/React sections.
+- Back to rules: see RULES.md — Technical Commitments for TypeScript and Angular/React/Vue sections.
 - Forward to implementations: link project-specific services, repositories, and components to the examples above.

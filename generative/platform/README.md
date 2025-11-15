@@ -7,5 +7,6 @@ Topics
 - Observability — ./observability/README.md
 - Security & Auth — ./security-auth/README.md
 - Secrets & Config — ./secrets-config/README.md
+- Testing & Coverage — ./testing/README.md
 
 See also: ../README.md — Master Index.

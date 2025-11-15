@@ -299,9 +299,12 @@ public abstract class Base<J extends Base<J>> {
 }
 ```
 
-Subclass usage
+Subclass usage (JWebMP/GuicedEE pattern)
 ```java
-public final class User extends Base<User> { }
+public class User<J extends User<J>> extends Base<J> { 
+  @SuppressWarnings("unchecked")
+  public J setAge(int age) { return (J) this; }
+}
 ```
 
 Rules

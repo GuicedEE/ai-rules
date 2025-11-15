@@ -8,5 +8,6 @@ Topics
 - TypeScript — ./typescript/README.md
 - Angular — ./angular/README.md
 - React — ./react/README.md
+- Vue — ./vue/README.md
 
 See also: ../README.md — Master Index.

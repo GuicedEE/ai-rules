@@ -1,8 +1,8 @@
 # 🧰 Starter Prompt — Library Rules Update (Framework/Component Libraries)
 
-Use this prompt when you maintain a library (e.g., JWebMP, EntityAssist, WebAwesome) and need to update or (re)create its rules, indexes, and guides to align with the Rules Repository. This drives a forward-only, modular documentation model and ensures host projects can navigate component/topic rules easily.
+Ask your AI tool to copy this template and align with the Rules Repository whenever you maintain a library (e.g., UI Kits, etc) and need to update or (re)create its rules, indexes, and guides. This drives a forward-only, modular documentation model and ensures host projects can navigate component/topic rules easily.
 
-Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
+Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
 ---
 
@@ -19,12 +19,125 @@ Fill before running.
   - [ ] Service/Framework
   - [ ] Other: <OTHER>
 
+- AI engine used:
+  - [ ] Junie
+  - [ ] GitHub Copilot
+  - [ ] Cursor
+  - [ ] ChatGPT
+  - [ ] Claude
+  - [ ] Roo
+  - [ ] Codex
+  - [ ] AI Assistant
+  - Note: Select every engine participating in the release and ensure rules/templates are configured for each.
+    - AI Assistant consumes rules from `.aiassistant/rules/`; replicate enforced policies there.
+
+- Architecture:
+  - [x] Specification-Driven Design (SDD) (mandatory)
+  - [x] Documentation-as-Code (mandatory)
+  - [ ] Monolith
+  - [ ] Microservices
+  - [ ] Micro Frontends
+  - [ ] DDD
+  - [ ] TDD (docs-first, test-first)
+  - [ ] BDD (docs-first, executable specs)
+- Language selection (configure here)
+  - Languages
+    - Java (choose exactly one LTS)
+      - [ ] Java 17 LTS
+      - [ ] Java 21 LTS
+      - [ ] Java 25 LTS
+    - Web
+      - [ ] TypeScript
+        - [ ] Angular (TypeScript)
+        - [ ] React (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
+      - [ ] JavaScript
+    - Kotlin
+      - [ ] Kotlin
+      - [ ] Ktor (requires Kotlin)
+    - Other: <OTHER_LANGUAGES>
+  - Build engines
+    - Java/Kotlin builds
+      - [ ] Maven
+      - [ ] Gradle (Groovy DSL)
+      - [ ] Gradle (Kotlin DSL)
+      - [ ] Apache Ivy
+    - Web builds
+      - [ ] npm / package.json scripts
+      - [ ] pnpm
+      - [ ] yarn
+      - [ ] Babel (transpile configuration lives in package.json/babel.config.*)
+    - Other build tooling: <OTHER_BUILDS>
+  - Dependency declarations
+    - JVM: document artifact coordinates only (groupId:artifactId:version); detailed build configuration belongs in build-tooling topics.
+    - JavaScript/Web: document package names + versions (npm/pnpm/yarn/Babel) and leave script wiring to language/build guides.
+
 - Component/topic areas (list): <TOPICS>
+- Backend Reactive:
+  - Core stacks:
+    - [ ] Vert.x 5 — ./generative/backend/vertx/README.md
+    - [ ] Hibernate Reactive 7 — ./generative/backend/hibernate/README.md
+  - Quarkus:
+    - [ ] Core project setup
+    - [ ] RESTEasy Reactive APIs
+    - [ ] Persistence (Hibernate/Panache)
+    - [ ] Reactive messaging
+    - [ ] Security/OIDC
+    - [ ] Dev Services & local tooling
+    - [ ] Native build & packaging
+    - [ ] Testing strategy
+    - Note: Quarkus currently embeds Vert.x 4; pick Vert.x 5 only for direct Vert.x API usage.
+  - GuicedEE:
+    - [ ] Core
+    - [ ] Web
+    - [ ] Rest
+    - [ ] Persistence
+    - [ ] RabbitMQ
+    - [ ] Cerial
+    - [ ] OpenAPI
+    - [ ] Sockets
+    - Note: If Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7.
+- Backend:
+  - Spring MVC
+    - [ ] Core MVC/Web
+    - [ ] Validation (Bean Validation)
+    - [ ] Data JPA (Hibernate ORM)
+    - [ ] Security (non-reactive)
+    - [ ] Actuator (ops endpoints)
+    - [ ] OpenAPI (springdoc)
+    - [ ] Micrometer/Tracing (OTel exporters optional)
+    - [ ] Caching
+    - [ ] Scheduling & Async
+    - [ ] Batch
+    - [ ] Mail
+    - [ ] Messaging
+    - Database migrations:
+      - [ ] Flyway
+      - [ ] Liquibase
+    - [ ] Testing
+    - [ ] Packaging & Deployment
+  - JDBC Databases:
+    - [ ] PostgreSQL
+    - [ ] MySQL
+    - [ ] Oracle
+    - [ ] MSSQL
+    - [ ] MariaDB
+    - [ ] IBM DB2
+    - [ ] SQLite
+    - [ ] Other: <DB_OTHER>
 - Structural:
   - [ ] MapStruct
   - [ ] Lombok
   - [ ] Logging
   - [ ] JSpecify
+- Testing & Coverage:
+  - [ ] Jacoco
+  - [ ] SonarQube
+  - [ ] Java Micro Harness
+  - [ ] Cypress
+  - [ ] BrowserStack
 - Fluent API Strategy (choose exactly one):
   - [ ] CRTP
   - [ ] Builder pattern (Lombok @Builder/manual)
@@ -37,14 +150,14 @@ Fill before running.
     - [ ] Angular 20
   - Other frameworks
     - [ ] React
-    - [ ] Next.js
+      - [ ] Next.js
+    - [ ] Vue
+      - [ ] Nuxt
 - Frontend (Angular Plugins):
   - [ ] Angular Awesome
 - Frameworks (JWebMP):
   - [ ] Core
   - [ ] WebAwesome
-- Security (Reactive):
-  - [ ] Vert.x Web Auth/JWT/OAuth2
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)
@@ -58,22 +171,8 @@ Fill before running.
   - [ ] Google Cloud Build
   - [ ] Azure Pipelines
   - [ ] AWS CodeBuild/CodePipeline
-- Architecture:
-  - [ ] Monolith
-  - [ ] Microservices
-  - [ ] Micro Frontends
-  - [ ] DDD
-  - [ ] TDD (docs-first, test-first)
-  - [ ] BDD (docs-first, executable specs)
 - Observability/Diagnostics:
   - [ ] Wireshark
-- AI engine used:
-  - [ ] JetBrains Junie
-  - [ ] GitHub Copilot
-  - [ ] Cursor
-  - [ ] ChatGPT
-  - [ ] Claude
-  - [ ] Roo
 - Release impact:
   - [x] Forward-only (breaking changes allowed)
   - [ ] Backcompat required (only if explicitly demanded)
@@ -88,12 +187,13 @@ Policies (must honor):
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
   - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
 - Glossary policy (topic-first): Provide and maintain a topic-scoped GLOSSARY.md for your library with minimal canonical terms and “LLM interpretation guidance”. Avoid duplicating definitions in host projects. Host projects compose their root GLOSSARY.md by linking to your topic GLOSSARY.md and copying only enforced Prompt Language Alignment mappings (e.g., WebAwesome names); all other terms should be linked to your topic files/anchors.
+- **Sandbox awareness / Pact note** — Record in PACT that host artifacts stay at the repo root or `docs/`. When a release is finalized, update the canonical rules under `rules/frontend/angular-awesome` (the ruleset this library maintains) and limit writes inside the Rules Repository to `repository/frontend/angular-awesome`; never modify other directories in the rules repo.
 
 ---
 
 ## Documentation-First, Stage-Gated Workflow (Mandatory)
 
-- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo).
+- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
 
 Stage 1 — Architecture & Foundations (Docs only)
@@ -140,6 +240,9 @@ Universal STOP rule
   - Host project mode (a downstream project consuming these rules):
     - Use this repository as a Git submodule and link to it from host artifacts.
   - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
+- For Codex CLI (Codex agent):
+  - Load ./RULES.md anchors plus README context; confirm forward-only and Document Modularity constraints are pinned in the Codex CLI workspace.
+  - Follow Codex CLI harness instructions: run shell commands with `bash -lc` and explicit `workdir`, prefer `rg` for scans, honor sandbox/approval settings, and use the plan tool for multi-step work.
 - If Roo, load and pin ROO_WORKSPACE_POLICY.md at the repository root. If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled. Update all references affected by a change in the same forward-only change set.
 
 Language Selection (configure here)
@@ -152,6 +255,9 @@ Language Selection (configure here)
     - [ ] TypeScript
       - [ ] Angular (TypeScript)
       - [ ] React (TypeScript)
+        - [ ] Next.js (TypeScript)
+      - [ ] Vue (TypeScript)
+        - [ ] Nuxt (TypeScript)
     - [ ] JavaScript
   - Kotlin
     - [ ] Kotlin
@@ -162,10 +268,15 @@ Language selection → generation rules
 - If Java 17/21/25 is selected:
   - Apply the corresponding LTS rules and toolchains (link to the selected: rules/generative/language/java/java-17.rules.md, rules/generative/language/java/java-21.rules.md, or rules/generative/language/java/java-25.rules.md).
   - Include build integration via rules/generative/language/java/build-tooling.md.
+  - When Maven, Gradle (Groovy/Kotlin DSL), or Apache Ivy is selected, document artifact coordinates only (groupId:artifactId:version) and rely on build-tooling.md for plugin/configuration wiring.
 - If Web → TypeScript is selected:
   - Include language rules link: rules/generative/language/typescript/README.md.
   - If Angular is also selected: include rules/generative/language/angular/README.md and scaffold Angular app structure when requested.
   - If React is also selected: include rules/generative/language/react/README.md and scaffold React app structure when requested.
+  - If React → Next.js is selected: include rules/generative/frontend/nextjs/README.md and apply App Router guidance.
+  - If Vue is also selected: include rules/generative/language/vue/README.md and scaffold Vue app structure when requested.
+  - If Vue → Nuxt is selected: include rules/generative/frontend/nuxt/README.md and follow Nuxt SSR/SSG rules.
+  - When npm, pnpm, yarn, or Babel is selected, list package@version dependencies only; defer bundler/transpiler configuration to the TypeScript/JS build guides.
 - If Kotlin is selected:
   - Include language rules link: rules/generative/language/kotlin/README.md.
   - If Ktor is also selected, scaffold a minimal Ktor service module and wire guides accordingly.
@@ -208,9 +319,11 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
     - React: rules/generative/language/react/README.md
     - Next.js (App Router): rules/generative/frontend/nextjs/README.md
+    - Vue: rules/generative/language/vue/README.md
+    - Nuxt: rules/generative/frontend/nuxt/README.md
   - Backend:
     - Hibernate (ORM/Reactive): rules/generative/backend/hibernate/README.md
-    - Security (Reactive): rules/generative/backend/security-reactive/README.md
+    - Quarkus: rules/generative/backend/quarkus/README.md
   - Platform:
     - CI/CD: rules/generative/platform/ci-cd/README.md
       - If CI/CD Providers are selected, also link provider docs:

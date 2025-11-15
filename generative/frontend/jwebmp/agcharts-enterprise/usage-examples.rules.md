@@ -4,6 +4,13 @@ Overview
 - Examples assume CRTP style for fluent APIs in JWebMP.
 - These are Java-side pseudocode snippets using JWebMP components. The enterprise plugin ensures the Angular build includes `ag-charts-enterprise` via the Page Configurator; no TS edits.
 
+Prerequisites (Java-only)
+- Maven dependencies in your host app:
+  - `com.jwebmp.plugins:agcharts` (community)
+  - `com.jwebmp.plugins:agcharts-enterprise` (this module)
+- Prefer importing the JWebMP BOM to align versions automatically.
+- No manual Angular edits. The Page Configurator in this plugin contributes the `ag-charts-enterprise` NPM dependency.
+
 General pattern
 - Construct charts the same way as in the community plugin; enterprise unlocks additional series types, interactions, and APIs on the client.
 
@@ -16,9 +23,31 @@ public class SalesChart<J extends SalesChart<J>> extends Div<J> {
     public SalesChart() {
         AgChartComponent<?> chart = new AgChartComponent<>()
             .withTitle("Quarterly Sales")
-            .withSeries(/* column/line series config */)
-            .withLegendShown(true);
+            .withOption("series[0].type", "column")
+            .withOption("series[0].xKey", "quarter")
+            .withOption("series[0].yKey", "revenue")
+            .withLegendShown(true)
+            .withData(List.of(
+                Map.of("quarter", "Q1", "revenue", 120_000),
+                Map.of("quarter", "Q2", 150_000),
+                Map.of("quarter", "Q3", 170_000),
+                Map.of("quarter", "Q4", 190_000)
+            ));
         add(chart);
+    }
+}
+```
+
+Full page example (with layout)
+```java
+public class DashboardPage extends Page<DashboardPage> {
+    @Override
+    public void onInitialize() {
+        super.onInitialize();
+        Div<?> layout = new Div<>().addClass("grid grid-cols-2 gap-4");
+        layout.add(new SalesChart<>());
+        layout.add(new TimeSeriesChart<>());
+        add(layout);
     }
 }
 ```
@@ -32,11 +61,10 @@ public class PivotSalesChart<J extends PivotSalesChart<J>> extends Div<J> {
     public PivotSalesChart() {
         AgChartComponent<?> chart = new AgChartComponent<>()
             .withTitle("Sales by Region (Pivot)")
-            .withOption("pivot", true) // Enterprise runtime interprets
-            .withOption("groupBy", List.of("region"))
-            .withOption("values", List.of("revenue"))
-            .withOption("aggregation", "sum")
-            .withSeries(/* automatically inferred from pivot */);
+            .withOption("pivot.enabled", true) // Enterprise runtime interprets
+            .withOption("pivot.groupBy", List.of("region"))
+            .withOption("pivot.values", List.of("revenue"))
+            .withOption("pivot.aggregation", "sum");
         add(chart);
     }
 }
@@ -144,7 +172,13 @@ Notes
 - No special Java code is needed to enable enterprise beyond including the plugin; ensure licensing on the client when applicable.
 - Options shown are illustrative and passed through to the client configuration expected by AG Charts Enterprise.
 
-See alsoW
+AG Grid context (for dashboards combining Grid and Charts)
+- While this module focuses on Charts, dashboards often combine AG Grid Enterprise and Charts:
+  - Use JWebMP AG Grid plugin for tables/grids.
+  - Use cross-filtering or event bridging: grid selection events can be forwarded to charts via shared context ids or custom events.
+  - Keep data contracts simple: rows (grid) and series datapoints (charts) should share stable keys (e.g., region, productId).
+
+See also
 - Integration — ./agcharts-enterprise-integration.rules.md
 - Page Configurator — ./page-configurator.rules.md
 - Licensing — ./licensing-and-activation.rules.md
