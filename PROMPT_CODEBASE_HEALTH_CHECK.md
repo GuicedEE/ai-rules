@@ -196,6 +196,7 @@ Policies (must honor):
 
 - This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+- Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
 
 Stage 1 — Health Check Plan (Docs only)
 - Deliver:
@@ -203,27 +204,27 @@ Stage 1 — Health Check Plan (Docs only)
   - Rule/topic mapping plan and evidence collection approach
   - Risks and assumptions
 - Output format: Markdown plan in host docs (outside rules/), with links to enterprise rule indexes.
-- STOP: Request explicit user approval to proceed to Stage 2.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 2. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 2 — Findings & Documentation (Docs only)
 - Deliver:
   - Compliance matrix draft with evidence links (no code changes)
   - Documentation fixes proposals (Doc Modularity, link integrity), diffs as text only
   - Risk notes and migration implications (forward-only)
-- STOP: Request explicit user approval to proceed to Stage 3.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 3. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 3 — Proposed Diffs (No code applied yet)
 - Deliver:
   - Single change set proposal with unified diffs
   - Migration notes and validation plan (tests, link checks) for after application
-- STOP: Request explicit user approval to proceed to Stage 4.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 4. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 4 — Apply Diffs (Code allowed)
-- Scope: Only after explicit approval.
+- Scope: Only after explicit approval unless the user has already waived stage approvals or granted blanket approval for the run.
 - Approach: Apply the single change set; present results, run validations, report outcomes. For further changes, repeat Stage 3/4.
 
 Universal STOP rule
-- If approval is not granted, revise docs/findings; do not produce or apply code.
+- If the user requires staged approvals and approval is not granted, revise docs/findings; if the user waived staged approvals, continue but incorporate feedback when it arrives.
 - Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
 
 ## 1) Self‑Configure the AI Engine
@@ -358,10 +359,10 @@ Produce a comprehensive health report with:
 ---
 
 ## 5) Output Checklist
-- [ ] Stage 1 (Health Check Plan) produced and user-approved (STOP gate passed)
-- [ ] Stage 2 (Findings & Documentation) produced and user-approved (STOP gate passed)
-- [ ] Stage 3 (Proposed Diffs) produced and user-approved (STOP gate passed)
-- [ ] Stage 4 (Apply Diffs) executed only after explicit approval; results validated with links and evidence
+- [ ] Stage 1 (Health Check Plan) produced; capture user approval if they require the STOP gate
+- [ ] Stage 2 (Findings & Documentation) produced; capture user approval if they require the STOP gate
+- [ ] Stage 3 (Proposed Diffs) produced; capture user approval if they require the STOP gate
+- [ ] Stage 4 (Apply Diffs) executed only after explicit approval unless the user granted blanket approval; results validated with links and evidence
 - [ ] Inventory and rule mapping completed
 - [ ] Compliance matrix produced with links and evidence
 - [ ] Proposed diffs prepared (single forward-only change set)
@@ -388,9 +389,9 @@ Reply in this structure:
 
 1) Stage N deliverables (docs or plans only until Stage 4), with file paths and working links
 2) Open questions, decisions required, risks
-3) STOP — Request explicit approval to proceed to Stage N+1
-   - Required approval phrasing: “APPROVED Stage N → Stage N+1”
-4) If approved, provide next-stage plan; if not, revise and re-submit Stage N
+3) STOP — Offer an optional review checkpoint before Stage N+1; if the user wants staged approvals, request explicit approval
+   - Capture explicit phrasing (e.g., “APPROVED Stage N → Stage N+1”) when the user requires it; otherwise note that the user opted out or granted blanket approval
+4) If approval is required and granted, provide the next-stage plan; if not granted, revise and re-submit Stage N; if the user opted out, continue with the next-stage plan
 
 End of prompt.
 
