@@ -1,3 +1,5 @@
+> This document is deprecated. See the consolidated rules under: ../../frameworks/guicedee/swagger.rules.md
+
 # GuicedSwagger and GuicedSwaggerUI Framework Guidelines
 
 This document provides comprehensive guidelines for using the GuicedSwagger and GuicedSwaggerUI frameworks, including package structure, configuration, usage patterns, and best practices.

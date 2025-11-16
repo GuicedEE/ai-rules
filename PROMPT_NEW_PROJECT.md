@@ -1,8 +1,8 @@
 # 🚀 Starter Prompt — New Project Using the Rules Repository
 
-Paste this prompt into your AI tool to bootstrap a new repository aligned to the Rules Repository methodology. The AI will scaffold a modular, forward-only documentation structure (Pact → Rules → Guides → Implementation), set up topic indexes, and generate minimal starter code where requested.
+Ask your AI tool to copy this template and align with the Rules Repository. The AI will scaffold a modular, forward-only documentation structure (Pact → Rules → Guides → Implementation), set up topic indexes, and generate minimal starter code where requested.
 
-Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo.
+Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
 ---
 
@@ -16,41 +16,130 @@ Fill before running.
 - License: <LICENSE> (e.g., Apache-2.0)
 
 
+- AI engine used:
+  - [ ] Junie
+  - [ ] GitHub Copilot
+  - [ ] Cursor
+  - [ ] ChatGPT
+  - [ ] Claude
+  - [ ] Roo
+  - [ ] Codex
+  - [ ] AI Assistant
+  - Note: Select every AI assistant involved and configure prompts/rules for each engine accordingly.
+    - AI Assistant reads rules from `.aiassistant/rules/`; mirror enforced policies there so IDE prompts stay aligned.
+
+- Architecture:
+  - [x] Specification-Driven Design (SDD) (mandatory)
+  - [x] Documentation-as-Code (mandatory)
+  - [ ] Monolith
+  - [ ] Microservices
+  - [ ] Micro Frontends
+  - [ ] DDD
+  - [ ] TDD (docs-first, test-first)
+  - [ ] BDD (docs-first, executable specs)
+- Language selection (configure here)
+  - Languages
+    - Java (choose exactly one LTS)
+      - [ ] Java 17 LTS
+      - [ ] Java 21 LTS
+      - [ ] Java 25 LTS
+    - Web
+      - [ ] TypeScript
+        - [ ] Angular (TypeScript)
+        - [ ] React (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
+      - [ ] JavaScript
+    - Kotlin
+      - [ ] Kotlin
+      - [ ] Ktor (requires Kotlin)
+    - Other: <OTHER_LANGUAGES>
+  - Build engines
+    - Java/Kotlin builds
+      - [ ] Maven
+      - [ ] Gradle (Groovy DSL)
+      - [ ] Gradle (Kotlin DSL)
+      - [ ] Apache Ivy
+    - Web builds
+      - [ ] npm / package.json scripts
+      - [ ] pnpm
+      - [ ] yarn
+      - [ ] Babel (transpile configuration lives in package.json/babel.config.*)
+    - Other build tooling: <OTHER_BUILDS>
+  - Dependency declarations
+    - JVM: record artifact coordinates only (groupId:artifactId:version). Use build-tooling rules for plugin or build script scaffolding.
+    - JavaScript/Web: record package name + version (npm/pnpm/yarn/Babel). Defer script wiring to language/build-topic rules.
+
 - Selected tech topics (tick):
+  - Fluent API Strategy (choose exactly one):
+    - [ ] CRTP
+    - [ ] Builder pattern (Lombok @Builder/manual)
   - Backend Reactive:
-    - [ ] Vert.x 5
-    - [ ] Hibernate Reactive 7
-  - Backend (Spring MVC):
-    - [ ] Core MVC/Web
-    - [ ] Validation (Bean Validation)
-    - [ ] Data JPA (Hibernate ORM)
-    - [ ] Security (non-reactive)
-    - [ ] Actuator (ops endpoints)
-    - [ ] OpenAPI (springdoc)
-    - [ ] Micrometer/Tracing (OTel exporters optional)
-    - [ ] Caching
-    - [ ] Scheduling & Async
-    - [ ] Batch
-    - [ ] Mail
-    - [ ] Messaging
-    - Database migrations:
-      - [ ] Flyway
-      - [ ] Liquibase
-    - [ ] Testing
-    - [ ] Packaging & Deployment
-    - Reference: ./generative/backend/spring/overview-setup.md
-  - Backend Reactive (GuicedEE):
-    - [ ] Core
-    - [ ] Web
-    - [ ] Rest
-    - [ ] Persistence
-    - [ ] RabbitMQ
-    - [ ] Cerial
-    - [ ] OpenAPI
-    - [ ] Sockets
-    - Note: Dependencies — if Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7
-  - Security (Reactive):
-    - [ ] Vert.x Web Auth/JWT/OAuth2
+    - Core stacks:
+      - [ ] Vert.x 5
+      - [ ] Hibernate Reactive 7
+    - Quarkus:
+      - [ ] Core project setup
+      - [ ] RESTEasy Reactive APIs
+      - [ ] Persistence (Hibernate/Panache)
+      - [ ] Reactive messaging
+      - [ ] Security/OIDC
+      - [ ] Dev Services & local tooling
+      - [ ] Native build & packaging
+      - [ ] Testing strategy
+      - Note: Quarkus currently embeds Vert.x 4 under the hood; select Vert.x 5 only if directly building on the Vert.x APIs.
+    - GuicedEE:
+      - [ ] Core
+      - [ ] Web
+      - [ ] Rest
+      - [ ] Persistence
+      - [ ] RabbitMQ
+      - [ ] Cerial
+      - [ ] OpenAPI
+      - [ ] Sockets
+      - Note: If Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7.
+    - Databases:
+      - [ ] PostgreSQL
+      - [ ] MySQL
+      - [ ] DB2
+      - [ ] Oracle
+      - [ ] MSSQL
+      - [ ] SQL Client templates
+      - [ ] MongoDB
+      - [ ] Redis
+      - [ ] Cassandra
+    - Security (Reactive):
+      - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Backend:
+    - Spring MVC:
+      - [ ] Core MVC/Web
+      - [ ] Validation (Bean Validation)
+      - [ ] Data JPA (Hibernate ORM)
+      - [ ] Security (non-reactive)
+      - [ ] Actuator (ops endpoints)
+      - [ ] OpenAPI (springdoc)
+      - [ ] Micrometer/Tracing (OTel exporters optional)
+      - [ ] Caching
+      - [ ] Scheduling & Async
+      - [ ] Batch
+      - [ ] Mail
+      - [ ] Messaging
+      - Database migrations:
+        - [ ] Flyway
+        - [ ] Liquibase
+      - [ ] Testing
+      - [ ] Packaging & Deployment
+      - Reference: ./generative/backend/spring/overview-setup.md
+    - JDBC Databases:
+      - [ ] PostgreSQL
+      - [ ] MySQL
+      - [ ] Oracle
+      - [ ] MSSQL
+      - [ ] MariaDB
+      - [ ] IBM DB2
+      - [ ] SQLite
+      - [ ] Other: <DB_OTHER>
   - Security/Auth Providers:
     - [ ] OpenID Connect (generic)
     - [ ] GCP (IAP/OIDC)
@@ -61,9 +150,12 @@ Fill before running.
     - [ ] Lombok
     - [ ] Logging
     - [ ] JSpecify
-  - Fluent API Strategy (choose exactly one):
-    - [ ] CRTP
-    - [ ] Builder pattern (Lombok @Builder/manual)
+  - Testing & Coverage:
+    - [ ] Jacoco
+    - [ ] SonarQube
+    - [ ] Java Micro Harness
+    - [ ] Cypress
+    - [ ] BrowserStack
   - Frontend (Standard):
     - [ ] Web Components
   - Frontend (Reactive):
@@ -73,7 +165,9 @@ Fill before running.
       - [ ] Angular 20
     - Other frameworks
       - [ ] React
-      - [ ] Next.js
+        - [ ] Next.js
+      - [ ] Vue
+        - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome
   - Frameworks (JWebMP):
@@ -90,10 +184,6 @@ Fill before running.
   - Infra/Deploy:
     - [ ] Terraform
     - [ ] GCP Cloud Run
-  - Database:
-    - [ ] PostgreSQL
-    - [ ] MySQL
-    - [ ] Other: <DB_OTHER>
   - Observability/Diagnostics:
     - [ ] Health endpoints
     - [ ] Tracing
@@ -104,20 +194,6 @@ Fill before running.
       - [ ] MicroProfile OpenAPI
       - [ ] Springdoc OpenAPI (Spring Boot)
     - Health endpoints default to MicroProfile: /health, /health/ready, /health/live (Spring Actuator endpoints supported but not default)
-- Architecture:
-  - [ ] Monolith
-  - [ ] Microservices
-  - [ ] Micro Frontends
-  - [ ] DDD
-  - [ ] TDD (docs-first, test-first)
-  - [ ] BDD (docs-first, executable specs)
-- AI engine used:
-  - [ ] JetBrains Junie
-  - [ ] GitHub Copilot
-  - [ ] Cursor
-  - [ ] ChatGPT
-  - [ ] Claude
-  - [ ] Roo
 - Level of change:
   - [x] Forward-only (default)
   - [ ] Conservative (only if explicitly required)
@@ -138,8 +214,10 @@ Policies (must honor):
 
 ## Documentation-First, Stage-Gated Workflow (Mandatory)
 
-- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo).
+- This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex).
 - The AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
+- Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
+- Junie exception: If Junie is the active AI engine, do not pause for stage approvals; treat each stage as auto-approved while documenting that Junie bypasses STOP gates.
 
 Stage 1 — Architecture & Foundations (Docs only)
 - Deliver:
@@ -149,7 +227,7 @@ Stage 1 — Architecture & Foundations (Docs only)
   - Dependency/integration map (internal/external services)
   - Glossary composition plan (topic-first, precedence and anchors)
 - Output format: Markdown docs placed in host docs (outside rules/), with links to enterprise rules indexes.
-- STOP: Request explicit user approval to proceed to Stage 2.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 2. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 2 — Guides & Design Validation (Docs only)
 - Deliver:
@@ -157,21 +235,21 @@ Stage 2 — Guides & Design Validation (Docs only)
   - API surface sketches and contracts (OpenAPI, types) where applicable
   - UI flows/wireframes (if applicable) and component mapping
   - Migration notes, test strategy outline, acceptance criteria
-- STOP: Request explicit user approval to proceed to Stage 3.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 3. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 3 — Implementation Plan (No code yet)
 - Deliver:
   - Scaffolding plan and module/file tree
   - Build/annotation-processor wiring, CI workflow plan, env/config plan
   - Rollout plan (phased), risk items, validation approach
-- STOP: Request explicit user approval to proceed to Stage 4.
+- STOP (user review optional): Offer a review/approval checkpoint before Stage 4. Continue without waiting only if the user has opted out or granted blanket approval.
 
 Stage 4 — Implementation & Scaffolding (Code allowed)
-- Scope: Only after explicit approval.
+- Scope: Only after explicit approval unless the user has already waived stage approvals or granted blanket approval for the run.
 - Approach: Generate minimal scaffolding first, then iterate in small, reviewable steps. After each step, present diffs and validation, then ask to continue.
 
 Universal STOP rule
-- If approval is not granted, revise docs; do not produce code.
+- If the user requires staged approvals and approval is not granted, revise docs; if the user waived staged approvals, continue but be prepared to revise when feedback is provided.
 - Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
 
 ## 1) Self‑Configure the AI Engine
@@ -185,6 +263,9 @@ Universal STOP rule
   - Host project mode (a downstream project adopting these rules):
     - Use this repository as a Git submodule and link to it from host artifacts.
   - For Claude specifically: load and pin ./skills.md; discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code); acknowledge which Skills are active and apply them throughout generation.
+- For Codex CLI (Codex agent):
+  - Load ./RULES.md anchors plus README context; confirm forward-only and Document Modularity constraints are pinned in the Codex CLI workspace.
+  - Follow Codex CLI harness instructions: run shell commands with `bash -lc` and explicit `workdir`, prefer `rg` for scans, honor sandbox/approval settings, and use the plan tool for multi-step work.
 - For Roo: load and pin [ROO_WORKSPACE_POLICY.md](rules/ROO_WORKSPACE_POLICY.md). If it does not exist, create it with a summary of RULES.md sections 4,5, Document Modularity Policy, and 6 (Forward-Only). Ensure repo-scoped conversations, include file paths in responses, and confirm forward-only mode is enabled. Update all references affected by a change in the same forward-only change set.
 
 Language Selection (configure here)
@@ -193,12 +274,14 @@ Language Selection (configure here)
     - [ ] Java 17 LTS
     - [ ] Java 21 LTS
     - [ ] Java 25 LTS
-  - Web
-    - [ ] TypeScript
-      - [ ] Angular (TypeScript)
-      - [ ] React (TypeScript)
-      - [ ] Next.js (TypeScript)
-    - [ ] JavaScript
+    - Web
+      - [ ] TypeScript
+        - [ ] Angular (TypeScript)
+        - [ ] React (TypeScript)
+          - [ ] Next.js (TypeScript)
+        - [ ] Vue (TypeScript)
+          - [ ] Nuxt (TypeScript)
+      - [ ] JavaScript
   - Kotlin
     - [ ] Kotlin
     - [ ] Ktor (requires Kotlin)
@@ -208,11 +291,15 @@ Language selection → generation rules
 - If Java 17/21/25 is selected:
   - Apply the corresponding LTS rules and toolchains — [java-17.rules.md](rules/generative/language/java/java-17.rules.md), [java-21.rules.md](rules/generative/language/java/java-21.rules.md), [java-25.rules.md](rules/generative/language/java/java-25.rules.md).
   - Include build integration via [build-tooling.md](rules/generative/language/java/build-tooling.md).
+  - When Maven, Gradle (Groovy/Kotlin DSL), or Apache Ivy is selected, document artifact coordinates only (groupId:artifactId:version) and refer to build-tooling.md for plugin/config wiring.
 - If Web → TypeScript is selected:
   - Include language rules link: [TypeScript README](rules/generative/language/typescript/README.md).
   - If Angular is also selected: include [Angular README](rules/generative/language/angular/README.md) and scaffold Angular app structure when requested; enforce a single version override.
   - If React is also selected: include [React README](rules/generative/language/react/README.md) and scaffold when requested.
-  - If Next.js is selected: include [Next.js README](rules/generative/frontend/nextjs/README.md) and adhere to App Router guidance.
+  - If React → Next.js is selected: include [Next.js README](rules/generative/frontend/nextjs/README.md) and adhere to App Router guidance.
+  - If Vue is also selected: include [Vue README](rules/generative/language/vue/README.md) and scaffold when requested.
+  - If Vue → Nuxt is selected: include [Nuxt README](rules/generative/frontend/nuxt/README.md) and follow SSR/SSG routing guidance.
+  - When npm, pnpm, yarn, or Babel is selected, record package@version requirements only; rely on the TypeScript/JS build guides for configuring bundlers/transpilers.
 - If Kotlin is selected:
   - Include language rules link: [Kotlin README](rules/generative/language/kotlin/README.md).
   - If Ktor is also selected, scaffold a minimal Ktor service module and wire guides accordingly.
@@ -247,9 +334,11 @@ When approved, execute the plan as one change set.
        - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
        - Angular Plugins:
          - Angular Awesome — [README](rules/generative/frontend/angular-awesome/README.md), [GLOSSARY](rules/generative/frontend/angular-awesome/GLOSSARY.md)
-     - Frontend (React/Next):
+     - Frontend (React/Vue/Next/Nuxt):
        - React — [README](rules/generative/language/react/README.md)
        - Next.js — [README](rules/generative/frontend/nextjs/README.md), [GLOSSARY](rules/generative/frontend/nextjs/GLOSSARY.md)
+       - Vue — [README](rules/generative/language/vue/README.md), [GLOSSARY](rules/generative/language/vue/GLOSSARY.md)
+       - Nuxt — [README](rules/generative/frontend/nuxt/README.md), [GLOSSARY](rules/generative/frontend/nuxt/GLOSSARY.md)
      - Backend:
        - GuicedEE — [README](rules/generative/backend/guicedee/README.md)
        - Hibernate (ORM/Reactive) — [README](rules/generative/backend/hibernate/README.md)
@@ -275,7 +364,7 @@ When approved, execute the plan as one change set.
        - Observability — [README](rules/generative/platform/observability/README.md)
        - Security & Auth — [README](rules/generative/platform/security-auth/README.md)
        - Secrets & Env — [README](rules/generative/platform/secrets-config/README.md)
-5. Create GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions; Web Components custom-elements/shadow-dom; Angular producing/consuming; Angular Awesome component usage; Next.js data fetching). Use glossary-aligned terms consistently.
+5. Create GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions; Web Components custom-elements/shadow-dom; Angular producing/consuming; Angular Awesome component usage; Next.js or Nuxt data fetching). Use glossary-aligned terms consistently.
 6. Create IMPLEMENTATION.md explaining current modules, code layout, and back-links to guides. Ensure implementation names and labels adhere to GLOSSARY.md.
 7. Environment alignment
    - Create .env.example per [env-variables.md](rules/generative/platform/secrets-config/env-variables.md).
@@ -295,10 +384,10 @@ When approved, execute the plan as one change set.
 ---
 
 ## 4) Output Checklist
-- [ ] Stage 1 (Architecture & Foundations) docs produced and user-approved (STOP gate passed)
-- [ ] Stage 2 (Guides & Design Validation) docs produced and user-approved (STOP gate passed)
-- [ ] Stage 3 (Implementation Plan) produced and user-approved (STOP gate passed)
-- [ ] Stage 4 (Code/Scaffolding) executed only after explicit approval; diffs presented with validation and links
+- [ ] Stage 1 (Architecture & Foundations) docs produced; capture user approval if they require the STOP gate
+- [ ] Stage 2 (Guides & Design Validation) docs produced; capture user approval if they require the STOP gate
+- [ ] Stage 3 (Implementation Plan) produced; capture user approval if they require the STOP gate
+- [ ] Stage 4 (Code/Scaffolding) executed only after explicit approval unless the user granted blanket approval; diffs presented with validation and links
 - [ ] Repo initialized; submodule added and referenced in README
 - [ ] PACT.md present and linked
 - [ ] Project RULES.md present, linking to enterprise RULES and topic indexes (including Angular Plugins group where applicable)
@@ -323,9 +412,9 @@ When approved, execute the plan as one change set.
 ## 6) AI Response Format (Stage-Gated)
 1) Stage N deliverables (docs or plans only until Stage 4), with file paths and working links
 2) Open questions, decisions required, risks
-3) STOP — Request explicit approval to proceed to Stage N+1
-   - Required approval phrasing: “APPROVED Stage N → Stage N+1”
-4) If approved, provide next-stage plan; if not, revise and re-submit Stage N
+3) STOP — Offer an optional review checkpoint before Stage N+1; if the user wants staged approvals, request explicit approval
+   - Capture explicit phrasing (e.g., “APPROVED Stage N → Stage N+1”) when the user requires it; otherwise note that the user opted out or granted blanket approval
+4) If approval is required and granted, provide the next-stage plan; if not granted, revise and re-submit Stage N; if the user opted out, continue with the next-stage plan
 
 End of prompt.
 ## Diagrams and Docs-as-Code Policy (Mandatory)
@@ -377,7 +466,7 @@ Stage-gates alignment (reinforced)
   - Sequence diagrams for at least two critical flows
   - Initial ERD for the core domain
   - docs/architecture/README.md and docs/PROMPT_REFERENCE.md
-- Stage 2 may refine/extend diagrams; Stage 3/4 must not proceed without Stage 1/2 approval.
+- Stage 2 may refine/extend diagrams; Stage 3/4 must not proceed without Stage 1/2 approval when the user requests staged reviews.
 
 Checklist addendum (Docs & Diagrams)
 - [ ] docs/architecture/README.md exists and links to all diagrams

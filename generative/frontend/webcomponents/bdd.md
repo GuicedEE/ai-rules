@@ -8,7 +8,7 @@ Purpose
 
 Scope
 - Authoring and consuming Custom Elements (shadow DOM, slots, CSS parts, custom events) across frameworks (vanilla, Angular, React, Next.js).
-- For framework projects, also see the framework’s BDD override (Angular/React/Next.js), which supersedes this file where guidance differs.
+- For framework projects, also see the framework’s BDD override (Angular/React/Vue/Next.js/Nuxt), which supersedes this file where guidance differs.
 
 BDD workflow in this context
 - Discovery → Formulation → Automation

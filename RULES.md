@@ -77,6 +77,7 @@ Authoritative categories for topics under generative/:
   - logging/
   - guicedee/
   - lombok/
+  - quarkus/
 - generative/data/
   - database/
   - entityassist/ (future)
@@ -90,6 +91,7 @@ Authoritative categories for topics under generative/:
   - ci-cd/
   - observability/
   - secrets-config/
+  - testing/
 
 Indexing rule: Each category and each topic MUST provide a README.md that serves as an index and navigator.
 

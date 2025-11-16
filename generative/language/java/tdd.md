@@ -112,6 +112,7 @@ Build Tooling (Maven/Gradle)
     }
   }
   ```
+- Deeper coverage rules and CI wiring: ../../platform/testing/jacoco.rules.md
 
 Testing Libraries and Patterns
 - Unit

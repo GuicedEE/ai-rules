@@ -72,8 +72,12 @@ Consumption Policies
   - For dedicated wrappers, follow [GLOSSARY.md](rules/generative/frontend/angular-awesome/GLOSSARY.md) binding and events policy.
 - React
   - Prefer ref for imperative props; use onEvent case mapping where applicable; see [react-web-components.md](rules/generative/language/react/react-web-components.md).
+- Vue
+  - Register components once per app entry; wrap CE props/events via Vue wrappers; see [vue-web-components.md](rules/generative/language/vue/vue-web-components.md).
 - Next.js
   - Ensure ESM-compatible bundling and SSR guards; see [nextjs-web-components.md](rules/generative/frontend/nextjs/nextjs-web-components.md).
+- Nuxt
+  - Load web components via client-only plugins or dynamic imports; see [nuxt-web-components.md](rules/generative/frontend/nuxt/nuxt-web-components.md).
 - Microfrontends
   - Use ESM and import maps to avoid duplicate registrations; isolate styles via shadow DOM; see [microfronts-overview.md](rules/generative/frontend/webcomponents/microfronts-overview.md).
 
@@ -88,7 +92,7 @@ Security
 
 Testing
 - Authoring: test with @web/test-runner or Playwright; verify slot/part contracts.
-- Consumption: test integration in framework harnesses (Angular/React) with JSDOM or e2e.
+- Consumption: test integration in framework harnesses (Angular/React/Vue) with JSDOM or e2e.
 
 LLM Interpretation Guidance
 - When asked to author a component:
