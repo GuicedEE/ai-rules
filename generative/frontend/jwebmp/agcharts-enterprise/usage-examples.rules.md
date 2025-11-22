@@ -10,6 +10,32 @@ Prerequisites (Java-only)
   - `com.jwebmp.plugins:agcharts-enterprise` (this module)
 - Prefer importing the JWebMP BOM to align versions automatically.
 - No manual Angular edits. The Page Configurator in this plugin contributes the `ag-charts-enterprise` NPM dependency.
+- Load `docs/PROMPT_REFERENCE.md` (architecture + policy index) before prompting so the correct stacks and diagrams are pinned.
+
+## Option type cheat sheet (agents / humans / LLMs)
+
+Use this table when selecting option beans so prompts stay deterministic and humans can see where each class applies.
+
+### Series (Enterprise-only)
+| Option class | When to use | Key setters / properties | Tips |
+| - | - | - | - |
+| `AgRadialColumnSeriesOptions` | Circular column charts driven by categorical angles and numeric radii. | `setAngleKey`, `setRadiusKey`, `setGrouped`, `setStacked`, `setColumnWidthRatio`, `setCornerRadius`, `setLegendItemName`, `setStroke*`. | Pair with `AgRadiusNumberAxisOptions` to control the inner hole via `setInnerRadiusRatio`. |
+| `AgRadialBarSeriesOptions` | Radial bars where the numeric value maps to angle and radius is categorical. | `setAngleKey`, `setRadiusKey`, `setStackGroup`, `setNormalizedTo`, `setItemStyler`, `setLineDash`, `setShowInLegend`. | Use when comparing categories around a circular scale (e.g., gauge-like dashboards). |
+| `AgHeatmapSeriesOptions` | Heatmap/gridded insights (X/Y categories, color intensity). | `setxKey`, `setyKey`, `setColorKey`, `setColorRange`, `setItemPadding`, `setTextAlign`, `setShowInMiniChart`, `setStroke*`. | Always provide ≥2 colours in `colorRange`; use `setNodeClickRange("nearest")` for better hover fidelity. |
+| `AgHeatmapSeriesLabelOptions` | Cell label control for heatmaps. | `setEnabled`, `setFormatter("function(params){...}")`. | Formatter is raw JavaScript; escape strings via `JsUtils.escapeJs` before passing to `.setFormatter`. |
+
+### Axis helpers
+| Option class | Purpose | Notes |
+| - | - | - |
+| `AgRadiusNumberAxisOptions` | Numeric radius axis for polar/radial charts. | `setInnerRadiusRatio(0-1)` hollows the center; `setPositionAngle` aligns the axis with a degree value. |
+| `AgPolarAxisLabelOptions` + `AgPolarAxisLabelOrientation` | Label styling for polar axes. | Choose orientations (`PARALLEL`, `PERPENDICULAR`, etc.) to keep labels readable; combine with `setFormatter` for unit suffixes. |
+
+### Gauge root options
+| Option class | When to use | Key pieces |
+| - | - | - |
+| `AgLinearGaugeOptions` | Linear gauges (vertical/horizontal). | Required `setValue`. Compose with `setScale(AgLinearGaugeScale)`, `setBar(AgLinearGaugeBarStyle)`, `setLabel(AgLinearGaugeLabelOptions)`, `setTargets(List<AgLinearGaugeTarget>)`, `setSegmentation(AgGaugeSegmentation)`, `setCornerMode`. |
+| `AgRadialGaugeOptions` | Radial gauges with bars/needles. | Required `setValue`. Combine with `setNeedle(AgRadialGaugeNeedleStyle)`, `setBar(AgRadialGaugeBarStyle)`, `setScale(AgRadialGaugeScale)`, `setTargets(List<AgRadialGaugeTarget>)`, `setLabel(...)`, `setSecondaryLabel(...)`, plus geometry (`setInnerRadiusRatio`, `setStartAngle`, `setEndAngle`). |
+| Shared helpers | Colour bands / targets. | `AgGaugeSegmentation` defines banding; `AgGaugeTarget`/`AgGaugeTargetPlacement` add goal markers; keep units consistent with the gauge scale. |
 
 General pattern
 - Construct charts the same way as in the community plugin; enterprise unlocks additional series types, interactions, and APIs on the client.

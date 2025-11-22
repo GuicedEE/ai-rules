@@ -6,7 +6,7 @@ Overview
 
 TypeScript dependency wiring
 - Use `@TsDependency(name = "ag-charts-enterprise")` within the configurator to pull the NPM package into the generated Angular project.
-- This plugin uses `@NgBootImportReference` to import AG Charts Enterprise modules: `AgChartsEnterprise` from `ag-charts-enterprise` and `AgChartsModule` from `ag-charts-angular`.
+- This plugin uses `@NgBootImportReference` to import AG Charts Enterprise modules: `AgChartsEnterpriseModule` from `ag-charts-enterprise` and `AgChartsModule` from `ag-charts-angular`.
 - The enterprise plugin complements the community plugin dependencies; it does not replace them.
 - Do not edit generated TS; all dependency inclusion is declarative via annotations and build-time processing.
 

@@ -1,3 +1,5 @@
+> This document is deprecated. See the consolidated rules under: ../../frameworks/guicedee/hazelcast.rules.md and ../../frameworks/guicedee/hibernate.rules.md
+
 # GuicedHazelcast and HazelcastHibernate Framework Guidelines
 
 This document provides comprehensive guidelines for using the GuicedHazelcast and HazelcastHibernate frameworks, including package structure, configuration, usage patterns, and best practices.

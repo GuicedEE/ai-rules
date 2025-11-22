@@ -17,6 +17,7 @@ Quick links
 - Usage Examples (CRTP) — ./usage-examples.rules.md
 - Troubleshooting — ./troubleshooting.rules.md
 - Glossary — ./GLOSSARY.md
+- Architecture & prompt seeding — ../../../../../docs/PROMPT_REFERENCE.md (loads C4 + sequence diagrams under docs/architecture/)
 
 Cross-links
 - JWebMP topic index — ../README.md
