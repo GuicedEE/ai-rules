@@ -20,7 +20,7 @@ public abstract class Base<J extends Base<J>> {
   private String name;
 
   @SuppressWarnings("unchecked")
-  public J setName(String name) {
+  public @org.jspecify.annotations.NonNull J setName(String name) {
     this.name = name;
     return (J) this; // CRTP: return the self type
   }
@@ -31,7 +31,7 @@ public class User<J extends User<J>> extends Base<J> {
   private int age;
 
   @SuppressWarnings("unchecked")
-  public J setAge(int age) {
+  public @org.jspecify.annotations.NonNull J setAge(int age) {
     this.age = age;
     return (J) this;
   }
@@ -61,6 +61,8 @@ Rules
 3) Nullness and API contracts (JSpecify)
 - Annotate packages or classes with @org.jspecify.annotations.NullMarked.
 - Use @org.jspecify.annotations.Nullable on parameters/fields/returns only where null is part of the explicit contract.
+- CRTP setters that return J MUST never return null and MUST be annotated @org.jspecify.annotations.NonNull on the return type.
+- Keep variables strongly typed; never coerce or cast to `any`/raw types to bypass nullability or other constraints. Perform explicit `if`-statement null checks and narrow types instead of erasing them.
 
 4) Inheritance safety
 - Do not widen nullness in overrides.
@@ -142,19 +144,20 @@ package com.example.user;
 CRTP base with multiple setters
 ```java
 import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public abstract class Entity<J extends Entity<J>> {
   private String id;
   private @Nullable String description;
 
   @SuppressWarnings("unchecked")
-  public J setId(String id) {
+  public @NonNull J setId(String id) {
     this.id = id;
     return (J) this;
   }
 
   @SuppressWarnings("unchecked")
-  public J setDescription(@Nullable String description) {
+  public @NonNull J setDescription(@Nullable String description) {
     this.description = description;
     return (J) this;
   }

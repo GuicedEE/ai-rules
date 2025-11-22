@@ -17,6 +17,9 @@ Core principles
   - Use signals for local state where available and appropriate; use computed/effect; coordinate with app-wide state strategy (signals services or NgRx).
 - Control flow
   - Prefer Angular’s built-in control flow blocks (if/for/switch) where the selected version supports them; fall back to legacy syntax if required by version.
+- Type safety and flow control
+  - Ban `any` (explicit or implicit); use `unknown`, generics, and discriminated unions, then narrow via conditions/guards instead of casting away types.
+  - Do not add no-op try/catch blocks; surface errors or handle them explicitly so failures stay observable.
 - SSR/Hydration
   - Keep templates pure and deterministic; avoid side-effects during render/init; prefer zoneless hydration when version supports it; ensure stable keys/ids.
 - DI
