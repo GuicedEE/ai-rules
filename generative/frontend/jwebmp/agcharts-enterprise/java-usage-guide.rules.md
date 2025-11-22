@@ -2,6 +2,7 @@
 
 Purpose
 - Provide a concrete, Java-only walkthrough for using AG Charts Enterprise via this JWebMP plugin. No manual Angular or TypeScript edits are required.
+- Before using these steps, load `docs/PROMPT_REFERENCE.md` to ensure the architecture diagrams and policy selections are pinned for prompts/agents.
 
 Prerequisites
 - Dependencies in your host app:
@@ -38,7 +39,7 @@ Prerequisites
 
 2) Verify Page Configurator discovery
 - The enterprise plugin contributes a Page Configurator that declares the NPM dependency: `ag-charts-enterprise` via `@TsDependency`.
-- Angular Boot Import References ensure proper module imports: `AgChartsEnterprise` and `AgChartsModule`.
+- Angular Boot Import References ensure proper module imports: `AgChartsEnterpriseModule` from `ag-charts-enterprise` and `AgChartsModule` from `ag-charts-angular`.
 - At build time, the generated Angular workspace should include `ag-charts-enterprise` and `ag-charts-angular` in package.json.
 
 3) Create a chart in Java
