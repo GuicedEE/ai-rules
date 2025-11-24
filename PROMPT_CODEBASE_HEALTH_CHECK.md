@@ -13,6 +13,11 @@ Fill before running.
 - Org and project name: <ORG_NAME> / <PROJECT_NAME>
 - Short description: <ONE_LINE_DESCRIPTION>
 - License (if missing or to change): <LICENSE>
+- Stage approvals preference for this run (controls STOP gates)
+  - Choose exactly one:
+    - [ ] Require explicit approval at each stage (default)
+    - [ ] Approvals are optional; proceed with documented defaults if no reply
+    - [ ] Blanket approval granted for this run (no STOPs)
 - AI engine used:
   - [ ] Junie
   - [ ] GitHub Copilot
@@ -228,6 +233,26 @@ Universal STOP rule
 - If the user requires staged approvals and approval is not granted, revise docs/findings; if the user waived staged approvals, continue but incorporate feedback when it arrives.
 - Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
 
+### Stage Gate Interaction Protocol (Non-blocking, with defaults)
+- Purpose: Standardize STOP gate UI options and fallback behavior to prevent stalls/timeouts.
+- At every STOP gate, the assistant MUST present the following options block verbatim (adapting only the stage number):
+
+  Options:
+  - 1) Approve Stage N → proceed to Stage N+1
+  - 2) Request changes to Stage N (specify what to adjust)
+  - 3) Skip approval for this stage and proceed (recorded as optional approval)
+  - 4) Pause here (do not proceed)
+
+- Retry and fallback rules:
+  - If “Blanket approval” is selected in inputs: proceed automatically without asking; still log that gates were skipped by policy.
+  - If “Approvals optional” is selected: present the options once, send one reminder if no reply within a reasonable time, then proceed with option 3 and record the default decision. Do NOT loop more than 2 attempts.
+  - If “Require explicit approval” is selected: present the options and send one reminder if no reply; if still no response, stop at the gate with a concise summary and instructions to resume. Do NOT loop more than 2 attempts.
+  - Under no circumstance should the assistant perform more than two consecutive “await user input” attempts at a single gate.
+
+- Rendering requirement:
+  - The options block MUST be included under a clearly labeled STOP section so that UIs can render actionable choices. Avoid free-form phrasing that hides the options.
+  - Always echo the current stage and the next stage name in the options block.
+
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode; update references in the same change.
 - Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing constraints.
@@ -390,9 +415,11 @@ Reply in this structure:
 
 1) Stage N deliverables (docs or plans only until Stage 4), with file paths and working links
 2) Open questions, decisions required, risks
-3) STOP — Offer an optional review checkpoint before Stage N+1; if the user wants staged approvals, request explicit approval
-   - Capture explicit phrasing (e.g., “APPROVED Stage N → Stage N+1”) when the user requires it; otherwise note that the user opted out or granted blanket approval
-4) If approval is required and granted, provide the next-stage plan; if not granted, revise and re-submit Stage N; if the user opted out, continue with the next-stage plan
+3) STOP — Render the standardized options block (see Stage Gate Interaction Protocol). Respect the Stage approvals preference from Inputs.
+   - If approvals are optional and no reply is received after one reminder, proceed with option 3 and record the default.
+   - If explicit approval is required and still no reply after one reminder, stop and summarize how to resume; do not retry more than twice.
+   - If blanket approval is set, skip STOP sections but record that the gate was auto-approved by policy.
+4) If approval is required and granted, provide the next-stage plan; if not granted, revise and re-submit Stage N; if the user opted out or blanket approval applies, continue with the next stage plan
 
 End of prompt.
 

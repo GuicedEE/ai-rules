@@ -19,6 +19,12 @@ Fill before running.
   - [ ] Service/Framework
   - [ ] Other: <OTHER>
 
+- Stage approvals preference for this run (controls STOP gates)
+  - Choose exactly one:
+    - [ ] Require explicit approval at each stage (default)
+    - [ ] Approvals are optional; proceed with documented defaults if no reply
+    - [ ] Blanket approval granted for this run (no STOPs)
+
 - AI engine used:
   - [ ] Junie
   - [ ] GitHub Copilot
@@ -396,9 +402,11 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 ## 6) AI Response Format (Stage-Gated)
 1) Stage N deliverables (docs or plans only until Stage 4), with file paths and working links
 2) Open questions, decisions required, risks
-3) STOP — Offer an optional review checkpoint before Stage N+1; if the user wants staged approvals, request explicit approval
-   - Capture explicit phrasing (e.g., “APPROVED Stage N → Stage N+1”) when the user requires it; otherwise note that the user opted out or granted blanket approval
-4) If approval is required and granted, provide the next-stage plan; if not granted, revise and re-submit Stage N; if the user opted out, continue with the next-stage plan
+3) STOP — Render the standardized options block (see Stage Gate Interaction Protocol). Respect the Stage approvals preference from Inputs.
+   - If approvals are optional and no reply is received after one reminder, proceed with option 3 and record the default.
+   - If explicit approval is required and still no reply after one reminder, stop and summarize how to resume; do not retry more than twice.
+   - If blanket approval is set, skip STOP sections but record that the gate was auto-approved by policy.
+4) If approval is required and granted, provide the next-stage plan; if not granted, revise and re-submit Stage N; if the user opted out or blanket approval applies, continue with the next-stage plan
 
 End of prompt.
 ## Diagrams and Docs-as-Code Policy (Mandatory)
