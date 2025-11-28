@@ -28,7 +28,7 @@ Scope
 - [ ] Testcontainers spins up the database declared in `.env` (`TEST_DB_CONTAINER_IMAGE`), and the `DatabaseModule` reads host/port/user from the container.
 - [ ] Mutiny `Uni` contract verified: success + failure paths.
 - [ ] CRTP typing enforced (no raw/unchecked generics in tests).
-- [ ] Guice modules registered via `ServiceLoader` (`META-INF/services/com.guicedee.guicedinjection.interfaces.IGuiceModule`).
+- [ ] Guice modules registered via `ServiceLoader` (`META-INF/services/com.guicedee.client.services.lifecycle.IGuiceModule`).
 
 ## References
 - [EntityAssist Reactive Rules](./entity-assist-reactive-rules.md)

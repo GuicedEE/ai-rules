@@ -6,10 +6,14 @@ Guides
 - Services — ./services/ (see representative docs like representations.md)
 - Functions — ./functions/ (function helpers and utilities)
 
+Subtopics
+- Client Library — ./client/ (GuicedEE Inject Client specific rules, glossary, and examples)
+
 Recommended cross‑topics
 - Backend/Hibernate (Reactive 7) — generative/backend/hibernate/README.md
 - Data/EntityAssist — generative/data/entityassist/README.md
 - Backend/Vert.x 5 — generative/backend/vertx/README.md
+- Backend/JSpecify — generative/backend/jspecify/README.md
 
 See also
 - Master index — generative/README.md

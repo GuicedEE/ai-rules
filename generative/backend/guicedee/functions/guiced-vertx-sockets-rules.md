@@ -97,7 +97,7 @@ Example implementation of GuicedWebSocketOnAddToGroup:
 package com.example.websockets.groups;
 
 import com.google.inject.Inject;
-import com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnAddToGroup;
+import com.guicedee.client.services.websocket.GuicedWebSocketOnAddToGroup;
 import com.guicedee.vertx.websockets.VertxSocketHttpWebSocketConfigurator;
 import io.vertx.core.http.ServerWebSocket;
 
@@ -105,20 +105,20 @@ import java.util.concurrent.CompletableFuture;
 
 public class CustomGroupAddHandler implements GuicedWebSocketOnAddToGroup
 {
-    @Inject
-    private ServerWebSocket webSocket;
-
-    @Override
-    public CompletableFuture<Boolean> onAddToGroup(String groupName)
-    {
-        // Custom logic before adding to group
-        System.out.println("Adding WebSocket to group: " + groupName);
-
-        // Return false to allow the default implementation to run
-        CompletableFuture<Boolean> result = new CompletableFuture<>();
-        result.complete(false);
-        return result;
-    }
+		@Inject
+		private ServerWebSocket webSocket;
+		
+		@Override
+		public CompletableFuture<Boolean> onAddToGroup(String groupName)
+		{
+				// Custom logic before adding to group
+				System.out.println("Adding WebSocket to group: " + groupName);
+				
+				// Return false to allow the default implementation to run
+				CompletableFuture<Boolean> result = new CompletableFuture<>();
+				result.complete(false);
+				return result;
+		}
 }
 ```
 
@@ -131,17 +131,19 @@ SPI implementations can be registered using both the Java Module System and the 
 In your `module-info.java` file:
 
 ```java
-module com.example.websockets {
-    requires com.guicedee.vertx.sockets;
+import com.guicedee.client.services.websocket.GuicedWebSocketOnAddToGroup;
 
-    provides com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnAddToGroup 
-        with com.example.websockets.groups.CustomGroupAddHandler;
+module com.example.websockets {
+		requires com.guicedee.vertx.sockets;
+		
+		provides GuicedWebSocketOnAddToGroup
+			with com.example.websockets.groups.CustomGroupAddHandler;
 }
 ```
 
 #### Using META-INF/services:
 
-Create a file at `META-INF/services/com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnAddToGroup` with the content:
+Create a file at `META-INF/services/com.guicedee.client.services.websocket.GuicedWebSocketOnAddToGroup` with the content:
 
 ```
 com.example.websockets.groups.CustomGroupAddHandler
@@ -156,27 +158,31 @@ The `module-info.java` file for a module that uses GuicedVertxSockets should fol
 1. Require the GuicedVertxSockets module
 2. Use the SPI interfaces provided by GuicedVertxSockets
 3. Provide implementations of the SPI interfaces as needed
-4. **Do not** specify `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` as this is already handled by the GuicedInjection library
+4. **Do not** specify `uses com.guicedee.client.services.lifecycle.IGuiceModule` as this is already handled by the GuicedInjection library
 
 Example:
 
 ```java
+import com.guicedee.client.services.websocket.GuicedWebSocketOnAddToGroup;
+import com.guicedee.client.services.websocket.GuicedWebSocketOnPublish;
+import com.guicedee.client.services.websocket.GuicedWebSocketOnRemoveFromGroup;
+
 module com.example.websockets {
-    requires com.guicedee.vertx.sockets;
-
-    uses com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnAddToGroup;
-    uses com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnRemoveFromGroup;
-    uses com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnPublish;
-
-    provides com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnAddToGroup 
-        with com.example.websockets.groups.CustomGroupAddHandler;
-
-    // Do NOT include this line:
-    // uses com.guicedee.guicedinjection.interfaces.IGuiceModule;
+		requires com.guicedee.vertx.sockets;
+		
+		uses GuicedWebSocketOnAddToGroup;
+		uses com.guicedee.client.services.websocket.GuicedWebSocketOnRemoveFromGroup;
+		uses com.guicedee.client.services.websocket.GuicedWebSocketOnPublish;
+		
+		provides GuicedWebSocketOnAddToGroup
+			with com.example.websockets.groups.CustomGroupAddHandler;
+		
+		// Do NOT include this line:
+		// uses com.guicedee.client.services.lifecycle.IGuiceModule;
 }
 ```
 
-> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
+> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.client.services.lifecycle.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
 
 ### Transitive Dependencies
 
@@ -212,7 +218,7 @@ The META-INF/services mechanism can be used alongside or instead of the Java Mod
 
 Example:
 
-File: `META-INF/services/com.guicedee.guicedservlets.websockets.services.GuicedWebSocketOnAddToGroup`
+File: `META-INF/services/com.guicedee.client.services.websocket.GuicedWebSocketOnAddToGroup`
 ```
 com.example.websockets.groups.CustomGroupAddHandler
 ```

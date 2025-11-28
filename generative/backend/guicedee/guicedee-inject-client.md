@@ -362,20 +362,24 @@ For dependency management, you can import the GuicedEE BOM:
 If you're using Java modules, add the following to your module-info.java:
 
 ```java
+import com.guicedee.client.services.lifecycle.IGuiceModule;
+import com.guicedee.client.services.lifecycle.IGuicePostStartup;
+import com.guicedee.client.services.lifecycle.IGuicePreStartup;
+
 module your.module.name {
-    // Required modules
-    requires com.guicedee.client;
-
-    // If you're implementing SPI interfaces
-    provides com.guicedee.guicedinjection.interfaces.IGuiceModule with your.package.YourModule;
-    provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup with your.package.YourPreStartup;
-    provides com.guicedee.guicedinjection.interfaces.IGuicePostStartup with your.package.YourPostStartup;
-
-    // If you're using call scoping
-    opens your.package.scoped.classes to com.google.guice;
-
-    // If you're using Jackson serialization
-    opens your.package.serialized.classes to com.fasterxml.jackson.databind;
+		// Required modules
+		requires com.guicedee.client;
+		
+		// If you're implementing SPI interfaces
+		provides com.guicedee.client.services.lifecycle.IGuiceModule with your.package.YourModule;
+		provides com.guicedee.client.services.lifecycle.IGuicePreStartup with your.package.YourPreStartup;
+		provides com.guicedee.client.services.lifecycle.IGuicePostStartup with your.package.YourPostStartup;
+		
+		// If you're using call scoping
+		opens your.package.scoped.classes to com.google.guice;
+		
+		// If you're using Jackson serialization
+		opens your.package.serialized.classes to com.fasterxml.jackson.databind;
 }
 ```
 

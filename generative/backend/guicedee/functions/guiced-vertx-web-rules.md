@@ -168,7 +168,7 @@ The `module-info.java` file for a module that uses GuicedVertxWeb should follow 
 1. Require the GuicedVertxWeb module
 2. Use the SPI interfaces provided by GuicedVertxWeb
 3. Provide implementations of the SPI interfaces as needed
-4. **Do not** specify `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` as this is already handled by the GuicedInjection library
+4. **Do not** specify `uses com.guicedee.client.services.lifecycle.IGuiceModule` as this is already handled by the GuicedInjection library
 
 Example:
 
@@ -182,11 +182,11 @@ module com.example.web {
         with com.example.web.routes.ApiRoutesConfigurator;
 
     // Do NOT include this line:
-    // uses com.guicedee.guicedinjection.interfaces.IGuiceModule;
+    // uses com.guicedee.client.services.lifecycle.IGuiceModule;
 }
 ```
 
-> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
+> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.client.services.lifecycle.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
 
 ### Transitive Dependencies
 

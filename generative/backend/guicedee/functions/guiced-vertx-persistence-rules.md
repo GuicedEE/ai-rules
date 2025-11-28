@@ -77,31 +77,31 @@ Example:
 ```java
 package com.guicedee.vertxpersistence;
 
-import com.guicedee.guicedinjection.interfaces.IDefaultService;
+import com.guicedee.client.services.IDefaultService;
 import org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor;
 
 import java.util.Properties;
 
 /**
- * A functional interface to populate a connection base info based on properties received
- */
+	* A functional interface to populate a connection base info based on properties received
+	*/
 @FunctionalInterface
 public interface IPropertiesConnectionInfoReader<J extends IPropertiesConnectionInfoReader<J>>
-    extends IDefaultService<J>
+	extends IDefaultService<J>
 {
-    /**
-     * Method populateConnectionBaseInfo ...
-     *
-     * @param unit
-     *        of type PersistenceUnit
-     * @param filteredProperties
-     *        of type Properties
-     * @param cbi
-     *        of type ConnectionBaseInfo
-     *
-     * @return ConnectionBaseInfo
-     */
-    ConnectionBaseInfo populateConnectionBaseInfo(PersistenceUnitDescriptor unit, Properties filteredProperties, ConnectionBaseInfo cbi);
+		/**
+			* Method populateConnectionBaseInfo ...
+			*
+			* @param unit
+			*        of type PersistenceUnit
+			* @param filteredProperties
+			*        of type Properties
+			* @param cbi
+			*        of type ConnectionBaseInfo
+			*
+			* @return ConnectionBaseInfo
+			*/
+		ConnectionBaseInfo populateConnectionBaseInfo(PersistenceUnitDescriptor unit, Properties filteredProperties, ConnectionBaseInfo cbi);
 }
 ```
 
@@ -193,7 +193,7 @@ The `module-info.java` file for a module that uses GuicedVertxPersistence should
 1. Require the GuicedVertxPersistence module
 2. Use the SPI interfaces provided by GuicedVertxPersistence
 3. Provide implementations of the SPI interfaces as needed
-4. **Do not** specify `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` as this is already handled by the GuicedInjection library
+4. **Do not** specify `uses com.guicedee.client.services.lifecycle.IGuiceModule` as this is already handled by the GuicedInjection library
 
 Example:
 
@@ -208,11 +208,11 @@ module com.example.persistence {
         with com.example.persistence.CustomConnectionInfoReader;
 
     // Do NOT include this line:
-    // uses com.guicedee.guicedinjection.interfaces.IGuiceModule;
+    // uses com.guicedee.client.services.lifecycle.IGuiceModule;
 }
 ```
 
-> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
+> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.client.services.lifecycle.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
 
 ### Transitive Dependencies
 

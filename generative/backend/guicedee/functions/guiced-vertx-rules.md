@@ -132,17 +132,18 @@ Example:
 ```java
 package com.guicedee.vertx.spi;
 
-import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
+import com.guicedee.client.services.lifecycle.IGuicePreStartup;
 
 /**
- * Interface for components that need to perform Vert.x-specific actions before the application starts.
- */
-public interface VertxPreStartup<J extends VertxPreStartup<J>> extends IGuicePreStartup<J> {
-    /**
-     * Performs Vert.x-specific pre-startup actions.
-     */
-    @Override
-    void onStartup();
+	* Interface for components that need to perform Vert.x-specific actions before the application starts.
+	*/
+public interface VertxPreStartup<J extends VertxPreStartup<J>> extends IGuicePreStartup<J>
+{
+		/**
+			* Performs Vert.x-specific pre-startup actions.
+			*/
+		@Override
+		void onStartup();
 }
 ```
 
@@ -193,11 +194,11 @@ module com.guicedee.vertx {
         with com.guicedee.vertx.spi.impl.DefaultVertxConfigurator;
 
     // Do NOT include this line:
-    // uses com.guicedee.guicedinjection.interfaces.IGuiceModule;
+    // uses com.guicedee.client.services.lifecycle.IGuiceModule;
 }
 ```
 
-> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
+> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.client.services.lifecycle.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
 
 #### Transitive Dependencies
 
@@ -293,15 +294,19 @@ To hook into this sequence, implement the `IGuicePreDestroy` interface:
 ```java
 package com.guicedee.vertx.lifecycle;
 
-import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
+import com.guicedee.client.services.lifecycle.IGuicePreDestroy;
 import com.guicedee.vertx.spi.VertXPreStartup;
 
-public class VertxCleaner implements IGuicePreDestroy<VertxCleaner> {
-    @Override
-    public void onDestroy() {
-        // Close the Vert.x instance
-        VertXPreStartup.getVertx().close();
-    }
+public class VertxCleaner implements IGuicePreDestroy<VertxCleaner>
+{
+		@Override
+		public void onDestroy()
+		{
+				// Close the Vert.x instance
+				VertXPreStartup
+					.getVertx()
+					.close();
+		}
 }
 ```
 

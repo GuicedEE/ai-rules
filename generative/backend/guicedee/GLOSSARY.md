@@ -47,7 +47,7 @@ LLM interpretation guidance (how to apply these terms)
   - “representations”, “CRTP representation” → ./services/representations.md
 - JPMS and SPI registration
   - Prefer module-info “provides … with …” to register SPI implementations; optionally duplicate via META-INF/services for non-module consumers.
-  - Do not declare “uses com.guicedee.guicedinjection.interfaces.IGuiceModule” in your module — GuicedInjection already does; rely on it to discover providers.
+  - Do not declare “uses com.guicedee.client.services.lifecycle.IGuiceModule” in your module — GuicedInjection already does; rely on it to discover providers.
 - Class design policy (CRTP)
   - Extensible bases MUST be CRTP (abstract Base<J extends Base<J>>) so fluent chains preserve subtype. All CRTP classes remain extensible (never final) for client extension.
 - Nullness

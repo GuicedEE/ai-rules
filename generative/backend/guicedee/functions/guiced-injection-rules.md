@@ -72,17 +72,18 @@ Example:
 ```java
 package com.guicedee.module.spi;
 
-import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
+import com.guicedee.client.services.lifecycle.IGuicePreStartup;
 
 /**
- * Interface for components that need to perform actions before the application starts.
- */
-public interface ModulePreStartup<J extends ModulePreStartup<J>> extends IGuicePreStartup<J> {
-    /**
-     * Performs pre-startup actions for the module.
-     */
-    @Override
-    void onStartup();
+	* Interface for components that need to perform actions before the application starts.
+	*/
+public interface ModulePreStartup<J extends ModulePreStartup<J>> extends IGuicePreStartup<J>
+{
+		/**
+			* Performs pre-startup actions for the module.
+			*/
+		@Override
+		void onStartup();
 }
 ```
 
@@ -120,17 +121,19 @@ SPI implementations can be registered using both the Java Module System and the 
 In your `module-info.java` file:
 
 ```java
-module com.guicedee.module {
-    requires com.guicedee.guicedinjection;
 
-    provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup 
-        with com.guicedee.module.spi.impl.DefaultModulePreStartup;
+
+module com.guicedee.module {
+		requires com.guicedee.guicedinjection;
+		
+		provides com.guicedee.client.services.lifecycle.IGuicePreStartup
+			with com.guicedee.module.spi.impl.DefaultModulePreStartup;
 }
 ```
 
 #### Using META-INF/services:
 
-Create a file at `META-INF/services/com.guicedee.guicedinjection.interfaces.IGuicePreStartup` with the content:
+Create a file at `META-INF/services/com.guicedee.client.services.lifecycle.IGuicePreStartup` with the content:
 
 ```
 com.guicedee.module.spi.impl.DefaultModulePreStartup
@@ -160,26 +163,27 @@ Example of an interface using CRTP:
 ```java
 package com.guicedee.module.spi;
 
-import com.guicedee.guicedinjection.interfaces.IDefaultService;
+import com.guicedee.client.services.IDefaultService;
 
 /**
- * Interface for a module service with CRTP pattern.
- */
-public interface ModuleService<J extends ModuleService<J>> extends IDefaultService<J> {
-    /**
-     * Configures the service with a name.
-     *
-     * @param name the name to configure
-     * @return this instance for method chaining
-     */
-    J withName(String name);
-
-    /**
-     * Gets the configured name.
-     *
-     * @return the name
-     */
-    String getName();
+	* Interface for a module service with CRTP pattern.
+	*/
+public interface ModuleService<J extends ModuleService<J>> extends IDefaultService<J>
+{
+		/**
+			* Configures the service with a name.
+			*
+			* @param name the name to configure
+			* @return this instance for method chaining
+			*/
+		J withName(String name);
+		
+		/**
+			* Gets the configured name.
+			*
+			* @return the name
+			*/
+		String getName();
 }
 ```
 
@@ -263,35 +267,37 @@ The `module-info.java` file should be placed at the root of your module's source
 5. Open packages that need reflection access using `opens`
 6. Declare service providers using `provides ... with ...`
 7. Declare service consumers using `uses ...`
-8. **Do not** specify `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` as this is already handled by the GuicedInjection library
+8. **Do not** specify `uses com.guicedee.client.services.lifecycle.IGuiceModule` as this is already handled by the GuicedInjection library
 
-> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.guicedinjection.interfaces.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
+> **Important Note**: The GuicedInjection library already includes `uses com.guicedee.client.services.lifecycle.IGuiceModule` in its module-info.java file. Since your module will require GuicedInjection (directly or transitively), you should not specify this "uses" directive in your own module-info.java file. The GuicedInjection library will automatically discover and load all IGuiceModule implementations.
 
 Example:
 
 ```java
+import com.guicedee.client.services.lifecycle.IGuiceModule;
+
 module com.guicedee.module {
-    // Core dependencies
-    requires transitive com.guicedee.guicedinjection;
-
-    // Optional dependencies
-    requires static lombok;
-
-    // Exports
-    exports com.guicedee.module.core;
-    exports com.guicedee.module.spi;
-
-    // Opens for reflection
-    opens com.guicedee.module.core to com.google.guice;
-
-    // Service providers
-    provides com.guicedee.guicedinjection.interfaces.IGuiceModule 
-        with com.guicedee.module.core.Module;
-    provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup 
-        with com.guicedee.module.spi.impl.DefaultModulePreStartup;
-
-    // Service consumers
-    uses com.guicedee.module.spi.ModuleService;
+		// Core dependencies
+		requires transitive com.guicedee.guicedinjection;
+		
+		// Optional dependencies
+		requires static lombok;
+		
+		// Exports
+		exports com.guicedee.module.core;
+		exports com.guicedee.module.spi;
+		
+		// Opens for reflection
+		opens com.guicedee.module.core to com.google.guice;
+		
+		// Service providers
+		provides com.guicedee.client.services.lifecycle.IGuiceModule
+			with com.guicedee.module.core.Module;
+		provides com.guicedee.client.services.lifecycle.IGuicePreStartup
+			with com.guicedee.module.spi.impl.DefaultModulePreStartup;
+		
+		// Service consumers
+		uses com.guicedee.module.spi.ModuleService;
 }
 ```
 
@@ -331,7 +337,7 @@ The META-INF/services mechanism can be used alongside or instead of the Java Mod
 
 Example:
 
-File: `META-INF/services/com.guicedee.guicedinjection.interfaces.IGuicePreStartup`
+File: `META-INF/services/com.guicedee.client.services.lifecycle.IGuicePreStartup`
 ```
 com.guicedee.module.spi.impl.DefaultModulePreStartup
 ```
@@ -360,13 +366,13 @@ Example:
 ```java
 package com.guicedee.module.lifecycle;
 
-import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
-
-public class ModuleInitializer implements IGuicePreStartup<ModuleInitializer> {
-    @Override
-    public void onStartup() {
-        // Initialize module resources
-    }
+public class ModuleInitializer implements com.guicedee.client.services.lifecycle.IGuicePreStartup<ModuleInitializer>
+{
+		@Override
+		public void onStartup()
+		{
+				// Initialize module resources
+		}
 }
 ```
 
@@ -383,13 +389,13 @@ To hook into this sequence, implement the `IGuicePreDestroy` interface:
 ```java
 package com.guicedee.module.lifecycle;
 
-import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
-
-public class ModuleCleaner implements IGuicePreDestroy<ModuleCleaner> {
-    @Override
-    public void onDestroy() {
-        // Clean up module resources
-    }
+public class ModuleCleaner implements com.guicedee.client.services.lifecycle.IGuicePreDestroy<ModuleCleaner>
+{
+		@Override
+		public void onDestroy()
+		{
+				// Clean up module resources
+		}
 }
 ```
 

@@ -43,7 +43,7 @@ com.entityassist
 1. Add `org.hibernate.orm:hibernate-processor` to your compiler plugin alongside Lombok; keep version alignment with the GuicedEE BOM.
 2. Keep compiler args: `--add-reads org.jboss.logging=org.hibernate.reactive` (compile scope) and Surefire `argLine` flags: `--add-reads org.hibernate.orm.core=<your.module.name>` plus `--add-reads org.jboss.logging=org.hibernate.reactive`.
 3. Do not remove these when adding new processors or test profiles; extend them so Hibernate retains module access.
-4. Tests must define a JPMS module (e.g., `module entity.assist.test`) with `opens com.<test package>` to `org.hibernate.orm.core`, `com.google.guice`, `org.junit.platform.commons`, `net.bytebuddy`, `com.entityassist`, and must `provide com.guicedee.guicedinjection.interfaces.IGuiceModule` with the `DatabaseModule` used during testing.
+4. Tests must define a JPMS module (e.g., `module entity.assist.test`) with `opens com.<test package>` to `org.hibernate.orm.core`, `com.google.guice`, `org.junit.platform.commons`, `net.bytebuddy`, `com.entityassist`, and must `provide com.guicedee.client.services.lifecycle.IGuiceModule` with the `DatabaseModule` used during testing.
 
 ## 5. Database Modules & Environment
 - Configure JDBC/reactive credentials through GuicedEE `DatabaseModule` subclasses (`@EntityManager`, `getConnectionBaseInfo`). Never rely on ad-hoc `.env` overrides for DB host/user/password.
