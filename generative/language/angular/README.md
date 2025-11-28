@@ -15,6 +15,7 @@ Guides (modular)
 Notes
 - Version selection is explicit in prompts (17/19/20). Do not mix APIs across versions in one project.
 - The older monolithic files (angular17.md, angular19.md) are superseded by the modular files above.
+- Error handling: never wrap Angular code in try/catch blocks with no-op handlers; surface, log, or rethrow so errors remain observable.
 
 See also
 - Group: Frontend → Reactive — ../README.md

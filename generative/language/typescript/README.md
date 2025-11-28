@@ -11,6 +11,7 @@ Core Principles
 - Reactive-first composition: prefer chained reactive pipelines (RxJS or Promise combinators) over scattered `await` statements. Never await indefinitely — always bound with timeouts, cancellation, or safeguards.
 - Strict enumerations: for known finite sets (<16), use string literal unions or immutable const arrays validated with satisfies; only use `enum` when interop requires, and ensure exhaustiveness checks.
 - Testing completeness: define and implement a test taxonomy: unit, property-based, contract, integration, e2e, performance, and mutation testing.
+- Explicit error handling: never add try/catch blocks with no-op handlers; log, map, or rethrow errors so nothing is silently swallowed.
 
 1) TypeScript Configuration (strict)
 Use or generate a baseline tsconfig.json with strictest reasonable settings:

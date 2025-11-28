@@ -101,6 +101,7 @@ tasks.test {
 - Use sealed interfaces for constrained hierarchies; favor value classes for IDs
 - Prefer top-level functions for pure utilities; avoid singletons unless object is justified
 - KDoc public APIs; document nullability and thread expectations
+- Error handling: avoid try/catch blocks with no-op handlers; log, map to domain failures, or rethrow so errors stay visible.
 - Native-first library policy: prefer Kotlin stdlib and kotlinx.* (serialization, coroutines, datetime) over third-party libraries. Use alternatives only when integration requires them or provides measurable benefits.
 
 ### Null-safety and Java interop

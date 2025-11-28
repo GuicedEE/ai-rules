@@ -6,6 +6,7 @@ Goals
 - Provide enforceable Java 21 baselines (toolchains, compiler flags, CI).
 - Standardize language features, concurrency (virtual threads), nullness, testing, and observability.
 - Ensure compatibility with backend topics (Vert.x, Hibernate Reactive, Security).
+- Error handling: never use try/catch blocks with no-op handlers; handle, translate, or rethrow so failures are observable.
 
 Scope
 - Toolchains (Gradle, Maven), source/target compatibility

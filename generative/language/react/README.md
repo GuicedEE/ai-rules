@@ -7,6 +7,9 @@ Guides
 - Using Web Components in React — ./react-web-components.md
 - SSR and Rendering Options with React — ./react-ssr-options.md
 
+Notes
+- Error handling: never wrap React code in try/catch blocks with no-op handlers; handle failures explicitly (log, surface to UI, or rethrow) instead of swallowing them.
+
 See also
 - Group: Frontend → Reactive — ../README.md
 - Frontend category index — ../README.md

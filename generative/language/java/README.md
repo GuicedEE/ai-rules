@@ -16,6 +16,7 @@ Notes
 - Default to GA features only; avoid preview features unless explicitly justified and consistently enabled across build, run, and test.
 - Prefer JPMS (module-info.java) for library modules; keep clear boundaries and exports.
 - Align nullness with JSpecify when interoperating with Kotlin or enforcing null contracts.
+- Error handling: never add try/catch blocks with no-op handlers; surface, translate, or rethrow errors so failures stay observable.
 
 See also
 - Language index — ../README.md

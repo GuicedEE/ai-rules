@@ -14,6 +14,7 @@ This directory provides Kotlin-focused backend guidance optimized for AI-assiste
 - This topic follows the Document Modularity Policy: lean, linkable, and task-oriented. Deep-dive narratives are avoided; instead, rules and quick-start patterns are provided.
 - Kotlin interop with Java-centric libraries (Hibernate Reactive, MapStruct, Lombok) is addressed via constraints and adapters instead of mirroring Java-only features.
 - Native-first policy: prefer Kotlin stdlib and kotlinx.* (serialization, coroutines, datetime) over third-party libraries. Use alternatives (e.g., Jackson) only when required by shared infrastructure or external SDKs.
+- Error handling: do not wrap logic in try/catch blocks with no-op handlers; handle errors intentionally (log, map to domain failures, or rethrow).
 
 ## See also
 - Backend category index — ../../backend/README.md

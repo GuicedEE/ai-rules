@@ -9,6 +9,9 @@ Guides
 - Testing (TDD) — ./tdd.md
 - Behavioral Scenarios (BDD) — ./bdd.md
 
+Notes
+- Error handling: never add try/catch blocks with no-op handlers; surface errors to logs/UI or rethrow so issues stay observable.
+
 See also
 - Group: Frontend → Reactive — ../../frontend/README.md
 - TypeScript topic (when using TypeScript with Vue) — ../typescript/README.md
