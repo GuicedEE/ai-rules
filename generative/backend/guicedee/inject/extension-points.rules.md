@@ -1,11 +1,12 @@
 # Extension Points (SPI) — GuicedEE Inject
 
 Purpose
-- Describe SPI contracts and how to register extensions for scanning, module/binder composition, configuration, and lifecycle hooks.
+- Describe SPI contracts and how to register extensions for scanning, module composition, configuration, and lifecycle hooks.
 
 Key SPI surfaces (examples)
 - Scanners: `PackageContentsScanner`, `FileContentsScanner`, `IPathContentsScanner`, `IPathContentsRejectListScanner`, `IGuiceScanModuleInclusions/Exclusions`, `IGuiceScanJarInclusions/Exclusions`
-- Modules and binders: `IGuiceModule`, `IGuiceProvider`, `IGuiceConfigurator`, `GuiceDefaultBinder`, `GuiceSiteBinder`
+- Modules: implement standard Guice modules (`AbstractModule`, `PrivateModule`, etc.) and implement `IGuiceModule<?>` (CRTP) for SPI discovery. Register via ServiceLoader/JPMS.
+- Providers/configurators: `IGuiceProvider`, `IGuiceConfigurator`
 - Lifecycle: `IGuicePreStartup`, `IGuicePostStartup`, `IGuicePreDestroy`
 - Jobs: `IJobServiceProvider`
 - URL handler: `java.net.spi.URLStreamHandlerProvider` (JRT)
