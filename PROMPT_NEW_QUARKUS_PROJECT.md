@@ -328,6 +328,7 @@ Format and storage (Docs as Code)
 - Use text formats that diff well:
   - Mermaid (preferred) in Markdown fenced blocks (```mermaid)
   - PlantUML (.puml) or fenced blocks (```plantuml)
+  - Mermaid MCP server is available to assist with architecture and diagrams: HTTP endpoint `https://mcp.mermaidchart.com/mcp` with `"type": "http"`; SSE endpoint `https://mcp.mermaidchart.com/sse` with `"type": "sse"`.
 - Storage conventions (host repository, outside rules/):
   - docs/architecture/README.md — architecture index linking all diagrams
   - docs/architecture/c4-context.md — C4 L1

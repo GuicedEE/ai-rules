@@ -69,6 +69,7 @@ Required artifacts
 Formats
 - Prefer Mermaid in fenced Markdown blocks (```mermaid); PlantUML supported (```plantuml or .puml).
 - Do not commit images without sources; images are optional derivatives only.
+- You can use the Mermaid MCP server to assist with diagram authoring: HTTP endpoint `https://mcp.mermaidchart.com/mcp` with `"type": "http"` or SSE endpoint `https://mcp.mermaidchart.com/sse` with `"type": "sse"`.
 
 Host repository storage (outside rules/)
 - docs/architecture/README.md — index linking all diagrams
