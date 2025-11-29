@@ -103,6 +103,7 @@ Fill before running.
     - [ ] Core
     - [ ] Client
     - [ ] Web
+    - [X] WebSocket
     - [ ] Rest
     - [ ] Persistence
     - [ ] RabbitMQ
@@ -339,6 +340,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - Backend:
     - Hibernate (ORM/Reactive): rules/generative/backend/hibernate/README.md
     - Quarkus: rules/generative/backend/quarkus/README.md
+    - GuicedEE Websockets: rules/generative/backend/guicedee/websockets/README.md
   - Platform:
     - CI/CD: rules/generative/platform/ci-cd/README.md
       - If CI/CD Providers are selected, also link provider docs:

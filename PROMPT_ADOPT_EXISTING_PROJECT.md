@@ -97,12 +97,12 @@ Fill before running.
       - [ ] Core
       - [ ] Client
       - [ ] Web
+      - [ ] WebSocket
       - [ ] Rest
       - [ ] Persistence
       - [ ] RabbitMQ
       - [ ] Cerial
       - [ ] OpenAPI
-      - [ ] Sockets
       - Note: If Core is selected, also select Vert.x 5 and include GuicedEE Vert.x Bridge rules (rules/generative/backend/guicedee/vertx/README.md); if Persistence is selected, also select Hibernate Reactive 7.
     - Databases:
       - [ ] PostgreSQL
@@ -372,7 +372,7 @@ When approved, execute the plan as one change set.
      - rules/generative/backend/guicedee/README.md
      - rules/generative/backend/guicedee/client/README.md
     - If GuicedEE Core is selected: also include rules/generative/backend/vertx/README.md and rules/generative/backend/guicedee/vertx/README.md.
-    - If Backend Reactive → GuicedEE options are selected: link chosen function rules under rules/generative/backend/guicedee/functions/ (guiced-injection-rules.md, guiced-vertx-web-rules.md, guiced-vertx-rest-rules.md, guiced-vertx-persistence-rules.md, guiced-rabbit-rules.md, guiced-cerial-rules.md, guiced-swagger-openapi-rules.md, guiced-vertx-sockets-rules.md).
+    - If Backend Reactive → GuicedEE options are selected: link chosen function/rules under rules/generative/backend/guicedee/ (functions/..., websockets/README.md).
     - If GuicedEE Persistence is selected: ensure Hibernate Reactive 7 is selected/linked (rules/generative/backend/hibernate/README.md).
      - rules/generative/backend/security-reactive/README.md
      - rules/generative/frontend/webawesome/README.md
