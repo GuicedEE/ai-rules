@@ -8,6 +8,7 @@ Guides
 
 Subtopics
 - Client Library — ./client/ (GuicedEE Inject Client specific rules, glossary, and examples)
+- Vert.x Web Server — ./web/ (HTTP/HTTPS bootstrap, SPI configurators, router/server setup, env configuration)
 - Guiced Vert.x Bridge — ./vertx/ (GuicedEE ↔ Vert.x integration rules, glossary, lifecycle/configuration/publisher guidance)
 
 Recommended cross‑topics
