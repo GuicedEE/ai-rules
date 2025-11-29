@@ -16,6 +16,28 @@ Recommended cross‑topics
 - Backend/Vert.x 5 — generative/backend/vertx/README.md
 - Backend/JSpecify — generative/backend/jspecify/README.md
 
+CI/CD standard (GitHub Actions)
+- GuicedEE libraries should reuse the shared workflow `GuicedEE/Workflows/.github/workflows/projects.yml@master` with the `GuicedInjection` job.
+- Required secrets: `USERNAME`, `USER_TOKEN`, `SONA_USERNAME`, `SONA_PASSWORD`. Pass `baseDir` and a descriptive `name` as inputs.
+- Reference implementation:
+```yaml
+name: Maven Package
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  GuicedInjection:
+    uses: GuicedEE/Workflows/.github/workflows/projects.yml@master
+    with:
+      baseDir: ''
+      name: 'Guiced Injection'
+    secrets:
+      USERNAME: ${{secrets.USERNAME}}
+      USER_TOKEN: ${{secrets.USER_TOKEN}}
+      SONA_USERNAME: ${{secrets.SONA_USERNAME}}
+      SONA_PASSWORD: ${{secrets.SONA_PASSWORD}}
+```
+
 See also
 - Master index — generative/README.md
 - RULES.md — Generative Topic Taxonomy; Document Modularity Policy

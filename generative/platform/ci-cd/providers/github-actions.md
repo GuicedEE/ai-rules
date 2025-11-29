@@ -97,6 +97,28 @@ Java toolchain with caching
 - run: mvn -B -ntp verify
 ```
 
+GuicedEE libraries (shared workflow)
+- Reuse the shared workflow `GuicedEE/Workflows/.github/workflows/projects.yml@master` with the `GuicedInjection` job when GuicedEE libraries use GitHub Actions.
+- Required secrets: `USERNAME`, `USER_TOKEN`, `SONA_USERNAME`, `SONA_PASSWORD`. Pass `baseDir` (module path, empty for root) and a descriptive `name`.
+
+```yaml
+name: Maven Package
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  GuicedInjection:
+    uses: GuicedEE/Workflows/.github/workflows/projects.yml@master
+    with:
+      baseDir: ''
+      name: 'Guiced Injection'
+    secrets:
+      USERNAME: ${{secrets.USERNAME}}
+      USER_TOKEN: ${{secrets.USER_TOKEN}}
+      SONA_USERNAME: ${{secrets.SONA_USERNAME}}
+      SONA_PASSWORD: ${{secrets.SONA_PASSWORD}}
+```
+
 Artifacts, caching, path filters
 - Artifacts: actions/upload-artifact for reports, coverage, build outputs.
 - Cache: cache npm/maven/gradle to speed builds; avoid caching build outputs that risk corruption.

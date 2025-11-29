@@ -401,6 +401,24 @@ When approved, execute the plan as one change set.
    - Create or update .env.example using rules/generative/platform/secrets-config/env-variables.md as the source of truth.
 9. CI alignments
    - Add/update minimal GitHub Actions workflows for build/test and document required secrets.
+   - If the project is a GuicedEE library and GitHub Actions is selected, add `.github/workflows/maven-package.yml` pointing at the shared workflow:
+      ```yaml
+      name: Maven Package
+      on:
+        workflow_dispatch:
+        push:
+      jobs:
+        GuicedInjection:
+          uses: GuicedEE/Workflows/.github/workflows/projects.yml@master
+          with:
+            baseDir: ''
+            name: 'Guiced Injection'
+          secrets:
+            USERNAME: ${{secrets.USERNAME}}
+            USER_TOKEN: ${{secrets.USER_TOKEN}}
+            SONA_USERNAME: ${{secrets.SONA_USERNAME}}
+            SONA_PASSWORD: ${{secrets.SONA_PASSWORD}}
+      ```
 10. README updates
    - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY.
 11. AI workspace alignment (selected engines)
