@@ -205,6 +205,9 @@ Fill before running.
   - [ ] Conservative (only if explicitly required)
 
 Policies (must honor):
+- Reset the AI context before running this template—act as if this is the first prompt for the project and do not reuse prior session memory.
+- Treat all existing repository documentation as out-of-date; never rely on it as a source of truth. When executing this template, reference only the current checked-in code/config you observe.
+- Honor the selected Java LTS exactly; do not substitute another version. If Java 25 is selected, plan and generate for Java 25 everywhere.
 - Use Markdown for docs. Follow [RULES.md](rules/RULES.md) sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).
 - Do NOT place project-specific docs inside the submodule directory.
 - Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is selected. Align Lombok usage accordingly:

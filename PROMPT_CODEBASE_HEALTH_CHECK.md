@@ -185,6 +185,8 @@ Fill before running.
   - [ ] Conservative (only if explicitly required)
 
 Policies (must honor):
+- Reset the AI context before running this template—act as if this is the first prompt for the project and do not reuse prior session memory.
+- Treat all existing repository documentation as out-of-date; never rely on it as a source of truth. When executing this template, reference only the current checked-in code/config you observe.
 - Use Markdown for docs. Follow [RULES.md](rules/RULES.md) sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).
 - Do NOT place project artifacts inside this submodule. Host projects must keep PACT/RULES/GUIDES/IMPLEMENTATION outside the submodule path.
 - Generated artifacts are read-only; do not propose edits to compiled outputs (TS/HTML/site bundles).
