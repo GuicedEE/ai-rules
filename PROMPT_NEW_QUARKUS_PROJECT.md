@@ -171,7 +171,10 @@ Universal STOP rule
 
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode: update all affected references in the same change.
-- For Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing these constraints.
+- AI workspace files (selected engines):
+  - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
+  - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
+  - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
 - For ChatGPT/Claude:
   - Start with system note: "Follow Rules Repository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
   - Owner mode (this Rules Repository repository is the active workspace; not used as a submodule):
@@ -247,6 +250,11 @@ When approved, execute the plan as one change set.
    - Add/update minimal CI workflows; enumerate required secrets.
 9. README updates
    - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY. Note Java LTS and Quarkus selections.
+10. AI workspace alignment (selected engines)
+    - AI Assistant — `.aiassistant/rules/` with RULES.md sections 4/5, Document Modularity, and Forward-Only.
+    - GitHub Copilot — `.github/copilot-instructions.md` (or workspace note) covering the same constraints and STOP-gate policy.
+    - Cursor — `.cursor/rules.md` mirroring the same constraints.
+    - Roo — [ROO_WORKSPACE_POLICY.md](rules/ROO_WORKSPACE_POLICY.md) present/pinned if Roo is selected.
 
 - WebAwesome prompt language alignment (only if selected)
   - When prompting, align terms:
@@ -272,6 +280,7 @@ When approved, execute the plan as one change set.
 - [ ] .env.example aligned to env-variables.md
 - [ ] CI updated/added
 - [ ] Quarkus selections recorded (Java LTS, Quarkus 3.x, RESTEasy Reactive) and links resolve
+- [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] No project files placed inside the submodule
 
 ---

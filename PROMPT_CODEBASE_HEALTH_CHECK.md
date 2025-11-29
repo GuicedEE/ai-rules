@@ -258,7 +258,10 @@ Universal STOP rule
 
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode; update references in the same change.
-- Copilot/Cursor: create a workspace note or .cursor/rules.md summarizing constraints.
+- AI workspace files (selected engines):
+  - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
+  - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
+  - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
 - ChatGPT/Claude:
   - Start with system note enforcing the above sections. Close loops across artifacts.
   - Owner mode (this repository as active workspace): do not refer to it as a submodule; load and pin ./skills.md if available.
@@ -313,6 +316,7 @@ A. Repository Inventory and Structure
 - Detect language modules, build system, JPMS usage, packaging, and code owners.
 - Host docs placement: verify PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY are outside the submodule path per [README.md](rules/README.md#enterprise-usage-and-placement-rules).
 - Submodule integrity: confirm rules/ is a Git submodule (host mode) or absent (owner mode).
+- AI workspace files: confirm selected/observed engines have instruction files committed (.aiassistant/rules/, .github/copilot-instructions.md or workspace note, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo).
 
 B. Rule Mapping and Scope Confirmation
   - Map detected stacks to indexes:
@@ -398,6 +402,7 @@ Produce a comprehensive health report with:
 - [ ] Risk and migration notes drafted
 - [ ] Remediation plan prioritized
 - [ ] Link integrity report completed
+- [ ] AI workspace files validated/created for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Fluent API Strategy declared/detected (CRTP vs Builder) and aligned across RULES/GLOSSARY/implementation; violations flagged
 - [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings copied)
 - [ ] All references point to correct topic indexes under generative/
@@ -507,6 +512,7 @@ Deliverables for this section
 ## 5) Output Checklist (Additions)
 - [ ] Starting prompt identified and linked (or inferred with evidence)
 - [ ] Host docs directories scanned and validated (outside submodule)
+- [ ] AI workspace instruction files verified/added for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Overrides vs Enterprise matrix produced with rationale and links
 - [ ] Topic guides/guidelines coverage validated against starting prompt selections
 - [ ] MIGRATION notes present where forward-only changes remove/replace legacy content
