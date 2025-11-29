@@ -97,6 +97,7 @@ Fill before running.
       - Note: Quarkus currently embeds Vert.x 4 under the hood; select Vert.x 5 only if directly building on the Vert.x APIs.
     - GuicedEE:
       - [ ] Core
+      - [ ] Client
       - [ ] Web
       - [ ] Rest
       - [ ] Persistence
@@ -104,7 +105,7 @@ Fill before running.
       - [ ] Cerial
       - [ ] OpenAPI
       - [ ] Sockets
-      - Note: If Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7.
+      - Note: If Core is selected, also select Vert.x 5 and include GuicedEE Vert.x Bridge rules (rules/generative/backend/guicedee/vertx/README.md); if Persistence is selected, also select Hibernate Reactive 7.
     - Databases:
       - [ ] PostgreSQL
       - [ ] MySQL
@@ -350,6 +351,8 @@ When approved, execute the plan as one change set.
        - Nuxt — [README](rules/generative/frontend/nuxt/README.md), [GLOSSARY](rules/generative/frontend/nuxt/GLOSSARY.md)
      - Backend:
        - GuicedEE — [README](rules/generative/backend/guicedee/README.md)
+       - GuicedEE Client — [README](rules/generative/backend/guicedee/client/README.md)
+       - GuicedEE Vert.x Bridge — [README](rules/generative/backend/guicedee/vertx/README.md) (include when GuicedEE Core is selected)
        - Hibernate (ORM/Reactive) — [README](rules/generative/backend/hibernate/README.md)
        - Vert.x — [README](rules/generative/backend/vertx/README.md)
      - Structural:

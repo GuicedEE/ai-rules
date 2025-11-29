@@ -100,6 +100,7 @@ Fill before running.
     - Note: Quarkus currently embeds Vert.x 4; pick Vert.x 5 only for direct Vert.x API usage.
   - GuicedEE:
     - [ ] Core
+    - [ ] Client
     - [ ] Web
     - [ ] Rest
     - [ ] Persistence
@@ -107,7 +108,7 @@ Fill before running.
     - [ ] Cerial
     - [ ] OpenAPI
     - [ ] Sockets
-    - Note: If Core is selected, also select Vert.x 5; if Persistence is selected, also select Hibernate Reactive 7.
+    - Note: If Core is selected, also select Vert.x 5 and include GuicedEE Vert.x Bridge rules (rules/generative/backend/guicedee/vertx/README.md); if Persistence is selected, also select Hibernate Reactive 7.
 - Backend:
   - Spring MVC
     - [ ] Core MVC/Web
