@@ -165,6 +165,7 @@ Fill before running.
     - [ ] Web Components
   - Frameworks (JWebMP):
     - [ ] Core
+    - [ ] Client
     - [ ] WebAwesome
   - Frontend (Reactive):
     - Angular (choose exactly one)
@@ -365,38 +366,44 @@ When approved, execute the plan as one change set.
    - Copy only enforced Prompt Language Alignment mappings into the host glossary (e.g., WebAwesome: WaButton, WaInput, WaCluster, WaStack). For all other terms, link to the topic file/anchor instead of duplicating definitions.
    - Document a “Glossary Precedence Policy”: topic glossaries override root for their scope; the host GLOSSARY.md acts as an index and aggregator with minimal duplication and LLM interpretation guidance (e.g., CRTP vs Builder routing, JSpecify defaults).
 4. Create/Update project RULES.md (outside submodule):
-   - Declare scope, chosen stacks, and any project-specific conventions.
+  - Declare scope, chosen stacks, and any project-specific conventions.
   - Link to relevant topic indexes:
-    - rules/generative/language/react/README.md
-    - rules/generative/frontend/nextjs/README.md
-    - rules/generative/language/vue/README.md
-    - rules/generative/frontend/nuxt/README.md
-     - rules/generative/frontend/webcomponents/README.md
-     - rules/generative/frontend/angular-awesome/README.md
-    - rules/generative/backend/hibernate/README.md
-    - rules/generative/backend/guicedee/README.md
-    - rules/generative/backend/guicedee/client/README.md
-    - rules/generative/backend/guicedee/persistence/README.md
-    - If GuicedEE Core is selected: also include rules/generative/backend/vertx/README.md and rules/generative/backend/guicedee/vertx/README.md.
-    - If Backend Reactive → GuicedEE options are selected: link chosen function/rules under rules/generative/backend/guicedee/ (functions/..., persistence/README.md, websockets/README.md).
-    - If GuicedEE Persistence is selected: ensure Hibernate Reactive 7 is selected/linked (rules/generative/backend/hibernate/README.md) and include rules/generative/backend/guicedee/persistence/README.md.
-     - rules/generative/backend/security-reactive/README.md
-     - rules/generative/frontend/webawesome/README.md
-     - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
-     - rules/generative/platform/ci-cd/README.md
-       - If CI/CD Providers are selected, also link provider docs:
-         - GitHub Actions — rules/generative/platform/ci-cd/providers/github-actions.md
-         - GitLab CI — rules/generative/platform/ci-cd/providers/gitlab-ci.md
-         - Jenkins — rules/generative/platform/ci-cd/providers/jenkins.md
-         - TeamCity — rules/generative/platform/ci-cd/providers/teamcity.md
-         - Google Cloud Build — rules/generative/platform/ci-cd/providers/google-cloud-build.md
-         - Azure Pipelines — rules/generative/platform/ci-cd/providers/azure-pipelines.md
-         - AWS CodeBuild/CodePipeline — rules/generative/platform/ci-cd/providers/aws-codebuild-codepipeline.md
-     - rules/generative/platform/observability/README.md
-     - rules/generative/architecture/README.md
-     - rules/generative/architecture/tdd/README.md
-     - rules/generative/architecture/bdd/README.md
-     - rules/generative/platform/security-auth/README.md
+    - Frontend:
+      - rules/generative/frontend/webcomponents/README.md
+      - rules/generative/frontend/webawesome/README.md
+      - rules/generative/frontend/jwebmp/README.md
+      - If JWebMP Client is selected: rules/generative/frontend/jwebmp/client/README.md
+      - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
+      - rules/generative/frontend/angular-awesome/README.md
+    - React/Vue/Next/Nuxt:
+      - rules/generative/language/react/README.md
+      - rules/generative/frontend/nextjs/README.md
+      - rules/generative/language/vue/README.md
+      - rules/generative/frontend/nuxt/README.md
+    - Backend:
+      - rules/generative/backend/guicedee/README.md
+      - rules/generative/backend/guicedee/client/README.md
+      - rules/generative/backend/guicedee/persistence/README.md
+      - rules/generative/backend/hibernate/README.md
+      - rules/generative/backend/security-reactive/README.md
+      - If GuicedEE Core is selected: include rules/generative/backend/vertx/README.md and rules/generative/backend/guicedee/vertx/README.md.
+      - If Backend Reactive → GuicedEE options are selected: link chosen function/rules under rules/generative/backend/guicedee/ (functions/..., persistence/README.md, websockets/README.md).
+      - If GuicedEE Persistence is selected: ensure Hibernate Reactive 7 is selected/linked (rules/generative/backend/hibernate/README.md) and include rules/generative/backend/guicedee/persistence/README.md.
+    - Platform/Architecture:
+      - rules/generative/platform/ci-cd/README.md
+        - If CI/CD Providers are selected, also link provider docs:
+          - GitHub Actions — rules/generative/platform/ci-cd/providers/github-actions.md
+          - GitLab CI — rules/generative/platform/ci-cd/providers/gitlab-ci.md
+          - Jenkins — rules/generative/platform/ci-cd/providers/jenkins.md
+          - TeamCity — rules/generative/platform/ci-cd/providers/teamcity.md
+          - Google Cloud Build — rules/generative/platform/ci-cd/providers/google-cloud-build.md
+          - Azure Pipelines — rules/generative/platform/ci-cd/providers/azure-pipelines.md
+          - AWS CodeBuild/CodePipeline — rules/generative/platform/ci-cd/providers/aws-codebuild-codepipeline.md
+      - rules/generative/platform/observability/README.md
+      - rules/generative/architecture/README.md
+      - rules/generative/architecture/tdd/README.md
+      - rules/generative/architecture/bdd/README.md
+      - rules/generative/platform/security-auth/README.md
    - Reference GLOSSARY.md for naming/terminology alignment.
 5. Create/Update GUIDES.md with links to chosen modular entries (e.g., Hibernate transactions, CRUD; Web Components custom-elements/shadow-dom; Angular producing/consuming; WebAwesome Button/Input rules). Use glossary-aligned terms consistently.
 6. Create/Update IMPLEMENTATION.md explaining current modules, code layout, and back-links to guides. Ensure implementation names and labels adhere to GLOSSARY.md.

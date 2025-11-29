@@ -179,6 +179,7 @@ Fill before running.
     - [ ] Angular Awesome
   - Frameworks (JWebMP):
     - [ ] Core
+    - [ ] Client
     - [ ] WebAwesome
   - CI/CD Providers:
     - [ ] GitHub Actions
@@ -348,6 +349,8 @@ When approved, execute the plan as one change set.
      - Frontend (Standard):
        - Web Components — [README](rules/generative/frontend/webcomponents/README.md)
        - WebAwesome — [README](rules/generative/frontend/webawesome/README.md)
+       - JWebMP — [README](rules/generative/frontend/jwebmp/README.md)
+       - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
      - Frontend (Angular):
        - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
        - Angular Plugins:

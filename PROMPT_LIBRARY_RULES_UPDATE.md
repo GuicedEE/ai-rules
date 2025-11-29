@@ -166,6 +166,7 @@ Fill before running.
   - [ ] Angular Awesome
 - Frameworks (JWebMP):
   - [ ] Core
+  - [ ] Client
   - [ ] WebAwesome
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
@@ -331,10 +332,11 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 
 4. Cross-links to enterprise topics
 - Link to relevant Rules Repository indexes in your README to aid host projects:
-  - Frontend (Standard):
-    - Web Components: rules/generative/frontend/webcomponents/README.md
-    - WebAwesome: rules/generative/frontend/webawesome/README.md
-    - JWebMP: rules/generative/frontend/jwebmp/README.md
+- Frontend (Standard):
+  - Web Components: rules/generative/frontend/webcomponents/README.md
+  - WebAwesome: rules/generative/frontend/webawesome/README.md
+  - JWebMP: rules/generative/frontend/jwebmp/README.md
+  - JWebMP Client library: rules/generative/frontend/jwebmp/client/README.md
   - Frontend (Reactive):
     - Angular: rules/generative/language/angular/README.md
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
@@ -389,6 +391,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - For new components, add <name>.rules.md and update the index.
 - JWebMP wrappers
   - Provide wrapper-specific rules where needed; link to underlying WebAwesome or Web Component contracts.
+  - If the JWebMP Client library is selected, include the JWebMP Client topic index (rules/generative/frontend/jwebmp/client/README.md) and its subtopics (configuration/JPMS, interception, rendering, reactive, logging, nullness, examples).
 - EntityAssist / ORM-like libraries
   - Provide modular rules for entities, repositories, transactions, testing, threading, and anti-patterns.
 - Service/Framework libraries
