@@ -366,10 +366,11 @@ The following GuicedEE function documentation files serve as the default rules t
 
 ###### Vert.x Integration
 
-**GuicedVertx** (`generative/backend/guicedee/functions/guiced-vertx-rules.md`):
-- **Purpose**: Outlines the recommended package structure and usage guidelines for the GuicedVertx module.
-- **When to Apply**: When integrating Vert.x with GuicedEE applications for reactive, event-driven functionality.
-- **Key Features**: Event bus integration, verticle configuration, Vert.x 5 migration.
+**GuicedEE Vert.x Bridge** (`generative/backend/guicedee/vertx/README.md`):
+- **Purpose**: Provides comprehensive guidelines for integrating Vert.x 5 with GuicedEE Client lifecycle, including event definitions, publishers, codecs, and configurators.
+- **When to Apply**: When building reactive, event-driven GuicedEE applications with Vert.x 5.
+- **Key Features**: Lifecycle & module wiring, event definitions & options, publishers (CRTP), codec strategy, configuration & SPIs, verticles & deployment, testing & validation.
+- **Modular topics**: lifecycle.rules.md, event-definitions.rules.md, publishers.rules.md, codecs.rules.md, configuration.rules.md, verticles.rules.md, testing.rules.md, GLOSSARY.md
 
 **GuicedVertxPersistence** (`generative/backend/guicedee/functions/guiced-vertx-persistence-rules.md`):
 - **Purpose**: Provides guidelines for database connectivity and ORM capabilities using Vert.x and Hibernate Reactive.
