@@ -53,6 +53,9 @@ public record User(@Nullable String middleName) {}
 public @Nullable String findNickname(@Nullable UUID userId) { /* ... */ }
 ```
 
+Positive non-null annotations
+- When you must spell out non-null on a specific member (e.g., overriding a third-party signature), use `@org.jspecify.annotations.NonNull` — do not use `@NotNull` from other libraries.
+
 Generics and collections
 ```java
 import java.util.*;

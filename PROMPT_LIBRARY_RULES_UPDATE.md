@@ -12,6 +12,7 @@ Fill before running.
 - Library name: <LIBRARY_NAME>
 - Current/new version: <VERSION>
 - Repository URL / path: <REPO_URL_OR_PATH>
+- Rules Repository Location: <RULES_REPO_LOCATION>
 - Short description: <ONE_LINE_DESCRIPTION>
 - Type:
   - [ ] UI component library
