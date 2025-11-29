@@ -118,8 +118,9 @@ Fill before running.
     - [ ] Tracing
     - [ ] OpenAPI
     - OpenAPI Provider (choose one; default = Swagger via springdoc)
-      - [x] Swagger (default)
+      - [ ] Swagger (default)
       - [ ] MicroProfile OpenAPI
+      - [ ] Spring OpenAPI
     - Health endpoints default to Spring Actuator: /actuator/health, /actuator/health/ready, /actuator/health/live
 - Level of change:
   - [x] Forward-only (default)

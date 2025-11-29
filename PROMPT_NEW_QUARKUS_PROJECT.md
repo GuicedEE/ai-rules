@@ -108,8 +108,8 @@ Fill before running.
     - [ ] Tracing
     - [ ] OpenAPI
     - OpenAPI Provider (choose one; default = Swagger/SmallRye)
-      - [x] Swagger (default)
-      - [ ] MicroProfile OpenAPI
+      - [ ] Swagger (default)
+      - [X] MicroProfile OpenAPI
     - Health endpoints default to Quarkus: /q/health, /q/health/ready, /q/health/live
 - Level of change:
   - [x] Forward-only (default)
