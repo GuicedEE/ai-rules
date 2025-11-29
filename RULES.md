@@ -404,10 +404,10 @@ The following GuicedEE function documentation files serve as the default rules t
 - **When to Apply**: When implementing message queuing and asynchronous communication in GuicedEE applications.
 - **Key Features**: Queue configuration, message publishing, message consumption, error handling.
 
-**GuicedCerial** (`generative/backend/guicedee/functions/guiced-cerial-rules.md`):
-- **Purpose**: Provides guidelines for serial port communication in GuicedEE applications.
+**GuicedCerial** (`generative/backend/guicedee/cerial/README.md`):
+- **Purpose**: Provides modular rules for serial port communication within GuicedEE (CRTP API, data listeners, idle monitoring, logging, SPI).
 - **When to Apply**: When interfacing with hardware devices via serial ports in GuicedEE applications.
-- **Key Features**: Port configuration, data transmission, event handling, error recovery.
+- **Key Features**: Port configuration, event/data listeners, idle detection with Vert.x timers, lifecycle/SPI registration, diagnostics.
 
 **GuicedSwaggerOpenAPI** (`generative/backend/guicedee/functions/guiced-swagger-openapi-rules.md`):
 - **Purpose**: Defines patterns for API documentation using Swagger/OpenAPI in GuicedEE applications.
