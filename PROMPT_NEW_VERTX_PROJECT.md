@@ -106,8 +106,8 @@ Fill before running.
     - [ ] Tracing
     - [ ] OpenAPI
     - OpenAPI Provider (choose one; default = Swagger/SmallRye)
-      - [x] Swagger (default)
-      - [ ] MicroProfile OpenAPI
+      - [ ] Swagger (default)
+      - [X] MicroProfile OpenAPI
 - Level of change:
   - [x] Forward-only (default)
   - [ ] Conservative (only if explicitly required)
