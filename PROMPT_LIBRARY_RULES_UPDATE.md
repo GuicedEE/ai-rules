@@ -242,7 +242,10 @@ Universal STOP rule
 
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode.
-- If Copilot/Cursor, create a workspace note or .cursor/rules.md summarizing constraints.
+- AI workspace files (selected engines):
+  - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
+  - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
+  - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
 - If ChatGPT/Claude:
   - Start with system note: "Follow Rules Repository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
   - Owner mode (this Rules Repository repository is the active workspace; not used as a submodule):
@@ -362,6 +365,12 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - Add “Prompt Language Alignment & Glossary” note:
   - Link to your library’s topic GLOSSARY.md and state that it is the authoritative, minimal glossary for this topic with LLM interpretation guidance (topic-first).
   - List any enforced aligned names (if applicable) and instruct host projects to copy only those into their root GLOSSARY.md; for all other terms, host projects should link back to your topic GLOSSARY.md/rules instead of duplicating definitions.
+
+7. AI workspace alignment (selected engines)
+   - AI Assistant — `.aiassistant/rules/` with RULES.md sections 4/5, Document Modularity, and Forward-Only.
+   - GitHub Copilot — `.github/copilot-instructions.md` (or workspace note) covering the same constraints and STOP-gate policy.
+   - Cursor — `.cursor/rules.md` mirroring the same constraints.
+   - Roo — ROO_WORKSPACE_POLICY.md present/pinned if Roo is selected.
 ---
 
 ## 3) Special Guidance by Library Type
@@ -391,6 +400,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - [ ] Topic GLOSSARY.md created/updated (topic-first, minimal duplication) with LLM interpretation guidance; README includes “Prompt Language Alignment & Glossary” note linking to it
 - [ ] Release notes and version bump prepared (if applicable)
 - [ ] Root README updated with navigation and usage instructions
+- [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] All links resolve
 
 ---
