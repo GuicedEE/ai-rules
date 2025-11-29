@@ -191,6 +191,7 @@ Policies (must honor):
 - Use Markdown for docs. Follow [RULES.md](rules/RULES.md) sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).
 - Do NOT place project artifacts inside this submodule. Host projects must keep PACT/RULES/GUIDES/IMPLEMENTATION outside the submodule path.
 - Generated artifacts are read-only; do not propose edits to compiled outputs (TS/HTML/site bundles).
+- Logging policy: Default to Log4j2; wire logging/config/examples against Log4j2. If Lombok is selected, use Lombok's `@Log4j2` annotation (avoid other Lombok logging annotations).
 - JWebMP: no inline string HTML; render UI with JWebMP components; do not generate separate TS/HTML for missing views.
 - PostgreSQL JPMS: do not shade the driver; prefer com.guicedee.services:postgresql and requires org.postgresql.
 - Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is present. Align Lombok usage accordingly:
@@ -262,6 +263,10 @@ Universal STOP rule
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
+- MCP servers (per selected AI engine):
+  - If the chosen assistant supports MCP (e.g., Cursor, Claude Desktop, MCP-capable IDEs), register the servers before running the prompt.
+  - Always register the Mermaid MCP server for docs/diagrams: HTTP `https://mcp.mermaidchart.com/mcp` (`"type": "http"`) or SSE `https://mcp.mermaidchart.com/sse` (`"type": "sse"`).
+  - Confirm in responses which MCP servers are active so registration aligns with the AI engine selections.
 - ChatGPT/Claude:
   - Start with system note enforcing the above sections. Close loops across artifacts.
   - Owner mode (this repository as active workspace): do not refer to it as a submodule; load and pin ./skills.md if available.
@@ -402,6 +407,7 @@ Produce a comprehensive health report with:
 - [ ] Risk and migration notes drafted
 - [ ] Remediation plan prioritized
 - [ ] Link integrity report completed
+- [ ] MCP servers registered for selected assistants (Mermaid MCP for docs/diagrams) and acknowledged in outputs
 - [ ] AI workspace files validated/created for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Fluent API Strategy declared/detected (CRTP vs Builder) and aligned across RULES/GLOSSARY/implementation; violations flagged
 - [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings copied)
@@ -512,6 +518,7 @@ Deliverables for this section
 ## 5) Output Checklist (Additions)
 - [ ] Starting prompt identified and linked (or inferred with evidence)
 - [ ] Host docs directories scanned and validated (outside submodule)
+- [ ] MCP servers registered for selected assistants (Mermaid MCP for docs/diagrams) and acknowledged in outputs
 - [ ] AI workspace instruction files verified/added for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Overrides vs Enterprise matrix produced with rationale and links
 - [ ] Topic guides/guidelines coverage validated against starting prompt selections
