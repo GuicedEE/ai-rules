@@ -8,6 +8,7 @@ Guides
 
 Subtopics
 - Client Library — ./client/ (GuicedEE Inject Client specific rules, glossary, and examples)
+- Guiced Vert.x Bridge — ./vertx/ (GuicedEE ↔ Vert.x integration rules, glossary, lifecycle/configuration/publisher guidance)
 
 Recommended cross‑topics
 - Backend/Hibernate (Reactive 7) — generative/backend/hibernate/README.md
