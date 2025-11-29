@@ -99,18 +99,18 @@ Fill before running.
     - [ ] Native build & packaging
     - [ ] Testing strategy
     - Note: Quarkus currently embeds Vert.x 4; pick Vert.x 5 only for direct Vert.x API usage.
-  - GuicedEE:
-    - [ ] Core
-    - [ ] Client
-    - [ ] Web
-    - [X] WebSocket
-    - [ ] Rest
-    - [ ] Persistence
-    - [ ] RabbitMQ
-    - [ ] Cerial
-    - [ ] OpenAPI
-    - [ ] Sockets
-    - Note: If Core is selected, also select Vert.x 5 and include GuicedEE Vert.x Bridge rules (rules/generative/backend/guicedee/vertx/README.md); if Persistence is selected, also select Hibernate Reactive 7.
+    - GuicedEE:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Web
+      - [ ] WebSocket
+      - [ ] Rest
+      - [ ] Persistence
+      - [ ] RabbitMQ
+      - [ ] Cerial
+      - [ ] OpenAPI
+      - [ ] Sockets
+      - Note: If Core is selected, also select Vert.x 5 and include GuicedEE Vert.x Bridge rules (rules/generative/backend/guicedee/vertx/README.md); if Persistence is selected, also select Hibernate Reactive 7 and link rules/generative/backend/guicedee/persistence/README.md.
 - Backend:
   - Spring MVC
     - [ ] Core MVC/Web
@@ -346,6 +346,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - Hibernate (ORM/Reactive): rules/generative/backend/hibernate/README.md
     - Quarkus: rules/generative/backend/quarkus/README.md
     - GuicedEE Websockets: rules/generative/backend/guicedee/websockets/README.md
+    - GuicedEE Persistence: rules/generative/backend/guicedee/persistence/README.md
   - Platform:
     - CI/CD: rules/generative/platform/ci-cd/README.md
       - If CI/CD Providers are selected, also link provider docs:

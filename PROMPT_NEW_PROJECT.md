@@ -105,7 +105,7 @@ Fill before running.
       - [ ] RabbitMQ
       - [ ] Cerial
       - [ ] OpenAPI
-      - Note: If Core is selected, also select Vert.x 5 and include GuicedEE Vert.x Bridge rules (rules/generative/backend/guicedee/vertx/README.md); if Persistence is selected, also select Hibernate Reactive 7.
+      - Note: If Core is selected, also select Vert.x 5 and include GuicedEE Vert.x Bridge rules (rules/generative/backend/guicedee/vertx/README.md); if Persistence is selected, also select Hibernate Reactive 7 and link rules/generative/backend/guicedee/persistence/README.md.
     - Databases:
       - [ ] PostgreSQL
       - [ ] MySQL
@@ -362,6 +362,7 @@ When approved, execute the plan as one change set.
        - GuicedEE Client — [README](rules/generative/backend/guicedee/client/README.md)
       - GuicedEE Vert.x Bridge — [README](rules/generative/backend/guicedee/vertx/README.md) (include when GuicedEE Core is selected)
       - GuicedEE Websockets — [README](rules/generative/backend/guicedee/websockets/README.md)
+      - GuicedEE Persistence — [README](rules/generative/backend/guicedee/persistence/README.md)
        - Hibernate (ORM/Reactive) — [README](rules/generative/backend/hibernate/README.md)
        - Vert.x — [README](rules/generative/backend/vertx/README.md)
      - Structural:
