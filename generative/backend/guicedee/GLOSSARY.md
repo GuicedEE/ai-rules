@@ -25,7 +25,7 @@ Major function families (route-to rules)
 - GuicedVertxPersistence (DB/Hibernate Reactive) — Connection setup, transactions, reactive patterns. See: ./functions/guiced-vertx-persistence-rules.md
 - GuicedVertxSockets (WebSockets) — Real-time communication via Vert.x sockets, handlers. See: ./functions/guiced-vertx-sockets-rules.md
 - GuicedRabbit (RabbitMQ) — Messaging clients, queue config, publish/consume patterns. See: ./functions/guiced-rabbit-rules.md
-- GuicedCerial (Serial IO) — Serial port comms, event handling, recovery. See: ./functions/guiced-cerial-rules.md
+- GuicedCerial (Serial IO) — Serial port comms, event handling, recovery. See: ./cerial/GLOSSARY.md
 - GuicedHibernate (ORM classic) — Hibernate ORM integration (blocking), sessions, transactions. See: ./functions/guiced-hibernate-rules.md
 - GuicedSwaggerOpenAPI (API docs) — Swagger/OpenAPI generation and UI for GuicedEE apps. See: ./functions/guiced-swagger-openapi-rules.md
 
@@ -40,7 +40,7 @@ LLM interpretation guidance (how to apply these terms)
   - “persistence”, “hibernate reactive”, “transactions” → ./functions/guiced-vertx-persistence-rules.md
   - “websocket” → ./functions/guiced-vertx-sockets-rules.md
   - “rabbitmq” → ./functions/guiced-rabbit-rules.md
-  - “serial”, “com port” → ./functions/guiced-cerial-rules.md
+  - “serial”, “com port” → ./cerial/GLOSSARY.md
   - “hibernate (classic)” → ./functions/guiced-hibernate-rules.md
   - “OpenAPI/Swagger” → ./functions/guiced-swagger-openapi-rules.md
   - “shaded JPMS libraries”, “guicedee services”, “postgresql policy” → ./services/services.md
