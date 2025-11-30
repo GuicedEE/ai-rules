@@ -4,6 +4,7 @@ This category covers language-specific guidance optimized for AI-assisted code g
 
 Cross-language guardrails
 - Never use try/catch blocks with no-op handlers. Errors must be handled explicitly (log, map to domain errors, or rethrow) so nothing is silently swallowed.
+- Do not fallback to reflection unless the user explicitly requests it and approves that approach; assume reflection is off-limits by default across all language guidance.
 
 Topics
 - Kotlin — ./kotlin/README.md
