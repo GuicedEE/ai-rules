@@ -164,11 +164,12 @@ Fill before running.
       - [ ] Nuxt
 - Frontend (Angular Plugins):
   - [ ] Angular Awesome
-- Frameworks (JWebMP):
-  - [ ] Core
-  - [ ] Client
-  - [ ] TypeScript
-  - [ ] WebAwesome
+  - Frameworks (JWebMP):
+    - [ ] Core
+    - [ ] Client
+    - [ ] TypeScript
+    - [ ] Angular
+    - [ ] WebAwesome
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)

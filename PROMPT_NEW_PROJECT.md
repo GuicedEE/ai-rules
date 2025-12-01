@@ -181,6 +181,7 @@ Fill before running.
     - [ ] Core
     - [ ] Client
     - [ ] TypeScript
+    - [ ] Angular
     - [ ] WebAwesome
   - CI/CD Providers:
     - [ ] GitHub Actions
@@ -199,7 +200,7 @@ Fill before running.
     - [ ] OpenAPI
     - [ ] Wireshark
     - OpenAPI Provider (choose one; default = Swagger)
-      - [x] Swagger (default)
+      - [ ] Swagger (default)
       - [ ] MicroProfile OpenAPI
       - [ ] Springdoc OpenAPI (Spring Boot)
     - Health endpoints default to MicroProfile: /health, /health/ready, /health/live (Spring Actuator endpoints supported but not default)

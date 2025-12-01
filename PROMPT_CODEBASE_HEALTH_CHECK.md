@@ -165,14 +165,16 @@ Fill before running.
     - [ ] Angular Awesome (Angular 19+ plugin)
   - Frameworks (JWebMP):
     - [ ] Core
+    - [ ] Client
     - [ ] TypeScript
+    - [ ] Angular
     - [ ] WebAwesome
   - Platform:
     - [ ] Observability/Health
     - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)
     - [ ] Secrets & Env
     - OpenAPI Provider (choose one; default = Swagger)
-      - [x] Swagger (default)
+      - [ ] Swagger (default)
       - [ ] MicroProfile OpenAPI
       - [ ] Springdoc OpenAPI (Spring Boot)
     - Health endpoints default to MicroProfile: /health, /health/ready, /health/live (Spring Actuator endpoints supported but not default)
