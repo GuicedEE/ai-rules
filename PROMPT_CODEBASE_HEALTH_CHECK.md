@@ -170,6 +170,8 @@ Fill before running.
     - [ ] TypeScript
     - [ ] Angular
     - [ ] WebAwesome
+    - [ ] AgCharts
+    - [ ] AgCharts Enterprise
   - Platform:
     - [ ] Observability/Health
     - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)

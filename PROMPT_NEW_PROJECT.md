@@ -184,6 +184,8 @@ Fill before running.
     - [ ] TypeScript
     - [ ] Angular
     - [ ] WebAwesome
+    - [ ] AgCharts
+    - [ ] AgCharts Enterprise
   - CI/CD Providers:
     - [ ] GitHub Actions
     - [ ] GitLab CI
@@ -352,11 +354,13 @@ When approved, execute the plan as one change set.
    - Declare scope, chosen stacks, plugin selections (Angular Plugins), and any project-specific conventions.
    - Link topic indexes:
      - Frontend (Standard):
-       - Web Components — [README](rules/generative/frontend/webcomponents/README.md)
-       - WebAwesome — [README](rules/generative/frontend/webawesome/README.md)
-       - JWebMP — [README](rules/generative/frontend/jwebmp/README.md)
-       - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
-       - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
+        - Web Components — [README](rules/generative/frontend/webcomponents/README.md)
+        - WebAwesome — [README](rules/generative/frontend/webawesome/README.md)
+        - JWebMP — [README](rules/generative/frontend/jwebmp/README.md)
+        - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
+        - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
+        - JWebMP AgCharts — [README](rules/generative/frontend/jwebmp/agcharts/README.md)
+          - AgCharts Enterprise — [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
      - Frontend (Angular):
        - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
        - Angular Plugins:
