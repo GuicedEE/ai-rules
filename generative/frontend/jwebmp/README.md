@@ -12,6 +12,7 @@ Important policy for generators and maintainers (JWebMP projects):
 Guides
 - JWebMP AI Guide — ./jwebmp_ai_guide.md
 - JWebMP Angular Integration (TypeScript generation) — ./jwebmp_angular_ai_guide.md
+- JWebMP Typescript Client rules — ./typescript/README.md
 
 See also
 - Group: Frontend → Standard — ../README.md
