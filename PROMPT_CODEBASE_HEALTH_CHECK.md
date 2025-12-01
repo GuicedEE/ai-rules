@@ -8,6 +8,7 @@ Supported: JetBrains AI (Junie), GitHub Copilot Chat, Cursor, ChatGPT, Claude, R
 
 ## 0) Provide Inputs
 Fill before running.
+Before proceeding with any other steps, register required MCP servers with your assistant (Mermaid MCP is mandatory) and load the config snippet for the selected engine.
 
 - Repository URL / local path: <REPO_URL_OR_PATH>
 - Org and project name: <ORG_NAME> / <PROJECT_NAME>

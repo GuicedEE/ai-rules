@@ -8,6 +8,7 @@ Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Ro
 
 ## 0) Provide Inputs
 Fill before running.
+Before proceeding with any other steps, register required MCP servers with your assistant (Mermaid MCP is mandatory) and load the config snippet for the selected engine.
 
 - Library name: <LIBRARY_NAME>
 - Current/new version: <VERSION>
