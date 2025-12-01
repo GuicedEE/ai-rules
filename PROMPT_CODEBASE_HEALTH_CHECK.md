@@ -267,7 +267,9 @@ Universal STOP rule
 - MCP servers (per selected AI engine):
   - If the chosen assistant supports MCP (e.g., Cursor, Claude Desktop, MCP-capable IDEs), register the servers before running the prompt.
   - Always register the Mermaid MCP server for docs/diagrams: HTTP `https://mcp.mermaidchart.com/mcp` (`"type": "http"`) or SSE `https://mcp.mermaidchart.com/sse` (`"type": "sse"`).
+  - Provide a minimal MCP config snippet for the selected assistant (e.g., `.mcp.json` or IDE settings) that includes Mermaid and any other required servers; instruct the AI to load it before producing diagrams.
   - Confirm in responses which MCP servers are active so registration aligns with the AI engine selections.
+  - Explicitly note when an output/diagram was generated using an MCP server for traceability.
 - ChatGPT/Claude:
   - Start with system note enforcing the above sections. Close loops across artifacts.
   - Owner mode (this repository as active workspace): do not refer to it as a submodule; load and pin ./skills.md if available.
@@ -409,7 +411,7 @@ Produce a comprehensive health report with:
 - [ ] Risk and migration notes drafted
 - [ ] Remediation plan prioritized
 - [ ] Link integrity report completed
-- [ ] MCP servers registered for selected assistants (Mermaid MCP for docs/diagrams) and acknowledged in outputs
+- [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
 - [ ] AI workspace files validated/created for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Fluent API Strategy declared/detected (CRTP vs Builder) and aligned across RULES/GLOSSARY/implementation; violations flagged
 - [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings copied)
@@ -520,7 +522,7 @@ Deliverables for this section
 ## 5) Output Checklist (Additions)
 - [ ] Starting prompt identified and linked (or inferred with evidence)
 - [ ] Host docs directories scanned and validated (outside submodule)
-- [ ] MCP servers registered for selected assistants (Mermaid MCP for docs/diagrams) and acknowledged in outputs
+- [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
 - [ ] AI workspace instruction files verified/added for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Overrides vs Enterprise matrix produced with rationale and links
 - [ ] Topic guides/guidelines coverage validated against starting prompt selections
@@ -560,6 +562,7 @@ Required artifacts (Docs-as-Code)
 Format and storage (Docs as Code)
 - Use text formats that diff well:
   - Mermaid (preferred) in Markdown fenced blocks (```mermaid)
+  - Mermaid node names/labels must not contain parentheses `(` or `)`; use plain names without brackets.
   - PlantUML (.puml) or fenced blocks (```plantuml)
   - Mermaid MCP server is available to assist with architecture and diagrams: HTTP endpoint `https://mcp.mermaidchart.com/mcp` with `"type": "http"`; SSE endpoint `https://mcp.mermaidchart.com/sse` with `"type": "sse"`.
 - Storage conventions in host repo (outside rules/):

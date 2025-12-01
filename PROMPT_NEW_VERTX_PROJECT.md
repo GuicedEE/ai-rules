@@ -176,7 +176,9 @@ Universal STOP rule
 - MCP servers (per selected AI engine):
   - If the chosen assistant supports MCP (e.g., Cursor, Claude Desktop, MCP-capable IDEs), register the servers before running the prompt.
   - Always register the Mermaid MCP server for docs/diagrams: HTTP `https://mcp.mermaidchart.com/mcp` (`"type": "http"`) or SSE `https://mcp.mermaidchart.com/sse` (`"type": "sse"`).
+  - Provide a minimal MCP config snippet for the selected assistant (e.g., `.mcp.json` or IDE settings) that includes Mermaid and any other required servers; instruct the AI to load it before producing diagrams.
   - Confirm in responses which MCP servers are active so registration aligns with the AI engine selections.
+  - Explicitly note when an output/diagram was generated using an MCP server for traceability.
 - For ChatGPT/Claude:
   - Start with system note: "Follow Rules Repository RULES.md sections 4,5, Document Modularity, and 6 (forward-only). Close loops across artifacts."
   - Owner mode (this Rules Repository repository is the active workspace; not used as a submodule):
@@ -282,7 +284,7 @@ When approved, execute the plan as one change set.
 - [ ] .env.example aligned to env-variables.md
 - [ ] CI updated/added
 - [ ] Vert.x selections recorded (Java LTS, Vert.x 5.x) and links resolve
-- [ ] MCP servers registered for selected assistants (Mermaid MCP for docs/diagrams) and acknowledged in outputs
+- [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
 - [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] No project files placed inside the submodule
 
@@ -330,6 +332,7 @@ Required artifacts (Docs-as-Code)
 Format and storage (Docs as Code)
 - Use text formats that diff well:
   - Mermaid (preferred) in Markdown fenced blocks (```mermaid)
+  - Mermaid node names/labels must not contain parentheses `(` or `)`; use plain names without brackets.
   - PlantUML (.puml) or fenced blocks (```plantuml)
   - Mermaid MCP server is available to assist with architecture and diagrams: HTTP endpoint `https://mcp.mermaidchart.com/mcp` with `"type": "http"`; SSE endpoint `https://mcp.mermaidchart.com/sse` with `"type": "sse"`.
 - Storage conventions (host repository, outside rules/):
