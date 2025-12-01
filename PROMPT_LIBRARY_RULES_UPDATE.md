@@ -37,6 +37,7 @@ Fill before running.
   - [ ] AI Assistant
   - Note: Select every engine participating in the release and ensure rules/templates are configured for each.
     - AI Assistant consumes rules from `.aiassistant/rules/`; replicate enforced policies there.
+- MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
 
 - Architecture:
   - [x] Specification-Driven Design (SDD) (mandatory)

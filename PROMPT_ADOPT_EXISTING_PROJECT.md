@@ -31,6 +31,7 @@ Fill before running.
   - [ ] AI Assistant
   - Note: Multiple AI engines may be selected; configure each chosen assistant per its workspace requirements.
     - AI Assistant reads rules from `.aiassistant/rules/`; ensure those files stay in sync with this repository’s policies.
+- MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
 
 - Architecture:
   - [x] Specification-Driven Design (SDD) (mandatory)

@@ -29,6 +29,7 @@ Fill before running.
   - [ ] AI Assistant
   - Note: Check every AI assistant used in the codebase and configure compliance for each.
     - AI Assistant expects repository rules under `.aiassistant/rules/`; keep those policies synchronized.
+- MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
 
 - Architecture:
   - [x] Specification-Driven Design (SDD)
