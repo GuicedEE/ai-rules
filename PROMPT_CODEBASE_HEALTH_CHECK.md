@@ -165,6 +165,7 @@ Fill before running.
     - [ ] Angular Awesome (Angular 19+ plugin)
   - Frameworks (JWebMP):
     - [ ] Core
+    - [ ] TypeScript
     - [ ] WebAwesome
   - Platform:
     - [ ] Observability/Health
