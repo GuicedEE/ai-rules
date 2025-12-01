@@ -8,6 +8,7 @@ Modules
 - Annotations & contracts — `annotations.rules.md`
 - Scanning & runtime wiring — `scanning-runtime.rules.md`
 - Configuration & rendering — `configuration-rendering.rules.md`
+- Service interfaces & templates — `interfaces.rules.md`
 - Testing & validation — `testing.rules.md`
 - CI/CD & releases — `ci-cd-release.rules.md`
 - Glossary — `GLOSSARY.md`

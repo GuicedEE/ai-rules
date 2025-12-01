@@ -13,6 +13,7 @@ Guides
 - JWebMP AI Guide — ./jwebmp_ai_guide.md
 - JWebMP Angular Integration (TypeScript generation) — ./jwebmp_angular_ai_guide.md
 - JWebMP Typescript Client rules — ./typescript/README.md
+- JWebMP Angular (Angular 20 generation + Vert.x hosting) — ./angular/README.md
 
 See also
 - Group: Frontend → Standard — ../README.md

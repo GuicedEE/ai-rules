@@ -10,6 +10,10 @@ Usage patterns
 - Signals/models/method hooks: apply `@NgSignal*`, `@NgModels`, `@NgMethods`, `@NgInterfaces`, `@NgInjects` to drive render helpers; keep CRTP setters returning `(J) this`.
 - Bootstrapping/module wiring: add `@NgBoot*` annotations for root module imports/providers/declarations; use `@NgImportModule(s)` and `@NgImportProvider(s)` to pull external Angular modules/providers.
 - Constructor metadata: `@NgConstructorParameters`/`@NgConstructorBodies` describe generated constructors; pair with TS types (`tstypes`) for primitives.
+- TypeScript dependency annotations:
+  - `@TsDependency` (repeatable or grouped via `@TsDependencies`) defines runtime `dependencies` for the generated `package.json`. Use the exact semver string you want emitted; set `overrides = true` when the package must also appear under `overrides` to force a resolution for transitive consumers.
+  - `@TsDevDependency` (repeatable or grouped via `@TsDevDependencies`) defines `devDependencies` for `package.json` and drives the Angular CLI/build tool versions referenced in `angular.json` project entries. Keep these aligned with the Angular major/minor used by your Ng annotations to avoid mismatched builders.
+  - Place these annotations on the Ng app/module types that represent the workspace root (e.g., `INgModule` implementations). The generator aggregates them during scan and writes out `dependencies`, `devDependencies`, and `overrides` blocks before composing `angular.json` so the CLI builder versions match the declared dev dependencies.
 
 Constraints
 - Do not mark component classes `final`; CRTP requires extensible generics for fluent chaining.

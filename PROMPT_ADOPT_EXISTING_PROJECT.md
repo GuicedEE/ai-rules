@@ -167,6 +167,7 @@ Fill before running.
     - [ ] Core
     - [ ] Client
     - [ ] TypeScript
+    - [ ] Angular
     - [ ] WebAwesome
   - Frontend (Reactive):
     - Angular (choose exactly one)
