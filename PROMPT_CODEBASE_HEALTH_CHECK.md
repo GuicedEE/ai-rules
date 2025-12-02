@@ -30,6 +30,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] AI Assistant
   - Note: Check every AI assistant used in the codebase and configure compliance for each.
     - AI Assistant expects repository rules under `.aiassistant/rules/`; keep those policies synchronized.
+  - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
 
 - Architecture:
