@@ -10,7 +10,9 @@ What this covers
 - Troubleshooting and diagnostics
 
 Quick links
+- **[NEW] Release Notes v2.0.0** — ./RELEASE_NOTES_v2.0.0.md
 - Plugin overview and integration — ./agcharts-enterprise-integration.rules.md
+- Grid ↔ Charts Data Binding — ./grid-data-binding.rules.md
 - Page Configurator — ./page-configurator.rules.md
 - Licensing & Activation — ./licensing-and-activation.rules.md
 - Java Usage Guide (Java-only) — ./java-usage-guide.rules.md

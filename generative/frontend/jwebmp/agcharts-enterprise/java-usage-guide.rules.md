@@ -66,18 +66,29 @@ public class RevenueChart<J extends RevenueChart<J>> extends Div<J> {
 4) Optional: Combine charts with AG Grid Enterprise
 - For dashboards, pair the JWebMP AG Grid plugin with charts. Use grid selection events to update charts (and vice versa) via shared context ids or app events.
 - Keep shared keys stable (e.g., region, productId) across grid rows and chart series data.
+- **New Feature (v2.0.0+)**: Use the new `IChartDataBridge` interface and `ChartRegistry` for automatic data synchronization, cross-filtering, and selection sync. See `grid-data-binding.rules.md` for detailed patterns and API.
 
 5) Licensing and activation
 - AG Charts Enterprise requires a license key. Do not commit secrets.
-- Initialize on the client using a small server-injected script (see Licensing & Activation doc). Example pattern:
-```text
-// In a Page Configurator implementation — illustrative only
-String agLicense = secrets.get("AG_CHARTS_ENTERPRISE_LICENSE_KEY");
-if (agLicense != null && !agLicense.isEmpty()) {
-    page.add(new Script<>()
-        .add("window.AG_CHARTS_LICENSE_KEY='" + JsUtils.escapeJs(agLicense) + "';\n"));
+- License keys are automatically injected by `AgGridEnterprisePageConfigurator` via one of three methods:
+  - **Programmatic**: `AgGridEnterprisePageConfigurator.setAG_GRID_LICENSE_KEY(licenseKey);`
+  - **System Property**: `-Dag.grid.license=YOUR_KEY` or `System.setProperty("ag.grid.license", key);`
+  - **Environment Variable**: `export AG_GRID_LICENSE=YOUR_KEY` or set in deployment config
+- Example using secret provider with programmatic setter:
+```java
+// In your application bootstrap code
+import com.jwebmp.plugins.aggridenterprise.AgGridEnterprisePageConfigurator;
+
+private final SecretsProvider secrets; // your secret provider
+
+public void initializeAgGridLicense() {
+    String licenseKey = secrets.get("AG_CHARTS_ENTERPRISE_LICENSE_KEY");
+    if (licenseKey != null && !licenseKey.isEmpty()) {
+        AgGridEnterprisePageConfigurator.setAG_GRID_LICENSE_KEY(licenseKey);
+    }
 }
 ```
+- See `./licensing-and-activation.rules.md` for detailed configuration methods and best practices.
 
 6) Validation checklist
 - Build includes `ag-charts-enterprise` in generated Angular app.
