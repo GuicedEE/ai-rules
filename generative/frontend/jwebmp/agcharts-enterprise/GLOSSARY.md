@@ -19,6 +19,12 @@ AG Charts terms
 - Cross-filtering: Enterprise feature where interactions in one chart filter data in other charts.
 - Pivoting (Charts): Aggregating data by dimensions (e.g., groupBy: region) to generate series or categories dynamically.
 - Theme: Visual presets for charts (colors, fonts, backgrounds).
+- Hierarchical Series (v2.0.0+): Multi-level data visualizations including Sankey, Treemap, Sunburst, Chord, and Funnel.
+  - Sankey: Flow diagram showing source→target→value relationships (e.g., process flows, energy transfer).
+  - Treemap: Hierarchical rectangle partition with area-proportional sizing (e.g., org charts, budget allocation).
+  - Sunburst: Circular/concentric hierarchy with radial segments (e.g., file system, category drilldown).
+  - Chord: Circular relationship network with ribbons connecting nodes (e.g., migration flows, collaborations).
+  - Funnel: Sequential stage progression with width proportional to values (e.g., sales pipeline, conversion stages).
 
 AG Grid terms (for combined Grid + Charts dashboards)
 - Column: Grid column definition describing field, header name, renderers, etc.

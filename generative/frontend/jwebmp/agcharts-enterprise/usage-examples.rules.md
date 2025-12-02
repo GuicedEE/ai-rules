@@ -23,6 +23,11 @@ Use this table when selecting option beans so prompts stay deterministic and hum
 | `AgRadialBarSeriesOptions` | Radial bars where the numeric value maps to angle and radius is categorical. | `setAngleKey`, `setRadiusKey`, `setStackGroup`, `setNormalizedTo`, `setItemStyler`, `setLineDash`, `setShowInLegend`. | Use when comparing categories around a circular scale (e.g., gauge-like dashboards). |
 | `AgHeatmapSeriesOptions` | Heatmap/gridded insights (X/Y categories, color intensity). | `setxKey`, `setyKey`, `setColorKey`, `setColorRange`, `setItemPadding`, `setTextAlign`, `setShowInMiniChart`, `setStroke*`. | Always provide ≥2 colours in `colorRange`; use `setNodeClickRange("nearest")` for better hover fidelity. |
 | `AgHeatmapSeriesLabelOptions` | Cell label control for heatmaps. | `setEnabled`, `setFormatter("function(params){...}")`. | Formatter is raw JavaScript; escape strings via `JsUtils.escapeJs` before passing to `.setFormatter`. |
+| `AgSankeySeriesOptions` (v2.0.0+) | Flow and process visualization; source→target→value model. | `setSourceKey`, `setTargetKey`, `setValueKey`, `setNodeFill`, `setNodePadding*` (all 4 sides), `setStroke*`. | Use for supply chains, energy flows, process analysis; node padding controls layout spacing. |
+| `AgTreemapSeriesOptions` (v2.0.0+) | Hierarchical rectangle partition; 4-dimensional (label/secondary/value/color). | `setLabelKey`, `setSecondaryLabelKey`, `setValueKey`, `setColorKey`, `setColorScale`, `setColorDomain`, `setCornerRadius`. | Best for org charts, budget allocation; color scale options: `viridis`, `plasma`, `inferno`, `magma`, `cividis`. |
+| `AgSunburstSeriesOptions` (v2.0.0+) | Circular hierarchy with concentric segments; label/value/color model. | `setLabelKey`, `setValueKey`, `setColorKey`, `setColorScale`, `setColorDomain`, `setCornerRadius`. | Ideal for file systems, category drilldown; supports hover-drilldown interactions via client options. |
+| `AgChordSeriesOptions` (v2.0.0+) | Relationship networks in circular layout; source→target→value. | `setSourceKey`, `setTargetKey`, `setValueKey`, `setNodeFill`, `setNodePaddingAngle`, `setStroke*`. | Use for migration flows, collaboration networks; angular padding controls arc spacing (degrees). |
+| `AgFunnelSeriesOptions` (v2.0.0+) | Stage progression and conversion funnels; label/value model. | `setLabelKey`, `setValueKey`, `setOrientation` (`vertical`/`horizontal`), `setCornerRadius`, `setFill*`. | Simplest hierarchical series; ideal for sales pipelines and user journey stages. |
 
 ### Axis helpers
 | Option class | Purpose | Notes |
@@ -174,6 +179,90 @@ public class TreemapChart<J extends TreemapChart<J>> extends Div<J> {
             .withTitle("Portfolio Allocation")
             .withOption("series[0].type", "treemap")
             .withOption("series[0].data", /* hierarchical data */ null);
+        add(chart);
+    }
+}
+```
+
+- Sankey (v2.0.0+)
+
+```java
+public class SankeyChart<J extends SankeyChart<J>> extends Div<J> {
+    public SankeyChart() {
+        AgSankeyChart<?> chart = new AgSankeyChart<>("process-flow")
+            .setSourceKey("from")
+            .setTargetKey("to")
+            .setValueKey("amount")
+            .setData(List.of(
+                Map.of("from", "Sales", "to", "Processing", "amount", 120),
+                Map.of("from", "Processing", "to", "Fulfillment", "amount", 100)
+            ))
+            .setFill("#1f77b4")
+            .setNodeFill("#2ca02c")
+            .setNodePaddingTop(5)
+            .setNodePaddingRight(5)
+            .setNodePaddingBottom(5)
+            .setNodePaddingLeft(5);
+        add(chart);
+    }
+}
+```
+
+- Sunburst (v2.0.0+)
+
+```java
+public class SunburstChart<J extends SunburstChart<J>> extends Div<J> {
+    public SunburstChart() {
+        AgSunburstChart<?> chart = new AgSunburstChart<>("hierarchy")
+            .setLabelKey("name")
+            .setValueKey("value")
+            .setColorKey("metric")
+            .setData(List.of(
+                Map.of("name", "Root", "value", 1000, "metric", 50),
+                Map.of("name", "Branch A", "value", 600, "metric", 65)
+            ))
+            .setColorScale("viridis")
+            .setColorDomain(100.0);
+        add(chart);
+    }
+}
+```
+
+- Chord (v2.0.0+)
+
+```java
+public class ChordChart<J extends ChordChart<J>> extends Div<J> {
+    public ChordChart() {
+        AgChordChart<?> chart = new AgChordChart<>("relationships")
+            .setSourceKey("source")
+            .setTargetKey("target")
+            .setValueKey("strength")
+            .setData(List.of(
+                Map.of("source", "Node A", "target", "Node B", "strength", 50),
+                Map.of("source", "Node B", "target", "Node C", "strength", 35)
+            ))
+            .setFill("#1f77b4")
+            .setNodePaddingAngle(5);
+        add(chart);
+    }
+}
+```
+
+- Funnel (v2.0.0+)
+
+```java
+public class FunnelChart<J extends FunnelChart<J>> extends Div<J> {
+    public FunnelChart() {
+        AgFunnelChart<?> chart = new AgFunnelChart<>("sales-funnel")
+            .setLabelKey("stage")
+            .setValueKey("count")
+            .setData(List.of(
+                Map.of("stage", "Awareness", "count", 1000),
+                Map.of("stage", "Interest", "count", 700),
+                Map.of("stage", "Conversion", "count", 100)
+            ))
+            .setOrientation("vertical")
+            .setFill("#70AD47");
         add(chart);
     }
 }
