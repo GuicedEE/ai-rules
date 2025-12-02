@@ -48,6 +48,59 @@ Patterns
 - Listeners: pass raw JavaScript function strings via `@JsonRawValue`; server code can generate these dynamically or use predefined templates.
 - Sync modes: coordinate across multiple chart instances for UX consistency; document sync channel naming in host GUIDES.md.
 
+Dynamic Series Coloring (AG Charts 12.2.0+)
+- **Item Styler (Per-Datum)**: Use `setItemStyler(String)` on `AgSeriesBaseOptions` for conditional styling per data item. The styler function receives each datum and returns style objects (fill, stroke, opacity, etc.).
+  ```java
+  new AgBarSeriesOptions()
+      .setXKey("category")
+      .setYKey("value")
+      .setItemStyler("""
+          (datum) => ({
+              fill: datum.value > 100 ? '#FF6B6B' : '#4ECDC4',
+              stroke: datum.value > 100 ? '#C92A2A' : '#0B7285'
+          })
+          """)
+  ```
+  - Styler is serialized as raw JavaScript via `@JsonRawValue`; evaluated client-side.
+  - Avoid workarounds like stacked phantom series; item styler is the native AG Charts approach for per-datum logic.
+  - Also available on nested options: `AgSeriesMarkerOptions` and `AgSeriesLabelOptions` each support per-item styling.
+
+- **Segmentation (Range-Based)**: Use `setSegmentation(AgSeriesSegmentationOptions)` to color series segments by axis value ranges. Define axis key (X or Y) and a list of segments with style overrides.
+  ```java
+  new AgBarSeriesOptions()
+      .setXKey("category")
+      .setYKey("value")
+      .setSegmentation(new AgSeriesSegmentationOptions<>()
+          .setKey(AgSegmentationKey.Y)
+          .setSegments(List.of(
+              new AgSeriesShapeSegmentOptions<>().setStop(50).setFill("#FF6B6B"),
+              new AgSeriesShapeSegmentOptions<>().setStart(50).setStop(100).setFill("#FFD93D"),
+              new AgSeriesShapeSegmentOptions<>().setStart(100).setFill("#6BCB77")
+          )))
+  ```
+  - Segments are styled independently over defined axis ranges; unspecified properties inherit from series defaults.
+  - Useful for threshold-based coloring (e.g., red/yellow/green zones).
+
+- **Series-Level Fill**: Set `setFill(String)` or `setFill(AgGradientColor)` / `setFill(AgPatternFill)` / `setFill(AgImageFill)` for uniform series styling.
+  - Single-color fill: `setFill("#FF6B6B")`
+  - Gradient fill: `setFill(new AgGradientColor<>().setType("linear")...)` (supports linear/radial).
+  - Pattern/image: `setFill(new AgPatternFill<>()...)` or `setFill(new AgImageFill<>()...)`.
+
+- **Highlight Integration**: Combine `itemStyler` with `setHighlight(AgSeriesHighlightOptions)` for distinct hover/selection states.
+  ```java
+  new AgBarSeriesOptions()
+      .setItemStyler("(datum) => ({ fill: datum.value > 100 ? '#FF6B6B' : '#4ECDC4' })")
+      .setHighlight(new AgSeriesHighlightOptions<>()
+          .setItemStyler("(datum) => ({ fill: datum.value > 100 ? '#AA0000' : '#009080', opacity: 0.9 })"))
+  ```
+
+- **Best Practices**:
+  - Prefer `itemStyler` for data-driven logic; avoids phantom series and legend clutter.
+  - Use `segmentation` for fixed threshold bands (e.g., performance zones, SLA tiers).
+  - Apply fill opacity sparingly; ensure sufficient contrast for accessibility.
+  - Test color logic across all data states (edge cases, nulls, zero values).
+  - Document color mappings in host GUIDES.md for maintainability.
+
 Deprecation (AG Charts 12.2.0 alignment)
 - Removed: `highlightStyle` in series; use series-level `highlight` or chart-level `highlight`.
 - Removed: `formatterFunction`, `formatterFunctions`, `formatterFormats` (global formatter); use `AgChartFormatterOptions` instead.
