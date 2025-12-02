@@ -7,7 +7,7 @@ Bridge GuicedEE Client lifecycle with Vert.x 5. Use these modular rules when wir
 - Vert.x 5 — `rules/generative/backend/vertx/README.md`; GuicedEE Client — `rules/generative/backend/guicedee/README.md`
 - Fluent API: CRTP (no Lombok @Builder) — `rules/generative/backend/fluent-api/crtp.rules.md`
 - Logging — `rules/generative/backend/logging/README.md`; JSpecify — `rules/generative/backend/jspecify/README.md`
-- CI/CD: GitHub Actions (GuicedEE libraries: use `GuicedEE/Workflows/.github/workflows/projects.yml@master` via the `GuicedInjection` job) — `rules/generative/platform/ci-cd/providers/github-actions.md`; env/secrets — `rules/generative/platform/secrets-config/env-variables.md`
+- CI/CD: GitHub Actions (GuicedEE libraries: shared workflow example `GuicedEE/Workflows/.github/workflows/projects.yml@master` via the `GuicedInjection` job—confirm before adding) — `rules/generative/platform/ci-cd/providers/github-actions.md`; env/secrets — `rules/generative/platform/secrets-config/env-variables.md`
 - Document Modularity & Forward-Only — see RULES.md (host) and rules/RULES.md (repository)
 
 ## Topic modules

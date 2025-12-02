@@ -17,10 +17,11 @@ Recommended cross‑topics
 - Backend/Vert.x 5 — generative/backend/vertx/README.md
 - Backend/JSpecify — generative/backend/jspecify/README.md
 
-CI/CD standard (GitHub Actions)
-- GuicedEE libraries should reuse the shared workflow `GuicedEE/Workflows/.github/workflows/projects.yml@master` with the `GuicedInjection` job.
+CI/CD reference (GitHub Actions example)
+- Use the shared workflow only when the host GuicedEE library wants GitHub Actions; if another CI/CD pipeline already exists, keep it and treat this as a template, not a mandate.
+- Shared workflow: `GuicedEE/Workflows/.github/workflows/projects.yml@master` with the `GuicedInjection` job.
 - Required secrets: `USERNAME`, `USER_TOKEN`, `SONA_USERNAME`, `SONA_PASSWORD`. Pass `baseDir` and a descriptive `name` as inputs.
-- Reference implementation:
+- Example implementation:
 ```yaml
 name: Maven Package
 on:
