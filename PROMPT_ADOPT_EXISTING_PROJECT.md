@@ -32,6 +32,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] AI Assistant
   - Note: Multiple AI engines may be selected; configure each chosen assistant per its workspace requirements.
     - AI Assistant reads rules from `.aiassistant/rules/`; ensure those files stay in sync with this repository’s policies.
+  - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
 
 - Architecture:
@@ -171,6 +172,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] TypeScript
     - [ ] Angular
     - [ ] WebAwesome
+    - [ ] AgGrid
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
   - Frontend (Reactive):
@@ -382,6 +384,7 @@ When approved, execute the plan as one change set.
       - rules/generative/frontend/jwebmp/README.md
       - If JWebMP Client is selected: rules/generative/frontend/jwebmp/client/README.md
       - If JWebMP TypeScript client is selected: rules/generative/frontend/jwebmp/typescript/README.md
+      - If JWebMP AgGrid is selected: rules/generative/frontend/jwebmp/aggrid/README.md
       - If JWebMP AgCharts is selected: rules/generative/frontend/jwebmp/agcharts/README.md (enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
       - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
       - rules/generative/frontend/angular-awesome/README.md

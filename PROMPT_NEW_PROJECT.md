@@ -34,6 +34,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] AI Assistant
   - Note: Select every AI assistant involved and configure prompts/rules for each engine accordingly.
     - AI Assistant reads rules from `.aiassistant/rules/`; mirror enforced policies there so IDE prompts stay aligned.
+  - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
 
 - Architecture:
@@ -185,6 +186,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] TypeScript
     - [ ] Angular
     - [ ] WebAwesome
+    - [ ] AgGrid
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
   - CI/CD Providers:
@@ -360,6 +362,7 @@ When approved, execute the plan as one change set.
         - JWebMP — [README](rules/generative/frontend/jwebmp/README.md)
         - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
         - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
+        - JWebMP AgGrid — [README](rules/generative/frontend/jwebmp/aggrid/README.md)
         - JWebMP AgCharts — [README](rules/generative/frontend/jwebmp/agcharts/README.md)
           - AgCharts Enterprise — [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
      - Frontend (Angular):
