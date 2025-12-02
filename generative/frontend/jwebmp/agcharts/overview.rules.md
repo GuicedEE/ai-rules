@@ -1,13 +1,15 @@
 # Overview — AgCharts JWebMP Wrapper
 
 Purpose
-- Provide JWebMP components that render AG Charts via Angular 20 using the JWebMP client/TypeScript bridge.
+- Provide JWebMP components that render AG Charts 12.2.0 via Angular 20 using the JWebMP client/TypeScript bridge.
 - Enforce specification-driven design with CRTP fluent setters and forward-only documentation; generated Angular output stays read-only.
+- Full AG Charts 12.2.0 compliance: all 38 chart-level options implemented as CRTP Java classes with Jackson JSON serialization.
 
 Scope and stacks
 - Java 25 LTS + Maven; JWebMP Client + TypeScript + Angular 20; GuicedEE Client + Vert.x reactive (Mutiny `Uni`).
+- AG Charts version lock: **12.2.0 minimum and only supported version**; no backwards compatibility with earlier versions.
 - Default logging: Log4j2 (apply if/when logging is added).
-- Dependencies: `ag-charts-community` (optionally enterprise), `ag-charts-angular`, `ag-charts-locale`; declared by `AgChartsPageConfigurator`.
+- Dependencies: `ag-charts-community@^12.2.0`, optionally `ag-charts-enterprise@^12.2.0`, `ag-charts-angular@^12.2.0`, `ag-charts-locale@^12.2.0`; declared by `AgChartsPageConfigurator`.
 
 Architecture anchors
 - Context/container/component diagrams — `../../../../../docs/architecture/README.md`, `../../../../../docs/architecture/c4-context.md`, `../../../../../docs/architecture/c4-container.md`, `../../../../../docs/architecture/c4-component-agcharts.md`.

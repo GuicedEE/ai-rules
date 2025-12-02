@@ -1,29 +1,74 @@
 # Options and Styling — AgCharts (JWebMP)
 
 Purpose
-- Define how to shape `AgChartOptions` and series options for AG Charts 12.2+ using CRTP setters and JWebMP components.
+- Define how to shape `AgChartOptions` and series options for AG Charts 12.2.0 (38 chart-level options) using CRTP setters and JWebMP components.
 
-Option model essentials
-- `AgChartOptions` aggregates axes (`options/axes/*`), legend/tooltip (`options/legend/*`, `options/tooltip/*`), theme/background/locale, overlays/navigator/gradient legend/highlight/zoom/sync/ranges/contextMenu/dataSource/animation, formatter, keyboard/touch toggles.
-- Series base (`AgSeriesBaseOptions`) provides label/marker/tooltip/segmentation/highlight plus fills (gradient/pattern/image) and raw color strings. Concrete series (bar/line/area/pie/donut/bubble/combination/scatter) layer chart-specific props.
-- Deprecated in AG Charts 12.2: `highlightStyle` in series; use `highlight`. `AgSeriesAreaPaddingOptions` replaced by general `Padding`/`PaddingOptions`.
+Option model — All 38 AG Charts 12.2.0 Options
+
+**Core Chart Elements (19 options)**
+- `axes`: List of axis objects (NumberAxis, TimeAxis, CategoryAxis, LogAxis, OrdinalTimeAxis, UnitTimeAxis, GroupedCategoryAxis); use `AgAxisBaseOptions` subclasses.
+- `series`: List of series objects; use concrete options (AgBarSeriesOptions, AgLineSeriesOptions, etc.) extending `AgSeriesBaseOptions`.
+- `legend`: Chart legend configuration; use `AgChartLegendOptions` with enabled/position/formatter/listeners.
+- `tooltip`: Chart-level tooltip; use `AgChartTooltipOptions` with showDelay/hideDelay/position/formatting.
+- `theme`: Theme name (string, e.g., "light", "dark") or theme object; use `AgChartTheme` for palette customization.
+- `locale`: Localization settings; use `AgLocaleOptions` for number/time format and label translations.
+- `background`: Chart background fill; use `AgChartBackground` with fill color or image.
+- `seriesArea`: Series area appearance; use `AgSeriesAreaOptions` for fill/stroke styling.
+- `overlays`: Decorative overlays (lines, bands); use `AgChartOverlaysOptions`.
+- `navigator`: Mini chart for range selection (enterprise-only); use `AgNavigatorOptions` with miniChart/mask/handle styling.
+- `gradientLegend`: Continuous gradient legend (enterprise-only); use `AgGradientLegendOptions`.
+- `width`, `height`, `minWidth`, `minHeight`: Chart sizing in pixels; use Integer properties.
+- `padding`: Chart padding; use Integer (uniform) or `AgPadding` object (directional).
+- `title`, `subtitle`, `footnote`: Chart captions; use `AgChartCaptionOptions` with text/font/alignment.
+
+**Interaction & Feature Options (19 options) — Added December 2025**
+- `highlight`: Chart-level highlighting; use `AgChartHighlightOptions` with highlightedItem/unhighlightedItem/highlightedSeries/unhighlightedSeries styles.
+- `animation`: Animation configuration; use `AgChartAnimationOptions` with enabled/duration/easing.
+- `zoom`: Zoom and pan control; use `AgChartZoomOptions` with enabled/wheelBehaviour/minZoom.
+- `ranges`: Range presets and selection UI; use `AgChartRangesOptions` for filtering/preset buttons.
+- `sync`: Multi-chart synchronization; use `AgChartSyncOptions` with enabled/mode (tooltip/highlight/selection).
+- `contextMenu`: Right-click menu control; use `AgChartContextMenuOptions` with enabled/customItems.
+- `dataSource`: Data source adapter; use `AgChartDataSourceOptions` for remote data fetching.
+- `keyboard`: Keyboard input enable/disable; use `AgChartKeyboardOptions` with enabled property.
+- `touch`: Touch gesture support; use `AgChartTouchOptions` with enabled/pinchZoom.
+- `listeners`: Chart-level event callbacks; use `AgChartListenersOptions` with onClick/onHighlight/onSelection (raw JavaScript).
+- `formatter`: Modern formatter configuration; use `AgChartFormatterOptions` (replaces deprecated global formatter).
+- `container`: Chart container config; use `AgChartContainerOptions` with id/className/styles.
+- `data`: Chart-level data binding; use `AgChartDataOptions` for data source configuration.
+- `annotations`: Annotations (lines, labels, shapes); use `AgChartAnnotationsOptions`.
+- `initialState`: Initial zoom/pan state; use `AgChartInitialStateOptions` for replay/persistence.
+- `misc`: Miscellaneous settings; use `AgChartMiscOptions` for CSP nonce/field notation/Google Fonts.
 
 Patterns
 - Build options with CRTP setters; return `(J) this` and avoid builders. Keep immutable defaults minimal; let host apps override.
-- Axes: use matching axis classes (e.g., `AgNumberAxisOptions`, `AgTimeAxisOptions`); pair with series domain/measure data accordingly.
-- Legend/tooltip: prefer configuration objects (`AgChartLegendOptions`, `AgChartTooltipOptions`) instead of raw maps; set `enabled`, `position`, `formatter` as needed.
+- Axes: match axis class to data type (e.g., `AgNumberAxisOptions` for numeric, `AgTimeAxisOptions` for dates); pair with series domain/range keys accordingly.
+- Legend/tooltip: use configuration objects (not raw maps); set enabled/position/formatter/listeners as needed.
 - Theme/styling: apply palettes via `AgChartTheme`; keep enterprise-only palettes behind host-controlled flag.
-- Navigator/gradient legend/highlight/zoom/sync/ranges/contextMenu: enable only when app scenarios require them; document in migration notes if defaults change.
+- Highlight/animation/zoom: enable conditionally based on app scenarios; document rationale in migration notes if defaults change.
+- Listeners: pass raw JavaScript function strings via `@JsonRawValue`; server code can generate these dynamically or use predefined templates.
+- Sync modes: coordinate across multiple chart instances for UX consistency; document sync channel naming in host GUIDES.md.
+
+Deprecation (AG Charts 12.2.0 alignment)
+- Removed: `highlightStyle` in series; use series-level `highlight` or chart-level `highlight`.
+- Removed: `formatterFunction`, `formatterFunctions`, `formatterFormats` (global formatter); use `AgChartFormatterOptions` instead.
+- Removed: `seriesId` field; use `id` only.
+- Kept for compatibility: deprecated formatter classes under `options/formatters/` (not serialized).
 
 Example (options construction)
 ```java
 AgBarChart chart = new AgBarChart()
     .setId("salesChart")
     .setOptions(new AgChartOptions()
-        .setTitle("Quarterly Sales")
-        .setAxes(List.of(new AgCategoryAxisOptions(), new AgNumberAxisOptions()))
+        .setTitle(new AgChartCaptionOptions().setText("Quarterly Sales"))
+        .setAxes(List.of(
+            new AgCategoryAxisOptions().setType("category").setKeys(List.of("quarter")),
+            new AgNumberAxisOptions().setType("number")))
         .setLegend(new AgChartLegendOptions().setPosition("bottom"))
-        .setSeries(List.of(new AgSeriesBarOptions()
+        .setHighlight(new AgChartHighlightOptions()
+            .setHighlightedItem(new AgChartHighlightStyleOptions().setFill("red").setOpacity(1.0))
+            .setUnhighlightedItem(new AgChartHighlightStyleOptions().setOpacity(0.3)))
+        .setAnimation(new AgChartAnimationOptions().setEnabled(true).setDuration(500))
+        .setSeries(List.of(new AgBarSeriesOptions()
             .setXKey("quarter")
             .setYKey("value")
             .setLabel(new AgChartLabelOptions().setEnabled(true)))));
