@@ -171,6 +171,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] TypeScript
     - [ ] Angular
     - [ ] WebAwesome
+    - [ ] AgGrid
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
   - Frontend (Reactive):
@@ -382,6 +383,7 @@ When approved, execute the plan as one change set.
       - rules/generative/frontend/jwebmp/README.md
       - If JWebMP Client is selected: rules/generative/frontend/jwebmp/client/README.md
       - If JWebMP TypeScript client is selected: rules/generative/frontend/jwebmp/typescript/README.md
+      - If JWebMP AgGrid is selected: rules/generative/frontend/jwebmp/aggrid/README.md
       - If JWebMP AgCharts is selected: rules/generative/frontend/jwebmp/agcharts/README.md (enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
       - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
       - rules/generative/frontend/angular-awesome/README.md
