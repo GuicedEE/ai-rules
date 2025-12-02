@@ -382,6 +382,7 @@ When approved, execute the plan as one change set.
       - rules/generative/frontend/webcomponents/README.md
       - rules/generative/frontend/webawesome/README.md
       - rules/generative/frontend/jwebmp/README.md
+      - If JWebMP WebAwesome wrapper is selected: rules/generative/frontend/jwebmp/webawesome/README.md
       - If JWebMP Client is selected: rules/generative/frontend/jwebmp/client/README.md
       - If JWebMP TypeScript client is selected: rules/generative/frontend/jwebmp/typescript/README.md
       - If JWebMP AgGrid is selected: rules/generative/frontend/jwebmp/aggrid/README.md
