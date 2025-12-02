@@ -187,6 +187,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] Angular
     - [ ] WebAwesome
     - [ ] AgGrid
+    - [ ] AgGridEnterprise
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
   - CI/CD Providers:
@@ -363,6 +364,7 @@ When approved, execute the plan as one change set.
         - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
         - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
         - JWebMP AgGrid — [README](rules/generative/frontend/jwebmp/aggrid/README.md)
+        - JWebMP AgGridEnterprise — [README](docs/AgGridEnterprise-Guide.md)
         - JWebMP AgCharts — [README](rules/generative/frontend/jwebmp/agcharts/README.md)
           - AgCharts Enterprise — [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
      - Frontend (Angular):
