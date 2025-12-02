@@ -411,7 +411,7 @@ When approved, execute the plan as one change set.
    - Create .env.example per [env-variables.md](rules/generative/platform/secrets-config/env-variables.md).
 8. CI alignments
    - Add/update minimal GitHub Actions workflows; enumerate required secrets.
-   - If building a GuicedEE library and GitHub Actions is selected, add `.github/workflows/maven-package.yml` pointing at the shared workflow:
+   - If building a GuicedEE library and GitHub Actions is selected, treat the shared workflow as an example; only add it when the maintainer wants that pipeline. Adapt to the host's CI/CD and use the snippet below as a template:
       ```yaml
       name: Maven Package
       on:
