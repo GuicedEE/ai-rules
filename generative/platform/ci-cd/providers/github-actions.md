@@ -97,7 +97,8 @@ Java toolchain with caching
 - run: mvn -B -ntp verify
 ```
 
-GuicedEE libraries (shared workflow)
+GuicedEE libraries (shared workflow example)
+- Treat this as a reference template for GuicedEE libraries that opt into GitHub Actions; do not add it by default if the repo already has CI/CD preferences.
 - Reuse the shared workflow `GuicedEE/Workflows/.github/workflows/projects.yml@master` with the `GuicedInjection` job when GuicedEE libraries use GitHub Actions.
 - Required secrets: `USERNAME`, `USER_TOKEN`, `SONA_USERNAME`, `SONA_PASSWORD`. Pass `baseDir` (module path, empty for root) and a descriptive `name`.
 

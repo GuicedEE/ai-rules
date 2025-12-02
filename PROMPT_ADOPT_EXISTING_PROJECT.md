@@ -171,8 +171,8 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] Client
     - [ ] TypeScript
     - [ ] Angular
-    - [ ] WebAwesome
     - [ ] AgGrid
+    - [ ] AgGridEnterprise
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
   - Frontend (Reactive):
@@ -382,11 +382,12 @@ When approved, execute the plan as one change set.
       - rules/generative/frontend/webcomponents/README.md
       - rules/generative/frontend/webawesome/README.md
       - rules/generative/frontend/jwebmp/README.md
+      - If JWebMP WebAwesome wrapper is selected: rules/generative/frontend/jwebmp/webawesome/README.md
       - If JWebMP Client is selected: rules/generative/frontend/jwebmp/client/README.md
       - If JWebMP TypeScript client is selected: rules/generative/frontend/jwebmp/typescript/README.md
       - If JWebMP AgGrid is selected: rules/generative/frontend/jwebmp/aggrid/README.md
+      - If JWebMP AgGridEnterprise is selected: docs/AgGridEnterprise-Guide.md
       - If JWebMP AgCharts is selected: rules/generative/frontend/jwebmp/agcharts/README.md (enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
-      - If JWebMP with WebAwesome plugin is selected: rules/generative/frontend/jwebmp/jwebmp-webawesome/README.md
       - rules/generative/frontend/angular-awesome/README.md
     - React/Vue/Next/Nuxt:
       - rules/generative/language/react/README.md
@@ -427,7 +428,7 @@ When approved, execute the plan as one change set.
    - Create or update .env.example using rules/generative/platform/secrets-config/env-variables.md as the source of truth.
 9. CI alignments
    - Add/update minimal GitHub Actions workflows for build/test and document required secrets.
-   - If the project is a GuicedEE library and GitHub Actions is selected, add `.github/workflows/maven-package.yml` pointing at the shared workflow:
+   - If the project is a GuicedEE library and GitHub Actions is selected, reference the shared workflow as an example; do not drop the YAML into the repo unless the maintainer approves that pipeline. Adapt as needed to the host's CI/CD and reuse the snippet below only as a template:
       ```yaml
       name: Maven Package
       on:

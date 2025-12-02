@@ -187,6 +187,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] Angular
     - [ ] WebAwesome
     - [ ] AgGrid
+    - [ ] AgGridEnterprise
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
   - CI/CD Providers:
@@ -362,7 +363,9 @@ When approved, execute the plan as one change set.
         - JWebMP — [README](rules/generative/frontend/jwebmp/README.md)
         - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
         - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
+        - JWebMP WebAwesome wrapper — [README](rules/generative/frontend/jwebmp/webawesome/README.md)
         - JWebMP AgGrid — [README](rules/generative/frontend/jwebmp/aggrid/README.md)
+        - JWebMP AgGridEnterprise — [README](docs/AgGridEnterprise-Guide.md)
         - JWebMP AgCharts — [README](rules/generative/frontend/jwebmp/agcharts/README.md)
           - AgCharts Enterprise — [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
      - Frontend (Angular):
@@ -409,7 +412,7 @@ When approved, execute the plan as one change set.
    - Create .env.example per [env-variables.md](rules/generative/platform/secrets-config/env-variables.md).
 8. CI alignments
    - Add/update minimal GitHub Actions workflows; enumerate required secrets.
-   - If building a GuicedEE library and GitHub Actions is selected, add `.github/workflows/maven-package.yml` pointing at the shared workflow:
+   - If building a GuicedEE library and GitHub Actions is selected, treat the shared workflow as an example; only add it when the maintainer wants that pipeline. Adapt to the host's CI/CD and use the snippet below as a template:
       ```yaml
       name: Maven Package
       on:

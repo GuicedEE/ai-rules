@@ -14,6 +14,7 @@ Guides
 - JWebMP Angular Integration (TypeScript generation) — ./jwebmp_angular_ai_guide.md
 - JWebMP Typescript Client rules — ./typescript/README.md
 - JWebMP Angular (Angular 20 generation + Vert.x hosting) — ./angular/README.md
+- WebAwesome wrapper (Angular Awesome components) — ./webawesome/README.md
 - AgCharts wrappers (Angular 20) — ./agcharts/README.md
 - AgCharts Enterprise extras — ./agcharts-enterprise/README.md
 
