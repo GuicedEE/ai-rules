@@ -363,6 +363,7 @@ When approved, execute the plan as one change set.
         - JWebMP — [README](rules/generative/frontend/jwebmp/README.md)
         - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
         - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
+        - JWebMP WebAwesome wrapper — [README](rules/generative/frontend/jwebmp/webawesome/README.md)
         - JWebMP AgGrid — [README](rules/generative/frontend/jwebmp/aggrid/README.md)
         - JWebMP AgGridEnterprise — [README](docs/AgGridEnterprise-Guide.md)
         - JWebMP AgCharts — [README](rules/generative/frontend/jwebmp/agcharts/README.md)
