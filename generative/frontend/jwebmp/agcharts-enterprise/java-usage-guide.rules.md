@@ -43,7 +43,9 @@ Prerequisites
 - At build time, the generated Angular workspace should include `ag-charts-enterprise` and `ag-charts-angular` in package.json.
 
 3) Create a chart in Java
-```text
+
+#### Basic Column Chart
+```java
 public class RevenueChart<J extends RevenueChart<J>> extends Div<J> {
     public RevenueChart() {
         AgChartComponent<?> chart = new AgChartComponent<>()
@@ -58,6 +60,107 @@ public class RevenueChart<J extends RevenueChart<J>> extends Div<J> {
                 Map.of("quarter", "Q3", 170_000),
                 Map.of("quarter", "Q4", 190_000)
             ));
+        add(chart);
+    }
+}
+```
+
+#### Hierarchical Series (v2.0.0+)
+
+Sankey Flow Chart
+```java
+public class ProcessFlowChart<J extends ProcessFlowChart<J>> extends Div<J> {
+    public ProcessFlowChart() {
+        AgSankeyChart<?> chart = new AgSankeyChart<>("process-flow")
+            .setSourceKey("from")
+            .setTargetKey("to")
+            .setValueKey("amount")
+            .setData(List.of(
+                Map.of("from", "Sales", "to", "Processing", "amount", 120),
+                Map.of("from", "Processing", "to", "Fulfillment", "amount", 100),
+                Map.of("from", "Fulfillment", "to", "Delivery", "amount", 95)
+            ))
+            .setNodeFill("#2ca02c")
+            .setNodePaddingTop(10)
+            .setNodePaddingRight(10)
+            .setNodePaddingBottom(10)
+            .setNodePaddingLeft(10);
+        add(chart);
+    }
+}
+```
+
+Treemap Hierarchy
+```java
+public class OrgChartTreemap<J extends OrgChartTreemap<J>> extends Div<J> {
+    public OrgChartTreemap() {
+        AgTreemapChart<?> chart = new AgTreemapChart<>("org-treemap")
+            .setLabelKey("name")
+            .setSecondaryLabelKey("department")
+            .setValueKey("headcount")
+            .setColorKey("performance")
+            .setData(List.of(
+                Map.of("name", "Engineering", "department", "Tech", "headcount", 50, "performance", 85),
+                Map.of("name", "Sales", "department", "Revenue", "headcount", 30, "performance", 72)
+            ))
+            .setColorScale("viridis")
+            .setColorDomain(100.0);
+        add(chart);
+    }
+}
+```
+
+Sunburst Circular Hierarchy
+```java
+public class HierarchySunburst<J extends HierarchySunburst<J>> extends Div<J> {
+    public HierarchySunburst() {
+        AgSunburstChart<?> chart = new AgSunburstChart<>("hierarchy")
+            .setLabelKey("name")
+            .setValueKey("value")
+            .setColorKey("metric")
+            .setData(List.of(
+                Map.of("name", "Root", "value", 1000, "metric", 50),
+                Map.of("name", "Branch A", "value", 600, "metric", 65)
+            ))
+            .setColorScale("plasma");
+        add(chart);
+    }
+}
+```
+
+Chord Relationship Network
+```java
+public class RelationshipChord<J extends RelationshipChord<J>> extends Div<J> {
+    public RelationshipChord() {
+        AgChordChart<?> chart = new AgChordChart<>("relationships")
+            .setSourceKey("source")
+            .setTargetKey("target")
+            .setValueKey("strength")
+            .setData(List.of(
+                Map.of("source", "Node A", "target", "Node B", "strength", 50),
+                Map.of("source", "Node B", "target", "Node C", "strength", 35),
+                Map.of("source", "Node C", "target", "Node A", "strength", 42)
+            ))
+            .setNodePaddingAngle(5);
+        add(chart);
+    }
+}
+```
+
+Funnel Conversion Pipeline
+```java
+public class SalesFunnel<J extends SalesFunnel<J>> extends Div<J> {
+    public SalesFunnel() {
+        AgFunnelChart<?> chart = new AgFunnelChart<>("sales-funnel")
+            .setLabelKey("stage")
+            .setValueKey("count")
+            .setData(List.of(
+                Map.of("stage", "Awareness", "count", 1000),
+                Map.of("stage", "Interest", "count", 700),
+                Map.of("stage", "Decision", "count", 400),
+                Map.of("stage", "Purchase", "count", 100)
+            ))
+            .setOrientation("vertical");
         add(chart);
     }
 }

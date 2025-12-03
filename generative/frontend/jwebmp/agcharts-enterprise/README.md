@@ -15,6 +15,7 @@ Quick links
 - Licensing & Activation — ./licensing-and-activation.rules.md
 - Java Usage Guide (Java-only) — ./java-usage-guide.rules.md
 - Usage Examples (CRTP) — ./usage-examples.rules.md
+- **Phase 6 Client Updates** (v2.0.0) — ./PHASE_6_CLIENT_UPDATES.md
 - Troubleshooting — ./troubleshooting.rules.md
 - Glossary — ./GLOSSARY.md
 - Architecture & prompt seeding — ../../../../../docs/PROMPT_REFERENCE.md (loads C4 + sequence diagrams under docs/architecture/)
