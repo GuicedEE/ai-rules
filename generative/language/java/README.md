@@ -18,6 +18,9 @@ Notes
 - Align nullness with JSpecify when interoperating with Kotlin or enforcing null contracts.
 - Error handling: never add try/catch blocks with no-op handlers; surface, translate, or rethrow errors so failures stay observable.
 
+Null safety & getters
+- Java null-safety & getter rules — ./null-safety.rules.md
+
 See also
 - Language index — ../README.md
 - Build Tooling — ./build-tooling.md
