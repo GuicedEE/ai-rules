@@ -155,24 +155,25 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] BrowserStack
 - Frontend (Standard):
   - [ ] Web Components
-- Frontend (Reactive):
-  - Angular (choose exactly one)
-    - [ ] Angular 17
-    - [ ] Angular 19
-    - [ ] Angular 20
-  - Other frameworks
-    - [ ] React
-      - [ ] Next.js
-    - [ ] Vue
-      - [ ] Nuxt
-- Frontend (Angular Plugins):
-  - [ ] Angular Awesome
+  - Frontend (Reactive):
+    - Angular (choose exactly one)
+      - [ ] Angular 17
+      - [ ] Angular 19
+      - [ ] Angular 20
+    - Other frameworks
+      - [ ] React
+        - [ ] Next.js
+      - [ ] Vue
+        - [ ] Nuxt
+  - Frontend (Angular Plugins):
+    - [ ] Angular Awesome
   - Frameworks (JWebMP):
     - [ ] Core
     - [ ] Client
     - [ ] TypeScript
     - [ ] Angular
     - [ ] WebAwesome
+    - [ ] WebAwesome Pro
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
 - Security/Auth Providers:
@@ -348,6 +349,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - JWebMP Client library: rules/generative/frontend/jwebmp/client/README.md
   - JWebMP TypeScript client: rules/generative/frontend/jwebmp/typescript/README.md
   - JWebMP WebAwesome wrapper: rules/generative/frontend/jwebmp/webawesome/README.md
+  - JWebMP WebAwesome Pro wrapper: rules/generative/frontend/jwebmp/webawesome-pro/README.md
   - JWebMP AgCharts (Angular wrapper): rules/generative/frontend/jwebmp/agcharts/README.md
     - AgCharts Enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md
   - Frontend (Reactive):
@@ -404,6 +406,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - For new components, add <name>.rules.md and update the index.
 - JWebMP wrappers
   - Provide wrapper-specific rules where needed; link to underlying WebAwesome or Web Component contracts. When the WebAwesome wrapper is selected, include rules/generative/frontend/jwebmp/webawesome/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack, asset configurator).
+  - When the WebAwesome Pro wrapper is selected, include rules/generative/frontend/jwebmp/webawesome-pro/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack).
   - If AgCharts is selected, load rules/generative/frontend/jwebmp/agcharts/README.md (enterprise extras: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md) and align listener naming to topic glossary.
   - If the JWebMP Client library is selected, include the JWebMP Client topic index (rules/generative/frontend/jwebmp/client/README.md) and its subtopics (configuration/JPMS, interception, rendering, reactive, logging, nullness, examples).
   - If the JWebMP TypeScript client is selected, include the JWebMP TypeScript topic index (rules/generative/frontend/jwebmp/typescript/README.md) and its subtopics (dependency map, scanning/runtime, testing, annotations).

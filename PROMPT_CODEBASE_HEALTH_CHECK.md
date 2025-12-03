@@ -172,6 +172,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] TypeScript
     - [ ] Angular
     - [ ] WebAwesome
+    - [ ] WebAwesome Pro
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
   - Platform:
