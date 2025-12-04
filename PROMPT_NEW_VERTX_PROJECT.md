@@ -67,6 +67,8 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] TCP EventBus bridge integration
     - [ ] Vert.x 5 upgrade guidance
     - Reference: ./generative/backend/vertx/README.md
+  - Data access libraries:
+    - [ ] EntityAssist — rules/generative/data/entityassist/README.md
   - JDBC Databases:
     - [ ] PostgreSQL
     - [ ] MySQL

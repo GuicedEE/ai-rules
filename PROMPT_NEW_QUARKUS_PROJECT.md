@@ -69,6 +69,8 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] Testing strategy
     - Note: Quarkus currently embeds Vert.x 4 under the hood; select Vert.x 5 only if directly building on the Vert.x APIs.
     - Reference: ./generative/backend/quarkus/README.md
+  - Data access libraries:
+    - [ ] EntityAssist — rules/generative/data/entityassist/README.md
   - JDBC Databases:
     - [ ] PostgreSQL
     - [ ] MySQL
