@@ -119,6 +119,11 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] Cassandra
     - Security (Reactive):
       - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Data:
+    - Activity Master:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Cerial
   - Backend:
     - Spring MVC:
       - [ ] Core MVC/Web
@@ -406,6 +411,8 @@ When approved, execute the plan as one change set.
       - If GuicedEE Core is selected: include rules/generative/backend/vertx/README.md and rules/generative/backend/guicedee/vertx/README.md.
       - If Backend Reactive → GuicedEE options are selected: link chosen function/rules under rules/generative/backend/guicedee/ (functions/..., persistence/README.md, websockets/README.md).
       - If GuicedEE Persistence is selected: ensure Hibernate Reactive 7 is selected/linked (rules/generative/backend/hibernate/README.md) and include rules/generative/backend/guicedee/persistence/README.md.
+    - Data:
+        - Activity Master (Core/Client/Cerial) - rules/generative/data/activity-master/README.md
     - Platform/Architecture:
       - rules/generative/platform/ci-cd/README.md
         - If CI/CD Providers are selected, also link provider docs:

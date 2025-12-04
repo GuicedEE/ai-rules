@@ -380,13 +380,18 @@ When approved, execute the plan as one change set.
        - Vue — [README](rules/generative/language/vue/README.md), [GLOSSARY](rules/generative/language/vue/GLOSSARY.md)
        - Nuxt — [README](rules/generative/frontend/nuxt/README.md), [GLOSSARY](rules/generative/frontend/nuxt/GLOSSARY.md)
      - Backend:
-       - GuicedEE — [README](rules/generative/backend/guicedee/README.md)
-       - GuicedEE Client — [README](rules/generative/backend/guicedee/client/README.md)
-      - GuicedEE Vert.x Bridge — [README](rules/generative/backend/guicedee/vertx/README.md) (include when GuicedEE Core is selected)
-      - GuicedEE Websockets — [README](rules/generative/backend/guicedee/websockets/README.md)
-      - GuicedEE Persistence — [README](rules/generative/backend/guicedee/persistence/README.md)
-       - Hibernate (ORM/Reactive) — [README](rules/generative/backend/hibernate/README.md)
-       - Vert.x — [README](rules/generative/backend/vertx/README.md)
+       - GuicedEE - [README](rules/generative/backend/guicedee/README.md)
+       - GuicedEE Client - [README](rules/generative/backend/guicedee/client/README.md)
+       - GuicedEE Vert.x Bridge - [README](rules/generative/backend/guicedee/vertx/README.md) (include when GuicedEE Core is selected)
+       - GuicedEE Websockets - [README](rules/generative/backend/guicedee/websockets/README.md)
+       - GuicedEE Persistence - [README](rules/generative/backend/guicedee/persistence/README.md)
+       - Hibernate (ORM/Reactive) - [README](rules/generative/backend/hibernate/README.md)
+       - Vert.x - [README](rules/generative/backend/vertx/README.md)
+     - Data:
+       - Activity Master:
+         - [ ] Core
+         - [ ] Client
+         - [ ] Cerial
      - Structural:
        - MapStruct — [README](rules/generative/backend/mapstruct/README.md), [GLOSSARY](rules/generative/backend/mapstruct/GLOSSARY.md)
        - Lombok — [README](rules/generative/backend/lombok/README.md), [GLOSSARY](rules/generative/backend/lombok/GLOSSARY.md)

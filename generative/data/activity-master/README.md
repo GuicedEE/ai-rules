@@ -1,12 +1,18 @@
-# Activity Master — Topic Index
+# Activity Master Rules Index
 
-Use this topic for Activity Master related guidance and rules. This area aggregates docs that complement backend and architecture topics.
+Scope: Reactive Activity Master Client rules for version 3.0.0-SNAPSHOT. Focused on CRTP fluent builders, system and enterprise services, token caching, and Hibernate Reactive 7 over Vert.x 5 with GuicedEE bindings.
 
-Guides
-- Overview and docs — ./ (browse files in this directory)
+Topic map
+- Client library rules: ./client/README.md
+- Interface hierarchies: ./interface_hierarchies.md
+- Topic glossary (topic-first, authoritative for Activity Master terms): ./GLOSSARY.md
 
-See also
-- Architecture — ../README.md
-- Backend — ../../backend/README.md
-- Master index — ../../README.md
-- RULES.md — Generative Topic Taxonomy; Document Modularity Policy
+Cross-links
+- Data category index: ../README.md
+- Backend stacks: ../../backend/vertx/README.md, ../../backend/hibernate/README.md, ../../backend/guicedee/README.md, ../../backend/fluent-api/README.md
+- Platform: ../../platform/observability/README.md, ../../platform/secrets-config/env-variables.md, ../../platform/testing/README.md, ../../platform/ci-cd/README.md
+- Architecture sources (Mermaid MCP rendered): ../../../../docs/architecture/README.md and linked diagrams
+
+Forward-only and modularity
+- Replace monoliths with the modular files referenced above and update links rather than duplicating content.
+- Keep host project docs (PACT/RULES/GUIDES/IMPLEMENTATION) outside the rules directory; use this index to align prompts and generation.

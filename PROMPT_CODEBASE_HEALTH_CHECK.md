@@ -78,13 +78,13 @@ Before proceeding with any other steps, register required MCP servers with your 
 
 - Scope focus (tick all that apply):
   - Fluent API Strategy (choose exactly one):
-    - [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)
-    - [ ] Builder pattern (Lombok @Builder/manual)
-    - Note: Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
-  - Backend Reactive:
-    - Core stacks:
-      - [ ] Vert.x 5
-      - [ ] Hibernate Reactive 7
+      - [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)
+      - [ ] Builder pattern (Lombok @Builder/manual)
+      - Note: Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
+    - Backend Reactive:
+      - Core stacks:
+        - [ ] Vert.x 5
+        - [ ] Hibernate Reactive 7
     - Quarkus:
       - [ ] Core project setup
       - [ ] RESTEasy Reactive APIs
@@ -118,6 +118,11 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] Cassandra
     - Security (Reactive):
       - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Data:
+    - Activity Master:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Cerial
   - Backend:
     - Spring MVC:
       - [ ] Core MVC/Web
@@ -338,6 +343,7 @@ B. Rule Mapping and Scope Confirmation
   - Map detected stacks to indexes:
     - Frontend: [webcomponents](rules/generative/frontend/webcomponents/README.md), [webawesome](rules/generative/frontend/webawesome/README.md), [angular](rules/generative/language/angular/angular17.md), [react](rules/generative/language/react/README.md), [vue](rules/generative/language/vue/README.md), [nextjs](rules/generative/frontend/nextjs/README.md), [nuxt](rules/generative/frontend/nuxt/README.md).
     - Backend: [hibernate](rules/generative/backend/hibernate/README.md), [vertx](rules/generative/backend/vertx/README.md), [guicedee](rules/generative/backend/guicedee/README.md), [guicedee client](rules/generative/backend/guicedee/client/README.md), [guicedee websockets](rules/generative/backend/guicedee/websockets/README.md), [guicedee persistence](rules/generative/backend/guicedee/persistence/README.md), [mapstruct](rules/generative/backend/mapstruct/README.md), [lombok](rules/generative/backend/lombok/README.md), [logging](rules/generative/backend/logging/README.md).
+    - Data: activity master (core/client/cerial) - rules/generative/data/activity-master/README.md.
   - Platform: [security-auth](rules/generative/platform/security-auth/README.md), [secrets-config](rules/generative/platform/secrets-config/README.md), [observability](rules/generative/platform/observability/README.md), [ci-cd](rules/generative/platform/ci-cd/README.md).
   - Architecture: [architecture](rules/generative/architecture/README.md), [tdd](rules/generative/architecture/tdd/README.md), [bdd](rules/generative/architecture/bdd/README.md).
 - For each mapping, enumerate applicable rules and checks.
