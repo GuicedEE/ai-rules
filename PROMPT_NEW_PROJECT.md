@@ -191,6 +191,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] AgGridEnterprise
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
+    - [ ] FullCalendar
   - CI/CD Providers:
     - [ ] GitHub Actions
     - [ ] GitLab CI
@@ -366,10 +367,11 @@ When approved, execute the plan as one change set.
         - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
         - JWebMP WebAwesome wrapper — [README](rules/generative/frontend/jwebmp/webawesome/README.md)
         - JWebMP WebAwesome Pro wrapper — [README](rules/generative/frontend/jwebmp/webawesome-pro/README.md)
-        - JWebMP AgGrid — [README](rules/generative/frontend/jwebmp/aggrid/README.md)
-        - JWebMP AgGridEnterprise — [README](docs/AgGridEnterprise-Guide.md)
-        - JWebMP AgCharts — [README](rules/generative/frontend/jwebmp/agcharts/README.md)
-          - AgCharts Enterprise — [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
+        - JWebMP AgGrid - [README](rules/generative/frontend/jwebmp/aggrid/README.md)
+        - JWebMP AgGridEnterprise - [README](docs/AgGridEnterprise-Guide.md)
+        - JWebMP AgCharts - [README](rules/generative/frontend/jwebmp/agcharts/README.md)
+          - AgCharts Enterprise - [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
+        - JWebMP FullCalendar - [README](rules/generative/frontend/jwebmp/fullcalendar/README.md)
      - Frontend (Angular):
        - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
        - Angular Plugins:

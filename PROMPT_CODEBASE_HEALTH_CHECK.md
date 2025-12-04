@@ -175,6 +175,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] WebAwesome Pro
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
+    - [ ] FullCalendar
   - Platform:
     - [ ] Observability/Health
     - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)
