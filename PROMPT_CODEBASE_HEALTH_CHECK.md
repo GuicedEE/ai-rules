@@ -116,6 +116,8 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] MongoDB
       - [ ] Redis
       - [ ] Cassandra
+    - Data access libraries:
+      - [ ] EntityAssist — rules/generative/data/entityassist/README.md
     - Security (Reactive):
       - [ ] Vert.x Web Auth/JWT/OAuth2
   - Data:
@@ -180,6 +182,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] WebAwesome Pro
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
+    - [ ] FullCalendar
   - Platform:
     - [ ] Observability/Health
     - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)

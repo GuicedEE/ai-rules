@@ -14,6 +14,7 @@ Before proceeding with any other steps, register required MCP servers with your 
 - Current/new version: <VERSION>
 - Repository URL / path: <REPO_URL_OR_PATH>
 - Rules Repository Location: <RULES_REPO_LOCATION>
+- Rules Repository target path for generated artifacts (relative to the Rules Repository root): <RULES_REPO_TARGET_PATH> (e.g., generative/frontend/jwebmp/chartjs)
 - Short description: <ONE_LINE_DESCRIPTION>
 - Type:
   - [ ] UI component library
@@ -176,6 +177,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] WebAwesome Pro
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
+    - [ ] FullCalendar
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)
@@ -208,7 +210,7 @@ Policies (must honor):
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
   - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
 - Glossary policy (topic-first): Provide and maintain a topic-scoped GLOSSARY.md for your library with minimal canonical terms and “LLM interpretation guidance”. Avoid duplicating definitions in host projects. Host projects compose their root GLOSSARY.md by linking to your topic GLOSSARY.md and copying only enforced Prompt Language Alignment mappings (e.g., WebAwesome names); all other terms should be linked to your topic files/anchors.
-- **Sandbox awareness / Pact note** — Record in PACT that host artifacts stay at the repo root or `docs/`. When a release is finalized, update the canonical rules under `rules/frontend/angular-awesome` (the ruleset this library maintains) and limit writes inside the Rules Repository to `repository/frontend/angular-awesome`; never modify other directories in the rules repo.
+- **Sandbox awareness / Pact note** — Record in PACT that host artifacts stay at the repo root or `docs/`. When a release is finalized, update the canonical rules under the Rules Repository target path captured above (e.g., `generative/frontend/jwebmp/chartjs`) and limit writes inside the Rules Repository to that path; never modify other directories in the rules repo.
 
 ---
 
@@ -323,7 +325,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
    - For UI libraries (e.g., WebAwesome):
      - Index each component with links to ./<component>.rules.md
      - If a component is documented as a subsection, add direct anchors (e.g., input.rules.md#number-input)
-   - For non-UI libraries (e.g., EntityAssist):
+   - For non-UI libraries (e.g., EntityAssist — rules/generative/data/entityassist/README.md):
      - Index modular topics (e.g., Entities, Repositories, Transactions, Testing, Anti-patterns)
 
 2. Modularize content
@@ -352,6 +354,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - JWebMP WebAwesome Pro wrapper: rules/generative/frontend/jwebmp/webawesome-pro/README.md
   - JWebMP AgCharts (Angular wrapper): rules/generative/frontend/jwebmp/agcharts/README.md
     - AgCharts Enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md
+  - JWebMP FullCalendar wrapper: rules/generative/frontend/jwebmp/fullcalendar/README.md
   - Frontend (Reactive):
     - Angular: rules/generative/language/angular/README.md
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
@@ -380,6 +383,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - Architecture: rules/generative/architecture/README.md (e.g., ddd/README.md, microfronts/README.md, tdd/README.md, bdd/README.md)
 - Data:
   - rules/generative/data/README.md
+    - rules/generative/data/entityassist/README.md
   - Activity Master (Core/Client/Cerial) - rules/generative/data/activity-master/README.md
 
 5. Versioning and release notes
@@ -408,9 +412,10 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - Provide wrapper-specific rules where needed; link to underlying WebAwesome or Web Component contracts. When the WebAwesome wrapper is selected, include rules/generative/frontend/jwebmp/webawesome/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack, asset configurator).
   - When the WebAwesome Pro wrapper is selected, include rules/generative/frontend/jwebmp/webawesome-pro/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack).
   - If AgCharts is selected, load rules/generative/frontend/jwebmp/agcharts/README.md (enterprise extras: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md) and align listener naming to topic glossary.
+  - If FullCalendar is selected, include rules/generative/frontend/jwebmp/fullcalendar/README.md and its glossary; align option/view names to FullCalendar 6.1.19 strings and keep Angular artifacts read-only.
   - If the JWebMP Client library is selected, include the JWebMP Client topic index (rules/generative/frontend/jwebmp/client/README.md) and its subtopics (configuration/JPMS, interception, rendering, reactive, logging, nullness, examples).
   - If the JWebMP TypeScript client is selected, include the JWebMP TypeScript topic index (rules/generative/frontend/jwebmp/typescript/README.md) and its subtopics (dependency map, scanning/runtime, testing, annotations).
-- EntityAssist / ORM-like libraries
+- EntityAssist / ORM-like libraries — rules/generative/data/entityassist/README.md
   - Provide modular rules for entities, repositories, transactions, testing, threading, and anti-patterns.
 - Service/Framework libraries
   - Provide modular rules for lifecycle, configuration, extension points, and integration examples.
