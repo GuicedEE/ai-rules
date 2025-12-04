@@ -17,6 +17,7 @@ Guides
 - WebAwesome wrapper (Angular Awesome components) — ./webawesome/README.md
 - AgCharts wrappers (Angular 20) — ./agcharts/README.md
 - AgCharts Enterprise extras — ./agcharts-enterprise/README.md
+- FullCalendar wrapper (FullCalendar 6.1.19 + Angular plugin) — ./fullcalendar/README.md
 
 See also
 - Group: Frontend → Standard — ../README.md
