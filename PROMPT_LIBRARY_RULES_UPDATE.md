@@ -156,18 +156,6 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] BrowserStack
 - Frontend (Standard):
   - [ ] Web Components
-  - Frontend (Reactive):
-    - Angular (choose exactly one)
-      - [ ] Angular 17
-      - [ ] Angular 19
-      - [ ] Angular 20
-    - Other frameworks
-      - [ ] React
-        - [ ] Next.js
-      - [ ] Vue
-        - [ ] Nuxt
-  - Frontend (Angular Plugins):
-    - [ ] Angular Awesome
   - Frameworks (JWebMP):
     - [ ] Core
     - [ ] Client
@@ -179,6 +167,18 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] AgCharts Enterprise
     - [ ] FullCalendar
     - [ ] FullCalendar Pro
+- Frontend (Reactive):
+  - Angular (choose exactly one)
+    - [ ] Angular 17
+    - [ ] Angular 19
+    - [ ] Angular 20
+  - Other frameworks
+    - [ ] React
+      - [ ] Next.js
+    - [ ] Vue
+      - [ ] Nuxt
+- Frontend (Angular Plugins):
+  - [ ] Angular Awesome
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)

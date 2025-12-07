@@ -161,8 +161,19 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] JSpecify
   - Frontend (Standard):
     - [ ] Web Components
+    - Frameworks (JWebMP):
+      - [ ] Core
+      - [ ] Client
+      - [ ] TypeScript
+      - [ ] Angular
+      - [ ] WebAwesome
+      - [ ] WebAwesome Pro
+      - [ ] AgCharts
+      - [ ] AgCharts Enterprise
+      - [ ] FullCalendar
+      - [ ] FullCalendar Pro
   - Frontend (Reactive):
-    - Angular (choose exactly one)
+      - Angular (choose exactly one)
       - [ ] Angular 17
       - [ ] Angular 19
       - [ ] Angular 20
@@ -173,17 +184,6 @@ Before proceeding with any other steps, register required MCP servers with your 
         - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome (Angular 19+ plugin)
-  - Frameworks (JWebMP):
-    - [ ] Core
-    - [ ] Client
-    - [ ] TypeScript
-    - [ ] Angular
-    - [ ] WebAwesome
-    - [ ] WebAwesome Pro
-    - [ ] AgCharts
-    - [ ] AgCharts Enterprise
-    - [ ] FullCalendar
-    - [ ] FullCalendar Pro
   - Platform:
     - [ ] Observability/Health
     - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)

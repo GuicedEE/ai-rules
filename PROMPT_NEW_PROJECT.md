@@ -170,6 +170,19 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] BrowserStack
   - Frontend (Standard):
     - [ ] Web Components
+    - Frameworks (JWebMP):
+      - [ ] Core
+      - [ ] Client
+      - [ ] TypeScript
+      - [ ] Angular
+      - [ ] WebAwesome
+      - [ ] WebAwesome Pro
+      - [ ] AgGrid
+      - [ ] AgGridEnterprise
+      - [ ] AgCharts
+      - [ ] AgCharts Enterprise
+      - [ ] FullCalendar
+      - [ ] FullCalendar Pro
   - Frontend (Reactive):
     - Angular (choose exactly one)
       - [ ] Angular 17
@@ -182,19 +195,6 @@ Before proceeding with any other steps, register required MCP servers with your 
         - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome
-  - Frameworks (JWebMP):
-    - [ ] Core
-    - [ ] Client
-    - [ ] TypeScript
-    - [ ] Angular
-    - [ ] WebAwesome
-    - [ ] WebAwesome Pro
-    - [ ] AgGrid
-    - [ ] AgGridEnterprise
-    - [ ] AgCharts
-    - [ ] AgCharts Enterprise
-    - [ ] FullCalendar
-    - [ ] FullCalendar Pro
   - CI/CD Providers:
     - [ ] GitHub Actions
     - [ ] GitLab CI
