@@ -71,6 +71,12 @@ Before proceeding with any other steps, register required MCP servers with your 
     - Reference: ./generative/backend/quarkus/README.md
   - Data access libraries:
     - [ ] EntityAssist — rules/generative/data/entityassist/README.md
+  - Data:
+    - Activity Master:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Cerial
+      - [ ] Cerial Client
   - JDBC Databases:
     - [ ] PostgreSQL
     - [ ] MySQL

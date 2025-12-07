@@ -3,7 +3,8 @@
 Scope: Reactive Activity Master Client rules for version 3.0.0-SNAPSHOT. Focused on CRTP fluent builders, system and enterprise services, token caching, and Hibernate Reactive 7 over Vert.x 5 with GuicedEE bindings.
 
 Topic map
-- Cerial Master client rules (this library): ./cerial-client/README.md
+- Cerial Master (serial port addon): ./cerial/README.md
+- Cerial Master client rules (client library): ./cerial-client/README.md
 - Core Activity Master client rules (referenced by this library): ./client/README.md
 - Interface hierarchies: ./interface_hierarchies.md
 - Topic glossary (topic-first, authoritative for Activity Master terms): ./GLOSSARY.md

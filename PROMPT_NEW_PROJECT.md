@@ -121,8 +121,14 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] Cassandra
     - Data access libraries:
       - [ ] EntityAssist — rules/generative/data/entityassist/README.md
-    - Security (Reactive):
-      - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Security (Reactive):
+    - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Data:
+    - Activity Master:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Cerial
+      - [ ] Cerial Client
   - Backend:
     - Spring MVC:
       - [ ] Core MVC/Web

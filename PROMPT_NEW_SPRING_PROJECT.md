@@ -88,6 +88,12 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] IBM DB2
     - [ ] SQLite
     - [ ] Other: <DB_OTHER>
+  - Data:
+    - Activity Master:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Cerial
+      - [ ] Cerial Client
   - Security/Auth Providers:
     - [ ] OpenID Connect (generic)
     - [ ] GCP (IAP/OIDC)
