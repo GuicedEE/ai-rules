@@ -183,6 +183,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
     - [ ] FullCalendar
+    - [ ] FullCalendar Pro
   - Platform:
     - [ ] Observability/Health
     - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)

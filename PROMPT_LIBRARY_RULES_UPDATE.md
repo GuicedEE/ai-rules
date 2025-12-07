@@ -178,6 +178,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
     - [ ] FullCalendar
+    - [ ] FullCalendar Pro
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)
@@ -355,6 +356,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - JWebMP AgCharts (Angular wrapper): rules/generative/frontend/jwebmp/agcharts/README.md
     - AgCharts Enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md
   - JWebMP FullCalendar wrapper: rules/generative/frontend/jwebmp/fullcalendar/README.md
+  - JWebMP FullCalendar Pro wrapper: rules/generative/frontend/jwebmp/fullcalendar-pro/README.md
   - Frontend (Reactive):
     - Angular: rules/generative/language/angular/README.md
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
@@ -413,6 +415,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - When the WebAwesome Pro wrapper is selected, include rules/generative/frontend/jwebmp/webawesome-pro/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack).
   - If AgCharts is selected, load rules/generative/frontend/jwebmp/agcharts/README.md (enterprise extras: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md) and align listener naming to topic glossary.
   - If FullCalendar is selected, include rules/generative/frontend/jwebmp/fullcalendar/README.md and its glossary; align option/view names to FullCalendar 6.1.19 strings and keep Angular artifacts read-only.
+  - If FullCalendar Pro is selected, include `rules/generative/frontend/jwebmp/fullcalendar-pro/README.md` plus its glossary; document the premium resource/timeline plugins, template hooks, and WebSocket resource channels against `docs/architecture/c4-component-fullcalendar-pro.md` and `docs/architecture/sequence-runtime-wiring.md` before editing the wrapper.
   - If the JWebMP Client library is selected, include the JWebMP Client topic index (rules/generative/frontend/jwebmp/client/README.md) and its subtopics (configuration/JPMS, interception, rendering, reactive, logging, nullness, examples).
   - If the JWebMP TypeScript client is selected, include the JWebMP TypeScript topic index (rules/generative/frontend/jwebmp/typescript/README.md) and its subtopics (dependency map, scanning/runtime, testing, annotations).
 - EntityAssist / ORM-like libraries — rules/generative/data/entityassist/README.md

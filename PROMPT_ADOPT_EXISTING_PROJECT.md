@@ -184,6 +184,8 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] AgGridEnterprise
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
+    - [ ] FullCalendar
+    - [ ] FullCalendar Pro
   - Frontend (Reactive):
     - Angular (choose exactly one)
       - [ ] Angular 17
@@ -391,13 +393,15 @@ When approved, execute the plan as one change set.
       - rules/generative/frontend/webcomponents/README.md
       - rules/generative/frontend/webawesome/README.md
       - rules/generative/frontend/jwebmp/README.md
-      - If JWebMP WebAwesome wrapper is selected: rules/generative/frontend/jwebmp/webawesome/README.md
-      - If JWebMP WebAwesome Pro wrapper is selected: rules/generative/frontend/jwebmp/webawesome-pro/README.md
-      - If JWebMP Client is selected: rules/generative/frontend/jwebmp/client/README.md
-      - If JWebMP TypeScript client is selected: rules/generative/frontend/jwebmp/typescript/README.md
-      - If JWebMP AgGrid is selected: rules/generative/frontend/jwebmp/aggrid/README.md
-      - If JWebMP AgGridEnterprise is selected: docs/AgGridEnterprise-Guide.md
-      - If JWebMP AgCharts is selected: rules/generative/frontend/jwebmp/agcharts/README.md (enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
+    - If JWebMP WebAwesome wrapper is selected: rules/generative/frontend/jwebmp/webawesome/README.md
+    - If JWebMP WebAwesome Pro wrapper is selected: rules/generative/frontend/jwebmp/webawesome-pro/README.md
+    - If JWebMP Client is selected: rules/generative/frontend/jwebmp/client/README.md
+    - If JWebMP TypeScript client is selected: rules/generative/frontend/jwebmp/typescript/README.md
+    - If JWebMP AgGrid is selected: rules/generative/frontend/jwebmp/aggrid/README.md
+    - If JWebMP AgGridEnterprise is selected: docs/AgGridEnterprise-Guide.md
+    - If JWebMP AgCharts is selected: rules/generative/frontend/jwebmp/agcharts/README.md (enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
+    - If JWebMP FullCalendar is selected: rules/generative/frontend/jwebmp/fullcalendar/README.md
+    - If JWebMP FullCalendar Pro is selected: rules/generative/frontend/jwebmp/fullcalendar-pro/README.md
       - rules/generative/frontend/angular-awesome/README.md
     - React/Vue/Next/Nuxt:
       - rules/generative/language/react/README.md

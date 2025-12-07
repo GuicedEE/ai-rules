@@ -194,6 +194,7 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
     - [ ] FullCalendar
+    - [ ] FullCalendar Pro
   - CI/CD Providers:
     - [ ] GitHub Actions
     - [ ] GitLab CI
@@ -374,6 +375,7 @@ When approved, execute the plan as one change set.
         - JWebMP AgCharts - [README](rules/generative/frontend/jwebmp/agcharts/README.md)
           - AgCharts Enterprise - [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
         - JWebMP FullCalendar - [README](rules/generative/frontend/jwebmp/fullcalendar/README.md)
+        - JWebMP FullCalendar Pro - [README](rules/generative/frontend/jwebmp/fullcalendar-pro/README.md)
      - Frontend (Angular):
        - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
        - Angular Plugins:
