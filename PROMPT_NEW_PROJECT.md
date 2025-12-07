@@ -394,10 +394,11 @@ When approved, execute the plan as one change set.
        - Hibernate (ORM/Reactive) - [README](rules/generative/backend/hibernate/README.md)
        - Vert.x - [README](rules/generative/backend/vertx/README.md)
      - Data:
-       - Activity Master:
+     - Activity Master:
          - [ ] Core
          - [ ] Client
          - [ ] Cerial
+         - [ ] Cerial Client
      - Structural:
        - MapStruct — [README](rules/generative/backend/mapstruct/README.md), [GLOSSARY](rules/generative/backend/mapstruct/GLOSSARY.md)
        - Lombok — [README](rules/generative/backend/lombok/README.md), [GLOSSARY](rules/generative/backend/lombok/GLOSSARY.md)

@@ -386,7 +386,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - Data:
   - rules/generative/data/README.md
     - rules/generative/data/entityassist/README.md
-  - Activity Master (Core/Client/Cerial) - rules/generative/data/activity-master/README.md
+  - Activity Master (Core/Client/Cerial/Cerial Client) - rules/generative/data/activity-master/README.md
 
 5. Versioning and release notes
    - If rules reorganization is breaking (likely under forward-only), prepare RELEASE_NOTES.md summarizing changes.

@@ -125,6 +125,7 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] Core
       - [ ] Client
       - [ ] Cerial
+      - [ ] Cerial Client
   - Backend:
     - Spring MVC:
       - [ ] Core MVC/Web
