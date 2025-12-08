@@ -29,6 +29,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Codex
   - [ ] AI Assistant
   - Note: Check every AI assistant used in the codebase and configure compliance for each.
+    - Junie reads workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant expects repository rules under `.aiassistant/rules/`; keep those policies synchronized.
   - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
@@ -279,6 +280,7 @@ Universal STOP rule
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode; update references in the same change.
 - AI workspace files (selected engines):
+  - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
@@ -342,7 +344,7 @@ A. Repository Inventory and Structure
 - Detect language modules, build system, JPMS usage, packaging, and code owners.
 - Host docs placement: verify PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY are outside the submodule path per [README.md](rules/README.md#enterprise-usage-and-placement-rules).
 - Submodule integrity: confirm rules/ is a Git submodule (host mode) or absent (owner mode).
-- AI workspace files: confirm selected/observed engines have instruction files committed (.aiassistant/rules/, .github/copilot-instructions.md or workspace note, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo).
+- AI workspace files: confirm selected/observed engines have instruction files committed (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md or workspace note, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo).
 
 B. Rule Mapping and Scope Confirmation
   - Map detected stacks to indexes:
@@ -431,7 +433,7 @@ Produce a comprehensive health report with:
 - [ ] Remediation plan prioritized
 - [ ] Link integrity report completed
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files validated/created for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace files validated/created for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Fluent API Strategy declared/detected (CRTP vs Builder) and aligned across RULES/GLOSSARY/implementation; violations flagged
 - [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings copied)
 - [ ] All references point to correct topic indexes under generative/
@@ -542,7 +544,7 @@ Deliverables for this section
 - [ ] Starting prompt identified and linked (or inferred with evidence)
 - [ ] Host docs directories scanned and validated (outside submodule)
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace instruction files verified/added for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace instruction files verified/added for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Overrides vs Enterprise matrix produced with rationale and links
 - [ ] Topic guides/guidelines coverage validated against starting prompt selections
 - [ ] MIGRATION notes present where forward-only changes remove/replace legacy content
