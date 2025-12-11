@@ -10,6 +10,11 @@ Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Ro
 Fill before running.
 Before proceeding with any other steps, register required MCP servers with your assistant (Mermaid MCP is mandatory) and load the config snippet for the selected engine.
 
+- MCP setup (must be completed before continuing):
+  - Load the MCP config snippet for each selected engine (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop).
+  - Register/install the required MCP servers from that config (Mermaid MCP is mandatory). If the config is missing, pause and request it; do not proceed without Mermaid.
+  - Confirm in your responses which MCP servers are active before starting Stage 1.
+
 - Repository URL / local path: <REPO_URL_OR_PATH>
 - Org and project name: <ORG_NAME> / <PROJECT_NAME>
 - Short description: <ONE_LINE_DESCRIPTION>
