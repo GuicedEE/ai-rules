@@ -14,6 +14,7 @@ Before proceeding with any other steps, register required MCP servers with your 
 - Current/new version: <VERSION>
 - Repository URL / path: <REPO_URL_OR_PATH>
 - Rules Repository Location: <RULES_REPO_LOCATION>
+- Rules Repository target path for generated artifacts (relative to the Rules Repository root): <RULES_REPO_TARGET_PATH> (e.g., generative/frontend/jwebmp/chartjs)
 - Short description: <ONE_LINE_DESCRIPTION>
 - Type:
   - [ ] UI component library
@@ -37,6 +38,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Codex
   - [ ] AI Assistant
   - Note: Select every engine participating in the release and ensure rules/templates are configured for each.
+    - Junie consumes workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant consumes rules from `.aiassistant/rules/`; replicate enforced policies there.
   - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
@@ -155,6 +157,17 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] BrowserStack
 - Frontend (Standard):
   - [ ] Web Components
+  - Frameworks (JWebMP):
+    - [ ] Core
+    - [ ] Client
+    - [ ] TypeScript
+    - [ ] Angular
+    - [ ] WebAwesome
+    - [ ] WebAwesome Pro
+    - [ ] AgCharts
+    - [ ] AgCharts Enterprise
+    - [ ] FullCalendar
+    - [ ] FullCalendar Pro
 - Frontend (Reactive):
   - Angular (choose exactly one)
     - [ ] Angular 17
@@ -167,14 +180,6 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] Nuxt
 - Frontend (Angular Plugins):
   - [ ] Angular Awesome
-  - Frameworks (JWebMP):
-    - [ ] Core
-    - [ ] Client
-    - [ ] TypeScript
-    - [ ] Angular
-    - [ ] WebAwesome
-    - [ ] AgCharts
-    - [ ] AgCharts Enterprise
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)
@@ -207,7 +212,7 @@ Policies (must honor):
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
   - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
 - Glossary policy (topic-first): Provide and maintain a topic-scoped GLOSSARY.md for your library with minimal canonical terms and “LLM interpretation guidance”. Avoid duplicating definitions in host projects. Host projects compose their root GLOSSARY.md by linking to your topic GLOSSARY.md and copying only enforced Prompt Language Alignment mappings (e.g., WebAwesome names); all other terms should be linked to your topic files/anchors.
-- **Sandbox awareness / Pact note** — Record in PACT that host artifacts stay at the repo root or `docs/`. When a release is finalized, update the canonical rules under `rules/frontend/angular-awesome` (the ruleset this library maintains) and limit writes inside the Rules Repository to `repository/frontend/angular-awesome`; never modify other directories in the rules repo.
+- **Sandbox awareness / Pact note** — Record in PACT that host artifacts stay at the repo root or `docs/`. When a release is finalized, update the canonical rules under the Rules Repository target path captured above (e.g., `generative/frontend/jwebmp/chartjs`) and limit writes inside the Rules Repository to that path; never modify other directories in the rules repo.
 
 ---
 
@@ -254,6 +259,7 @@ Universal STOP rule
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode.
 - AI workspace files (selected engines):
+  - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
@@ -322,7 +328,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
    - For UI libraries (e.g., WebAwesome):
      - Index each component with links to ./<component>.rules.md
      - If a component is documented as a subsection, add direct anchors (e.g., input.rules.md#number-input)
-   - For non-UI libraries (e.g., EntityAssist):
+   - For non-UI libraries (e.g., EntityAssist — rules/generative/data/entityassist/README.md):
      - Index modular topics (e.g., Entities, Repositories, Transactions, Testing, Anti-patterns)
 
 2. Modularize content
@@ -348,8 +354,11 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - JWebMP Client library: rules/generative/frontend/jwebmp/client/README.md
   - JWebMP TypeScript client: rules/generative/frontend/jwebmp/typescript/README.md
   - JWebMP WebAwesome wrapper: rules/generative/frontend/jwebmp/webawesome/README.md
+  - JWebMP WebAwesome Pro wrapper: rules/generative/frontend/jwebmp/webawesome-pro/README.md
   - JWebMP AgCharts (Angular wrapper): rules/generative/frontend/jwebmp/agcharts/README.md
     - AgCharts Enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md
+  - JWebMP FullCalendar wrapper: rules/generative/frontend/jwebmp/fullcalendar/README.md
+  - JWebMP FullCalendar Pro wrapper: rules/generative/frontend/jwebmp/fullcalendar-pro/README.md
   - Frontend (Reactive):
     - Angular: rules/generative/language/angular/README.md
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
@@ -376,9 +385,10 @@ Perform as a single, forward-only change set. The exact target paths depend on y
     - Platform Security & Auth: rules/generative/platform/security-auth/README.md
     - Env variables: rules/generative/platform/secrets-config/env-variables.md
   - Architecture: rules/generative/architecture/README.md (e.g., ddd/README.md, microfronts/README.md, tdd/README.md, bdd/README.md)
-  - Data:
-    - rules/generative/data/README.md
-    - rules/generative/data/activity-master/README.md
+- Data:
+  - rules/generative/data/README.md
+    - rules/generative/data/entityassist/README.md
+  - Activity Master (Core/Client/Cerial/Cerial Client) - rules/generative/data/activity-master/README.md
 
 5. Versioning and release notes
    - If rules reorganization is breaking (likely under forward-only), prepare RELEASE_NOTES.md summarizing changes.
@@ -404,10 +414,13 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - For new components, add <name>.rules.md and update the index.
 - JWebMP wrappers
   - Provide wrapper-specific rules where needed; link to underlying WebAwesome or Web Component contracts. When the WebAwesome wrapper is selected, include rules/generative/frontend/jwebmp/webawesome/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack, asset configurator).
+  - When the WebAwesome Pro wrapper is selected, include rules/generative/frontend/jwebmp/webawesome-pro/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack).
   - If AgCharts is selected, load rules/generative/frontend/jwebmp/agcharts/README.md (enterprise extras: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md) and align listener naming to topic glossary.
+  - If FullCalendar is selected, include rules/generative/frontend/jwebmp/fullcalendar/README.md and its glossary; align option/view names to FullCalendar 6.1.19 strings and keep Angular artifacts read-only.
+  - If FullCalendar Pro is selected, include `rules/generative/frontend/jwebmp/fullcalendar-pro/README.md` plus its glossary; document the premium resource/timeline plugins, template hooks, and WebSocket resource channels against `docs/architecture/c4-component-fullcalendar-pro.md` and `docs/architecture/sequence-runtime-wiring.md` before editing the wrapper.
   - If the JWebMP Client library is selected, include the JWebMP Client topic index (rules/generative/frontend/jwebmp/client/README.md) and its subtopics (configuration/JPMS, interception, rendering, reactive, logging, nullness, examples).
   - If the JWebMP TypeScript client is selected, include the JWebMP TypeScript topic index (rules/generative/frontend/jwebmp/typescript/README.md) and its subtopics (dependency map, scanning/runtime, testing, annotations).
-- EntityAssist / ORM-like libraries
+- EntityAssist / ORM-like libraries — rules/generative/data/entityassist/README.md
   - Provide modular rules for entities, repositories, transactions, testing, threading, and anti-patterns.
 - Service/Framework libraries
   - Provide modular rules for lifecycle, configuration, extension points, and integration examples.
@@ -428,7 +441,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - [ ] Release notes and version bump prepared (if applicable)
 - [ ] Root README updated with navigation and usage instructions
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace files committed for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] All links resolve
 
 ---

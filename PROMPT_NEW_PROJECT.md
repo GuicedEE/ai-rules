@@ -33,6 +33,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Codex
   - [ ] AI Assistant
   - Note: Select every AI assistant involved and configure prompts/rules for each engine accordingly.
+    - Junie reads workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant reads rules from `.aiassistant/rules/`; mirror enforced policies there so IDE prompts stay aligned.
   - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
@@ -119,8 +120,16 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] MongoDB
       - [ ] Redis
       - [ ] Cassandra
-    - Security (Reactive):
-      - [ ] Vert.x Web Auth/JWT/OAuth2
+    - Data access libraries:
+      - [ ] EntityAssist — rules/generative/data/entityassist/README.md
+  - Security (Reactive):
+    - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Data:
+    - Activity Master:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Cerial
+      - [ ] Cerial Client
   - Backend:
     - Spring MVC:
       - [ ] Core MVC/Web
@@ -168,6 +177,19 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] BrowserStack
   - Frontend (Standard):
     - [ ] Web Components
+    - Frameworks (JWebMP):
+      - [ ] Core
+      - [ ] Client
+      - [ ] TypeScript
+      - [ ] Angular
+      - [ ] WebAwesome
+      - [ ] WebAwesome Pro
+      - [ ] AgGrid
+      - [ ] AgGridEnterprise
+      - [ ] AgCharts
+      - [ ] AgCharts Enterprise
+      - [ ] FullCalendar
+      - [ ] FullCalendar Pro
   - Frontend (Reactive):
     - Angular (choose exactly one)
       - [ ] Angular 17
@@ -180,16 +202,6 @@ Before proceeding with any other steps, register required MCP servers with your 
         - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome
-  - Frameworks (JWebMP):
-    - [ ] Core
-    - [ ] Client
-    - [ ] TypeScript
-    - [ ] Angular
-    - [ ] WebAwesome
-    - [ ] AgGrid
-    - [ ] AgGridEnterprise
-    - [ ] AgCharts
-    - [ ] AgCharts Enterprise
   - CI/CD Providers:
     - [ ] GitHub Actions
     - [ ] GitLab CI
@@ -276,6 +288,7 @@ Universal STOP rule
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode: update all affected references in the same change.
 - AI workspace files (selected engines):
+  - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
@@ -364,10 +377,13 @@ When approved, execute the plan as one change set.
         - JWebMP Client — [README](rules/generative/frontend/jwebmp/client/README.md)
         - JWebMP TypeScript — [README](rules/generative/frontend/jwebmp/typescript/README.md)
         - JWebMP WebAwesome wrapper — [README](rules/generative/frontend/jwebmp/webawesome/README.md)
-        - JWebMP AgGrid — [README](rules/generative/frontend/jwebmp/aggrid/README.md)
-        - JWebMP AgGridEnterprise — [README](docs/AgGridEnterprise-Guide.md)
-        - JWebMP AgCharts — [README](rules/generative/frontend/jwebmp/agcharts/README.md)
-          - AgCharts Enterprise — [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
+        - JWebMP WebAwesome Pro wrapper — [README](rules/generative/frontend/jwebmp/webawesome-pro/README.md)
+        - JWebMP AgGrid - [README](rules/generative/frontend/jwebmp/aggrid/README.md)
+        - JWebMP AgGridEnterprise - [README](docs/AgGridEnterprise-Guide.md)
+        - JWebMP AgCharts - [README](rules/generative/frontend/jwebmp/agcharts/README.md)
+          - AgCharts Enterprise - [README](rules/generative/frontend/jwebmp/agcharts-enterprise/README.md)
+        - JWebMP FullCalendar - [README](rules/generative/frontend/jwebmp/fullcalendar/README.md)
+        - JWebMP FullCalendar Pro - [README](rules/generative/frontend/jwebmp/fullcalendar-pro/README.md)
      - Frontend (Angular):
        - Angular — [README](rules/generative/language/angular/README.md) and exactly one override (17/19/20)
        - Angular Plugins:
@@ -378,13 +394,19 @@ When approved, execute the plan as one change set.
        - Vue — [README](rules/generative/language/vue/README.md), [GLOSSARY](rules/generative/language/vue/GLOSSARY.md)
        - Nuxt — [README](rules/generative/frontend/nuxt/README.md), [GLOSSARY](rules/generative/frontend/nuxt/GLOSSARY.md)
      - Backend:
-       - GuicedEE — [README](rules/generative/backend/guicedee/README.md)
-       - GuicedEE Client — [README](rules/generative/backend/guicedee/client/README.md)
-      - GuicedEE Vert.x Bridge — [README](rules/generative/backend/guicedee/vertx/README.md) (include when GuicedEE Core is selected)
-      - GuicedEE Websockets — [README](rules/generative/backend/guicedee/websockets/README.md)
-      - GuicedEE Persistence — [README](rules/generative/backend/guicedee/persistence/README.md)
-       - Hibernate (ORM/Reactive) — [README](rules/generative/backend/hibernate/README.md)
-       - Vert.x — [README](rules/generative/backend/vertx/README.md)
+       - GuicedEE - [README](rules/generative/backend/guicedee/README.md)
+       - GuicedEE Client - [README](rules/generative/backend/guicedee/client/README.md)
+       - GuicedEE Vert.x Bridge - [README](rules/generative/backend/guicedee/vertx/README.md) (include when GuicedEE Core is selected)
+       - GuicedEE Websockets - [README](rules/generative/backend/guicedee/websockets/README.md)
+       - GuicedEE Persistence - [README](rules/generative/backend/guicedee/persistence/README.md)
+       - Hibernate (ORM/Reactive) - [README](rules/generative/backend/hibernate/README.md)
+       - Vert.x - [README](rules/generative/backend/vertx/README.md)
+     - Data:
+     - Activity Master:
+         - [ ] Core
+         - [ ] Client
+         - [ ] Cerial
+         - [ ] Cerial Client
      - Structural:
        - MapStruct — [README](rules/generative/backend/mapstruct/README.md), [GLOSSARY](rules/generative/backend/mapstruct/GLOSSARY.md)
        - Lombok — [README](rules/generative/backend/lombok/README.md), [GLOSSARY](rules/generative/backend/lombok/GLOSSARY.md)
@@ -433,6 +455,7 @@ When approved, execute the plan as one change set.
 9. README updates
    - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY. Declare selected Angular version and Angular Plugins (if any).
 10. AI workspace alignment (selected engines)
+    - Junie — `.junie/guidelines.md` with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception.
     - AI Assistant — `.aiassistant/rules/` with RULES.md sections 4/5, Document Modularity, and Forward-Only.
     - GitHub Copilot — `.github/copilot-instructions.md` (or workspace note) covering the same constraints and STOP-gate policy.
     - Cursor — `.cursor/rules.md` mirroring the same constraints.
@@ -463,7 +486,7 @@ When approved, execute the plan as one change set.
 - [ ] CI updated/added
 - [ ] Angular version selected (exactly one) and, if applicable, Angular Plugins listed; all links resolve
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace files committed for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] No project files placed inside the submodule
 
 ---

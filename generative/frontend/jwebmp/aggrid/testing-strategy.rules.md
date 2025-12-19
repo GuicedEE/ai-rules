@@ -75,12 +75,11 @@ public class DataFetchingTest {
         
         // Act
         Uni<List<OrderRecord>> result = grid.fetchData();
-
-        // Example: log results reactively instead of blocking
-        result.invoke(fetched -> log.info("Fetched {} orders; first={}"
-            , fetched.size()
-            , fetched.isEmpty() ? "<none>" : fetched.get(0).getName()
-        ));
+        
+        // Assert
+        List<OrderRecord> fetched = result.await().indefinitely();
+        assertEquals(2, fetched.size());
+        assertEquals("Order 1", fetched.get(0).getName());
     }
     
     @Test

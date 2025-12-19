@@ -29,6 +29,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Codex
   - [ ] AI Assistant
   - Note: Check every AI assistant used in the codebase and configure compliance for each.
+    - Junie reads workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant expects repository rules under `.aiassistant/rules/`; keep those policies synchronized.
   - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
@@ -78,13 +79,13 @@ Before proceeding with any other steps, register required MCP servers with your 
 
 - Scope focus (tick all that apply):
   - Fluent API Strategy (choose exactly one):
-    - [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)
-    - [ ] Builder pattern (Lombok @Builder/manual)
-    - Note: Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
-  - Backend Reactive:
-    - Core stacks:
-      - [ ] Vert.x 5
-      - [ ] Hibernate Reactive 7
+      - [ ] CRTP (generic self-type; implied for GuicedEE and JWebMP)
+      - [ ] Builder pattern (Lombok @Builder/manual)
+      - Note: Only one may be selected; if GuicedEE or JWebMP is present, CRTP is enforced.
+    - Backend Reactive:
+      - Core stacks:
+        - [ ] Vert.x 5
+        - [ ] Hibernate Reactive 7
     - Quarkus:
       - [ ] Core project setup
       - [ ] RESTEasy Reactive APIs
@@ -116,8 +117,16 @@ Before proceeding with any other steps, register required MCP servers with your 
       - [ ] MongoDB
       - [ ] Redis
       - [ ] Cassandra
+    - Data access libraries:
+      - [ ] EntityAssist — rules/generative/data/entityassist/README.md
     - Security (Reactive):
       - [ ] Vert.x Web Auth/JWT/OAuth2
+  - Data:
+    - Activity Master:
+      - [ ] Core
+      - [ ] Client
+      - [ ] Cerial
+      - [ ] Cerial Client
   - Backend:
     - Spring MVC:
       - [ ] Core MVC/Web
@@ -154,8 +163,19 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] JSpecify
   - Frontend (Standard):
     - [ ] Web Components
+    - Frameworks (JWebMP):
+      - [ ] Core
+      - [ ] Client
+      - [ ] TypeScript
+      - [ ] Angular
+      - [ ] WebAwesome
+      - [ ] WebAwesome Pro
+      - [ ] AgCharts
+      - [ ] AgCharts Enterprise
+      - [ ] FullCalendar
+      - [ ] FullCalendar Pro
   - Frontend (Reactive):
-    - Angular (choose exactly one)
+      - Angular (choose exactly one)
       - [ ] Angular 17
       - [ ] Angular 19
       - [ ] Angular 20
@@ -166,14 +186,6 @@ Before proceeding with any other steps, register required MCP servers with your 
         - [ ] Nuxt
   - Frontend (Angular Plugins):
     - [ ] Angular Awesome (Angular 19+ plugin)
-  - Frameworks (JWebMP):
-    - [ ] Core
-    - [ ] Client
-    - [ ] TypeScript
-    - [ ] Angular
-    - [ ] WebAwesome
-    - [ ] AgCharts
-    - [ ] AgCharts Enterprise
   - Platform:
     - [ ] Observability/Health
     - [ ] Security & Auth (OIDC/GCP/Firebase/Microsoft)
@@ -268,6 +280,7 @@ Universal STOP rule
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode; update references in the same change.
 - AI workspace files (selected engines):
+  - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
@@ -331,12 +344,13 @@ A. Repository Inventory and Structure
 - Detect language modules, build system, JPMS usage, packaging, and code owners.
 - Host docs placement: verify PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY are outside the submodule path per [README.md](rules/README.md#enterprise-usage-and-placement-rules).
 - Submodule integrity: confirm rules/ is a Git submodule (host mode) or absent (owner mode).
-- AI workspace files: confirm selected/observed engines have instruction files committed (.aiassistant/rules/, .github/copilot-instructions.md or workspace note, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo).
+- AI workspace files: confirm selected/observed engines have instruction files committed (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md or workspace note, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo).
 
 B. Rule Mapping and Scope Confirmation
   - Map detected stacks to indexes:
     - Frontend: [webcomponents](rules/generative/frontend/webcomponents/README.md), [webawesome](rules/generative/frontend/webawesome/README.md), [angular](rules/generative/language/angular/angular17.md), [react](rules/generative/language/react/README.md), [vue](rules/generative/language/vue/README.md), [nextjs](rules/generative/frontend/nextjs/README.md), [nuxt](rules/generative/frontend/nuxt/README.md).
     - Backend: [hibernate](rules/generative/backend/hibernate/README.md), [vertx](rules/generative/backend/vertx/README.md), [guicedee](rules/generative/backend/guicedee/README.md), [guicedee client](rules/generative/backend/guicedee/client/README.md), [guicedee websockets](rules/generative/backend/guicedee/websockets/README.md), [guicedee persistence](rules/generative/backend/guicedee/persistence/README.md), [mapstruct](rules/generative/backend/mapstruct/README.md), [lombok](rules/generative/backend/lombok/README.md), [logging](rules/generative/backend/logging/README.md).
+    - Data: activity master (core/client/cerial) - rules/generative/data/activity-master/README.md.
   - Platform: [security-auth](rules/generative/platform/security-auth/README.md), [secrets-config](rules/generative/platform/secrets-config/README.md), [observability](rules/generative/platform/observability/README.md), [ci-cd](rules/generative/platform/ci-cd/README.md).
   - Architecture: [architecture](rules/generative/architecture/README.md), [tdd](rules/generative/architecture/tdd/README.md), [bdd](rules/generative/architecture/bdd/README.md).
 - For each mapping, enumerate applicable rules and checks.
@@ -419,7 +433,7 @@ Produce a comprehensive health report with:
 - [ ] Remediation plan prioritized
 - [ ] Link integrity report completed
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files validated/created for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace files validated/created for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Fluent API Strategy declared/detected (CRTP vs Builder) and aligned across RULES/GLOSSARY/implementation; violations flagged
 - [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings copied)
 - [ ] All references point to correct topic indexes under generative/
@@ -530,7 +544,7 @@ Deliverables for this section
 - [ ] Starting prompt identified and linked (or inferred with evidence)
 - [ ] Host docs directories scanned and validated (outside submodule)
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace instruction files verified/added for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace instruction files verified/added for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Overrides vs Enterprise matrix produced with rationale and links
 - [ ] Topic guides/guidelines coverage validated against starting prompt selections
 - [ ] MIGRATION notes present where forward-only changes remove/replace legacy content
