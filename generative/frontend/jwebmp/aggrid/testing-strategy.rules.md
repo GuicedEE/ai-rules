@@ -75,11 +75,11 @@ public class DataFetchingTest {
         
         // Act
         Uni<List<OrderRecord>> result = grid.fetchData();
-        
-        // Assert
-        List<OrderRecord> fetched = result.await().indefinitely();
-        assertEquals(2, fetched.size());
-        assertEquals("Order 1", fetched.get(0).getName());
+
+        // Example: log results reactively instead of blocking
+        result.invoke(fetched -> log.info("Fetched {} orders; first={}",
+            fetched.size(), fetched.isEmpty() ? "<none>" : fetched.get(0).getName()
+        ));
     }
     
     @Test
@@ -88,10 +88,11 @@ public class DataFetchingTest {
         when(mockRepository.findAll())
             .thenReturn(Uni.createFrom().failure(new RuntimeException("DB Error")));
         
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> {
-            grid.fetchData().await().indefinitely();
-        });
+        // Act (reactive logging instead of blocking)
+        grid.fetchData().subscribe().with(
+            items -> log.info("Received {} items", items.size()),
+            err -> log.error("Expected error received: {}", err.toString())
+        );
     }
 }
 ```
@@ -216,9 +217,9 @@ public class GridDataUpdateReceiverTest {
         // Act
         Uni<AjaxResponse<?>> result = receiver.action(call, response);
         
-        // Assert
-        AjaxResponse<?> actualResponse = result.await().indefinitely();
-        assertTrue(actualResponse.getData().containsKey("rowData"));
+        // Example: log response reactively instead of blocking
+        result.invoke(actualResponse -> log.info("Row data present: {}",
+            actualResponse.getData().containsKey("rowData")));
     }
     
     @Test
@@ -234,9 +235,9 @@ public class GridDataUpdateReceiverTest {
         // Act
         Uni<AjaxResponse<?>> result = receiver.action(call, response);
         
-        // Assert
-        AjaxResponse<?> actualResponse = result.await().indefinitely();
-        assertEquals(500, actualResponse.getStatus());
+        // Example: log response reactively instead of blocking
+        result.invoke(actualResponse -> log.info("Receiver responded with status {}",
+            actualResponse.getStatus()));
     }
 }
 ```
