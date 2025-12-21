@@ -287,6 +287,10 @@ Universal STOP rule
 
 ## 1) Self‑Configure the AI Engine
 - Pin [RULES.md](rules/RULES.md#4-behavioral-agreements), [RULES.md](rules/RULES.md#5-technical-commitments), [RULES.md](rules/RULES.md#document-modularity-policy), [RULES.md](rules/RULES.md#6-forward-only-change-policy). Operate in forward-only mode: update all affected references in the same change.
+- Workspace instruction file requirement (non-optional):
+  - If the assistant has filesystem access, it MUST create/update the workspace instruction files on disk before any Stage 1 outputs.
+  - If the assistant cannot write files, it MUST output the full file contents in fenced blocks labeled with the target path so the user can paste them.
+  - Always create missing parent directories (`.junie/`, `.github/`, `.cursor/`, `.aiassistant/rules/`) as needed.
 - AI workspace files (selected engines):
   - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.

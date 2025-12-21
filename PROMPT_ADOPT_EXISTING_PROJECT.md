@@ -1,6 +1,6 @@
 # 🔄 Starter Prompt — Adopt Rules Repository in an Existing Project
 
-Ask your AI tool to copy this template and align with the Rules Repository. The AI will analyze the repo, add the Rules Repository submodule, establish Pact → Rules → Guides → Implementation, and refactor docs to the modular, forward-only model.
+Ask your AI tool to copy this template and align with the Rules Repository. The AI will analyze the repo, add the Rules Repository submodule, establish Pact → Rules → Guides → Implementation, refactor docs to the modular, forward-only model, and produce the complete architectural documentation set for the existing project.
 
 Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Roo, Codex.
 
@@ -237,6 +237,7 @@ Policies (must honor):
 - Use Markdown for docs. Follow RULES.md sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).
 - Do NOT place project-specific docs inside the submodule directory.
 - Logging policy: Default to Log4j2; wire logging/config/examples against Log4j2. If Lombok is selected, use Lombok's `@Log4j2` annotation (avoid other Lombok logging annotations).
+- Entry points: When the GuicedEE Vert.x option is selected, treat every method annotated with `@VertxEventBusDefinition` as a designated entry point and document/enforce accordingly.
 - Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is selected. Align Lombok usage accordingly:
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
   - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
@@ -314,6 +315,10 @@ Universal STOP rule
 
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode: remove/replace legacy docs as needed; update all references.
+- Workspace instruction file requirement (non-optional):
+  - If the assistant has filesystem access, it MUST create/update the workspace instruction files on disk before any Stage 1 outputs.
+  - If the assistant cannot write files, it MUST output the full file contents in fenced blocks labeled with the target path so the user can paste them.
+  - Always create missing parent directories (`.junie/`, `.github/`, `.cursor/`, `.aiassistant/rules/`) as needed.
 - AI workspace files (selected engines):
   - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
