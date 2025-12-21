@@ -24,6 +24,8 @@ Rules
 - Keep CRTP fluent setters in JWebMP components (no Lombok builders or setters).
 - Logging in generators uses Log4j2 (`@Log4j2`).
 - Avoid inline HTML strings; render structure with JWebMP components.
+- Flatten class hierarchies into the concrete output: the generator merges inherited fields/annotations into a single TS class; do not expect separate TS classes for base types unless they are explicitly annotated as standalone outputs.
+- Keep one Angular role per inheritance chain. Mixing `@NgComponent` and `@NgDirective` (or other conflicting Ng* roles) across base/subclass collapses into a single TS class and yields invalid definitions.
 - Preserve topic-first glossary alignment; reuse terminology from Angular/TypeScript rules.
 
 Validation cues
