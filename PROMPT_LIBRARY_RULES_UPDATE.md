@@ -38,6 +38,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Codex
   - [ ] AI Assistant
   - Note: Select every engine participating in the release and ensure rules/templates are configured for each.
+    - Junie consumes workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant consumes rules from `.aiassistant/rules/`; replicate enforced policies there.
   - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
@@ -258,6 +259,7 @@ Universal STOP rule
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode.
 - AI workspace files (selected engines):
+  - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
@@ -439,7 +441,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - [ ] Release notes and version bump prepared (if applicable)
 - [ ] Root README updated with navigation and usage instructions
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace files committed for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] All links resolve
 
 ---

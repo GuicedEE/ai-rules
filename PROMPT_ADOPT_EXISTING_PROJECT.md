@@ -10,6 +10,11 @@ Supported: Junie, AI Assistant, GitHub Copilot Chat, Cursor, ChatGPT, Claude, Ro
 Fill before running.
 Before proceeding with any other steps, register required MCP servers with your assistant (Mermaid MCP is mandatory) and load the config snippet for the selected engine.
 
+- MCP setup (must be completed before continuing):
+  - Load the MCP config snippet for each selected engine (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop).
+  - Register/install the required MCP servers from that config (Mermaid MCP is mandatory). If the config is missing, pause and request it; do not proceed without Mermaid.
+  - Confirm in your responses which MCP servers are active before starting Stage 1.
+
 - Repository URL / local path: <REPO_URL_OR_PATH>
 - Org and project name: <ORG_NAME> / <PROJECT_NAME>
 - Short description: <ONE_LINE_DESCRIPTION>
@@ -31,6 +36,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Codex
   - [ ] AI Assistant
   - Note: Multiple AI engines may be selected; configure each chosen assistant per its workspace requirements.
+    - Junie reads workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant reads rules from `.aiassistant/rules/`; ensure those files stay in sync with this repository’s policies.
   - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
@@ -309,6 +315,7 @@ Universal STOP rule
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode: remove/replace legacy docs as needed; update all references.
 - AI workspace files (selected engines):
+  - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
@@ -466,6 +473,7 @@ When approved, execute the plan as one change set.
 10. README updates
    - State adoption of Rules Repository, link submodule path, and link PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY.
 11. AI workspace alignment (selected engines)
+    - Junie — `.junie/guidelines.md` with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception.
     - AI Assistant — `.aiassistant/rules/` with RULES.md sections 4/5, Document Modularity, and Forward-Only.
     - GitHub Copilot — `.github/copilot-instructions.md` (or workspace note) covering the same constraints and STOP-gate policy.
     - Cursor — `.cursor/rules.md` mirroring the same constraints.
@@ -497,7 +505,7 @@ When approved, execute the plan as one change set.
 - [ ] .env.example aligned to env-variables.md
 - [ ] CI updated/added
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace files committed for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] All links resolve; no project files placed inside the submodule
 ---
 
