@@ -268,6 +268,11 @@ For Maven:
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.11.0</version>
     <configuration>
+        <annotationProcessorArgs>
+            <arg>mapstruct.suppressGeneratorTimestamp=true</arg>
+            <arg>mapstruct.suppressGeneratorVersionInfoComment=true</arg>
+            <arg>mapstruct.suppressGeneratorAnnotation=true</arg>
+        </annotationProcessorArgs>
         <annotationProcessorPaths>
             <path>
                 <groupId>org.mapstruct</groupId>
@@ -278,6 +283,8 @@ For Maven:
     </configuration>
 </plugin>
 ```
+
+The `annotationProcessorArgs` block suppresses MapStruct generator timestamps, version comments, and the generator annotation to keep generated sources stable and diff-friendly.
 
 For Gradle:
 ```groovy

@@ -73,6 +73,11 @@ For Lombok to work properly in your IDE, you need to install the Lombok plugin:
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+                <annotationProcessorArgs>
+                    <arg>mapstruct.suppressGeneratorTimestamp=true</arg>
+                    <arg>mapstruct.suppressGeneratorVersionInfoComment=true</arg>
+                    <arg>mapstruct.suppressGeneratorAnnotation=true</arg>
+                </annotationProcessorArgs>
                 <annotationProcessorPaths>
                     <!-- Lombok must come before MapStruct -->
                     <path>
@@ -190,6 +195,11 @@ When using Lombok with both MapStruct and Hibernate processor, the configuration
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+                <annotationProcessorArgs>
+                    <arg>mapstruct.suppressGeneratorTimestamp=true</arg>
+                    <arg>mapstruct.suppressGeneratorVersionInfoComment=true</arg>
+                    <arg>mapstruct.suppressGeneratorAnnotation=true</arg>
+                </annotationProcessorArgs>
                 <annotationProcessorPaths>
                     <annotationProcessorPath>
                         <groupId>org.hibernate.orm</groupId>

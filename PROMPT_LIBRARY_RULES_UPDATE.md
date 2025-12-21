@@ -38,6 +38,7 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Codex
   - [ ] AI Assistant
   - Note: Select every engine participating in the release and ensure rules/templates are configured for each.
+    - Junie consumes workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant consumes rules from `.aiassistant/rules/`; replicate enforced policies there.
   - Load the MCP configuration/file for each selected engine before continuing (e.g., `.mcp.json` for OpenAI/Cursor, IDE MCP settings for Claude Desktop) so servers are available to the assistant.
 - MCP servers to register (Mermaid MCP required; add others as needed): list name/purpose/endpoint/type (Mermaid MCP `https://mcp.mermaidchart.com/mcp` type `http`). Keep secrets out of the repo; reference env var names instead.
@@ -156,18 +157,6 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] BrowserStack
 - Frontend (Standard):
   - [ ] Web Components
-  - Frontend (Reactive):
-    - Angular (choose exactly one)
-      - [ ] Angular 17
-      - [ ] Angular 19
-      - [ ] Angular 20
-    - Other frameworks
-      - [ ] React
-        - [ ] Next.js
-      - [ ] Vue
-        - [ ] Nuxt
-  - Frontend (Angular Plugins):
-    - [ ] Angular Awesome
   - Frameworks (JWebMP):
     - [ ] Core
     - [ ] Client
@@ -178,6 +167,19 @@ Before proceeding with any other steps, register required MCP servers with your 
     - [ ] AgCharts
     - [ ] AgCharts Enterprise
     - [ ] FullCalendar
+    - [ ] FullCalendar Pro
+- Frontend (Reactive):
+  - Angular (choose exactly one)
+    - [ ] Angular 17
+    - [ ] Angular 19
+    - [ ] Angular 20
+  - Other frameworks
+    - [ ] React
+      - [ ] Next.js
+    - [ ] Vue
+      - [ ] Nuxt
+- Frontend (Angular Plugins):
+  - [ ] Angular Awesome
 - Security/Auth Providers:
   - [ ] OpenID Connect (generic)
   - [ ] GCP (IAP/OIDC)
@@ -257,6 +259,7 @@ Universal STOP rule
 ## 1) Self‑Configure the AI Engine
 - Pin ./RULES.md anchors (sections above). Operate in forward-only mode.
 - AI workspace files (selected engines):
+  - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
   - Cursor: add `.cursor/rules.md` with the same constraints (may share content with Copilot if both are selected).
@@ -355,6 +358,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - JWebMP AgCharts (Angular wrapper): rules/generative/frontend/jwebmp/agcharts/README.md
     - AgCharts Enterprise add-on: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md
   - JWebMP FullCalendar wrapper: rules/generative/frontend/jwebmp/fullcalendar/README.md
+  - JWebMP FullCalendar Pro wrapper: rules/generative/frontend/jwebmp/fullcalendar-pro/README.md
   - Frontend (Reactive):
     - Angular: rules/generative/language/angular/README.md
     - Angular Awesome (Angular 19+ plugin): rules/generative/frontend/angular-awesome/README.md
@@ -384,7 +388,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - Data:
   - rules/generative/data/README.md
     - rules/generative/data/entityassist/README.md
-  - Activity Master (Core/Client/Cerial) - rules/generative/data/activity-master/README.md
+  - Activity Master (Core/Client/Cerial/Cerial Client) - rules/generative/data/activity-master/README.md
 
 5. Versioning and release notes
    - If rules reorganization is breaking (likely under forward-only), prepare RELEASE_NOTES.md summarizing changes.
@@ -413,6 +417,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
   - When the WebAwesome Pro wrapper is selected, include rules/generative/frontend/jwebmp/webawesome-pro/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack).
   - If AgCharts is selected, load rules/generative/frontend/jwebmp/agcharts/README.md (enterprise extras: rules/generative/frontend/jwebmp/agcharts-enterprise/README.md) and align listener naming to topic glossary.
   - If FullCalendar is selected, include rules/generative/frontend/jwebmp/fullcalendar/README.md and its glossary; align option/view names to FullCalendar 6.1.19 strings and keep Angular artifacts read-only.
+  - If FullCalendar Pro is selected, include `rules/generative/frontend/jwebmp/fullcalendar-pro/README.md` plus its glossary; document the premium resource/timeline plugins, template hooks, and WebSocket resource channels against `docs/architecture/c4-component-fullcalendar-pro.md` and `docs/architecture/sequence-runtime-wiring.md` before editing the wrapper.
   - If the JWebMP Client library is selected, include the JWebMP Client topic index (rules/generative/frontend/jwebmp/client/README.md) and its subtopics (configuration/JPMS, interception, rendering, reactive, logging, nullness, examples).
   - If the JWebMP TypeScript client is selected, include the JWebMP TypeScript topic index (rules/generative/frontend/jwebmp/typescript/README.md) and its subtopics (dependency map, scanning/runtime, testing, annotations).
 - EntityAssist / ORM-like libraries — rules/generative/data/entityassist/README.md
@@ -436,7 +441,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 - [ ] Release notes and version bump prepared (if applicable)
 - [ ] Root README updated with navigation and usage instructions
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files committed for selected engines (.aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] AI workspace files committed for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] All links resolve
 
 ---

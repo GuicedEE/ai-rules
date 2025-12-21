@@ -161,6 +161,11 @@ Maven — POM template (Java 21+)
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <release>${java.version}</release>
+          <annotationProcessorArgs>
+            <arg>mapstruct.suppressGeneratorTimestamp=true</arg>
+            <arg>mapstruct.suppressGeneratorVersionInfoComment=true</arg>
+            <arg>mapstruct.suppressGeneratorAnnotation=true</arg>
+          </annotationProcessorArgs>
           <annotationProcessorPaths>
             <path>
               <groupId>org.projectlombok</groupId>
