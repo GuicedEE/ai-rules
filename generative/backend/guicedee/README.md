@@ -36,7 +36,7 @@ jobs:
     secrets:
       USERNAME: ${{secrets.USERNAME}}
       USER_TOKEN: ${{secrets.USER_TOKEN}}
-      SONA_USERNAME: ${{secrets.SONA_USERNAME}}
+      SONA_USERNAME: ${{secrets.SONA_USERNAME}} 
       SONA_PASSWORD: ${{secrets.SONA_PASSWORD}}
 ```
 
