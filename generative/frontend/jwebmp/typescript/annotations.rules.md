@@ -18,6 +18,8 @@ Usage patterns
 Constraints
 - Do not mark component classes `final`; CRTP requires extensible generics for fluent chaining.
 - Avoid inline HTML/TS; annotations should point to JWebMP component properties rather than embedding markup.
+- Inheritance is flattened into the concrete TS output; annotate base classes to contribute metadata, but expect a single emitted TS class unless a base type is explicitly annotated as its own output.
+- Do not mix Angular roles across a single inheritance chain (e.g., `@NgComponent` on a base class and `@NgDirective` on a subclass). The generator merges annotations into one TS class, so conflicting roles produce invalid output. Use composition or separate, non-related types when you need both.
 - Nullness: follow JSpecify defaults; annotate nullable members explicitly to avoid widening nullability in generated TS.
 
 Examples (minimal)

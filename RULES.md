@@ -716,6 +716,8 @@ When implementing GuicedEE applications, these function documentation files shou
 - Do not modify or propose edits to generated artifacts (compiled TS, HTML, site bundles). Treat them as read‑only build outputs.
 - Do not introduce separate TS/HTML components for missing views. Render dialogs, tables, and other UI directly from Java (JWebMP) within relevant page/components/cell renderers.
 - If Angular/TypeScript generation is enabled, all changes must originate from Java sources that feed the generator; never hand‑edit the generated TS.
+- Java inheritance is flattened into a single generated TypeScript class for the concrete type; base classes do not emit separate TS classes unless explicitly annotated as standalone outputs.
+- Do not mix Angular roles across an inheritance chain (e.g., base `@NgComponent`, subclass `@NgDirective`). The generator collapses the hierarchy into one TS class and produces invalid definitions; use composition or separate types.
 - Avoid inline string HTML in Java. Always express markup using JWebMP components (e.g., Div, Paragraph, Span, Table, H1–H6, etc.).
 
 ##### JWebMP Angular Integration

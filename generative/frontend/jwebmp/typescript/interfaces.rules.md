@@ -31,6 +31,7 @@ Interface roles
 Guidance
 - Extend the closest interface rather than re-implementing rendering logic; the generator relies on these defaults to populate decorators/imports consistently.
 - Add Ng annotations on the concrete classes (components, directives, services, data types) so `AnnotationUtils` can traverse superclasses/interfaces and the renderer can compose complete TS outputs.
+- Inheritance is merged into one emitted TS class for the concrete type; base classes contribute fields/annotations but do not produce separate TS classes unless explicitly annotated as standalone outputs.
 - When introducing new service or DTO shapes, prefer enhancing the existing interfaces/SPIs (e.g., `OnGetAllImports`, `OnGetAllFields`) to keep generation centralized instead of embedding ad-hoc TS strings.
 
 See also
