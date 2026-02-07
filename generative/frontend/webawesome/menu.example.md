@@ -253,7 +253,7 @@ export class MenuDemoComponent {
   @ViewChild('specialItem') specialItem!: WaMenuItemDirective;
 
   focusSpecialItem(): void {
-    // Access the native element and focus it
+    // Access the native element and focusNative it
     this.specialItem.nativeElement.focus();
   }
 }

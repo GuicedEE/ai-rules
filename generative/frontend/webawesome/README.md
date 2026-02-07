@@ -37,7 +37,8 @@ This directory contains component-specific rule files for the WebAwesome UI comp
 - Icon — ./icon.rules.md
 - Include — ./include.rules.md
 - Input — ./input.rules.md
-  - Number Input (subsection) — ./input.rules.md#number-input
+- File Input — ./file-input.rules.md
+- Number Input — ./number-input.rules.md
 - Intersection Observer — ./intersection-observer.rules.md
 - Mutation Observer — ./mutation-observer.rules.md
 - Option — ./option.rules.md
@@ -57,6 +58,7 @@ This directory contains component-specific rule files for the WebAwesome UI comp
 - Skeleton — ./skeleton.rules.md
 - Slider — ./slider.rules.md
 - Spinner — ./spinner.rules.md
+- Sparkline — ./sparkline.rules.md
 - Split Panel — ./split-panel.rules.md
 - Switch — ./switch.rules.md
 - Tab — ./tab.rules.md

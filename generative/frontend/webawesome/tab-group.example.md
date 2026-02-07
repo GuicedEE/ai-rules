@@ -127,6 +127,49 @@
 </wa-tab-group>
 ```
 
+## Lazy Loading
+
+Two options are available:
+
+1) True lazy instantiation using `<ng-template waTabContent>`
+
+```html
+<wa-tab-group [active]="activeTab">
+  <wa-tab panel="heavy">Heavy</wa-tab>
+  <wa-tab panel="medium">Medium</wa-tab>
+
+  <wa-tab-panel name="heavy">
+    <ng-template waTabContent>
+      <app-heavy-component-one></app-heavy-component-one>
+    </ng-template>
+  </wa-tab-panel>
+
+  <wa-tab-panel name="medium" [lazy]="true">
+    <app-medium-component></app-medium-component>
+  </wa-tab-panel>
+</wa-tab-group>
+```
+
+2) Nested groups with lazy
+
+```html
+<wa-tab-group active="printTab">
+  <wa-tab panel="printTab">Print</wa-tab>
+  <wa-tab-panel name="printTab" [lazy]="true">
+    <div class="wa-cluster wa-align-items-start wa-gap-sm">
+      <wa-tab-group active="serversTreeTab">
+        <wa-tab panel="serversTreeTab">Servers</wa-tab>
+        <wa-tab-panel name="serversTreeTab">
+          <ng-template waTabContent>
+            <grader-select-tree></grader-select-tree>
+          </ng-template>
+        </wa-tab-panel>
+      </wa-tab-group>
+    </div>
+  </wa-tab-panel>
+</wa-tab-group>
+```
+
 ## No Scroll Controls
 
 ```html

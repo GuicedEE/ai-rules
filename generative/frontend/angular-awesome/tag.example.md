@@ -64,7 +64,8 @@
 <wa-tag ngModel>Regular</wa-tag>
 
 <!-- Pill-shaped tag -->
-<wa-tag ngModel [pill]="true">Pill</wa-tag>
+<wa-tag ngModel pill>Pill</wa-tag>
+<wa-tag ngModel [pill]="true">Pill (Bound)</wa-tag>
 ```
 
 ## Removable Tags
@@ -74,7 +75,7 @@
 <wa-tag ngModel>Non-removable</wa-tag>
 
 <!-- Removable tag -->
-<wa-tag ngModel [removable]="true" (waRemove)="handleRemove($event)">Removable</wa-tag>
+<wa-tag ngModel [withRemove]="true" (waRemove)="handleRemove($event)">Removable</wa-tag>
 ```
 
 ## Combined Examples
@@ -85,7 +86,7 @@
   ngModel 
   variant="success" 
   appearance="filled" 
-  [pill]="true"
+  pill
 >
   Success
 </wa-tag>
@@ -95,7 +96,7 @@
   ngModel 
   variant="warning" 
   size="medium" 
-  [removable]="true" 
+  [withRemove]="true" 
   (waRemove)="handleRemove($event)"
 >
   Warning
@@ -127,7 +128,7 @@ import { WaTagDirective } from '@angular-awesome/directives/tag';
         ngModel
         [variant]="tag.variant" 
         [appearance]="tag.appearance"
-        [removable]="true"
+        [withRemove]="true"
         (waRemove)="removeTag(tag)"
       >
         {{ tag.label }}
