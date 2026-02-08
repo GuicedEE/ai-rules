@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rules Repo Conventions"
+  short_description: "Apply repository conventions and forward-only updates"
+  default_prompt: "Use $rules-repo-conventions to apply repository conventions and forward-only loop closure for this change."

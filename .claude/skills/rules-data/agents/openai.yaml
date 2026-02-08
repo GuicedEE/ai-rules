@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Rules Router"
+  short_description: "Route data tasks to Activity Master and data rules"
+  default_prompt: "Use $rules-data to route data-layer work to the correct activity-master or data rule files."

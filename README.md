@@ -233,15 +233,32 @@ To execute the generative/ taxonomy restructure, use the following root-level ar
 - CHECKLIST_GENERATIVE_TAXONOMY_VALIDATION.md — validation checklist and link integrity steps.
 
 
-## Claude Agent Skills (project-scoped)
+## Agent Workspace Files (multi-provider)
 
-Claude Code auto-discovers Agent Skills from three sources:
-- Personal: ~/.claude/skills/
-- Project: .claude/skills/ (this repository includes one for conventions)
-- Plugins: bundled with installed plugins
+This repository now includes a comprehensive, provider-agnostic Agent Skills/workspace setup.
 
-In this repository, we provide a project Skill to help Claude apply the Rules Repository conventions automatically:
-- .claude/skills/rules-repo-conventions/SKILL.md
+Canonical entrypoint:
+- `AGENTS.md` (provider-agnostic policy and routing)
+
+Shared skills catalog:
+- `skills.md`
+
+Claude project Skills:
+- `.claude/skills/rules-repo-conventions/SKILL.md`
+- `.claude/skills/rules-catalog/SKILL.md`
+- `.claude/skills/rules-frontend/SKILL.md`
+- `.claude/skills/rules-backend/SKILL.md`
+- `.claude/skills/rules-data/SKILL.md`
+- `.claude/skills/rules-platform/SKILL.md`
+- `.claude/skills/rules-language/SKILL.md`
+- `.claude/skills/rules-architecture/SKILL.md`
+
+Provider adapters:
+- GitHub Copilot — `.github/copilot-instructions.md`
+- Cursor — `.cursor/rules.md`
+- Junie — `.junie/guidelines.md`
+- AI Assistant — `.aiassistant/rules/`
+- Roo — `ROO_WORKSPACE_POLICY.md`
 
 Owner mode (this repository is the active workspace; not used as a submodule):
 - Do not refer to this repository as a submodule.
@@ -252,9 +269,12 @@ Host project mode (downstream projects that consume these rules):
 - Use this repository as a Git submodule and link back to it from host artifacts (PACT, RULES, GUIDES, IMPLEMENTATION).
 
 Usage tips:
-- Ask: "What Skills are available?" to list discovered Skills.
-- Inspect a Skill: open .claude/skills/rules-repo-conventions/SKILL.md
-- Claude should load ./skills.md and acknowledge active project Skills when operating in this repo context.
+- Ask: "What Skills are available?" to list discovered skills.
+- Inspect policy/routing first: open `AGENTS.md`
+- Inspect the skills catalog: open `skills.md`
+- Regenerate the rules catalog after rules changes: `.claude/skills/rules-catalog/scripts/build-rules-catalog.sh`
+- Validate generated rules references: `.claude/skills/rules-catalog/scripts/check-rules-catalog.sh`
+- Validate provider workspace files: `.claude/skills/rules-catalog/scripts/check-agent-workspaces.sh`
 
 Notes:
 - Keep Skills focused; use lowercase-hyphen names and valid YAML frontmatter.

@@ -1,0 +1,45 @@
+name: Rules Catalog
+
+on:
+  pull_request:
+    paths:
+      - 'generative/**'
+      - '.claude/skills/**'
+      - '.aiassistant/**'
+      - '.cursor/**'
+      - '.junie/**'
+      - '.github/copilot-instructions.md'
+      - 'AGENTS.md'
+      - 'skills.md'
+      - 'RULES.md'
+      - 'README.md'
+      - 'PROMPT_*.md'
+  push:
+    branches:
+      - main
+    paths:
+      - 'generative/**'
+      - '.claude/skills/**'
+      - '.aiassistant/**'
+      - '.cursor/**'
+      - '.junie/**'
+      - '.github/copilot-instructions.md'
+      - 'AGENTS.md'
+      - 'skills.md'
+      - 'RULES.md'
+      - 'README.md'
+      - 'PROMPT_*.md'
+
+jobs:
+  verify-rules-catalog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify generated rules catalog is current
+        run: .claude/skills/rules-catalog/scripts/check-rules-catalog.sh
+
+      - name: Verify provider agent workspace files
+        run: .claude/skills/rules-catalog/scripts/check-agent-workspaces.sh

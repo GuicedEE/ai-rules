@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Rules Router"
+  short_description: "Route frontend tasks to the right framework rule files"
+  default_prompt: "Use $rules-frontend to select the right frontend topic and component rule paths."

@@ -28,6 +28,10 @@ Before proceeding with any other steps, register required MCP servers with your 
   - [ ] Roo
   - [ ] Codex
   - [ ] AI Assistant
+  - Skill systems (enabled by default):
+    - [x] Provider-agnostic Agent workspace policy (`AGENTS.md`)
+    - [x] Claude project Skills (`skills.md` + `.claude/skills/`)
+    - [x] Provider workspace adapters (`.github/copilot-instructions.md`, `.cursor/rules.md`, `.junie/guidelines.md`, `.aiassistant/rules/`)
   - Note: Check every AI assistant used in the codebase and configure compliance for each.
     - Junie reads workspace rules from `.junie/guidelines.md`; create/update it with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval exception before running.
     - AI Assistant expects repository rules under `.aiassistant/rules/`; keep those policies synchronized.
@@ -282,8 +286,14 @@ Universal STOP rule
 - Workspace instruction file requirement (non-optional):
   - If the assistant has filesystem access, it MUST create/update the workspace instruction files on disk before any Stage 1 outputs.
   - If the assistant cannot write files, it MUST output the full file contents in fenced blocks labeled with the target path so the user can paste them.
-  - Always create missing parent directories (`.junie/`, `.github/`, `.cursor/`, `.aiassistant/rules/`) as needed.
-- AI workspace files (selected engines):
+  - Always create missing parent directories (`.junie/`, `.github/`, `.cursor/`, `.aiassistant/rules/`, `.claude/skills/`) as needed.
+- Agent Skills baseline (enabled by default):
+  - Ensure `AGENTS.md` exists and is updated as the canonical provider-agnostic policy.
+  - Ensure `skills.md` exists and is pinned for skill routing.
+  - Ensure `.claude/skills/` is present and includes at least `rules-repo-conventions` and `rules-catalog`.
+  - Ensure provider adapter files exist: `.github/copilot-instructions.md`, `.cursor/rules.md`, `.junie/guidelines.md`, `.aiassistant/rules/00-core.md`, `.aiassistant/rules/10-skills-routing.md`.
+  - Validate the baseline with `.claude/skills/rules-catalog/scripts/check-agent-workspaces.sh` and `.claude/skills/rules-catalog/scripts/check-rules-catalog.sh`.
+- AI workspace files (enabled by default; also verify selected engines):
   - Junie: ensure `.junie/guidelines.md` exists and is updated with RULES.md sections 4/5, Document Modularity, 6 (Forward-Only), and the Junie stage-approval bypass; confirm Junie loads it before generation.
   - AI Assistant: ensure `.aiassistant/rules/` exists with a pinned summary of RULES.md sections 4/5, Document Modularity, and Forward-Only; keep it synchronized with the host RULES.md.
   - GitHub Copilot: add `.github/copilot-instructions.md` (or workspace note) with the same constraints and STOP-gate policy.
@@ -295,11 +305,13 @@ Universal STOP rule
   - Confirm in responses which MCP servers are active so registration aligns with the AI engine selections.
   - Explicitly note when an output/diagram was generated using an MCP server for traceability.
 - ChatGPT/Claude:
+  - Load and pin ./AGENTS.md first, then ./skills.md.
   - Start with system note enforcing the above sections. Close loops across artifacts.
-  - Owner mode (this repository as active workspace): do not refer to it as a submodule; load and pin ./skills.md if available.
+  - Owner mode (this repository as active workspace): do not refer to it as a submodule; load and pin ./AGENTS.md and ./skills.md; use project-scoped Skills under .claude/skills/.
   - Host project mode: use this repository as a submodule and link to it from host artifacts.
+  - For Claude specifically: discover project Agent Skills under .claude/skills/ (auto-discovered by Claude Code), acknowledge active skills, and apply them throughout generation.
 - Codex CLI (Codex agent):
-  - Load ./RULES.md anchors plus README context; confirm forward-only and Document Modularity constraints are pinned in the Codex CLI workspace.
+  - Load and pin ./AGENTS.md, ./skills.md, and ./RULES.md anchors plus README context; confirm forward-only and Document Modularity constraints are pinned in the Codex CLI workspace.
   - Follow Codex CLI harness instructions: run shell commands with `bash -lc` and explicit `workdir`, prefer `rg` for scans, honor sandbox/approval settings, and use the plan tool for multi-step work.
 - Roo: pin [ROO_WORKSPACE_POLICY.md](rules/ROO_WORKSPACE_POLICY.md) if present; otherwise create it per [README.md](rules/README.md#roo-workspace-policy-pinned).
 
@@ -348,7 +360,7 @@ A. Repository Inventory and Structure
 - Detect language modules, build system, JPMS usage, packaging, and code owners.
 - Host docs placement: verify PACT/RULES/GUIDES/IMPLEMENTATION/GLOSSARY are outside the submodule path per [README.md](rules/README.md#enterprise-usage-and-placement-rules).
 - Submodule integrity: confirm rules/ is a Git submodule (host mode) or absent (owner mode).
-- AI workspace files: confirm selected/observed engines have instruction files committed (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md or workspace note, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo).
+- AI workspace files: confirm default-on Agent workspace + Claude Skills baseline is committed (AGENTS.md, skills.md, .claude/skills/, .github/copilot-instructions.md, .cursor/rules.md, .junie/guidelines.md, .aiassistant/rules/, and ROO_WORKSPACE_POLICY.md if Roo).
 
 B. Rule Mapping and Scope Confirmation
   - Map detected stacks to indexes:
@@ -437,7 +449,7 @@ Produce a comprehensive health report with:
 - [ ] Remediation plan prioritized
 - [ ] Link integrity report completed
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace files validated/created for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] Agent workspace + Claude Skills baseline validated/created by default (AGENTS.md, skills.md, .claude/skills/, .github/copilot-instructions.md, .cursor/rules.md, .junie/guidelines.md, .aiassistant/rules/, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Fluent API Strategy declared/detected (CRTP vs Builder) and aligned across RULES/GLOSSARY/implementation; violations flagged
 - [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings copied)
 - [ ] All references point to correct topic indexes under generative/
@@ -548,7 +560,7 @@ Deliverables for this section
 - [ ] Starting prompt identified and linked (or inferred with evidence)
 - [ ] Host docs directories scanned and validated (outside submodule)
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
-- [ ] AI workspace instruction files verified/added for selected engines (.junie/guidelines.md for Junie, .aiassistant/rules/, .github/copilot-instructions.md, .cursor/rules.md, ROO_WORKSPACE_POLICY.md if Roo)
+- [ ] Agent workspace + Claude Skills instruction files verified/added by default (AGENTS.md, skills.md, .claude/skills/, .github/copilot-instructions.md, .cursor/rules.md, .junie/guidelines.md, .aiassistant/rules/, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Overrides vs Enterprise matrix produced with rationale and links
 - [ ] Topic guides/guidelines coverage validated against starting prompt selections
 - [ ] MIGRATION notes present where forward-only changes remove/replace legacy content

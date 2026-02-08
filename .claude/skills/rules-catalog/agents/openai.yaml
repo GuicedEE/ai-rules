@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enterprise Rules Catalog"
+  short_description: "Discover and maintain the full enterprise rules inventory"
+  default_prompt: "Use $rules-catalog to locate exact rules files and summarize coverage for this task."

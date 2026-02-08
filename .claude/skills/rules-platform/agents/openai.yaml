@@ -1,0 +1,4 @@
+interface:
+  display_name: "Platform Rules Router"
+  short_description: "Route platform and delivery tasks to operational rules"
+  default_prompt: "Use $rules-platform to choose the correct platform, CI/CD, and observability rules."
