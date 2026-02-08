@@ -9,6 +9,10 @@ Provider-agnostic agent entrypoint: `AGENTS.md`.
 2. `.claude/skills/rules-catalog/SKILL.md`
 3. One or more domain router skills based on task scope.
 
+Fallback rule (mandatory)
+- If runtime skill discovery does not return project skills, continue by opening these skill files directly using the load order above; do not proceed with unguided/direct implementation.
+- Keep implementation library-first under fallback: use concrete APIs/contracts from selected topic rules before introducing new interfaces.
+
 ## Project Skills
 
 - `rules-repo-conventions`  

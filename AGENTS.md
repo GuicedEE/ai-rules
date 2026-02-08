@@ -25,6 +25,14 @@ Use this order for skill activation in owner mode:
    - `.claude/skills/rules-language/SKILL.md`
    - `.claude/skills/rules-architecture/SKILL.md`
 
+## Automatic Skill Fallback (Mandatory)
+
+- If the active engine exposes no matching project skill (or only generic/system skills), do not switch to unguided/direct implementation.
+- Continue automatic routing by loading `AGENTS.md` + `skills.md`, then open the required skill files by path in the activation order above.
+- Resolve exact topic files through `.claude/skills/rules-catalog/references/rules-inventory.md` and topic `README.md` indexes.
+- Do not emit "no session skill matched" style fallback summaries as a terminal decision; continue with project-scoped routing.
+- Implementation policy under fallback is still library-first: use selected library/framework concrete APIs and existing SPI contracts before introducing new interfaces.
+
 ## Non-Negotiable Rules
 
 - Operate in forward-only mode for requested changes.

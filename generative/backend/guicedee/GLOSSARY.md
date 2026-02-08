@@ -21,6 +21,7 @@ Major function families (route-to rules)
 - GuicedInjection (Core DI) — SPI setup, lifecycle, module configuration. See: ./functions/guiced-injection-rules.md
 - GuicedVertx (Core Vert.x integration) — Event loop, verticles, event bus integration, lifecycle. See: ./functions/guiced-vertx-rules.md
 - GuicedVertxWeb (HTTP/HTTPS + router) — Vert.x Web server, router configurators, TLS/keystore, static resources. See: ./functions/guiced-vertx-web-rules.md
+- GuicedMCP (MCP server runtime) — Model Context Protocol server patterns on GuicedEE + Vert.x 5, including handshake, capabilities, Streamable HTTP, and stdio transports. See: ./mcp/README.md
 - GuicedVertxRest (REST/Jakarta WS) — REST configuration on Vert.x, interceptors, scanners, debug endpoints. See: ./functions/guiced-vertx-rest-rules.md
 - GuicedVertxPersistence (DB/Hibernate Reactive) — Connection setup, transactions, reactive patterns. See: ./functions/guiced-vertx-persistence-rules.md
 - GuicedVertxSockets (WebSockets) — Real-time communication via Vert.x sockets, handlers. See: ./functions/guiced-vertx-sockets-rules.md
@@ -36,6 +37,7 @@ LLM interpretation guidance (how to apply these terms)
 - Routing by term cue
   - “IGuiceModule/PreStartup/PostStartup/PreDestroy”, “SPI”, “lifecycle hooks” → ./functions/guiced-injection-rules.md
   - “Vert.x”, “event bus”, “verticles”, “web server/router” → ./functions/guiced-vertx-rules.md, ./functions/guiced-vertx-web-rules.md
+  - “MCP”, “Model Context Protocol”, “tools/list”, “resources/read”, “prompts/get”, “Streamable HTTP” → ./mcp/README.md
   - “REST”, “JAX-RS/Jakarta WS”, “interceptors” → ./functions/guiced-vertx-rest-rules.md
   - “persistence”, “hibernate reactive”, “transactions” → ./functions/guiced-vertx-persistence-rules.md
   - “websocket” → ./functions/guiced-vertx-sockets-rules.md
@@ -56,6 +58,7 @@ LLM interpretation guidance (how to apply these terms)
 Terminology hints (routing)
 - “SPI providers”, “module-info provides … with …” → GuicedInjection
 - “router configurator”, “TLS keystore”, “static handler” → GuicedVertxWeb
+- “initialize handshake”, “tools/call”, “Mcp-Session-Id”, “SSE stream” → GuicedMCP
 - “REST interceptors”, “scanner config”, “debug endpoints” → GuicedVertxRest
 - “reactive SessionFactory”, “transactions”, “Mutiny Uni/Multi” → GuicedVertxPersistence
 - “ws handler”, “socket event” → GuicedVertxSockets
@@ -70,6 +73,7 @@ See also
 - Functions (rules) — ./functions/
 - Services (JPMS shaded libs) — ./services/services.md
 - Representations — ./services/representations.md
+- MCP Server rules — ./mcp/README.md
 - Fluent API (CRTP/Builder) — ../fluent-api/README.md
 - JSpecify — ../jspecify/README.md
 - Lombok — ../lombok/README.md

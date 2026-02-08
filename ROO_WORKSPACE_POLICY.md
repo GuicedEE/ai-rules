@@ -27,6 +27,11 @@ Follow these constraints at all times:
 - Topic directories (e.g., generative/frontend/webawesome/, webcomponents/, backend/hibernate/, etc.) provide README.md indexes that link to rule files (e.g., button.rules.md, input.rules.md) and important subsections.
 - Navigate via the topic index relevant to the selected framework.
 
+6) Skill/routing fallback and implementation policy
+- If runtime skill discovery is incomplete, open the required skill files from `skills.md` directly and continue routing.
+- Do not use "no session skill matched" as a terminal fallback to unguided/direct implementation.
+- Keep implementation library-first: use concrete APIs and existing SPI contracts from selected topic rules before introducing new interfaces.
+
 Quick links
 - RULES.md — ./RULES.md
 - WebAwesome index — ./generative/frontend/webawesome/README.md
@@ -40,6 +45,7 @@ Checklist for Roo sessions
 - [ ] Reference or create files with explicit paths
 - [ ] Link back to RULES.md sections when adding guidance
 - [ ] For component topics, start at the topic README index
+- [ ] If skills were not auto-discovered, load them directly from `skills.md` and continue
 
 Notes
 - Generated artifacts are read-only. Do not propose or perform edits on compiled outputs (bundled TS/HTML/site files).

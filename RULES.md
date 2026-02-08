@@ -18,6 +18,8 @@ Owner vs Host modes:
   - When Claude is selected, load and pin ./skills.md; use project-scoped Skills under .claude/skills/; apply forward-only edits and close loops (Pact ↔ Rules ↔ Guides ↔ Implementation).
 - Host project mode (downstream projects consuming these rules):
   - Use this repository as a Git submodule and link to it from host artifacts.
+  - If runtime skill discovery is incomplete, load required skill/rule files directly from this repository; do not use unguided/direct implementation fallback.
+  - Keep implementation library-first: prefer concrete APIs/SPI contracts from selected topic rules before adding new interfaces.
 
 - Getting started as a submodule (example):
   - git submodule add <Rules Repository repository URL> docs/rules-repository

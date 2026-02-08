@@ -13,6 +13,8 @@ Apply `AGENTS.md` as canonical policy for this repository.
 
 - Always start with `.claude/skills/rules-repo-conventions/SKILL.md` and `.claude/skills/rules-catalog/SKILL.md`.
 - Route topic work through the domain skills listed in `skills.md`.
+- If skills are not auto-discovered, open these skill files directly and continue routing; do not switch to unguided/direct implementation.
+- Keep implementation library-first: prefer concrete APIs/SPI contracts from selected topic rules before adding new interfaces.
 
 ## Change Policy
 

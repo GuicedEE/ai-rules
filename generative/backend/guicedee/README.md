@@ -10,12 +10,16 @@ Subtopics
 - Client Library — ./client/ (GuicedEE Inject Client specific rules, glossary, and examples)
 - Vert.x Web Server — ./web/ (HTTP/HTTPS bootstrap, SPI configurators, router/server setup, env configuration)
 - Guiced Vert.x Bridge — ./vertx/ (GuicedEE ↔ Vert.x integration rules, glossary, lifecycle/configuration/publisher guidance)
+- MCP Server (Vert.x 5) — ./mcp/ (full MCP server guidance for protocol, transports, security, deployment, and testing; hosted profile `mcp.guicedee.com`)
+  - For MCP work, auto-load `./mcp/README.md` and linked modules; keep implementation library-first (concrete GuicedEE/Vert.x/MCP contracts before new interfaces).
 
 Recommended cross‑topics
 - Backend/Hibernate (Reactive 7) — generative/backend/hibernate/README.md
 - Data/EntityAssist — generative/data/entityassist/README.md
 - Backend/Vert.x 5 — generative/backend/vertx/README.md
 - Backend/JSpecify — generative/backend/jspecify/README.md
+- Platform/Security & Auth — generative/platform/security-auth/README.md
+- Platform/Observability — generative/platform/observability/README.md
 
 CI/CD reference (GitHub Actions example)
 - Use the shared workflow only when the host GuicedEE library wants GitHub Actions; if another CI/CD pipeline already exists, keep it and treat this as a template, not a mandate.

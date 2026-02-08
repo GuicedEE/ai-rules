@@ -20,6 +20,8 @@ Apply `AGENTS.md` as canonical policy for this repository.
 - Load `skills.md`.
 - Start with conventions + catalog skills, then domain routers.
 - Use `.claude/skills/rules-catalog/references/` for authoritative lookup.
+- If skills are not auto-discovered, open the required skill files directly and continue routing; do not use unguided/direct implementation fallback.
+- Keep implementation library-first: prefer concrete APIs/SPI contracts from selected topic rules before adding new interfaces.
 
 ## Maintenance
 

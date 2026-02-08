@@ -138,7 +138,7 @@ We don’t leave threads dangling — we close each conceptual loop.
 - GLOSSARY.md
   - Create at the host project root or under `docs/`.
   - Compose topic-first from the selected topics: for each selected topic, link to its topic GLOSSARY.md and adopt its canonical terms; topic glossaries take precedence over the root glossary for their scope.
-  - Copy only enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton, WaInput, WaCluster, WaStack); for all other terms, link to the topic file/anchor instead of duplicating definitions.
+  - Copy only enforced Prompt Language Alignment mappings and interpretation/routing cues from selected topic glossaries (WebAwesome mappings are one example); for all other terms, link to the topic file/anchor instead of duplicating definitions.
   - Use as the single index of terminology across RULES, GUIDES, and IMPLEMENTATION with minimal duplication. Include brief LLM interpretation guidance where relevant (e.g., CRTP vs Builder routing, JSpecify defaults).
 - RULES.md (project-specific)
   - Lives in the host project (outside the submodule).
@@ -172,7 +172,8 @@ Example: WebAwesome components index — generative/frontend/webawesome/README.m
 - “button” → generative/frontend/webawesome/button.rules.md
 - “number input” → generative/frontend/webawesome/input.rules.md#number-input
 
-Note on WebAwesome prompt language alignment (enforced):
+Note on prompt language alignment (topic-scoped; WebAwesome example):
+- Derive mappings and interpretation/routing cues from selected topic glossaries only; do not emit inactive/unselected-topic status lines.
 - When prompting for WebAwesome UI, use the aligned component names to ensure correct routing:
   - “button” → say “WaButton”
   - “icon button” → say “WaIconButton”
@@ -264,9 +265,12 @@ Owner mode (this repository is the active workspace; not used as a submodule):
 - Do not refer to this repository as a submodule.
 - Claude should load ./skills.md and use project-scoped Skills under .claude/skills/.
 - Apply forward-only edits and close loops (Pact ↔ Rules ↔ Guides ↔ Implementation).
+- If skill discovery is incomplete, open required skill files directly from `skills.md` and continue routing.
+- Keep implementation library-first: use concrete APIs/SPI contracts from selected topic rules before adding new interfaces.
 
 Host project mode (downstream projects that consume these rules):
 - Use this repository as a Git submodule and link back to it from host artifacts (PACT, RULES, GUIDES, IMPLEMENTATION).
+- The same routing policy applies in host repos: missing runtime skill discovery is not permission for unguided/direct implementation.
 
 Usage tips:
 - Ask: "What Skills are available?" to list discovered skills.

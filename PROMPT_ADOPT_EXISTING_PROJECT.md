@@ -241,6 +241,8 @@ Policies (must honor):
 - Use Markdown for docs. Follow RULES.md sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).
 - Do NOT place project-specific docs inside the submodule directory.
 - Logging policy: Default to Log4j2; wire logging/config/examples against Log4j2. If Lombok is selected, use Lombok's `@Log4j2` annotation (avoid other Lombok logging annotations).
+- Skill fallback policy: If runtime skill discovery does not return a matching project skill, continue by loading `AGENTS.md`, `skills.md`, and selected topic rule files directly. Do not treat "no session skill matched" as a terminal fallback to unguided/direct implementation.
+- Library-first implementation policy: For selected stacks, use concrete library/framework APIs and existing SPI contracts before introducing new interfaces.
 - Entry points: When the GuicedEE Vert.x option is selected, treat every method annotated with `@VertxEventBusDefinition` as a designated entry point and document/enforce accordingly.
 - Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is selected. Align Lombok usage accordingly:
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
@@ -250,7 +252,7 @@ Policies (must honor):
   - Version overrides — ./generative/language/angular/angular-17.rules.md | ./angular-19.rules.md | ./angular-20.rules.md
   - Remove monolithic Angular docs; link to base + selected override; do not mix version APIs in a single project.
 - Angular Plugins policy: Select Angular plugins (e.g., Angular Awesome) from the “Frontend (Angular Plugins)” list. Treat plugins as additive to the chosen Angular version; link to the plugin’s topic index and glossary.
-- Glossary policy (topic-first): Compose the host GLOSSARY.md from topic-scoped glossaries for all selected topics. Topic glossaries take precedence over the root glossary. Minimize duplication by linking to each topic’s GLOSSARY.md and rules; copy only enforced Prompt Language Alignment mappings (e.g., WebAwesome: WaButton/WaInput).
+- Glossary policy (topic-first): Compose the host GLOSSARY.md from topic-scoped glossaries for all selected topics. Topic glossaries take precedence over the root glossary. Minimize duplication by linking to each topic's GLOSSARY.md and rules; copy only enforced Prompt Language Alignment mappings and interpretation/routing cues from every selected topic glossary.
 ---
 
 ## Documentation-First, Stage-Gated Workflow (Mandatory)
@@ -408,7 +410,7 @@ When approved, execute the plan as one change set.
 2. Create PACT.md (root or docs/) based on rules/creative/pact.md. Fill project details and cross-links.
 3. Create GLOSSARY.md (root or docs/):
    - Compose from topic glossaries (topic-first). For each selected topic, link to its topic GLOSSARY.md and adopt its canonical terms; these take precedence over root terms for that scope.
-   - Copy only enforced Prompt Language Alignment mappings into the host glossary (e.g., WebAwesome: WaButton, WaInput, WaCluster, WaStack). For all other terms, link to the topic file/anchor instead of duplicating definitions.
+   - Copy only enforced Prompt Language Alignment mappings and interpretation/routing cues from every selected topic glossary into the host glossary (for example, WebAwesome name mappings or CRTP vs Builder routing). For all other terms, link to the topic file/anchor instead of duplicating definitions.
    - Document a “Glossary Precedence Policy”: topic glossaries override root for their scope; the host GLOSSARY.md acts as an index and aggregator with minimal duplication and LLM interpretation guidance (e.g., CRTP vs Builder routing, JSpecify defaults).
 4. Create/Update project RULES.md (outside submodule):
   - Declare scope, chosen stacks, and any project-specific conventions.
@@ -498,14 +500,11 @@ When approved, execute the plan as one change set.
     - Cursor — `.cursor/rules.md` mirroring the same constraints.
     - Roo — ROO_WORKSPACE_POLICY.md present/pinned if Roo is selected.
 
-- WebAwesome prompt language alignment (if selected)
-  - When prompting, use WebAwesome component names to enforce alignment:
-    - “button” → say “WaButton” (see rules/generative/frontend/webawesome/button.rules.md)
-    - “icon button” → say “WaIconButton” (see rules/generative/frontend/webawesome/icon-button.rules.md)
-    - “input” → say “WaInput” (see rules/generative/frontend/webawesome/input.rules.md)
-    - “row” (layout) → say “WaCluster”
-    - “column/stack” (layout) → say “WaStack”
-  - If a variant has no dedicated file, link to the subsection under the broader rule (e.g., WaInput → #number-input).
+- Prompt Language Alignment (all selected topic glossaries)
+  - Build a single "Prompt Language Alignment" section from all selected topic glossaries.
+  - Include only active/selected topics; do not emit "not selected" or "not active" bullets.
+  - For each selected topic, list enforced name mappings and interpretation/routing cues with links to the source glossary/rule anchors.
+  - If a variant has no dedicated file, link to the subsection under the broader rule.
 
 ---
 
@@ -518,7 +517,7 @@ When approved, execute the plan as one change set.
 - [ ] PACT.md present and linked
 - [ ] Project RULES.md present, linking to enterprise RULES and topic indexes
 - [ ] Fluent API Strategy declared (CRTP vs Builder) and reflected in RULES.md and GLOSSARY.md; Lombok usage aligned to selection
-- [ ] GLOSSARY.md composed topic-first: links to selected topic glossaries; Glossary Precedence Policy documented; minimal duplication; Prompt Language Alignment mappings copied where enforced
+- [ ] GLOSSARY.md composed topic-first: links to selected topic glossaries; Glossary Precedence Policy documented; minimal duplication; Prompt Language Alignment mappings and interpretation/routing cues copied where enforced
 - [ ] GUIDES.md and IMPLEMENTATION.md present with back/forward links
 - [ ] Monolithic/legacy docs removed or replaced; all references updated
 - [ ] .env.example aligned to env-variables.md

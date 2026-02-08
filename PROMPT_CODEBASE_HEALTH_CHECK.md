@@ -216,12 +216,14 @@ Policies (must honor):
 - Do NOT place project artifacts inside this submodule. Host projects must keep PACT/RULES/GUIDES/IMPLEMENTATION outside the submodule path.
 - Generated artifacts are read-only; do not propose edits to compiled outputs (TS/HTML/site bundles).
 - Logging policy: Default to Log4j2; wire logging/config/examples against Log4j2. If Lombok is selected, use Lombok's `@Log4j2` annotation (avoid other Lombok logging annotations).
+- Skill fallback policy: If runtime skill discovery does not return a matching project skill, continue by loading `AGENTS.md`, `skills.md`, and selected topic rule files directly. Do not treat "no session skill matched" as a terminal fallback to unguided/direct implementation.
+- Library-first implementation policy: For selected stacks, use concrete library/framework APIs and existing SPI contracts before introducing new interfaces.
 - JWebMP: no inline string HTML; render UI with JWebMP components; do not generate separate TS/HTML for missing views.
 - PostgreSQL JPMS: do not shade the driver; prefer com.guicedee.services:postgresql and requires org.postgresql.
 - Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is present. Align Lombok usage accordingly:
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") on setters as needed.
   - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
-- Glossary policy (topic-first): Host GLOSSARY.md must be composed from topic-scoped glossaries for the selected topics. Topic glossaries take precedence over the root glossary; copy only enforced Prompt Language Alignment mappings, and otherwise link to topic files/anchors. Include brief LLM interpretation guidance where relevant (e.g., CRTP vs Builder routing, JSpecify defaults).
+- Glossary policy (topic-first): Host GLOSSARY.md must be composed from topic-scoped glossaries for the selected topics. Topic glossaries take precedence over the root glossary; copy only enforced Prompt Language Alignment mappings and interpretation/routing cues from every selected topic glossary, and otherwise link to topic files/anchors. Include brief LLM interpretation guidance where relevant (e.g., CRTP vs Builder routing, JSpecify defaults).
 
 ---
 
@@ -391,8 +393,10 @@ C. Language and Framework Checks
     - Flag conflicts (e.g., Builder found with GuicedEE/JWebMP, or both strategies mixed).
 - Kotlin:
   - Language rules; Ktor module shape; coroutines best practices.
-- Web Components / WebAwesome:
-  - Component usage; Prompt Language Alignment (WaButton, WaInput, WaCluster, WaStack); index links resolve.
+- Web Components / WebAwesome (if selected):
+  - Component usage; topic glossary mappings; index links resolve.
+- Prompt Language Alignment (all selected topics):
+  - Enforced mappings and interpretation/routing cues from selected glossaries are reflected consistently in host artifacts (for example, UI term mappings, CRTP vs Builder routing, JSpecify defaults).
 - Angular/React/Vue/Next.js/Nuxt:
   - Structure, routing, SSR/SSG (Next.js/Nuxt); web components integration (Angular Elements/Vue wrappers); security.
 
@@ -405,7 +409,7 @@ D. Quality, Security, and Platform
 E. Documentation and Link Integrity
 - Document Modularity: split oversized docs; replace monoliths with modular entries; update all references.
 - Close loops: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION with bi-directional links per [README.md](rules/README.md#linking-guidance-closing-loops).
-- Glossary policy compliance: host GLOSSARY.md links to topic glossaries (topic-first), documents precedence, avoids duplication, and copies only enforced Prompt Language Alignment mappings.
+- Glossary policy compliance: host GLOSSARY.md links to topic glossaries (topic-first), documents precedence, avoids duplication, and copies only enforced Prompt Language Alignment mappings and interpretation/routing cues.
 - Resolve all links: check that every referenced path exists; record broken links and missing indexes.
 
 F. CI/CD and Licensing
@@ -451,7 +455,7 @@ Produce a comprehensive health report with:
 - [ ] MCP servers configured (config snippet provided), registered for selected assistants (Mermaid MCP for docs/diagrams), and acknowledged in outputs
 - [ ] Agent workspace + Claude Skills baseline validated/created by default (AGENTS.md, skills.md, .claude/skills/, .github/copilot-instructions.md, .cursor/rules.md, .junie/guidelines.md, .aiassistant/rules/, ROO_WORKSPACE_POLICY.md if Roo)
 - [ ] Fluent API Strategy declared/detected (CRTP vs Builder) and aligned across RULES/GLOSSARY/implementation; violations flagged
-- [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings copied)
+- [ ] Glossary policy validated (topic-first composition, precedence documented, minimal duplication, enforced mappings and interpretation/routing cues copied where required)
 - [ ] All references point to correct topic indexes under generative/
 
 ---
@@ -540,8 +544,8 @@ Topic guides and guidelines coverage
   - Host RULES linkage to enterprise index
   - Host guide(s) or explicit reference to enterprise guides
   - Implementation back-links
-- WebAwesome alignment:
-  - Enforce prompt language alignment (WaButton, WaInput, WaCluster, WaStack) across host RULES/GUIDES/IMPLEMENTATION.
+- Prompt Language Alignment coverage:
+  - Enforce all selected-topic glossary mappings and interpretation/routing cues across host RULES/GUIDES/IMPLEMENTATION (not only WebAwesome terms).
 - Security/Auth providers:
   - If OIDC/GCP/Firebase/Microsoft selected, verify provider-specific guidance is linked and present in host docs.
 

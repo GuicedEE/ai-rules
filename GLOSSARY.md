@@ -6,7 +6,7 @@ Purpose
 
 Population model
 - Populate from the topics actually in use for your project based on prompts and selected stacks in [PROMPT_NEW_PROJECT.md](./PROMPT_NEW_PROJECT.md) and [PROMPT_ADOPT_EXISTING_PROJECT.md](./PROMPT_ADOPT_EXISTING_PROJECT.md).
-- For UI/component topics that enforce Prompt Language Alignment, copy the aligned names and mappings here. See [generative/frontend/webawesome/README.md](./generative/frontend/webawesome/README.md).
+- For any selected topic that defines Prompt Language Alignment or interpretation guidance, copy only its enforced mappings/cues here and link back to the topic glossary/rules for everything else (WebAwesome is one example: [generative/frontend/webawesome/README.md](./generative/frontend/webawesome/README.md)).
 - For backend/framework topics, define agreed terminology (e.g., DDD vs. CRUD nouns, OAuth2/OIDC identities, JPMS/SPI module terms), and record domain-specific acronyms.
 
 How to use (prompts, templates, and code)
@@ -52,8 +52,10 @@ Core repository constructs
 - Component Topic Indexing Policy — Each component-topic directory provides an index README linking to component .rules.md files and variant anchors. See [RULES.md](./RULES.md).
 - Generative Topic Taxonomy — Canonical category layout for generative/ content. See [RULES.md](./RULES.md).
 
-Prompt Language Alignment (enforced)
-- Use aligned component names to route to correct rules. Copy these into project glossaries when WebAwesome is selected:
+Prompt Language Alignment (enforced, topic-scoped)
+- Derive active mappings and interpretation/routing cues from selected topic glossaries only.
+- Do not emit inactive/unselected-topic status lines.
+- WebAwesome mappings (when WebAwesome is selected):
   - “button” → WaButton — See [webawesome/button.rules.md](./generative/frontend/webawesome/button.rules.md)
   - “icon button” → WaIconButton — See [webawesome/icon-button.rules.md](./generative/frontend/webawesome/icon-button.rules.md)
   - “input” → WaInput — See [webawesome/input.rules.md](./generative/frontend/webawesome/input.rules.md)
@@ -303,7 +305,7 @@ See also
 
 - Definition — Host projects compose their root glossary from topic-scoped glossaries. When a topic glossary and the root define the same term, the topic version wins for its scope.
 - Policy anchors — See RULES: Document Modularity and Generative Topic Taxonomy for structure and precedence.
-- Host usage — The host GLOSSARY.md acts as an index/aggregator with minimal duplication; copy only enforced Prompt Language Alignment mappings and otherwise link to topic files/anchors.
+- Host usage — The host GLOSSARY.md acts as an index/aggregator with minimal duplication; copy only enforced Prompt Language Alignment mappings and interpretation/routing cues, and otherwise link to topic files/anchors.
 
 See also
 - RULES — ./RULES.md

@@ -208,6 +208,8 @@ Policies (must honor):
 - Treat all existing repository documentation as out-of-date; never rely on it as a source of truth. When executing this template, reference only the current checked-in code/config you observe.
 - Follow RULES.md sections: 4 (Behavioral), 5 (Technical), Document Modularity Policy, 6 (Forward-Only Change Policy).
 - Logging policy: Default to Log4j2; wire logging/config/examples against Log4j2. If Lombok is selected, use Lombok's `@Log4j2` annotation (avoid other Lombok logging annotations).
+- Skill fallback policy: If runtime skill discovery does not return a matching project skill, continue by loading `AGENTS.md`, `skills.md`, and selected topic rule files directly. Do not treat "no session skill matched" as a terminal fallback to unguided/direct implementation.
+- Library-first implementation policy: For selected stacks, use concrete library/framework APIs and existing SPI contracts before introducing new interfaces.
 - Generated artifacts are read-only; do not propose edits to compiled outputs (e.g., TS/HTML/site bundles). For JWebMP specifically, do not generate or reference separate TS/HTML components for missing views—render dialogs/tables directly from Java components/cell renderers.
 - In JWebMP, avoid inline string HTML; express markup using JWebMP components (Div, Paragraph, Span, Table, H1–H6, etc.).
 - PostgreSQL (JPMS): Do not shade the driver. Use GuicedEE Services artifacts (com.guicedee.services:postgresql) and require org.postgresql in module-info.java.
@@ -215,7 +217,7 @@ Policies (must honor):
 - Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is selected. Align Lombok usage accordingly:
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") as needed.
   - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
-- Glossary policy (topic-first): Provide and maintain a topic-scoped GLOSSARY.md for your library with minimal canonical terms and “LLM interpretation guidance”. Avoid duplicating definitions in host projects. Host projects compose their root GLOSSARY.md by linking to your topic GLOSSARY.md and copying only enforced Prompt Language Alignment mappings (e.g., WebAwesome names); all other terms should be linked to your topic files/anchors.
+- Glossary policy (topic-first): Provide and maintain a topic-scoped GLOSSARY.md for your library with minimal canonical terms and "LLM interpretation guidance". Avoid duplicating definitions in host projects. Host projects compose their root GLOSSARY.md by linking to your topic GLOSSARY.md and copying only enforced Prompt Language Alignment mappings and interpretation/routing cues defined by your topic (WebAwesome is one example); all other terms should be linked to your topic files/anchors.
 - **Sandbox awareness / Pact note** — Record in PACT that host artifacts stay at the repo root or `docs/`. When a release is finalized, update the canonical rules under the Rules Repository target path captured above (e.g., `generative/frontend/jwebmp/chartjs`) and limit writes inside the Rules Repository to that path; never modify other directories in the rules repo.
 
 ---
@@ -428,7 +430,7 @@ Perform as a single, forward-only change set. The exact target paths depend on y
 ## 3) Special Guidance by Library Type
 - WebAwesome (UI components)
   - Ensure parent README index exists and includes components such as button.rules.md, input.rules.md (with #number-input anchor), etc.
-  - Enforce prompt language alignment in docs and examples: use WebAwesome component names when prompting and naming (e.g., WaButton, WaIconButton, WaInput, WaCluster for rows, WaStack for columns/stacks). Link to generative/frontend/webawesome/README.md → “Prompt Language Alignment”.
+  - Enforce topic glossary alignment in docs and examples. For WebAwesome specifically, use component names when prompting and naming (e.g., WaButton, WaIconButton, WaInput, WaCluster for rows, WaStack for columns/stacks). Link to generative/frontend/webawesome/README.md -> "Prompt Language Alignment".
   - For new components, add <name>.rules.md and update the index.
 - JWebMP wrappers
   - Provide wrapper-specific rules where needed; link to underlying WebAwesome or Web Component contracts. When the WebAwesome wrapper is selected, include rules/generative/frontend/jwebmp/webawesome/README.md and its glossary for prompt alignment (WaButton/WaInput/WaCluster/WaStack, asset configurator).

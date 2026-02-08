@@ -24,6 +24,9 @@ This Skill encodes the essential conventions for working with this repository (a
    - Add the entry to the nearest topic index README and cross-link to related guides.
 7. When updating structure/content:
    - Apply the Forward-Only policy in one change: update or remove conflicting docs and links; no compatibility stubs.
+8. If runtime skill discovery is incomplete:
+   - Load required project skills/rules by path and continue routing; do not switch to unguided/direct implementation.
+   - Keep implementation library-first: use concrete APIs/SPI contracts from selected topics before adding new interfaces.
 
 ## Examples
 - When scaffolding a new host project README, include links to PACT.md, RULES.md, GUIDES.md, IMPLEMENTATION.md, and the Rules Repository submodule path.
