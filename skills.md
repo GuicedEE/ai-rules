@@ -23,6 +23,10 @@ Fallback rule (mandatory)
   Path: `.claude/skills/rules-catalog/SKILL.md`  
   Use to discover, inventory, and maintain the full enterprise rules corpus.
 
+- `rules-repo-registration-usage`  
+  Path: `.claude/skills/rules-repo-registration-usage/SKILL.md`  
+  Use to register and run end-to-end Rules Repository workflows, including skill bootstrap (`skill-creator` + initiator), `figma`, `aggrid`, `gh-address-comments`, `gh-fix-ci`, `security-best-practices`, and `security-threat-model`.
+
 - `rules-frontend`  
   Path: `.claude/skills/rules-frontend/SKILL.md`  
   Use for frontend rule routing (`jwebmp`, `webawesome`, `angular-awesome`, `webcomponents`, `nextjs`, `nuxt`).

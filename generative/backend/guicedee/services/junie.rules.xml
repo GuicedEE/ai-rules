@@ -5,124 +5,124 @@
         <!-- Service Libraries -->
         <category name="Apache CXF">
             <!-- Core CXF module with shaded dependencies -->
-            <artifact original="org.apache.cxf:cxf-core" replacement="com.guicedee.services:org.apache.cxf" module="org.apache.cxf" />
+            <artifact original="org.apache.cxf:cxf-core" replacement="com.guicedee.modules.services:org.apache.cxf" module="org.apache.cxf" />
             <!-- The following dependencies are shaded into the core module -->
-            <artifact original="org.apache.ws.xmlschema:xmlschema-core" replacement="com.guicedee.services:org.apache.cxf" module="org.apache.cxf" />
-            <artifact original="xml-resolver:xml-resolver" replacement="com.guicedee.services:org.apache.cxf" module="org.apache.cxf" />
-            <artifact original="org.xmlresolver:xmlresolver" replacement="com.guicedee.services:org.apache.cxf" module="org.apache.cxf" />
-            <artifact original="com.sun.xml.fastinfoset:FastInfoset" replacement="com.guicedee.services:org.apache.cxf" module="org.apache.cxf" />
+            <artifact original="org.apache.ws.xmlschema:xmlschema-core" replacement="com.guicedee.modules.services:org.apache.cxf" module="org.apache.cxf" />
+            <artifact original="xml-resolver:xml-resolver" replacement="com.guicedee.modules.services:org.apache.cxf" module="org.apache.cxf" />
+            <artifact original="org.xmlresolver:xmlresolver" replacement="com.guicedee.modules.services:org.apache.cxf" module="org.apache.cxf" />
+            <artifact original="com.sun.xml.fastinfoset:FastInfoset" replacement="com.guicedee.modules.services:org.apache.cxf" module="org.apache.cxf" />
 
             <!-- REST/JAX-RS module that depends on core -->
-            <artifact original="org.apache.cxf:cxf-rt-frontend-jaxrs" replacement="com.guicedee.services:cxf-rt-frontend-jaxrs" module="org.apache.cxf.rest" />
-            <artifact original="org.apache.cxf:cxf-rt-rs-client" replacement="com.guicedee.services:cxf-rt-frontend-jaxrs" module="org.apache.cxf.rest" />
+            <artifact original="org.apache.cxf:cxf-rt-frontend-jaxrs" replacement="com.guicedee.modules.services:cxf-rt-frontend-jaxrs" module="org.apache.cxf.rest" />
+            <artifact original="org.apache.cxf:cxf-rt-rs-client" replacement="com.guicedee.modules.services:cxf-rt-frontend-jaxrs" module="org.apache.cxf.rest" />
             <!-- The following dependencies are shaded into the REST module -->
-            <artifact original="org.apache.cxf:cxf-rt-rs-http-sci" replacement="com.guicedee.services:cxf-rt-frontend-jaxrs" module="org.apache.cxf.rest" />
+            <artifact original="org.apache.cxf:cxf-rt-rs-http-sci" replacement="com.guicedee.modules.services:cxf-rt-frontend-jaxrs" module="org.apache.cxf.rest" />
 
             <!-- Security module that depends on core -->
-            <artifact original="org.apache.cxf:cxf-rt-security" replacement="com.guicedee.services:apache-cxf-rt-security" module="org.apache.cxf.rt.security" />
+            <artifact original="org.apache.cxf:cxf-rt-security" replacement="com.guicedee.modules.services:apache-cxf-rt-security" module="org.apache.cxf.rt.security" />
 
             <!-- HTTP transport module that depends on core -->
-            <artifact original="org.apache.cxf:cxf-rt-transports-http" replacement="com.guicedee.services:apache-cxf-rt-transports-http" module="org.apache.cxf.rt.transports.http" />
+            <artifact original="org.apache.cxf:cxf-rt-transports-http" replacement="com.guicedee.modules.services:apache-cxf-rt-transports-http" module="org.apache.cxf.rt.transports.http" />
 
             <!-- OpenAPI module that depends on REST and core -->
-            <artifact original="org.apache.cxf:cxf-rt-rs-service-description-openapi-v3" replacement="com.guicedee.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
+            <artifact original="org.apache.cxf:cxf-rt-rs-service-description-openapi-v3" replacement="com.guicedee.modules.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
             <!-- The following dependencies are shaded into the OpenAPI module -->
-            <artifact original="org.apache.cxf:cxf-rt-rs-json-basic" replacement="com.guicedee.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
-            <artifact original="org.apache.cxf:cxf-rt-rs-service-description-common-openapi" replacement="com.guicedee.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
-            <artifact original="org.apache.cxf:cxf-rt-rs-service-description-swagger-ui" replacement="com.guicedee.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
+            <artifact original="org.apache.cxf:cxf-rt-rs-json-basic" replacement="com.guicedee.modules.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
+            <artifact original="org.apache.cxf:cxf-rt-rs-service-description-common-openapi" replacement="com.guicedee.modules.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
+            <artifact original="org.apache.cxf:cxf-rt-rs-service-description-swagger-ui" replacement="com.guicedee.modules.services:cxf-rt-rs-service-description-openapi-v3" module="org.apache.cxf.rest.openapi" />
         </category>
 
         <category name="Apache Commons">
-            <artifact original="commons-beanutils:commons-beanutils" replacement="com.guicedee.services:commons-beanutils" module="org.apache.commons.beanutils" />
-            <artifact original="org.apache.commons:commons-collections4" replacement="com.guicedee.services:commons-collections" module="org.apache.commons.collections" />
-            <artifact original="org.apache.commons:commons-csv" replacement="com.guicedee.services:commons-csv" module="org.apache.commons.csv" />
-            <artifact original="commons-fileupload:commons-fileupload" replacement="com.guicedee.services:commons-fileupload" module="org.apache.commons.fileupload" />
-            <artifact original="org.apache.commons:commons-math3" replacement="com.guicedee.services:commons-math" module="org.apache.commons.math" />
+            <artifact original="commons-beanutils:commons-beanutils" replacement="com.guicedee.modules.services:commons-beanutils" module="org.apache.commons.beanutils" />
+            <artifact original="org.apache.commons:commons-collections4" replacement="com.guicedee.modules.services:commons-collections" module="org.apache.commons.collections" />
+            <artifact original="org.apache.commons:commons-csv" replacement="com.guicedee.modules.services:commons-csv" module="org.apache.commons.csv" />
+            <artifact original="commons-fileupload:commons-fileupload" replacement="com.guicedee.modules.services:commons-fileupload" module="org.apache.commons.fileupload" />
+            <artifact original="org.apache.commons:commons-math3" replacement="com.guicedee.modules.services:commons-math" module="org.apache.commons.math" />
         </category>
 
         <category name="Database Drivers">
-            <artifact original="org.postgresql:postgresql" replacement="com.guicedee.services:postgresql" module="org.postgresql" />
-            <artifact original="com.microsoft.sqlserver:mssql-jdbc" replacement="com.guicedee.services:mssql-jdbc" module="com.microsoft.sqlserver.jdbc" />
-            <artifact original="com.microsoft.azure:msal4j" replacement="com.guicedee.services:msal4j" module="com.microsoft.azure.msal4j" />
+            <artifact original="org.postgresql:postgresql" replacement="com.guicedee.modules.services:postgresql" module="org.postgresql" />
+            <artifact original="com.microsoft.sqlserver:mssql-jdbc" replacement="com.guicedee.modules.services:mssql-jdbc" module="com.microsoft.sqlserver.jdbc" />
+            <artifact original="com.microsoft.azure:msal4j" replacement="com.guicedee.modules.services:msal4j" module="com.microsoft.azure.msal4j" />
         </category>
 
         <category name="Utility Libraries">
-            <artifact original="org.javassist:javassist" replacement="com.guicedee.services:javassist" module="javassist" />
-            <artifact original="org.json:json" replacement="com.guicedee.services:json" module="org.json" />
-            <artifact original="at.favre.lib:bcrypt" replacement="com.guicedee.services:bcrypt" module="at.favre.lib.bcrypt" />
-            <artifact original="com.fazecast:jSerialComm" replacement="com.guicedee.services:jserialcomm" module="io.jserialcomm" />
-            <artifact original="org.jboss:jandex" replacement="com.guicedee.services:jandex" module="org.jboss.jandex" />
-            <artifact original="org.mapstruct:mapstruct" replacement="com.guicedee.services:mapstruct" module="org.mapstruct" />
-            <artifact original="com.ongres.scram:client" replacement="com.guicedee.services:scram" module="com.ongres.scram.client" />
-            <artifact original="net.sf.uadetector:uadetector-core" replacement="com.guicedee.services:uadetector-core" module="net.sf.uadetector.core" />
-            <artifact original="net.sf.uadetector:uadetector-resources" replacement="com.guicedee.services:uadetector-resources" module="net.sf.uadetector.resources" />
+            <artifact original="org.javassist:javassist" replacement="com.guicedee.modules.services:javassist" module="javassist" />
+            <artifact original="org.json:json" replacement="com.guicedee.modules.services:json" module="org.json" />
+            <artifact original="at.favre.lib:bcrypt" replacement="com.guicedee.modules.services:bcrypt" module="at.favre.lib.bcrypt" />
+            <artifact original="com.fazecast:jSerialComm" replacement="com.guicedee.modules.services:jserialcomm" module="io.jserialcomm" />
+            <artifact original="org.jboss:jandex" replacement="com.guicedee.modules.services:jandex" module="org.jboss.jandex" />
+            <artifact original="org.mapstruct:mapstruct" replacement="com.guicedee.modules.services:mapstruct" module="org.mapstruct" />
+            <artifact original="com.ongres.scram:client" replacement="com.guicedee.modules.services:scram" module="com.ongres.scram.client" />
+            <artifact original="net.sf.uadetector:uadetector-core" replacement="com.guicedee.modules.services:uadetector-core" module="net.sf.uadetector.core" />
+            <artifact original="net.sf.uadetector:uadetector-resources" replacement="com.guicedee.modules.services:uadetector-resources" module="net.sf.uadetector.resources" />
         </category>
 
         <category name="Integration Libraries">
-            <artifact original="io.cloudevents:cloudevents-core" replacement="com.guicedee.services:cloudevents" module="io.cloudevents" />
-            <artifact original="com.ibm.mq:com.ibm.mq.allclient" replacement="com.guicedee.services:ibm-mq" module="com.ibm.mq" />
-            <artifact original="com.rabbitmq:amqp-client" replacement="com.guicedee.services:rabbitmq-client" module="com.rabbitmq.client" />
-            <artifact original="org.apache.kafka:kafka-client" replacement="com.guicedee.services:kafka-client" module="org.apache.kafka.clients" />
+            <artifact original="io.cloudevents:cloudevents-core" replacement="com.guicedee.modules.services:cloudevents" module="io.cloudevents" />
+            <artifact original="com.ibm.mq:com.ibm.mq.allclient" replacement="com.guicedee.modules.services:ibm-mq" module="com.ibm.mq" />
+            <artifact original="com.rabbitmq:amqp-client" replacement="com.guicedee.modules.services:rabbitmq-client" module="com.rabbitmq.client" />
+            <artifact original="org.apache.kafka:kafka-client" replacement="com.guicedee.modules.services:kafka-client" module="org.apache.kafka.clients" />
         </category>
 
         <category name="Testing Libraries">
-            <artifact original="org.testcontainers:testcontainers" replacement="com.guicedee.services:testcontainers" module="org.testcontainers" />
+            <artifact original="org.testcontainers:testcontainers" replacement="com.guicedee.modules.services:testcontainers" module="org.testcontainers" />
         </category>
 
         <category name="Document Processing">
-            <artifact original="com.github.librepdf:openpdf" replacement="com.guicedee.services:openpdf" module="com.lowagie.text" />
-            <artifact original="org.apache.poi:poi" replacement="com.guicedee.services:apache-poi" module="org.apache.poi" />
-            <artifact original="org.apache.poi:poi-ooxml" replacement="com.guicedee.services:apache-poi-ooxml" module="org.apache.poi.ooxml" />
-            <artifact original="io.swagger:swagger-core" replacement="com.guicedee.services:swagger" module="io.swagger" />
+            <artifact original="com.github.librepdf:openpdf" replacement="com.guicedee.modules.services:openpdf" module="com.lowagie.text" />
+            <artifact original="org.apache.poi:poi" replacement="com.guicedee.modules.services:apache-poi" module="org.apache.poi" />
+            <artifact original="org.apache.poi:poi-ooxml" replacement="com.guicedee.modules.services:apache-poi-ooxml" module="org.apache.poi.ooxml" />
+            <artifact original="io.swagger:swagger-core" replacement="com.guicedee.modules.services:swagger" module="io.swagger" />
         </category>
 
         <category name="Google Core">
-            <artifact original="com.google.inject.extensions:guice-assistedinject" replacement="com.guicedee.services:guice-assistedinject" module="com.google.inject.assistedinject" />
-            <artifact original="com.google.inject:guice" replacement="com.guicedee.services:guice-core" module="com.google.inject" />
-            <artifact original="com.google.inject.extensions:guice-grapher" replacement="com.guicedee.services:guice-grapher" module="com.google.inject.grapher" />
-            <artifact original="com.google.inject.extensions:guice-jmx" replacement="com.guicedee.services:guice-jmx" module="com.google.inject.jmx" />
-            <artifact original="com.google.inject.extensions:guice-jndi" replacement="com.guicedee.services:guice-jndi" module="com.google.inject.jndi" />
-            <artifact original="com.google.inject.extensions:guice-persist" replacement="com.guicedee.services:guice-persist" module="com.google.inject.persist" />
-            <artifact original="com.google.inject.extensions:guice-servlet" replacement="com.guicedee.services:guice-servlet" module="com.google.inject.servlet" />
-            <artifact original="com.google.guava:guava" replacement="com.guicedee.services:guava" module="com.google.common" />
-            <artifact original="org.aopalliance:aopalliance" replacement="com.guicedee.services:aop" module="org.aopalliance" />
+            <artifact original="com.google.inject.extensions:guice-assistedinject" replacement="com.guicedee.modules.services:guice-assistedinject" module="com.google.inject.assistedinject" />
+            <artifact original="com.google.inject:guice" replacement="com.guicedee.modules.services:guice-core" module="com.google.inject" />
+            <artifact original="com.google.inject.extensions:guice-grapher" replacement="com.guicedee.modules.services:guice-grapher" module="com.google.inject.grapher" />
+            <artifact original="com.google.inject.extensions:guice-jmx" replacement="com.guicedee.modules.services:guice-jmx" module="com.google.inject.jmx" />
+            <artifact original="com.google.inject.extensions:guice-jndi" replacement="com.guicedee.modules.services:guice-jndi" module="com.google.inject.jndi" />
+            <artifact original="com.google.inject.extensions:guice-persist" replacement="com.guicedee.modules.services:guice-persist" module="com.google.inject.persist" />
+            <artifact original="com.google.inject.extensions:guice-servlet" replacement="com.guicedee.modules.services:guice-servlet" module="com.google.inject.servlet" />
+            <artifact original="com.google.guava:guava" replacement="com.guicedee.modules.services:guava" module="com.google.common" />
+            <artifact original="org.aopalliance:aopalliance" replacement="com.guicedee.modules.services:aop" module="org.aopalliance" />
         </category>
 
         <category name="Hibernate ORM">
-            <artifact original="org.hibernate:hibernate-core" replacement="com.guicedee.services:hibernate-core" module="org.hibernate.core" />
-            <artifact original="org.hibernate:hibernate-c3p0" replacement="com.guicedee.services:hibernate-c3p0" module="org.hibernate.c3p0" />
-            <artifact original="org.hibernate:hibernate-jcache" replacement="com.guicedee.services:hibernate-jcache" module="org.hibernate.jcache" />
-            <artifact original="org.hibernate.reactive:hibernate-reactive-core" replacement="com.guicedee.services:hibernate-reactive" module="org.hibernate.reactive" />
-            <artifact original="org.hibernate.validator:hibernate-validator" replacement="com.guicedee.services:hibernate-validator" module="org.hibernate.validator" />
+            <artifact original="org.hibernate:hibernate-core" replacement="com.guicedee.modules.services:hibernate-core" module="org.hibernate.core" />
+            <artifact original="org.hibernate:hibernate-c3p0" replacement="com.guicedee.modules.services:hibernate-c3p0" module="org.hibernate.c3p0" />
+            <artifact original="org.hibernate:hibernate-jcache" replacement="com.guicedee.modules.services:hibernate-jcache" module="org.hibernate.jcache" />
+            <artifact original="org.hibernate.reactive:hibernate-reactive-core" replacement="com.guicedee.modules.services:hibernate-reactive" module="org.hibernate.reactive" />
+            <artifact original="org.hibernate.validator:hibernate-validator" replacement="com.guicedee.modules.services:hibernate-validator" module="org.hibernate.validator" />
         </category>
 
         <category name="JCache">
-            <artifact original="org.jsr107.ri:cache-annotations-ri-common" replacement="com.guicedee.services:cache-annotations-ri-common" module="org.jsr107.ri.annotations.common" />
-            <artifact original="org.jsr107.ri:cache-annotations-ri-guice" replacement="com.guicedee.services:cache-annotations-ri-guice" module="org.jsr107.ri.annotations.guice" />
-            <artifact original="javax.cache:cache-api" replacement="com.guicedee.services:cache-api" module="javax.cache" />
-            <artifact original="com.hazelcast:hazelcast" replacement="com.guicedee.services:hazelcast" module="com.hazelcast" />
-            <artifact original="com.hazelcast:hazelcast-hibernate53" replacement="com.guicedee.services:hazelcast-hibernate" module="com.hazelcast.hibernate" />
+            <artifact original="org.jsr107.ri:cache-annotations-ri-common" replacement="com.guicedee.modules.services:cache-annotations-ri-common" module="org.jsr107.ri.annotations.common" />
+            <artifact original="org.jsr107.ri:cache-annotations-ri-guice" replacement="com.guicedee.modules.services:cache-annotations-ri-guice" module="org.jsr107.ri.annotations.guice" />
+            <artifact original="javax.cache:cache-api" replacement="com.guicedee.modules.services:cache-api" module="javax.cache" />
+            <artifact original="com.hazelcast:hazelcast" replacement="com.guicedee.modules.services:hazelcast" module="com.hazelcast" />
+            <artifact original="com.hazelcast:hazelcast-hibernate53" replacement="com.guicedee.modules.services:hazelcast-hibernate" module="com.hazelcast.hibernate" />
         </category>
 
         <category name="JNI">
-            <artifact original="net.java.dev.jna:jna-platform" replacement="com.guicedee.services:jna-platform" module="com.sun.jna.platform" />
-            <artifact original="com.neuronrobotics:nrjavaserial" replacement="com.guicedee.services:nrjavaserial" module="com.neuronrobotics.nrjavaserial" />
+            <artifact original="net.java.dev.jna:jna-platform" replacement="com.guicedee.modules.services:jna-platform" module="com.sun.jna.platform" />
+            <artifact original="com.neuronrobotics:nrjavaserial" replacement="com.guicedee.modules.services:nrjavaserial" module="com.neuronrobotics.nrjavaserial" />
         </category>
 
         <category name="Jakarta Security">
-            <artifact original="jakarta.security.jacc:jakarta.security.jacc-api" replacement="com.guicedee.services:jakarta-security-jacc" module="jakarta.security.jacc" />
+            <artifact original="jakarta.security.jacc:jakarta.security.jacc-api" replacement="com.guicedee.modules.services:jakarta-security-jacc" module="jakarta.security.jacc" />
         </category>
 
         <category name="Representations">
-            <artifact original="com.guicedee.services:excel-representation" replacement="com.guicedee.services:ExcelRepresentation" module="com.guicedee.services.excelrepresentation" />
-            <artifact original="com.guicedee.services:json-representation" replacement="com.guicedee.services:JsonRepresentation" module="com.guicedee.services.jsonrepresentation" />
-            <artifact original="com.guicedee.services:xml-representation" replacement="com.guicedee.services:XmlRepresentation" module="com.guicedee.services.xmlrepresentation" />
+            <artifact original="com.guicedee.modules.services:excel-representation" replacement="com.guicedee.modules.services:ExcelRepresentation" module="com.guicedee.modules.services.excelrepresentation" />
+            <artifact original="com.guicedee.modules.services:json-representation" replacement="com.guicedee.modules.services:JsonRepresentation" module="com.guicedee.modules.services.jsonrepresentation" />
+            <artifact original="com.guicedee.modules.services:xml-representation" replacement="com.guicedee.modules.services:XmlRepresentation" module="com.guicedee.modules.services.xmlrepresentation" />
         </category>
 
         <category name="Vert.x">
-            <artifact original="io.smallrye.reactive:smallrye-mutiny-vertx-core" replacement="com.guicedee.services:vertx-mutiny" module="io.smallrye.mutiny.vertx.core" />
-            <artifact original="io.vertx:vertx-pg-client" replacement="com.guicedee.services:vertx-pg-client" module="io.vertx.pgclient" />
-            <artifact original="io.vertx:vertx-rabbitmq-client" replacement="com.guicedee.services:vertx-rabbitmq" module="io.vertx.rabbitmq" />
+            <artifact original="io.smallrye.reactive:smallrye-mutiny-vertx-core" replacement="com.guicedee.modules.services:vertx-mutiny" module="io.smallrye.mutiny.vertx.core" />
+            <artifact original="io.vertx:vertx-pg-client" replacement="com.guicedee.modules.services:vertx-pg-client" module="io.vertx.pgclient" />
+            <artifact original="io.vertx:vertx-rabbitmq-client" replacement="com.guicedee.modules.services:vertx-rabbitmq" module="io.vertx.rabbitmq" />
         </category>
 
         <!-- Framework Components -->
@@ -165,7 +165,7 @@
 
     <!-- Transaction Management -->
     <category name="Transaction Management">
-        <artifact original="org.codehaus.btm:btm" replacement="com.guicedee.services:btm" module="org.codehaus.btm" />
+        <artifact original="org.codehaus.btm:btm" replacement="com.guicedee.modules.services:btm" module="org.codehaus.btm" />
     </category>
 
     

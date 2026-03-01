@@ -105,7 +105,7 @@ Coordinates and dependencies (Maven)
 <dependencies>
   <dependency>
     <groupId>com.guicedee</groupId>
-    <artifactId>guice-inject-client</artifactId>
+    <artifactId>client</artifactId>
   </dependency>
   <!-- Optional: JSpecify and Mutiny if you implement reactive or nullness-annotated APIs -->
   <dependency>

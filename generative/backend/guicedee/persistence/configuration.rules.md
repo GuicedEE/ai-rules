@@ -11,7 +11,7 @@ Scope: how persistence units, property readers, and connection metadata are defi
 - Implement `IPropertiesConnectionInfoReader` and `IPropertiesEntityManagerReader` via ServiceLoader; keep classes under `src/main/java/com/guicedee/vertxpersistence/implementations/`.
 - Readers must validate prefixes, reject unknown properties, and scrub secrets from logs (Log4j2 markers only).
 - Merge config from MicroProfile/Jakarta Config + env vars per [`rules/generative/platform/secrets-config/env-variables.md`](../../../platform/secrets-config/env-variables.md).
-- Default to `com.guicedee.services:<driver>` artifacts (e.g., `postgresql`) and declare JPMS requirements for drivers; do not shade drivers.
+- Default to `com.guicedee.modules.services:<driver>` artifacts (e.g., `postgresql`) and declare JPMS requirements for drivers; do not shade drivers.
 
 ## Connection Metadata
 - `ConnectionBaseInfo` carries JDBC URL, credentials, pool sizing, XA/reactive flags, and persistence unit name. `CleanConnectionBaseInfo` is the sanitized form for downstream reuse.
