@@ -7,7 +7,7 @@ LLM interpretation guidance (how to apply these terms)
 - Processor setup
   - Always configure the annotation processor (maven-compiler/gradle annotationProcessor). For JPMS, ensure mapper packages are opened to org.mapstruct.processor.
   - For Maven builds, add annotationProcessorArgs to suppress MapStruct generator metadata: `mapstruct.suppressGeneratorTimestamp=true`, `mapstruct.suppressGeneratorVersionInfoComment=true`, `mapstruct.suppressGeneratorAnnotation=true`.
-  - When using GuicedEE coordinates (com.guicedee.services:mapstruct), module name is org.mapstruct; behavior is identical to upstream with modular packaging.
+  - When using GuicedEE coordinates (com.guicedee.modules.services:mapstruct), module name is org.mapstruct; behavior is identical to upstream with modular packaging.
 - Mapper style
   - Prefer interface mappers annotated with @Mapper; compose mappings via default methods or helper mappers via uses = { … }.
   - For update operations, prefer in-place mapping via @MappingTarget rather than creating new objects when domain semantics require mutation.

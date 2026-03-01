@@ -219,7 +219,7 @@ Policies (must honor):
 - Skill fallback policy: If runtime skill discovery does not return a matching project skill, continue by loading `AGENTS.md`, `skills.md`, and selected topic rule files directly. Do not treat "no session skill matched" as a terminal fallback to unguided/direct implementation.
 - Library-first implementation policy: For selected stacks, use concrete library/framework APIs and existing SPI contracts before introducing new interfaces.
 - JWebMP: no inline string HTML; render UI with JWebMP components; do not generate separate TS/HTML for missing views.
-- PostgreSQL JPMS: do not shade the driver; prefer com.guicedee.services:postgresql and requires org.postgresql.
+- PostgreSQL JPMS: do not shade the driver; prefer com.guicedee.modules.services:postgresql and requires org.postgresql.
 - Fluent API Strategy: Choose either CRTP or Builder. CRTP is enforced if GuicedEE or JWebMP is present. Align Lombok usage accordingly:
   - If CRTP: do not use @Builder; implement manual CRTP fluent setters returning (J)this with @SuppressWarnings("unchecked") on setters as needed.
   - If Builder: prefer Lombok @Builder or manual builders; do not apply CRTP chaining rules.
@@ -377,7 +377,7 @@ C. Language and Framework Checks
 - Java LTS alignment:
   - Toolchains, compiler flags, modules; ensure selected LTS rules applied; verify [build-tooling.md](rules/generative/language/java/build-tooling.md) alignment.
 - JPMS policies:
-  - Verify module-info.java requires; PostgreSQL rule: prefer com.guicedee.services:postgresql; ensure requires org.postgresql.
+  - Verify module-info.java requires; PostgreSQL rule: prefer com.guicedee.modules.services:postgresql; ensure requires org.postgresql.
 - GuicedEE:
   - Check for conformity to client rules (inject client lifecycle/SPIs, services) and function rules (injection, vertx-web/rest/persistence, sockets, rabbit, cerial, swagger).
   - For persistence flows, consult rules/generative/backend/guicedee/persistence/README.md to ensure the documented modules and lifecycles are covered.

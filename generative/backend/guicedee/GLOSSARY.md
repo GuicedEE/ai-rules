@@ -14,7 +14,7 @@ Canonical terms
 - JPMS (module-info) — Modules declare “requires …” and register SPI via “provides … with …”. Avoid declaring “uses IGuiceModule” in your modules (GuicedInjection already does). See: guidance in function rules.
 - Service discovery/registration — Prefer Java ServiceLoader and JPMS “provides … with …”; META-INF/services may be used in addition. See: functions rules and examples.
 - GuicedEE Services (shaded JPMS libs) — JPMS-aligned replacements for popular third-party libraries with stable module names and BOM alignment. See: ./services/services.md
-- PostgreSQL JPMS policy — Do not shade the driver in host projects; use com.guicedee.services:postgresql and requires org.postgresql. See: ./services/services.md
+- PostgreSQL JPMS policy — Do not shade the driver in host projects; use com.guicedee.modules.services:postgresql and requires org.postgresql. See: ./services/services.md
 - Representations (CRTP) — Domain-driven representation interfaces that convert between formats (JSON/XML/Excel) using type-safe fluent CRTP. See: ./services/representations.md
 
 Major function families (route-to rules)
