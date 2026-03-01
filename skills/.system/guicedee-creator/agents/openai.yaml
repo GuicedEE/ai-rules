@@ -1,0 +1,4 @@
+interface:
+  display_name: "GuicedEE Creator"
+  short_description: "Scaffold GuicedEE Maven modules safely"
+  default_prompt: "Use $guicedee-creator to scaffold a new GuicedEE module with Maven 4, JDK 25+, BOM import, and JPMS main/test module-info files."

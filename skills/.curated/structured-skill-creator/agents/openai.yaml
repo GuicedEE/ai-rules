@@ -1,0 +1,4 @@
+interface:
+  display_name: "Structured Skill Creator"
+  short_description: "Create skills with strict local structure"
+  default_prompt: "Use $structured-skill-creator to scaffold and validate a new skill under skills/ using local conventions."
