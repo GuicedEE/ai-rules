@@ -247,6 +247,7 @@ Shared skills catalog:
 Claude project Skills:
 - `.claude/skills/rules-repo-conventions/SKILL.md`
 - `.claude/skills/rules-catalog/SKILL.md`
+- `.claude/skills/rules-repo-registration-usage/SKILL.md`
 - `.claude/skills/rules-frontend/SKILL.md`
 - `.claude/skills/rules-backend/SKILL.md`
 - `.claude/skills/rules-data/SKILL.md`
