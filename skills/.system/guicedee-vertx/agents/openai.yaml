@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Vert.x"
+  short_description: "Wire Vert.x 5 event-bus messaging into GuicedEE"
+  default_prompt: "Use $guicedee-vertx to add Vert.x event-bus consumers and publishers to my GuicedEE module with proper JPMS module setup."
+
