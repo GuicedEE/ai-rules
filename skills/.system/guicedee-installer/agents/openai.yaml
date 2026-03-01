@@ -1,0 +1,4 @@
+interface:
+  display_name: "GuicedEE Installer"
+  short_description: "Retrofit projects with GuicedEE standards"
+  default_prompt: "Use $guicedee-installer to retrofit an existing Maven project to GuicedEE baseline settings and JPMS module conventions."

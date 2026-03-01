@@ -1,0 +1,11 @@
+interface:
+  display_name: "AG Grid"
+  short_description: "Use AG Grid MCP for grid implementation"
+  default_prompt: "Use $aggrid to implement or upgrade AG Grid with MCP-backed docs and examples."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ag-mcp"
+      description: "AG Grid MCP server"
+      transport: "stdio"
