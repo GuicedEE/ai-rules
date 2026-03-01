@@ -344,7 +344,7 @@ Located in the `generative/` directory, these guides provide detailed instructio
 
 **PostgreSQL JPMS Policy**:
 - Do not shade the PostgreSQL driver in host projects. Use the GuicedEE Services artifact instead.
-- Maven: <dependency>com.guicedee.services:postgresql</dependency>
+- Maven: <dependency>com.guicedee.modules.services:postgresql</dependency>
 - module-info.java: requires org.postgresql;
 - See also: generative/data/database/postgres-database.md and generative/backend/guicedee/services/services.md (Database → postgresql)
 

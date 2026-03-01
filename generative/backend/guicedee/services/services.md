@@ -17,11 +17,11 @@ The project transforms original libraries into JPMS-compatible versions with the
 
 | Original Coordinates | GuicedEE Coordinates | Module Name | Notes |
 |----------------------|----------------------|-------------| ------ |
-| ~~com.fazecast:jSerialComm~~ | ~~com.guicedee.services:jserialcomm~~ | ~~io.jserialcomm~~ | Removed as of 2.11.2 - now properly modularized |
-| org.javassist:javassist | com.guicedee.services:javassist | javassist |
-| io.cloudevents:cloudevents-core | com.guicedee.services:cloudevents | io.cloudevents |
-| org.testcontainers:testcontainers | com.guicedee.services:testcontainers | org.testcontainers |
-| org.hibernate:hibernate-core | com.guicedee.services:hibernate-core | org.hibernate.core |
+| ~~com.fazecast:jSerialComm~~ | ~~com.guicedee.modules.services:jserialcomm~~ | ~~io.jserialcomm~~ | Removed as of 2.11.2 - now properly modularized |
+| org.javassist:javassist | com.guicedee.modules.services:javassist | javassist |
+| io.cloudevents:cloudevents-core | com.guicedee.modules.services:cloudevents | io.cloudevents |
+| org.testcontainers:testcontainers | com.guicedee.modules.services:testcontainers | org.testcontainers |
+| org.hibernate:hibernate-core | com.guicedee.modules.services:hibernate-core | org.hibernate.core |
 
 ### Usage Examples
 
@@ -40,7 +40,7 @@ Original library (not recommended for most libraries):
 GuicedEE modular version (recommended for most libraries):
 ```xml
 <dependency>
-    <groupId>com.guicedee.services</groupId>
+    <groupId>com.guicedee.modules.services</groupId>
     <artifactId>library-name</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
@@ -76,7 +76,7 @@ module your.module {
 
 ## Library Categories
 
-### Service Libraries (com.guicedee.services)
+### Service Libraries (com.guicedee.modules.services)
 These are shaded versions of third-party libraries with added module-info.java descriptors:
 
 #### Apache
@@ -84,44 +84,44 @@ These are shaded versions of third-party libraries with added module-info.java d
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.apache.cxf:cxf-core | com.guicedee.services:apache-cxf | org.apache.cxf |
-| org.apache.cxf:cxf-rt-rs-client | com.guicedee.services:apache-cxf-rest | org.apache.cxf.rest |
-| org.apache.cxf:cxf-rt-security | com.guicedee.services:apache-cxf-rt-security | org.apache.cxf.rt.security |
-| org.apache.cxf:cxf-rt-transports-http | com.guicedee.services:apache-cxf-rt-transports-http | org.apache.cxf.rt.transports.http |
-| org.apache.cxf:cxf-rt-rs-service-description-openapi-v3 | com.guicedee.services:apache-cxf-rest-openapi | org.apache.cxf.rest.openapi |
+| org.apache.cxf:cxf-core | com.guicedee.modules.services:apache-cxf | org.apache.cxf |
+| org.apache.cxf:cxf-rt-rs-client | com.guicedee.modules.services:apache-cxf-rest | org.apache.cxf.rest |
+| org.apache.cxf:cxf-rt-security | com.guicedee.modules.services:apache-cxf-rt-security | org.apache.cxf.rt.security |
+| org.apache.cxf:cxf-rt-transports-http | com.guicedee.modules.services:apache-cxf-rt-transports-http | org.apache.cxf.rt.transports.http |
+| org.apache.cxf:cxf-rt-rs-service-description-openapi-v3 | com.guicedee.modules.services:apache-cxf-rest-openapi | org.apache.cxf.rest.openapi |
 
 - **Commons**: commons-beanutils, commons-collections, commons-csv, commons-fileupload, commons-math
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| commons-beanutils:commons-beanutils | com.guicedee.services:commons-beanutils | org.apache.commons.beanutils |
-| org.apache.commons:commons-collections4 | com.guicedee.services:commons-collections | org.apache.commons.collections |
-| org.apache.commons:commons-csv | com.guicedee.services:commons-csv | org.apache.commons.csv |
-| commons-fileupload:commons-fileupload | com.guicedee.services:commons-fileupload | org.apache.commons.fileupload |
-| org.apache.commons:commons-math3 | com.guicedee.services:commons-math | org.apache.commons.math |
+| commons-beanutils:commons-beanutils | com.guicedee.modules.services:commons-beanutils | org.apache.commons.beanutils |
+| org.apache.commons:commons-collections4 | com.guicedee.modules.services:commons-collections | org.apache.commons.collections |
+| org.apache.commons:commons-csv | com.guicedee.modules.services:commons-csv | org.apache.commons.csv |
+| commons-fileupload:commons-fileupload | com.guicedee.modules.services:commons-fileupload | org.apache.commons.fileupload |
+| org.apache.commons:commons-math3 | com.guicedee.modules.services:commons-math | org.apache.commons.math |
 
 - **POI**: apache-poi, apache-poi-ooxml
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.apache.poi:poi | com.guicedee.services:apache-poi | org.apache.poi |
-| org.apache.poi:poi-ooxml | com.guicedee.services:apache-poi-ooxml | org.apache.poi.ooxml |
+| org.apache.poi:poi | com.guicedee.modules.services:apache-poi | org.apache.poi |
+| org.apache.poi:poi-ooxml | com.guicedee.modules.services:apache-poi-ooxml | org.apache.poi.ooxml |
 
 #### Database
 - **Database Drivers**: postgresql, mssql-jdbc, msal4j
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.postgresql:postgresql | com.guicedee.services:postgresql | org.postgresql |
-| com.microsoft.sqlserver:mssql-jdbc | com.guicedee.services:mssql-jdbc | com.microsoft.sqlserver.jdbc |
-| com.microsoft.azure:msal4j | com.guicedee.services:msal4j | com.microsoft.azure.msal4j |
+| org.postgresql:postgresql | com.guicedee.modules.services:postgresql | org.postgresql |
+| com.microsoft.sqlserver:mssql-jdbc | com.guicedee.modules.services:mssql-jdbc | com.microsoft.sqlserver.jdbc |
+| com.microsoft.azure:msal4j | com.guicedee.modules.services:msal4j | com.microsoft.azure.msal4j |
 
 Policy (PostgreSQL + JPMS):
 - Do not shade the PostgreSQL driver in host projects. Always consume the GuicedEE Services JPMS artifact.
 - Maven:
 ```xml
 <dependency>
-  <groupId>com.guicedee.services</groupId>
+  <groupId>com.guicedee.modules.services</groupId>
   <artifactId>postgresql</artifactId>
   <version>${guicedee.services.version}</version>
 </dependency>
@@ -138,52 +138,52 @@ module your.module {
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| com.google.inject.extensions:guice-assistedinject | com.guicedee.services:guice-assistedinject | com.google.inject.assistedinject |
-| com.google.inject:guice | com.guicedee.services:guice-core | com.google.inject |
-| com.google.inject.extensions:guice-grapher | com.guicedee.services:guice-grapher | com.google.inject.grapher |
-| com.google.inject.extensions:guice-jmx | com.guicedee.services:guice-jmx | com.google.inject.jmx |
-| com.google.inject.extensions:guice-jndi | com.guicedee.services:guice-jndi | com.google.inject.jndi |
-| com.google.inject.extensions:guice-persist | com.guicedee.services:guice-persist | com.google.inject.persist |
-| com.google.inject.extensions:guice-servlet | com.guicedee.services:guice-servlet | com.google.inject.servlet |
-| com.google.guava:guava | com.guicedee.services:guava | com.google.common |
-| org.aopalliance:aopalliance | com.guicedee.services:aop | org.aopalliance |
+| com.google.inject.extensions:guice-assistedinject | com.guicedee.modules.services:guice-assistedinject | com.google.inject.assistedinject |
+| com.google.inject:guice | com.guicedee.modules.services:guice-core | com.google.inject |
+| com.google.inject.extensions:guice-grapher | com.guicedee.modules.services:guice-grapher | com.google.inject.grapher |
+| com.google.inject.extensions:guice-jmx | com.guicedee.modules.services:guice-jmx | com.google.inject.jmx |
+| com.google.inject.extensions:guice-jndi | com.guicedee.modules.services:guice-jndi | com.google.inject.jndi |
+| com.google.inject.extensions:guice-persist | com.guicedee.modules.services:guice-persist | com.google.inject.persist |
+| com.google.inject.extensions:guice-servlet | com.guicedee.modules.services:guice-servlet | com.google.inject.servlet |
+| com.google.guava:guava | com.guicedee.modules.services:guava | com.google.common |
+| org.aopalliance:aopalliance | com.guicedee.modules.services:aop | org.aopalliance |
 
 #### Hibernate
 - **ORM**: hibernate-core, hibernate-c3p0, hibernate-jcache, hibernate-reactive, hibernate-validator
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.hibernate:hibernate-core | com.guicedee.services:hibernate-core | org.hibernate.core |
-| org.hibernate:hibernate-c3p0 | com.guicedee.services:hibernate-c3p0 | org.hibernate.c3p0 |
-| org.hibernate:hibernate-jcache | com.guicedee.services:hibernate-jcache | org.hibernate.jcache |
-| org.hibernate.reactive:hibernate-reactive-core | com.guicedee.services:hibernate-reactive | org.hibernate.reactive |
-| org.hibernate.validator:hibernate-validator | com.guicedee.services:hibernate-validator | org.hibernate.validator |
+| org.hibernate:hibernate-core | com.guicedee.modules.services:hibernate-core | org.hibernate.core |
+| org.hibernate:hibernate-c3p0 | com.guicedee.modules.services:hibernate-c3p0 | org.hibernate.c3p0 |
+| org.hibernate:hibernate-jcache | com.guicedee.modules.services:hibernate-jcache | org.hibernate.jcache |
+| org.hibernate.reactive:hibernate-reactive-core | com.guicedee.modules.services:hibernate-reactive | org.hibernate.reactive |
+| org.hibernate.validator:hibernate-validator | com.guicedee.modules.services:hibernate-validator | org.hibernate.validator |
 
 #### JCache
 - **Caching**: cache-annotations-ri-common, cache-annotations-ri-guice, cache-api, hazelcast, hazelcast-hibernate
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.jsr107.ri:cache-annotations-ri-common | com.guicedee.services:cache-annotations-ri-common | org.jsr107.ri.annotations.common |
-| org.jsr107.ri:cache-annotations-ri-guice | com.guicedee.services:cache-annotations-ri-guice | org.jsr107.ri.annotations.guice |
-| javax.cache:cache-api | com.guicedee.services:cache-api | javax.cache |
-| com.hazelcast:hazelcast | com.guicedee.services:hazelcast | com.hazelcast |
-| com.hazelcast:hazelcast-hibernate53 | com.guicedee.services:hazelcast-hibernate | com.hazelcast.hibernate |
+| org.jsr107.ri:cache-annotations-ri-common | com.guicedee.modules.services:cache-annotations-ri-common | org.jsr107.ri.annotations.common |
+| org.jsr107.ri:cache-annotations-ri-guice | com.guicedee.modules.services:cache-annotations-ri-guice | org.jsr107.ri.annotations.guice |
+| javax.cache:cache-api | com.guicedee.modules.services:cache-api | javax.cache |
+| com.hazelcast:hazelcast | com.guicedee.modules.services:hazelcast | com.hazelcast |
+| com.hazelcast:hazelcast-hibernate53 | com.guicedee.modules.services:hazelcast-hibernate | com.hazelcast.hibernate |
 
 #### JNI
 - **Native Interface**: jna-platform, nrjavaserial
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| net.java.dev.jna:jna-platform | com.guicedee.services:jna-platform | com.sun.jna.platform |
-| com.neuronrobotics:nrjavaserial | com.guicedee.services:nrjavaserial | com.neuronrobotics.nrjavaserial |
+| net.java.dev.jna:jna-platform | com.guicedee.modules.services:jna-platform | com.sun.jna.platform |
+| com.neuronrobotics:nrjavaserial | com.guicedee.modules.services:nrjavaserial | com.neuronrobotics.nrjavaserial |
 
 #### Jakarta
 - **Security**: jakarta-security-jacc
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| jakarta.security.jacc:jakarta.security.jacc-api | com.guicedee.services:jakarta-security-jacc | jakarta.security.jacc |
+| jakarta.security.jacc:jakarta.security.jacc-api | com.guicedee.modules.services:jakarta-security-jacc | jakarta.security.jacc |
 
 #### Libraries
 - **Transaction Management**: BitronixTransactionManager
@@ -191,69 +191,69 @@ module your.module {
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.codehaus.btm:btm | com.guicedee.services:btm | org.codehaus.btm |
+| org.codehaus.btm:btm | com.guicedee.modules.services:btm | org.codehaus.btm |
 
 - **Utility Libraries**: bcrypt, jandex, javassist, json, kafka-client, mapstruct, scram, uadetector-core, uadetector-resources
 
 | Original Coordinates | GuicedEE Coordinates | Module Name | Notes |
 |----------------------|----------------------|-------------| ------ |
-| at.favre.lib:bcrypt | com.guicedee.services:bcrypt | at.favre.lib.bcrypt | |
-| ~~com.fazecast:jSerialComm~~ | ~~com.guicedee.services:jserialcomm~~ | ~~io.jserialcomm~~ | Removed as of 2.11.2 - now properly modularized as `com.fazecast.jSerialComm` |
-| org.jboss:jandex | com.guicedee.services:jandex | org.jboss.jandex |
-| org.javassist:javassist | com.guicedee.services:javassist | javassist |
-| org.json:json | com.guicedee.services:json | org.json |
-| org.mapstruct:mapstruct | com.guicedee.services:mapstruct | org.mapstruct |
-| com.ongres.scram:client | com.guicedee.services:scram | com.ongres.scram.client |
-| net.sf.uadetector:uadetector-core | com.guicedee.services:uadetector-core | net.sf.uadetector.core |
-| net.sf.uadetector:uadetector-resources | com.guicedee.services:uadetector-resources | net.sf.uadetector.resources |
+| at.favre.lib:bcrypt | com.guicedee.modules.services:bcrypt | at.favre.lib.bcrypt | |
+| ~~com.fazecast:jSerialComm~~ | ~~com.guicedee.modules.services:jserialcomm~~ | ~~io.jserialcomm~~ | Removed as of 2.11.2 - now properly modularized as `com.fazecast.jSerialComm` |
+| org.jboss:jandex | com.guicedee.modules.services:jandex | org.jboss.jandex |
+| org.javassist:javassist | com.guicedee.modules.services:javassist | javassist |
+| org.json:json | com.guicedee.modules.services:json | org.json |
+| org.mapstruct:mapstruct | com.guicedee.modules.services:mapstruct | org.mapstruct |
+| com.ongres.scram:client | com.guicedee.modules.services:scram | com.ongres.scram.client |
+| net.sf.uadetector:uadetector-core | com.guicedee.modules.services:uadetector-core | net.sf.uadetector.core |
+| net.sf.uadetector:uadetector-resources | com.guicedee.modules.services:uadetector-resources | net.sf.uadetector.resources |
 
 - **Integration Libraries**: cloudevents, ibm-mq, rabbitmq-client
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| io.cloudevents:cloudevents-core | com.guicedee.services:cloudevents | io.cloudevents |
-| com.ibm.mq:com.ibm.mq.allclient | com.guicedee.services:ibm-mq | com.ibm.mq |
-| com.rabbitmq:amqp-client | com.guicedee.services:rabbitmq-client | com.rabbitmq.client |
-| org.apache.kafka:kafka-client | com.guicedee.services:kafka-client | org.apache.kafka.clients |
+| io.cloudevents:cloudevents-core | com.guicedee.modules.services:cloudevents | io.cloudevents |
+| com.ibm.mq:com.ibm.mq.allclient | com.guicedee.modules.services:ibm-mq | com.ibm.mq |
+| com.rabbitmq:amqp-client | com.guicedee.modules.services:rabbitmq-client | com.rabbitmq.client |
+| org.apache.kafka:kafka-client | com.guicedee.modules.services:kafka-client | org.apache.kafka.clients |
 
 - **Testing Libraries**: testcontainers
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.testcontainers:testcontainers | com.guicedee.services:testcontainers | org.testcontainers |
+| org.testcontainers:testcontainers | com.guicedee.modules.services:testcontainers | org.testcontainers |
 
 - **Document Processing**: openpdf, swagger
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| com.github.librepdf:openpdf | com.guicedee.services:openpdf | com.lowagie.text |
-| io.swagger:swagger-core | com.guicedee.services:swagger | io.swagger |
+| com.github.librepdf:openpdf | com.guicedee.modules.services:openpdf | com.lowagie.text |
+| io.swagger:swagger-core | com.guicedee.modules.services:swagger | io.swagger |
 
 #### MicroProfile
 - **Configuration**: config-core, metrics-core
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| org.eclipse.microprofile.config:microprofile-config-api | com.guicedee.services:config-core | org.eclipse.microprofile.config |
-| org.eclipse.microprofile.metrics:microprofile-metrics-api | com.guicedee.services:metrics-core | org.eclipse.microprofile.metrics |
+| org.eclipse.microprofile.config:microprofile-config-api | com.guicedee.modules.services:config-core | org.eclipse.microprofile.config |
+| org.eclipse.microprofile.metrics:microprofile-metrics-api | com.guicedee.modules.services:metrics-core | org.eclipse.microprofile.metrics |
 
 #### Representations
 - **Data Formats**: ExcelRepresentation, JsonRepresentation, XmlRepresentation
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| com.guicedee.services:excel-representation | com.guicedee.services:ExcelRepresentation | com.guicedee.services.excelrepresentation |
-| com.guicedee.services:json-representation | com.guicedee.services:JsonRepresentation | com.guicedee.services.jsonrepresentation |
-| com.guicedee.services:xml-representation | com.guicedee.services:XmlRepresentation | com.guicedee.services.xmlrepresentation |
+| com.guicedee.modules.services:excel-representation | com.guicedee.modules.services:ExcelRepresentation | com.guicedee.modules.services.excelrepresentation |
+| com.guicedee.modules.services:json-representation | com.guicedee.modules.services:JsonRepresentation | com.guicedee.modules.services.jsonrepresentation |
+| com.guicedee.modules.services:xml-representation | com.guicedee.modules.services:XmlRepresentation | com.guicedee.modules.services.xmlrepresentation |
 
 #### Vert.x
 - **Reactive**: vertx-mutiny, vertx-pg-client, vertx-rabbitmq
 
 | Original Coordinates | GuicedEE Coordinates | Module Name |
 |----------------------|----------------------|-------------|
-| io.smallrye.reactive:smallrye-mutiny-vertx-core | com.guicedee.services:vertx-mutiny | io.smallrye.mutiny.vertx.core |
-| io.vertx:vertx-pg-client | com.guicedee.services:vertx-pg-client | io.vertx.pgclient |
-| io.vertx:vertx-rabbitmq-client | com.guicedee.services:vertx-rabbitmq | io.vertx.rabbitmq |
+| io.smallrye.reactive:smallrye-mutiny-vertx-core | com.guicedee.modules.services:vertx-mutiny | io.smallrye.mutiny.vertx.core |
+| io.vertx:vertx-pg-client | com.guicedee.modules.services:vertx-pg-client | io.vertx.pgclient |
+| io.vertx:vertx-rabbitmq-client | com.guicedee.modules.services:vertx-rabbitmq | io.vertx.rabbitmq |
 
 
 ## Module Information

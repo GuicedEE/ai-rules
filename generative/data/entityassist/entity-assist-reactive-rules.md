@@ -19,7 +19,7 @@ These rules describe how to adopt the EntityAssist Reactive library inside downs
 | CI/CD | GitHub Actions | Use `GuicedEE/Workflows/.github/workflows/projects.yml@master`. |
 
 **Coordinates (BOM managed):**
-`com.entityassist:entity-assist-reactive:2.0.0-SNAPSHOT` plus GuicedEE dependencies (`com.guicedee:guiced-vertx-persistence`, `com.guicedee:guice-injection`, `com.guicedee.services:hibernate-reactive`, `com.guicedee.services:scram`, `io.smallrye.reactive:mutiny`, `io.vertx:vertx-pg-client`, `jakarta.xml.bind:jakarta.xml.bind-api`, `org.glassfish.jaxb:jaxb-runtime`, `org.projectlombok:lombok`). Consumers inherit versions from the parent BOM; do not pin mismatched artifacts.
+`com.entityassist:entity-assist-reactive:2.0.0-SNAPSHOT` plus GuicedEE dependencies (`com.guicedee:guiced-vertx-persistence`, `com.guicedee:guice-injection`, `com.guicedee.modules.services:hibernate-reactive`, `com.guicedee.modules.services:scram`, `io.smallrye.reactive:mutiny`, `io.vertx:vertx-pg-client`, `jakarta.xml.bind:jakarta.xml.bind-api`, `org.glassfish.jaxb:jaxb-runtime`, `org.projectlombok:lombok`). Consumers inherit versions from the parent BOM; do not pin mismatched artifacts.
 
 ## 3. Module & Packages
 ```

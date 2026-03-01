@@ -26,7 +26,7 @@ MapStruct is a code generator that greatly simplifies the implementation of mapp
 ### GuicedEE Coordinates
 ```xml
 <dependency>
-    <groupId>com.guicedee.services</groupId>
+    <groupId>com.guicedee.modules.services</groupId>
     <artifactId>mapstruct</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
@@ -42,7 +42,7 @@ annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
 ### GuicedEE Coordinates
 ```groovy
-implementation 'com.guicedee.services:mapstruct:2.0.0-SNAPSHOT'
+implementation 'com.guicedee.modules.services:mapstruct:2.0.0-SNAPSHOT'
 ```
 
 ## Module Information
@@ -311,7 +311,7 @@ module com.example.app {
 For Maven:
 ```xml
 <dependency>
-    <groupId>com.guicedee.services</groupId>
+    <groupId>com.guicedee.modules.services</groupId>
     <artifactId>mapstruct</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
@@ -319,7 +319,7 @@ For Maven:
 
 For Gradle:
 ```groovy
-implementation 'com.guicedee.services:mapstruct:2.0.0-SNAPSHOT'
+implementation 'com.guicedee.modules.services:mapstruct:2.0.0-SNAPSHOT'
 ```
 
 Note: When using GuicedEE coordinates, you still need to configure the annotation processor. GuicedEE services MapStruct works exactly the same as the original, just modular.
