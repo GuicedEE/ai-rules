@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Inject"
+  short_description: "Bootstrap the GuicedEE runtime with classpath scanning, DI, and lifecycle hooks"
+  default_prompt: "Use $guicedee-inject to wire up a GuicedEE application with classpath scanning, Guice modules, lifecycle hooks, and logging."
+
