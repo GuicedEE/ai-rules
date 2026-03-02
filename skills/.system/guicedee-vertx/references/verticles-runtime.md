@@ -8,11 +8,11 @@ Use `@Verticle` on a class or `package-info.java` to define deployment units. Ea
 
 ```java
 @Verticle(
-    workerPoolName = "billing",
-    workerPoolSize = 16,
-    threadingModel = ThreadingModel.EVENT_LOOP,
-    defaultInstances = 2,
-    capabilities = { Verticle.Capabilities.Rest, Verticle.Capabilities.Persistence }
+        value = "billing",
+        workerPoolSize = 16,
+        threadingModel = ThreadingModel.EVENT_LOOP,
+        defaultInstances = 2,
+        capabilities = {Verticle.Capabilities.Rest, Verticle.Capabilities.Persistence}
 )
 package my.app.billing;
 
