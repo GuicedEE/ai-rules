@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Metrics"
+  short_description: "Application metrics with Prometheus and Dropwizard inside GuicedEE"
+  default_prompt: "Use $guicedee-metrics to add @Counted, @Timed metrics with Prometheus scrape endpoints and Dropwizard integration in my GuicedEE module."
+
