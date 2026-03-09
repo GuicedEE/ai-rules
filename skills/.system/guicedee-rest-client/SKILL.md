@@ -109,8 +109,8 @@ IGuiceContext.instance().inject()
 
 - Client packages must `opens` to `com.google.guice` and `com.guicedee.rest.client`.
 - DTO packages must `opens` to `com.fasterxml.jackson.databind`.
-- Module must `requires com.guicedee.rest.client;`.
+- Module must `requires transitive com.guicedee.rest.client;`.
 - Only one `@Endpoint` field is needed per named endpoint; other classes inject by `@Named` alone.
-- `RestClientConfigurator` SPI implementations must be dual-registered.
+- `RestClientConfigurator` SPI implementations must be dual-registered for tests.
 
 
