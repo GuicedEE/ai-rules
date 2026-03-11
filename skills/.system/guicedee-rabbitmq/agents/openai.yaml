@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE RabbitMQ"
+  short_description: "Annotation-driven RabbitMQ messaging inside GuicedEE"
+  default_prompt: "Use $guicedee-rabbitmq to add RabbitMQ connections, exchanges, queues, consumers, and publishers with annotation-driven configuration in my GuicedEE module."
+
