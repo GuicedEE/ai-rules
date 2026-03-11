@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Config"
+  short_description: "MicroProfile Config with SmallRye Config inside GuicedEE"
+  default_prompt: "Use $guicedee-config to inject @ConfigProperty values from environment variables, system properties, and config files in my GuicedEE module."
+
