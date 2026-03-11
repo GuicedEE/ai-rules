@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Cerial"
+  short_description: "Serial port connectivity with jSerialComm inside GuicedEE"
+  default_prompt: "Use $guicedee-cerial to connect to serial ports with @Named injection, fluent configuration, automatic reconnect, and health monitoring in my GuicedEE module."
+
