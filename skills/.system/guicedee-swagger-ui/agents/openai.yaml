@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Swagger UI"
+  short_description: "Browsable Swagger UI for GuicedEE REST APIs"
+  default_prompt: "Use $guicedee-swagger-ui to add a browsable Swagger UI at /swagger/ for my GuicedEE REST API."
+
