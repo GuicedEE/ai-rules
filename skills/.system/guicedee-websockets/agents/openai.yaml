@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE WebSockets"
+  short_description: "WebSocket messaging with action-based routing inside GuicedEE"
+  default_prompt: "Use $guicedee-websockets to add WebSocket support with action-based message routing, group management, and broadcasting to my GuicedEE module."
+
