@@ -12,7 +12,7 @@ Wire Vert.x 5 into the GuicedEE lifecycle with zero manual bootstrap.
 Vert.x starts automatically via SPI — never create `Vertx` manually:
 
 ```
-IGuiceContext.instance()
+IGuiceContext.instance().inject()
  └─ VertXPreStartup   (IGuicePreStartup)  → creates Vertx, scans events, registers codecs
      └─ VerticleBuilder                    → deploys verticles from @Verticle annotations
          └─ VertxConsumersStartup          → deploys one EventConsumerVerticle per address
@@ -24,7 +24,7 @@ Bootstrap with:
 
 ```java
 IGuiceContext.registerModuleForScanning.add("my.app");
-IGuiceContext.instance();
+IGuiceContext.instance().inject();
 ```
 
 ## Required Flow
