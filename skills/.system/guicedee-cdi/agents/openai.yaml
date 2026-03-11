@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE CDI"
+  short_description: "Jakarta CDI annotation bridge for GuicedEE / Guice"
+  default_prompt: "Use $guicedee-cdi to bridge Jakarta CDI annotations like @Inject, @Named, @ApplicationScoped into Guice inside my GuicedEE module."
+
