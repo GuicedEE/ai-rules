@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Client"
+  short_description: "GuicedEE client SPI contracts and lifecycle interfaces"
+  default_prompt: "Use $guicedee-client to understand and implement GuicedEE lifecycle hooks, SPI contracts, and call scoping in my module."
+

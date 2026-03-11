@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE REST"
+  short_description: "Jakarta REST (JAX-RS) services on Vert.x inside GuicedEE"
+  default_prompt: "Use $guicedee-rest to create Jakarta REST endpoints with @Path, @GET, @POST annotations on Vert.x with Guice injection."
+
