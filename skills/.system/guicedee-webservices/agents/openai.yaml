@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Web Services"
+  short_description: "SOAP web services with Apache CXF conventions inside GuicedEE"
+  default_prompt: "Use $guicedee-webservices to create SOAP web services with JAX-WS annotations and CXF conventions in my GuicedEE module."
+
