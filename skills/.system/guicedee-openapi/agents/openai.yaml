@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE OpenAPI"
+  short_description: "OpenAPI 3.1 spec generation and serving inside GuicedEE"
+  default_prompt: "Use $guicedee-openapi to generate and serve OpenAPI 3.1 specs from Jakarta REST resources with Swagger annotations in my GuicedEE module."
+
