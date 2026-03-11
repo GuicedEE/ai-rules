@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE REST Client"
+  short_description: "Annotation-driven REST client with Vert.x WebClient inside GuicedEE"
+  default_prompt: "Use $guicedee-rest-client to declare @Endpoint REST clients with authentication, path parameters, and reactive Uni responses in my GuicedEE module."
+
