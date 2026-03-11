@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Persistence"
+  short_description: "Reactive JPA persistence with Hibernate Reactive inside GuicedEE"
+  default_prompt: "Use $guicedee-persistence to add reactive database persistence with Hibernate Reactive, Mutiny sessions, and Vert.x SQL clients to my GuicedEE module."
+
