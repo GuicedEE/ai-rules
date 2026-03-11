@@ -1,0 +1,5 @@
+tcinterface:
+  display_name: "GuicedEE Telemetry"
+  short_description: "OpenTelemetry distributed tracing inside GuicedEE"
+  default_prompt: "Use $guicedee-telemetry to add @Trace and @SpanAttribute OpenTelemetry tracing with OTLP export in my GuicedEE module."
+

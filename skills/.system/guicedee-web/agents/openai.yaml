@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Web"
+  short_description: "Reactive HTTP/HTTPS server bootstrap with Vert.x inside GuicedEE"
+  default_prompt: "Use $guicedee-web to configure the Vert.x HTTP/HTTPS web server, add custom routes and middleware, and manage server options in my GuicedEE module."
+
