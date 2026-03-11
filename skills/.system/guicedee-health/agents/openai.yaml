@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Health"
+  short_description: "MicroProfile Health checks with auto-discovery inside GuicedEE"
+  default_prompt: "Use $guicedee-health to add MicroProfile Health liveness, readiness, and startup checks with automatic endpoint registration in my GuicedEE module."
+
