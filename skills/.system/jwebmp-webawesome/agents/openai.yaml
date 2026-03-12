@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP WebAwesome"
+  short_description: "Modern icon library for JWebMP"
+  default_prompt: "Use $jwebmp-webawesome for modern, open-source icons as a FontAwesome alternative."

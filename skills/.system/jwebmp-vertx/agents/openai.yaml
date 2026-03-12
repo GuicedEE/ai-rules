@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP Vert.x"
+  short_description: "JWebMP integration with Vert.x 5 reactive runtime"
+  default_prompt: "Use $jwebmp-vertx to configure HTTP routes, handle AJAX events, manage WebSocket broadcasting, and build reactive web applications."

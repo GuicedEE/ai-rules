@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP WebAwesome Pro"
+  short_description: "WebAwesome Pro premium icons"
+  default_prompt: "Use $jwebmp-webawesome-pro for premium WebAwesome icon features."

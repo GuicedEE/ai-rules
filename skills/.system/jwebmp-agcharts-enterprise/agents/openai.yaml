@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP AG Charts Enterprise"
+  short_description: "Use AG Charts Enterprise premium features"
+  default_prompt: "Use $jwebmp-agcharts-enterprise for advanced chart types like heatmaps, treemaps, sunburst, sankey, and financial charts."

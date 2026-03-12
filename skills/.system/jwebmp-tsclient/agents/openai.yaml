@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP TypeScript Client"
+  short_description: "TypeScript generation utilities for plugins"
+  default_prompt: "Use $jwebmp-tsclient to generate TypeScript interfaces, declare npm dependencies, and build Angular-integrated components."

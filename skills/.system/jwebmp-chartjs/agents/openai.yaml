@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP Chart.js"
+  short_description: "Simple charting with Chart.js"
+  default_prompt: "Use $jwebmp-chartjs to create simple, responsive charts with Chart.js integration."

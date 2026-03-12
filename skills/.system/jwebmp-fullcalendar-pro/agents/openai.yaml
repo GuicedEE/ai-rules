@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP FullCalendar Pro"
+  short_description: "Use FullCalendar Premium features"
+  default_prompt: "Use $jwebmp-fullcalendar-pro for resource scheduling, timeline views, and premium calendar features."

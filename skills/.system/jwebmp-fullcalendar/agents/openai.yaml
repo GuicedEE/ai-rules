@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP FullCalendar"
+  short_description: "Build calendars with FullCalendar 6.1.19"
+  default_prompt: "Use $jwebmp-fullcalendar to create event calendars, scheduling interfaces, and timeline views with drag-and-drop support."

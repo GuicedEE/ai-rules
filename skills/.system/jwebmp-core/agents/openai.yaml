@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP Core"
+  short_description: "Build type-safe HTML/CSS/JS components in Java"
+  default_prompt: "Use $jwebmp-core to build strongly-typed HTML components, handle events, configure pages, and create server-driven web applications with JWebMP Core."

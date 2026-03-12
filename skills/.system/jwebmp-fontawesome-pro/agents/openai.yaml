@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP FontAwesome Pro"
+  short_description: "Use FontAwesome Pro premium icons"
+  default_prompt: "Use $jwebmp-fontawesome-pro for premium icon styles and advanced FontAwesome features."

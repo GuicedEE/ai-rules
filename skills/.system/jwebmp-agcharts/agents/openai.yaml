@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP AG Charts"
+  short_description: "Build enterprise charts with AG Charts 13.1.0"
+  default_prompt: "Use $jwebmp-agcharts to create line, bar, pie, scatter, and other chart types with AG Charts 13.1.0 integration."

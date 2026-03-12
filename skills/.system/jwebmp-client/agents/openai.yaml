@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP Client"
+  short_description: "Work with JWebMP client contracts and SPIs"
+  default_prompt: "Use $jwebmp-client to work with AJAX pipeline, page configurators, interceptors, and component model interfaces."

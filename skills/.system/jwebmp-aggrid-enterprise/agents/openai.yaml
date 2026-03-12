@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP AG Grid Enterprise"
+  short_description: "Use AG Grid Enterprise premium data grid features"
+  default_prompt: "Use $jwebmp-aggrid-enterprise for row grouping, aggregation, pivoting, master/detail, and advanced grid capabilities."

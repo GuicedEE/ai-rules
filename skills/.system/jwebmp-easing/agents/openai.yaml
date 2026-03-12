@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP Easing"
+  short_description: "jQuery Easing animation functions"
+  default_prompt: "Use $jwebmp-easing for smooth animation easing functions in JWebMP applications."
