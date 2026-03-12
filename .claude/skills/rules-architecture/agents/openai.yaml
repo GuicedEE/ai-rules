@@ -1,4 +1,0 @@
-interface:
-  display_name: "Architecture Rules Router"
-  short_description: "Route architecture tasks to DDD, microfronts, TDD, and BDD"
-  default_prompt: "Use $rules-architecture to route architecture decisions to the right methodology guides."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Language Rules Router"
-  short_description: "Route language and framework tasks to language guides"
-  default_prompt: "Use $rules-language to map language-level requests to the right language topic docs."

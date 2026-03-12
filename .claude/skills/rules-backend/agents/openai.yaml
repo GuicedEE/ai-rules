@@ -1,4 +1,0 @@
-interface:
-  display_name: "Backend Rules Router"
-  short_description: "Route backend tasks to framework-specific rule files"
-  default_prompt: "Use $rules-backend to map backend requests to the correct framework rules."
