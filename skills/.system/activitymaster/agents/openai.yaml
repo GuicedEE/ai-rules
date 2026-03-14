@@ -1,0 +1,4 @@
+interface:
+  display_name: "ActivityMaster"
+  short_description: "FSDM enterprise resource management platform"
+  default_prompt: "Use $activitymaster to work with FSDM domain services (Enterprise, Address, Events, Arrangements, ResourceItem, Classification), build reactive persistence workflows, manage security tokens, and implement enterprise resource management applications."

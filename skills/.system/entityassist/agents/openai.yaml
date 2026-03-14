@@ -1,0 +1,4 @@
+interface:
+  display_name: "EntityAssist Reactive"
+  short_description: "Reactive persistence with Hibernate Reactive and Mutiny"
+  default_prompt: "Use $entityassist to build reactive entities, write type-safe queries, and implement non-blocking database operations with Hibernate Reactive and Mutiny."
