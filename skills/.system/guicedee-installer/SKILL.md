@@ -32,7 +32,7 @@ Upgrade an existing module to the same baseline expected by `guicedee-creator`.
    - `com.guicedee.client.services.lifecycle.IGuicePreStartup`
    - `com.guicedee.client.services.lifecycle.IGuiceModule`
    - `com.guicedee.client.services.lifecycle.IGuicePostStartup`
-   - Ensure each implementation overrides `sortOrder()` (from `IDefaultService`)
+   - Ensure each implementation overrides `sortOrder()` (from `IDefaultService<J>`)
    - registrations required in both `module-info.java` and `src/main/resources/META-INF/services/*`
 7. Apply package separation:
    - test module name defaults to `<mainModule>.test`

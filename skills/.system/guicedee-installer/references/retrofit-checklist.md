@@ -81,7 +81,7 @@ If any implementation class uses these interfaces:
 Then each implementation must be declared in both:
 - `src/main/java/module-info.java` via `provides ... with ...`
 - `src/main/resources/META-INF/services/<spi-interface-fqcn>` with implementation FQCN lines
-- each implementation must override `sortOrder()` from `IDefaultService`
+- each implementation must override `sortOrder()` from `IDefaultService<J>`
 
 Behavior reminders:
 - `IGuicePreStartup` runs before module injection; Vert.x 5 is available.

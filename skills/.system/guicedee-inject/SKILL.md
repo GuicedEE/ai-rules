@@ -54,13 +54,13 @@ provides com.guicedee.client.services.lifecycle.IGuiceModule with my.app.AppModu
 
 | Hook | When it runs | Return |
 |---|---|---|
-| `IGuiceConfigurator` | First — configures `GuiceConfig` before scanning | `void` |
+| `IGuiceConfigurator` | First — configures `GuiceConfig` before scanning | `IGuiceConfig<?>` |
 | `IGuicePreStartup` | After scan, before injector — grouped by `sortOrder()` | `List<Future<Boolean>>` |
 | `IGuiceModule` | During injector creation — standard Guice module | — |
-| `IGuicePostStartup` | After injector is ready — async, grouped by `sortOrder()` | `List<Future<Boolean>>` |
+| `IGuicePostStartup` | After injector is ready — async, grouped by `sortOrder()` | `List<Uni<Boolean>>` |
 | `IGuicePreDestroy` | On shutdown — cleanup resources | `void` |
 
-All hooks implement `IDefaultService`; override `sortOrder()` to control execution order.
+All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` to control execution order and `enabled()` to conditionally skip.
 
 ## Logging
 
@@ -100,7 +100,7 @@ Pools auto-shutdown via `IGuicePreDestroy`.
 - Every SPI must be dual-registered (`module-info.java` + `META-INF/services/`).
 - Injection packages must `opens` to `com.google.guice`.
 - `IGuiceContext.registerModuleForScanning.add("my.module")` must be called before `instance()`.
-- All lifecycle hooks must implement `IDefaultService` and override `sortOrder()`.
+- All lifecycle hooks must extend `IDefaultService<J>` (CRTP) and override `sortOrder()`.
 
 ## References
 

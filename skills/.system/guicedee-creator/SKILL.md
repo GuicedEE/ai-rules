@@ -34,7 +34,7 @@ Create a new module with GuicedEE baseline constraints and validate them determi
    - `com.guicedee.client.services.lifecycle.IGuicePreStartup`
    - `com.guicedee.client.services.lifecycle.IGuiceModule`
    - `com.guicedee.client.services.lifecycle.IGuicePostStartup`
-   - All lifecycle hooks implement `IDefaultService`; override `sortOrder()` to control execution order
+   - All lifecycle hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` to control execution order and `enabled()` to conditionally skip
 8. Register every SPI implementation in both:
    - `src/main/java/module-info.java` (`provides ... with ...`)
    - `src/main/resources/META-INF/services/<spi-interface-fqcn>`
@@ -64,7 +64,7 @@ Create a new module with GuicedEE baseline constraints and validate them determi
 - Safe default for test module packages: also include `org.junit.platform.commons`.
 - A bootstrap `main()` class must exist in `src/main/java` and register the current module name.
 - Lifecycle SPI implementations must be registered in both `module-info.java` and `META-INF/services`.
-- Lifecycle SPI implementations must override `sortOrder()` (from `IDefaultService`).
+- Lifecycle SPI implementations must override `sortOrder()` (from `IDefaultService<J>`).
 - Testing baseline must include JUnit Jupiter `6.0.3+` and Mockito.
 - Playwright is optional and should be added for browser/E2E automation use cases.
 - Package names cannot be duplicated between main and test modules.

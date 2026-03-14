@@ -1,6 +1,6 @@
 ---
 name: guicedee-client
-description: "GuicedEE client SPI contracts: IGuiceContext, lifecycle hook interfaces (IGuicePreStartup, IGuiceModule, IGuicePostStartup, IGuicePreDestroy, IGuiceConfigurator), IDefaultService for sort ordering, CallScope and CallScopeProperties, IJsonRepresentation for Jackson serialization, and JPMS module setup. Use when programming against GuicedEE SPI contracts, understanding the lifecycle hook interfaces, implementing IDefaultService, using call scoping, or referencing the client API without the full runtime."
+description: "GuicedEE client SPI contracts: IGuiceContext, lifecycle hook interfaces (IGuicePreStartup, IGuiceModule, IGuicePostStartup, IGuicePreDestroy, IGuiceConfigurator) — all extending IDefaultService for sort ordering and enablement, CallScope and CallScopeProperties, IJsonRepresentation for Jackson serialization, and JPMS module setup. Use when programming against GuicedEE SPI contracts, understanding the lifecycle hook interfaces, implementing IDefaultService, using call scoping, or referencing the client API without the full runtime."
 metadata:
   short-description: GuicedEE client SPI contracts and lifecycle interfaces
 ---
@@ -33,22 +33,22 @@ This library provides the interfaces and annotations for the GuicedEE lifecycle.
 
 ## Lifecycle Hook Interfaces
 
-All hooks implement `IDefaultService` — override `sortOrder()` to control execution order.
+All hooks extend `IDefaultService<J>` (CRTP) — override `sortOrder()` to control execution order and `enabled()` to conditionally skip.
 
 | Interface | When | Purpose |
 |---|---|---|
-| `IGuiceConfigurator` | First | Configure `GuiceConfig` before scanning |
-| `IGuicePreStartup` | After scan, before injector | Pre-startup tasks, returns `List<Future<Boolean>>` |
-| `IGuiceModule` | During injector creation | Standard Guice `AbstractModule` |
-| `IGuicePostStartup` | After injector ready | Post-startup tasks, returns `List<Future<Boolean>>` |
-| `IGuicePreDestroy` | On shutdown | Cleanup resources |
+| `IGuiceConfigurator<J>` | First | Configure `GuiceConfig` before scanning |
+| `IGuicePreStartup<J>` | After scan, before injector | Pre-startup tasks, returns `List<Future<Boolean>>` |
+| `IGuiceModule<J>` | During injector creation | Standard Guice `AbstractModule` |
+| `IGuicePostStartup<J>` | After injector ready | Post-startup tasks, returns `List<Uni<Boolean>>` |
+| `IGuicePreDestroy<J>` | On shutdown | Cleanup resources |
 
 ## Key Classes
 
 | Class | Purpose |
 |---|---|
 | `IGuiceContext` | Singleton access to injector and context |
-| `IDefaultService` | Base for all SPI hooks with `sortOrder()` and `enabled()` |
+| `IDefaultService` | Base for all SPI hooks (CRTP) with `sortOrder()` and `enabled()` |
 | `CallScope` / `CallScopeProperties` | Request-scoped injection context |
 | `IJsonRepresentation` | Jackson ObjectMapper configuration contract |
 

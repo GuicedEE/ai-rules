@@ -58,12 +58,13 @@ public class ChangelogScanner implements IFileContentsScanner {
 Configure via an `IGuiceConfigurator` SPI implementation:
 
 ```java
-public class MyConfig implements IGuiceConfigurator {
+public class MyConfig implements IGuiceConfigurator<MyConfig> {
     @Override
-    public void configure(IGuiceConfig config) {
+    public IGuiceConfig<?> configure(IGuiceConfig<?> config) {
         config.setAnnotationScanning(true);
         config.setFieldScanning(true);
         config.setIncludePackages(true);
+        return config;
     }
 }
 ```

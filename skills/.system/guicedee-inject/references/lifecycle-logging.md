@@ -9,10 +9,11 @@ Detailed reference for lifecycle hooks, `@InjectLogger`, `LogUtils`, `Log4JConfi
 Runs first, before scanning. Receives a `GuiceConfig` to tune scanner behaviour.
 
 ```java
-public class MyConfig implements IGuiceConfigurator {
+public class MyConfig implements IGuiceConfigurator<MyConfig> {
     @Override
-    public void configure(IGuiceConfig config) {
+    public IGuiceConfig<?> configure(IGuiceConfig<?> config) {
         config.setAnnotationScanning(true);
+        return config;
     }
 }
 ```
@@ -48,13 +49,13 @@ public class AppModule extends AbstractModule implements IGuiceModule<AppModule>
 
 ### `IGuicePostStartup`
 
-Runs after the injector is ready. Same grouping semantics as `IGuicePreStartup`.
+Runs after the injector is ready. Same grouping semantics as `IGuicePreStartup`. Returns `List<Uni<Boolean>>` (Mutiny).
 
 ```java
 public class WarmupCache implements IGuicePostStartup<WarmupCache> {
     @Override
-    public List<Future<Boolean>> postLoad() {
-        return List.of(Future.succeededFuture(true));
+    public List<Uni<Boolean>> postLoad() {
+        return List.of(Uni.createFrom().item(true));
     }
 
     @Override
