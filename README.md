@@ -1,286 +1,250 @@
-# Rules Repository
+# Enterprise Skills Repository
 
-Enterprise-wide rules and guides for AI-assisted and human development. This repository is designed to be consumed as a Git submodule inside client/host projects. It provides a versioned canonical source of truth for shared rules and guides across the organization.
+Enterprise-wide AI skills catalog for AI-assisted and human development. This repository provides a versioned, canonical source of truth for reusable skills that extend AI agents (Codex, Copilot, Cursor, Junie, Claude, Roo, ChatGPT) with specialized knowledge, workflows, and tool integrations.
 
-## Enterprise usage and placement rules
+## Repository Structure
 
-- This repository is an enterprise-wide catalog; consume it as a Git submodule.
-- Do not place project-specific rules or documents inside the submodule directory where this repository lives.
-- In host projects, put project artifacts (PACT.md, project RULES.md, GUIDES.md, IMPLEMENTATION.md, etc.) outside the submodule (for example, under `docs/` or at the repository root).
-- To extend/override guidance, add or update the host project's RULES.md and link to relevant sections in this repository; do not modify files inside the submodule.
+```
+AIRules/
+├── README.md              ← you are here
+├── skills.md              ← pinned skills catalog and load-order
+├── LICENSE
+└── skills/
+    ├── .curated/          ← general-purpose, community-quality skills
+    │   ├── aggrid/
+    │   ├── api-integration-specialist/
+    │   ├── arm-to-terraform-migration/
+    │   ├── changelog-generator/
+    │   ├── code-reviewer/
+    │   ├── dispatching-parallel-agents/
+    │   ├── figma/
+    │   ├── finishing-a-development-branch/
+    │   ├── gh-address-comments/
+    │   ├── gh-fix-ci/
+    │   ├── git-commit-helper/
+    │   ├── information-architect/
+    │   ├── playwright/
+    │   ├── screenshot/
+    │   ├── security-best-practices/
+    │   ├── security-compliance/
+    │   ├── security-ownership-map/
+    │   ├── senior-architect/
+    │   ├── senior-backend/
+    │   ├── senior-devops/
+    │   ├── senior-prompt-engineer/
+    │   ├── senior-qa/
+    │   ├── senior-secops/
+    │   ├── skill-adopter/
+    │   ├── structured-skill-creator/
+    │   ├── systematic-debugging/
+    │   ├── terraform-*/          (9 terraform skills)
+    │   ├── test-driven-development/
+    │   └── using-git-worktrees/
+    └── .system/           ← project-specific skills for GuicedEE / JWebMP / ActivityMaster
+        ├── activitymaster/
+        ├── entityassist/
+        ├── guicedee-*/           (18 guicedee skills)
+        ├── jwebmp-*/             (16 jwebmp skills)
+        ├── skill-creator/
+        └── skill-installer/
+```
 
-### Adding as a submodule (example)
+### Skill anatomy
+
+Every skill is a self-contained folder with a required `SKILL.md` and optional bundled resources:
+
+```
+skill-name/
+├── SKILL.md              (required — YAML frontmatter + Markdown instructions)
+├── agents/               (recommended — UI metadata)
+│   └── openai.yaml
+├── references/           (optional — domain docs loaded on demand)
+├── scripts/              (optional — executable automation)
+└── assets/               (optional — icons, templates, etc.)
+```
+
+## Enterprise Usage
+
+### Consuming as a Git submodule
 
 ```bash
-# Choose an appropriate target folder (e.g., rules/)
-git submodule add <Rules Repository repository URL> rules/
+git submodule add https://github.com/GuicedEE/ai-rules.git rules/
 git submodule update --init --recursive
 ```
 
-Then reference content from your project's artifacts using relative links (see Structure of Work below).
+Host projects reference skills from the submodule. Do not place project-specific artifacts inside the submodule directory.
 
-## Forward-only change policy (no backwards compatibility)
+### Installing individual skills (Codex / CLI)
 
-- By default, AI generation and maintainers must not preserve backwards compatibility when applying requested changes.
-- Apply requested changes in full in the same change: update/remove conflicting documents, anchors, examples, indexes, and links.
-- Do not leave stubs or partial updates; provide complete, final artifacts for the new state.
-- Only maintain compatibility if the request explicitly requires it for a specific client project.
+Use the **skill-installer** skill to install skills into `$CODEX_HOME/skills/`:
 
-See RULES.md — 6. Forward-Only Change Policy for the authoritative statement.
+```bash
+# List available skills (curated from both OpenAI and GuicedEE sources)
+python skills/.system/skill-installer/scripts/list-skills.py
 
-### Roo workspace policy (pinned)
+# Install a curated skill by name
+python skills/.system/skill-installer/scripts/install-skill-from-defaults.py senior-architect
 
-Roo is a supported AI engine for this repository. To ensure Roo follows the same constraints and prompt language as other engines, a pinned workspace policy is provided at the repository root:
-- ROO_WORKSPACE_POLICY.md — repository-scoped policy for Roo covering RULES.md sections 4, 5, Document Modularity Policy, and 6 (Forward-Only). Operate at repo root, include file paths in responses, and apply forward-only edits updating all references in the same change.
+# Install from any GitHub repo
+python skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo GuicedEE/ai-rules --path skills/.curated/figma
+```
 
-## Documentation-First, Stage-Gated Workflow (Mandatory)
+### Creating new skills
 
-This repository enforces a documentation-first, stage-gated process for all AI systems (Junie, Copilot, Cursor, ChatGPT, Claude, Roo, Codex). AI MUST NOT write or modify source code until documentation phases are completed and explicitly approved by the user.
-- Stage approvals default to user review checkpoints; the user may explicitly waive these STOP gates or grant blanket approval, after which you may proceed while documenting the opt-out.
+Use the **skill-creator** skill for guided skill authoring:
 
-- Stage 1 — Architecture & Foundations (Docs only)
-  - Deliver: PACT draft/updates; architecture overview; C4 diagrams; sequence diagrams for key flows; ERDs for core domains; dependency/integration map; glossary composition plan (topic-first, precedence, anchors).
-  - Output: Markdown docs in host repo (outside rules/), with links to enterprise rules indexes.
-  - STOP (user review optional): Offer a review/approval checkpoint before Stage 2. Continue without waiting only if the user has opted out or granted blanket approval.
-- Stage 2 — Guides & Design Validation (Docs only)
-  - Deliver: RULES mapping to selected stacks; GUIDES with “how to apply”; API surface sketches/contracts; UI flows/wireframes and component mapping (if applicable); migration notes; test strategy; acceptance criteria.
-  - STOP (user review optional): Offer a review/approval checkpoint before Stage 3. Continue without waiting only if the user has opted out or granted blanket approval.
-- Stage 3 — Implementation Plan (No code yet)
-  - Deliver: Scaffolding plan and module/file tree; build/annotation-processor wiring; CI workflow plan; env/config plan; rollout plan; risks; validation approach.
-  - STOP (user review optional): Offer a review/approval checkpoint before Stage 4. Continue without waiting only if the user has opted out or granted blanket approval.
-- Stage 4 — Implementation & Scaffolding (Code allowed)
-  - Scope: Only after explicit approval unless the user has already waived stage approvals or granted blanket approval for the run.
-  - Approach: Generate minimal scaffolding first, then iterate in small, reviewable steps. After each step, present diffs and validation, then ask to continue.
+```bash
+# Bootstrap a new skill skeleton
+python skills/.system/skill-creator/scripts/init_skill.py my-new-skill
 
-Universal STOP rule
-- If the user requires staged approvals and approval is not granted, revise docs; if the user waived staged approvals, continue but incorporate feedback when it arrives.
-- Each stage must close loops via links: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION.
+# Generate agents/openai.yaml metadata
+python skills/.system/skill-creator/scripts/generate_openai_yaml.py my-new-skill
+```
+
+See `skills/.system/skill-creator/SKILL.md` for the full creation guide.
+
+## Skill Catalogs
+
+### Curated Skills (`.curated/`)
+
+General-purpose skills suitable for any project:
+
+| Skill | Description |
+|-------|-------------|
+| `aggrid` | AG Grid MCP integration for React, Angular, Vue, and vanilla JS |
+| `api-integration-specialist` | API integration design and implementation |
+| `arm-to-terraform-migration` | Azure ARM → Terraform migration workflows |
+| `changelog-generator` | Automated changelog generation |
+| `code-reviewer` | Structured code review with checklists |
+| `dispatching-parallel-agents` | Parallel agent orchestration patterns |
+| `figma` | Figma MCP integration for design-to-code |
+| `finishing-a-development-branch` | Branch completion and merge workflows |
+| `gh-address-comments` | GitHub PR comment resolution |
+| `gh-fix-ci` | GitHub CI failure diagnosis and repair |
+| `git-commit-helper` | Conventional commit message crafting |
+| `information-architect` | Information architecture and content strategy |
+| `playwright` | Playwright end-to-end test authoring |
+| `screenshot` | Screenshot capture and comparison |
+| `security-best-practices` | Language/framework-specific security reviews |
+| `security-compliance` | Security compliance auditing |
+| `security-ownership-map` | Security ownership mapping |
+| `senior-architect` | System design, ADRs, and architecture diagrams |
+| `senior-backend` | Backend engineering workflows |
+| `senior-devops` | DevOps and infrastructure workflows |
+| `senior-prompt-engineer` | Prompt engineering and optimization |
+| `senior-qa` | Quality assurance and test strategy |
+| `senior-secops` | Security operations workflows |
+| `skill-adopter` | Adopt and wire enterprise skills into a project for any AI agent |
+| `structured-skill-creator` | Structured skill authoring guide |
+| `systematic-debugging` | Systematic debugging methodology |
+| `terraform-*` | Terraform code gen, docs, modules, plans, security, state, validation |
+| `test-driven-development` | Red → green → refactor TDD workflow |
+| `using-git-worktrees` | Git worktree workflows |
+
+### System Skills (`.system/`)
+
+Project-specific skills for the GuicedEE ecosystem:
+
+| Skill | Description |
+|-------|-------------|
+| `activitymaster` | FSDM enterprise resource management platform |
+| `entityassist` | Reactive persistence with Hibernate Reactive 7 and Mutiny |
+| `guicedee-cdi` | CDI integration for GuicedEE |
+| `guicedee-cerial` | Serialization framework |
+| `guicedee-client` | HTTP client integration |
+| `guicedee-config` | MicroProfile Config integration |
+| `guicedee-creator` | GuicedEE project scaffolding |
+| `guicedee-health` | MicroProfile Health integration |
+| `guicedee-inject` | Guice DI with classpath scanning |
+| `guicedee-installer` | Module installation and retrofit |
+| `guicedee-metrics` | MicroProfile Metrics integration |
+| `guicedee-openapi` | OpenAPI/Swagger integration |
+| `guicedee-persistence` | JPA/Hibernate persistence wiring |
+| `guicedee-rabbitmq` | RabbitMQ messaging integration |
+| `guicedee-rest` | JAX-RS REST endpoint wiring |
+| `guicedee-rest-client` | MicroProfile REST Client |
+| `guicedee-swagger-ui` | Swagger UI serving |
+| `guicedee-telemetry` | OpenTelemetry integration |
+| `guicedee-vertx` | Vert.x 5 event-bus, verticles, and reactive wiring |
+| `guicedee-web` | Web module configuration |
+| `guicedee-webservices` | SOAP/XML web services |
+| `guicedee-websockets` | WebSocket integration |
+| `jwebmp-agcharts` | AG Charts community integration |
+| `jwebmp-agcharts-enterprise` | AG Charts enterprise integration |
+| `jwebmp-aggrid-enterprise` | AG Grid enterprise integration |
+| `jwebmp-angular` | Angular integration for JWebMP |
+| `jwebmp-chartjs` | Chart.js integration |
+| `jwebmp-client` | JWebMP client module |
+| `jwebmp-core` | JWebMP core framework (HTML, CSS, events) |
+| `jwebmp-easing` | jQuery easing animations |
+| `jwebmp-fontawesome` | Font Awesome free icons |
+| `jwebmp-fontawesome-pro` | Font Awesome pro icons |
+| `jwebmp-fullcalendar` | FullCalendar community integration |
+| `jwebmp-fullcalendar-pro` | FullCalendar pro integration |
+| `jwebmp-tsclient` | TypeScript client generation |
+| `jwebmp-vertx` | JWebMP Vert.x runtime |
+| `jwebmp-webawesome` | Web Awesome community components |
+| `jwebmp-webawesome-pro` | Web Awesome pro components |
+| `skill-creator` | Skill authoring guide and scaffolding scripts |
+| `skill-installer` | Skill installation from defaults or GitHub |
+
+## Principles
+
+### 🧭 Continuity
+We carry context across threads. We remember conventions and tone. We pick up where we left off.
+
+### 🧩 Finesse
+We refine outputs iteratively. We respect nuance — less brute-forcing, more shaping. We preserve language, structure, and intent.
+
+### 🌿 Collaborative Flow
+This is not a question-answer transaction. It's a collaborative design conversation that grows over time.
+
+### 🔁 Closing Loops
+Every artifact links forward (to implementation) and backward (to its reasoning). We don't leave threads dangling.
+
+## Forward-Only Change Policy
+
+- Apply requested changes in full: update/remove conflicting documents, indexes, and links in the same change.
+- Do not leave stubs or partial updates; provide complete, final artifacts.
+- Only maintain backwards compatibility if the request explicitly requires it.
+
+## Structure of Work
+
+| Layer | Description | Artifact |
+|-------|-------------|----------|
+| Skills | Modular, self-contained domain knowledge | `skills/` |
+| References | Supporting docs loaded on demand | `skills/**/references/` |
+| Scripts | Executable automation bundled with skills | `skills/**/scripts/` |
+
+### Host project setup
+
+- **Skills** — Install relevant skills via `skill-installer` or reference the submodule directly.
+- **Agent configs** — Use `skill-adopter` to generate agent-native configuration files for your AI tools.
+- **Project docs** — Place project-specific documentation outside the submodule (e.g., under `docs/`).
 
 ## Docs-as-Code Diagrams Policy
 
-All projects using this repository must maintain text-based architecture and technical diagrams that are reviewable by humans and consumable by AI. These documents are version-controlled first-class artifacts and are part of current and future prompts.
+All projects should maintain text-based architecture diagrams that are reviewable by humans and consumable by AI:
 
-Required artifacts
-- C4 Architecture: L1 (Context), L2 (Container), L3 (Component per bounded context). L4 (Code) optional for deep dives.
-- Sequence Diagrams: critical flows (auth, core business, error paths, background jobs), including async boundaries (bus/schedulers).
-- ERDs: core domain models, relationships, bounded context ownership, data lifecycles.
-- Deployment/Runtime: topology (edge, API, workers), environments/regions, significant infra.
+- **C4 Architecture**: L1 (Context), L2 (Container), L3 (Component). L4 optional.
+- **Sequence Diagrams**: Critical flows including async boundaries.
+- **ERDs**: Core domain models, relationships, bounded context ownership.
+- **Deployment/Runtime**: Topology, environments, infrastructure.
 
-Formats
-- Prefer Mermaid in fenced Markdown blocks (```mermaid); PlantUML supported (```plantuml or .puml).
-- Do not commit images without sources; images are optional derivatives only.
-- You can use the Mermaid MCP server to assist with diagram authoring: HTTP endpoint `https://mcp.mermaidchart.com/mcp` with `"type": "http"` or SSE endpoint `https://mcp.mermaidchart.com/sse` with `"type": "sse"`.
+Use Mermaid in fenced Markdown blocks. Commit diagram sources — images are optional derivatives.
 
-Host repository storage (outside rules/)
-- docs/architecture/README.md — index linking all diagrams
-- docs/architecture/c4-context.md — C4 L1
-- docs/architecture/c4-container.md — C4 L2
-- docs/architecture/c4-component-<bounded-context>.md — C4 L3 files
-- docs/architecture/sequence-<flow>.md — sequence diagrams
-- docs/architecture/erd-<domain>.md — ERDs
-- Optional rendered images under docs/architecture/img/ derived from sources
+## Usage Tips
 
-Prompt seeding and traceability
-- Create docs/PROMPT_REFERENCE.md that records selected stacks and glossary composition and links to all diagrams under docs/architecture/. Future prompts for the project must load and honor it.
-- Close the documentation loop: PACT ↔ GLOSSARY ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION must reference and reuse these diagrams.
+- Ask: "What skills are available?" to list discovered skills.
+- Use `skill-installer` to browse and install skills interactively.
+- Use `skill-creator` to author new skills following the standard anatomy.
+- Each skill's `SKILL.md` frontmatter (`name` + `description`) determines when the skill triggers.
+- Skill instructions (body) are loaded only after activation.
 
-Version control mandate
-- Commit diagram sources (Mermaid/PlantUML). Images never replace sources.
+## Notes
 
-## 2. Principles
-
-🧭 Continuity
-
-We carry context across threads.
-
-We remember rules, conventions, and tone.
-
-We pick up where we left off — without re-explaining established patterns.
-
-🧩 Finesse
-
-We refine outputs iteratively.
-
-We respect nuance — less brute-forcing, more shaping.
-
-We preserve language, structure, and intent from prior artifacts (Rules → Guides → Implementation).
-
-🌿 Non-Transactional Flow
-
-This is not a question-answer transaction.
-
-It’s a collaborative design conversation that grows over time.
-
-The goal is clarity and quality — not just completion.
-
-🔁 Closing Loops
-
-We ensure every artifact links forward (to implementation) and backward (to its reasoning).
-
-We don’t leave threads dangling — we close each conceptual loop.
-
-## 3. Structure of Work
-
-| Layer          | Description                                        | Artifact           |
-|----------------|----------------------------------------------------|--------------------|
-| Pact           | Defines our language, ethos, and continuity.       | PACT.md            |
-| Glossary       | Canonical terms and prompt-aligned labels.         | GLOSSARY.md        |
-| Rules          | Define technical and stylistic standards per domain.| RULES.md           |
-| Guides         | Describe the “how” — scaffolding, step-by-step, and process. | GUIDES.md          |
-| Implementation | The tangible code, structure, or design output.    | IMPLEMENTATION.md  |
-
-### Client project setup
-
-- PACT.md
-  - Create at the host project root or under `docs/`.
-  - Establish shared language, ethos, and continuity for the project.
-  - You may draw from or link to the template/ideas in `creative/pact.md` within this repository.
-- GLOSSARY.md
-  - Create at the host project root or under `docs/`.
-  - Compose topic-first from the selected topics: for each selected topic, link to its topic GLOSSARY.md and adopt its canonical terms; topic glossaries take precedence over the root glossary for their scope.
-  - Copy only enforced Prompt Language Alignment mappings and interpretation/routing cues from selected topic glossaries (WebAwesome mappings are one example); for all other terms, link to the topic file/anchor instead of duplicating definitions.
-  - Use as the single index of terminology across RULES, GUIDES, and IMPLEMENTATION with minimal duplication. Include brief LLM interpretation guidance where relevant (e.g., CRTP vs Builder routing, JSpecify defaults).
-- RULES.md (project-specific)
-  - Lives in the host project (outside the submodule).
-  - Extends/overrides enterprise rules; link back to specific sections of this submodule (e.g., `/path/to/submodule/RULES.md#section`).
-  - Reference GLOSSARY.md for naming/terminology constraints.
-- GUIDES.md (+ guide files)
-  - Host project guidance on how to apply rules, scaffolding, and processes.
-  - Link back to enterprise guides under the submodule's `generative/` directory where relevant.
-  - Use glossary-aligned terms consistently.
-- IMPLEMENTATION.md
-  - Links to concrete code, structures, and design artifacts.
-  - Close the loop by linking back to the rule or guide that justified the implementation.
-  - Ensure implementation names and labels adhere to GLOSSARY.md.
-
-### Linking guidance (closing loops)
-
-- From PACT → GLOSSARY: establish shared language; record canonical terms and aligned labels.
-- From GLOSSARY → RULES: reference glossary terms where naming/terminology is enforced.
-- From RULES → GUIDES: show how to apply each standard with step-by-step guidance using glossary-aligned terms.
-- From GUIDES → IMPLEMENTATION: link to the code and design produced, maintaining glossary-aligned terminology.
-- From IMPLEMENTATION → back-links: reference the guide and rule that informed the solution and keep names consistent with GLOSSARY.md.
-- Glossary precedence: topic-scoped GLOSSARY.md documents override root terms for their scope; the host project’s GLOSSARY.md aggregates links to topic glossaries and avoids duplicating definitions.
-
-By following the above, client projects retain local autonomy while staying aligned with enterprise standards provided by this repository.
-
-
-## Component topic indexes
-Component-driven rule subsets provide a parent README.md that indexes components and links to their rule files and relevant subsections. Choose the framework/topic that matches your host project, then navigate via the index.
-
-Example: WebAwesome components index — generative/frontend/webawesome/README.md
-- “button” → generative/frontend/webawesome/button.rules.md
-- “number input” → generative/frontend/webawesome/input.rules.md#number-input
-
-Note on prompt language alignment (topic-scoped; WebAwesome example):
-- Derive mappings and interpretation/routing cues from selected topic glossaries only; do not emit inactive/unselected-topic status lines.
-- When prompting for WebAwesome UI, use the aligned component names to ensure correct routing:
-  - “button” → say “WaButton”
-  - “icon button” → say “WaIconButton”
-  - “input” → say “WaInput”
-  - “row” (layout) → say “WaCluster”
-  - “column/stack” (layout) → say “WaStack”
-See generative/frontend/webawesome/README.md → Prompt Language Alignment for details.
-
-Example: Web Components topic index — generative/frontend/webcomponents/README.md
-- “custom elements” → generative/frontend/webcomponents/custom-elements.md
-- “Angular 20 Web Components guide” → generative/frontend/webcomponents/angular20-overview.md
-
-Example: Hibernate 7 Reactive topic index — generative/backend/hibernate/README.md
-- “transactions” → generative/backend/hibernate/hibernate-7-reactive-transactions.md
-- “CRUD” → generative/backend/hibernate/hibernate-7-reactive-crud.md
-- “Testcontainers setup” → generative/backend/hibernate/hibernate-7-reactive-testing.md
-
-### Prompt → Path Resolution Examples
-- “WebAwesome button” → generative/frontend/webawesome/button.rules.md
-- “Number input (WebAwesome)” → generative/frontend/webawesome/input.rules.md#number-input
-- “Custom elements” → generative/frontend/webcomponents/custom-elements.md
-- “Angular 20 consuming web components” → generative/frontend/webcomponents/angular20-consuming-web-components.md
-- “React overview” → generative/language/react/react-overview.md
-- “Web Components in React” → generative/language/react/react-web-components.md
-- “Vue overview” → generative/language/vue/vue-overview.md
-- “Vue Composition API guide” → generative/language/vue/vue-composition-api.md
-- “Web Components in Vue” → generative/language/vue/vue-web-components.md
-- “Next.js overview” → generative/frontend/nextjs/nextjs-overview.md
-- “Next.js SSR vs SSG” → generative/frontend/nextjs/nextjs-ssr-ssg.md
-- “Next.js security” → generative/frontend/nextjs/nextjs-security.md
-- “Nuxt overview” → generative/frontend/nuxt/nuxt-overview.md
-- “Nuxt routing/data” → generative/frontend/nuxt/nuxt-routing-data.md
-- “Hibernate 7 Reactive transactions” → generative/backend/hibernate/hibernate-7-reactive-transactions.md
-- “Postgres setup docs” → generative/data/database/postgres-database.md
-
-### Platform guides
-- Platform category index — generative/platform/README.md
-- Observability topic index — generative/platform/observability/README.md
-- Security & Auth topic index — generative/platform/security-auth/README.md
-- Env variables reference — generative/platform/secrets-config/env-variables.md
-- Health endpoints conventions — generative/platform/observability/health.md
-- Terraform examples — generative/platform/ci-cd/terraform/
-
-## Behavioral agreements and technical commitments
-
-For collaboration norms and generation guarantees, see:
-- RULES.md — 4. Behavioral Agreements
-- RULES.md — 5. Technical Commitments
-
-These govern language, continuity, transparency, boundaries, iteration, attribution, formatting, consistency, traceability, tool handling, and limitation disclosure.
-
-
-## Operational prompts and checklists
-
-To execute the generative/ taxonomy restructure, use the following root-level artifacts:
-- PROMPT_RESTRUCTURE_GENERATIVE.md — AI execution prompt for restructuring `generative/` into category taxonomy (forward-only).
-- TODO_GENERATIVE_TAXONOMY_RESTRUCTURE.md — maintainer TODO with step-by-step tasks.
-- CHECKLIST_GENERATIVE_TAXONOMY_VALIDATION.md — validation checklist and link integrity steps.
-
-
-## Agent Workspace Files (multi-provider)
-
-This repository now includes a comprehensive, provider-agnostic Agent Skills/workspace setup.
-
-Canonical entrypoint:
-- `AGENTS.md` (provider-agnostic policy and routing)
-
-Shared skills catalog:
-- `skills.md`
-
-Claude project Skills:
-- `.claude/skills/rules-repo-conventions/SKILL.md`
-- `.claude/skills/rules-catalog/SKILL.md`
-- `.claude/skills/rules-repo-registration-usage/SKILL.md`
-- `.claude/skills/rules-frontend/SKILL.md`
-- `.claude/skills/rules-backend/SKILL.md`
-- `.claude/skills/rules-data/SKILL.md`
-- `.claude/skills/rules-platform/SKILL.md`
-- `.claude/skills/rules-language/SKILL.md`
-- `.claude/skills/rules-architecture/SKILL.md`
-
-Provider adapters:
-- GitHub Copilot — `.github/copilot-instructions.md`
-- Cursor — `.cursor/rules.md`
-- Junie — `.junie/guidelines.md`
-- AI Assistant — `.aiassistant/rules/`
-- Roo — `ROO_WORKSPACE_POLICY.md`
-
-Owner mode (this repository is the active workspace; not used as a submodule):
-- Do not refer to this repository as a submodule.
-- Claude should load ./skills.md and use project-scoped Skills under .claude/skills/.
-- Apply forward-only edits and close loops (Pact ↔ Rules ↔ Guides ↔ Implementation).
-- If skill discovery is incomplete, open required skill files directly from `skills.md` and continue routing.
-- Keep implementation library-first: use concrete APIs/SPI contracts from selected topic rules before adding new interfaces.
-
-Host project mode (downstream projects that consume these rules):
-- Use this repository as a Git submodule and link back to it from host artifacts (PACT, RULES, GUIDES, IMPLEMENTATION).
-- The same routing policy applies in host repos: missing runtime skill discovery is not permission for unguided/direct implementation.
-
-Usage tips:
-- Ask: "What Skills are available?" to list discovered skills.
-- Inspect policy/routing first: open `AGENTS.md`
-- Inspect the skills catalog: open `skills.md`
-- Regenerate the rules catalog after rules changes: `.claude/skills/rules-catalog/scripts/build-rules-catalog.sh`
-- Validate generated rules references: `.claude/skills/rules-catalog/scripts/check-rules-catalog.sh`
-- Validate provider workspace files: `.claude/skills/rules-catalog/scripts/check-agent-workspaces.sh`
-
-Notes:
-- Keep Skills focused; use lowercase-hyphen names and valid YAML frontmatter.
-- Prefer relative links and forward-only changes, consistent with RULES.md.
+- Keep skills focused and concise — the context window is shared with everything else.
+- Use lowercase-hyphen names for skill directories.
+- Each skill must have valid YAML frontmatter with `name` and `description`.
+- Prefer relative links within skills.

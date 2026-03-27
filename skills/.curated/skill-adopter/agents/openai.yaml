@@ -1,0 +1,5 @@
+interface:
+  display_name: "Skill Adopter"
+  short_description: "Adopt enterprise skills into a project for any AI agent"
+  default_prompt: "Use $skill-adopter to scan this project, select relevant enterprise skills, and generate or update AI agent configuration files for the agents I use."
+

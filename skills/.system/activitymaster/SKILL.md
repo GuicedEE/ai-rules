@@ -540,7 +540,7 @@ Activity Master follows strict documentation governance:
 ### Documentation-as-Code Policy
 
 1. **Stage 1** — Architecture diagrams (C4 context/container/component, sequences, ERD)
-2. **Stage 2** — Rules, guides, glossary artifacts
+2. **Stage 2** — Skills, glossary, and domain documentation
 3. **Stage 3** — Implementation code
 4. **Stage 4** — Testing and validation
 
@@ -548,19 +548,15 @@ Activity Master follows strict documentation governance:
 
 ### Key Documents
 
-- **PACT.md** — Human–AI collaboration pact and stage approvals
-- **RULES.md** — Project conventions and stack references
-- **GUIDES.md** — How-to guidance and API mappings
 - **GLOSSARY.md** — Topic-first terminology
-- **IMPLEMENTATION.md** — Module layout and runtime expectations
 - **docs/architecture/** — C4/sequence/ERD diagrams (Mermaid)
 - **docs/PROMPT_REFERENCE.md** — Selected stacks and toolchain
 
-### Rules Repository
+### Skills Repository
 
-The `rules/` submodule is the canonical source for enterprise RULES, GUIDES, and GLOSSARY artifacts. Host-specific docs live at repo root and link back to the submodule.
+The skills submodule is the canonical source for enterprise skills and domain knowledge. Host-specific docs live at repo root and link back to the submodule.
 
-**Important:** Treat `rules/` as read-only; do not modify its contents.
+**Important:** Treat the skills submodule as read-only; do not modify its contents.
 
 ## Service APIs
 
