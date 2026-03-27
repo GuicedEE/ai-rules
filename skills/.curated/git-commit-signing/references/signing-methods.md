@@ -34,7 +34,7 @@ gpg --list-secret-keys --keyid-format=long
 
 ### Export your public key (to upload to GitHub/GitLab)
 ```bash
-gpg --armor --export 3AA5C34371567BD2
+gpg --armor --export 3AA5C34371234567 > ~/.ssh/id_rsa.pub
 ```
 
 ### Configure git
