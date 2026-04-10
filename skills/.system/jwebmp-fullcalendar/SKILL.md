@@ -1,13 +1,13 @@
 ---
 name: jwebmp-fullcalendar
-description: Full-featured calendar integration for JWebMP with FullCalendar 6.1.19 and Angular 20. Provides server-driven calendar configuration with drag-and-drop event scheduling, multiple calendar views (day, week, month, list, timeline), timezone support, localization, recurring events, resource management, and Bootstrap 5 theming. Use when working with FullCalendar, creating scheduling interfaces, building event calendars, managing resources, or implementing calendar features in JWebMP applications.
+description: Full-featured calendar integration for JWebMP with FullCalendar 6.1.19 and Angular 21. Provides server-driven calendar configuration with drag-and-drop event scheduling, multiple calendar views (day, week, month, list, timeline), timezone support, localization, recurring events, resource management, and Bootstrap 5 theming. Use when working with FullCalendar, creating scheduling interfaces, building event calendars, managing resources, or implementing calendar features in JWebMP applications.
 metadata:
   short-description: FullCalendar 6.1.19 calendar integration
 ---
 
 # JWebMP FullCalendar
 
-Full-featured calendar integration for JWebMP with FullCalendar 6.1.19 and Angular 20.
+Full-featured calendar integration for JWebMP with FullCalendar 6.1.19 and Angular 21.
 
 ## Core Features
 

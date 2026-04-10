@@ -1,4 +1,4 @@
 interface:
   display_name: "JWebMP Angular"
-  short_description: "Generate Angular 20 apps from Java annotations"
+  short_description: "Generate Angular 21 apps from Java annotations"
   default_prompt: "Use $jwebmp-angular to generate TypeScript, configure Angular components, set up routing, manage WebSocket communication, and build Angular applications from Java."

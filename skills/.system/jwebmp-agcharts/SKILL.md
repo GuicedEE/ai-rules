@@ -1,19 +1,19 @@
 ---
 name: jwebmp-agcharts
-description: Enterprise-grade charting library integration for JWebMP with Angular 20. Provides CRTP-based fluent Java API for AG Charts 13.1.0 with TypeScript type generation, reactive data binding, and server-side chart configuration. Supports line, bar, area, scatter, bubble, pie, donut, histogram charts with advanced axes, theming, tooltips, legends, zoom, and navigator components. Use when working with AG Charts, creating data visualizations, configuring chart options, building dashboards, or implementing charting features in JWebMP applications.
+description: Enterprise-grade charting library integration for JWebMP with Angular 21. Provides CRTP-based fluent Java API for AG Charts 13.1.0 with TypeScript type generation, reactive data binding, and server-side chart configuration. Supports line, bar, area, scatter, bubble, pie, donut, histogram charts with advanced axes, theming, tooltips, legends, zoom, and navigator components. Use when working with AG Charts, creating data visualizations, configuring chart options, building dashboards, or implementing charting features in JWebMP applications.
 metadata:
   short-description: AG Charts 13.1.0 charting integration
 ---
 
 # JWebMP AG Charts
 
-Enterprise-grade charting library integration for JWebMP with AG Charts 13.1.0 and Angular 20.
+Enterprise-grade charting library integration for JWebMP with AG Charts 13.1.0 and Angular 21.
 
 ## Core Features
 
 - **Complete AG Charts 13.1.0 API** — All 38 official chart options implemented
 - **CRTP Fluent Builders** — Type-safe, self-referencing setters
-- **Angular 20 Integration** — Seamless component integration
+- **Angular 21 Integration** — Seamless component integration
 - **TypeScript Type Generation** — Automatic interface generation
 - **Reactive Data Binding** — Real-time chart updates
 - **Multiple Chart Types** — Line, Bar, Area, Scatter, Bubble, Pie, Donut, Histogram
