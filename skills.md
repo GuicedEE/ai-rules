@@ -98,6 +98,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `guicedee-metrics` | `skills/.system/guicedee-metrics/SKILL.md` | MicroProfile Metrics |
 | `guicedee-openapi` | `skills/.system/guicedee-openapi/SKILL.md` | OpenAPI/Swagger integration |
 | `guicedee-persistence` | `skills/.system/guicedee-persistence/SKILL.md` | JPA/Hibernate persistence wiring |
+| `guicedee-kafka` | `skills/.system/guicedee-kafka/SKILL.md` | Kafka messaging |
 | `guicedee-rabbitmq` | `skills/.system/guicedee-rabbitmq/SKILL.md` | RabbitMQ messaging |
 | `guicedee-rest` | `skills/.system/guicedee-rest/SKILL.md` | JAX-RS REST endpoints |
 | `guicedee-rest-client` | `skills/.system/guicedee-rest-client/SKILL.md` | MicroProfile REST Client |

@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Kafka"
+  short_description: "Annotation-driven Kafka messaging inside GuicedEE"
+  default_prompt: "Use $guicedee-kafka to add Kafka connections, topics, consumers, and publishers with annotation-driven configuration in my GuicedEE module."
+
