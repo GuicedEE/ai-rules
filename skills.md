@@ -87,6 +87,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 
 | Skill | Path | Use for |
 |-------|------|---------|
+| `guicedee-auth` | `skills/.system/guicedee-auth/SKILL.md` | Authentication and authorization (OAuth2, JWT, ABAC, OTP, Property File, LDAP, htpasswd, htdigest) |
 | `guicedee-cdi` | `skills/.system/guicedee-cdi/SKILL.md` | CDI integration |
 | `guicedee-cerial` | `skills/.system/guicedee-cerial/SKILL.md` | Serialization framework |
 | `guicedee-client` | `skills/.system/guicedee-client/SKILL.md` | HTTP client integration |
@@ -99,6 +100,8 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `guicedee-openapi` | `skills/.system/guicedee-openapi/SKILL.md` | OpenAPI/Swagger integration |
 | `guicedee-persistence` | `skills/.system/guicedee-persistence/SKILL.md` | JPA/Hibernate persistence wiring |
 | `guicedee-kafka` | `skills/.system/guicedee-kafka/SKILL.md` | Kafka messaging |
+| `guicedee-hazelcast` | `skills/.system/guicedee-hazelcast/SKILL.md` | Hazelcast clustering, Vert.x cluster manager, JCache, distributed data structures |
+| `guicedee-mail-client` | `skills/.system/guicedee-mail-client/SKILL.md` | SMTP mail client |
 | `guicedee-rabbitmq` | `skills/.system/guicedee-rabbitmq/SKILL.md` | RabbitMQ messaging |
 | `guicedee-rest` | `skills/.system/guicedee-rest/SKILL.md` | JAX-RS REST endpoints |
 | `guicedee-rest-client` | `skills/.system/guicedee-rest-client/SKILL.md` | MicroProfile REST Client |

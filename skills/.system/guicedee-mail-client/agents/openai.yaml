@@ -1,0 +1,5 @@
+interface:
+  display_name: "GuicedEE Mail Client"
+  short_description: "Annotation-driven SMTP mail client inside GuicedEE"
+  default_prompt: "Use $guicedee-mail-client to add SMTP mail connections and send emails with annotation-driven configuration in my GuicedEE module."
+
