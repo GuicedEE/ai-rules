@@ -76,7 +76,7 @@ Core FSDM implementation with domain entities and services:
 
 ```xml
 <dependency>
-  <groupId>com.guicedee.activitymaster</groupId>
+  <groupId>com.activity-master</groupId>
   <artifactId>activity-master</artifactId>
 </dependency>
 ```
@@ -93,7 +93,7 @@ Client library for consuming Activity Master services:
 
 ```xml
 <dependency>
-  <groupId>com.guicedee.activitymaster</groupId>
+  <groupId>com.activity-master</groupId>
   <artifactId>activity-master-client</artifactId>
 </dependency>
 ```
@@ -112,7 +112,7 @@ Bill of Materials for version management:
 <dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>com.guicedee.activitymaster</groupId>
+      <groupId>com.activity-master</groupId>
       <artifactId>activitymaster-bom</artifactId>
       <version>${activitymaster.version}</version>
       <type>pom</type>
@@ -729,7 +729,7 @@ assertNotNull(factory);
 <dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>com.guicedee.activitymaster</groupId>
+      <groupId>com.activity-master</groupId>
       <artifactId>activitymaster-bom</artifactId>
       <version>${activitymaster.version}</version>
       <type>pom</type>
@@ -740,13 +740,13 @@ assertNotNull(factory);
 
 <!-- Core module -->
 <dependency>
-  <groupId>com.guicedee.activitymaster</groupId>
+  <groupId>com.activity-master</groupId>
   <artifactId>activity-master</artifactId>
 </dependency>
 
 <!-- Client module -->
 <dependency>
-  <groupId>com.guicedee.activitymaster</groupId>
+  <groupId>com.activity-master</groupId>
   <artifactId>activity-master-client</artifactId>
 </dependency>
 ```

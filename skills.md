@@ -101,6 +101,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `guicedee-persistence` | `skills/.system/guicedee-persistence/SKILL.md` | JPA/Hibernate persistence wiring |
 | `guicedee-kafka` | `skills/.system/guicedee-kafka/SKILL.md` | Kafka messaging |
 | `guicedee-hazelcast` | `skills/.system/guicedee-hazelcast/SKILL.md` | Hazelcast clustering, Vert.x cluster manager, JCache, distributed data structures |
+| `guicedee-ibmmq` | `skills/.system/guicedee-ibmmq/SKILL.md` | IBM MQ messaging (JMS 3.0, queues, topics, transacted sessions, durable subscriptions) |
 | `guicedee-mail-client` | `skills/.system/guicedee-mail-client/SKILL.md` | SMTP mail client |
 | `guicedee-rabbitmq` | `skills/.system/guicedee-rabbitmq/SKILL.md` | RabbitMQ messaging |
 | `guicedee-rest` | `skills/.system/guicedee-rest/SKILL.md` | JAX-RS REST endpoints |
