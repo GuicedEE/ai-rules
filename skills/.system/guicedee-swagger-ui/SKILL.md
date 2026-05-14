@@ -19,7 +19,7 @@ Add the dependency and a fully functional Swagger UI is mounted at `/swagger/` a
    ```xml
    <dependency>
      <groupId>com.guicedee</groupId>
-     <artifactId>guiced-swagger-ui</artifactId>
+     <artifactId>swagger-ui</artifactId>
    </dependency>
    <dependency>
      <groupId>com.guicedee</groupId>

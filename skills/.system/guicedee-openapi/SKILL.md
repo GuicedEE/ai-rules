@@ -54,7 +54,7 @@ Add the `guiced-swagger-ui` module for a browsable UI at `/swagger/`:
 ```xml
 <dependency>
   <groupId>com.guicedee</groupId>
-  <artifactId>guiced-swagger-ui</artifactId>
+  <artifactId>swagger-ui</artifactId>
 </dependency>
 ```
 
