@@ -192,7 +192,7 @@ private IActivityMasterService activityMaster;
 @Inject
 private IEnterpriseService enterpriseService;
 
-public void createEnterprise() {
+public Uni<Void> createEnterprise() {
     // Create new enterprise with fluent builder
     Enterprise enterprise = new Enterprise()
         .setName("ACME Corporation")
@@ -200,9 +200,9 @@ public void createEnterprise() {
         .setActiveFlag(ActiveFlag.Active);
 
     // Persist reactively
-    enterpriseService.createEnterprise(enterprise)
+    return enterpriseService.createEnterprise(enterprise)
         .invoke(created -> log.info("Created: {}", created.getId()))
-        .await().indefinitely();
+        .replaceWithVoid();
 }
 ```
 
@@ -221,18 +221,25 @@ public interface IEnterpriseService {
 }
 ```
 
-### Token Cache
+### SessionUtils System Context (Preferred)
 
-Built-in token caching for system operations:
+When code must resolve enterprise + system + system token(s), use `SessionUtils.withActivityMaster(...)`.
+This is the canonical mechanism for system-context operations.
 
 ```java
-// System token cache helper
-String systemToken = SYSTEM_TOKEN_CACHE.get();
+import com.guicedee.activitymaster.fsdm.client.services.SessionUtils;
 
-// Use cached token for service calls
-enterpriseService.getEnterprise(id, systemToken)
-    .await().indefinitely();
+SessionUtils.withActivityMaster("acme", "classification-loader", tuple -> {
+    Mutiny.Session session = tuple.getItem1();
+    IEnterprise<?, ?> enterprise = tuple.getItem2();
+    ISystems<?, ?> system = tuple.getItem3();
+    UUID[] tokens = tuple.getItem4();
+
+    return classificationService.ensureDefaults(session, enterprise, system, tokens[0]);
+});
 ```
+
+Do not hand-roll enterprise/system/token resolution when this helper applies.
 
 ## ActiveFlag Lifecycle
 
@@ -467,7 +474,7 @@ public class ActivityMasterTest {
                         assertEquals("Test Corp", retrieved.get().getName());
                     })
             )
-        ).await().indefinitely();
+        ).replaceWithVoid();
     }
 }
 ```
@@ -485,7 +492,7 @@ EnterpriseCreateRequest request = new EnterpriseCreateRequest()
     .setSecurityToken(token);
 
 enterpriseService.create(request)
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ### Query Builders
@@ -493,13 +500,12 @@ enterpriseService.create(request)
 ```java
 // Type-safe query building
 var qb = new Enterprise().builder(session);
-List<Enterprise> results = qb
+Uni<List<Enterprise>> results = qb
     .where(qb.getAttribute("name"), Operand.Like, "ACME%")
     .where(qb.getAttribute("activeFlag"), Operand.Equals, ActiveFlag.Active)
     .orderBy(qb.getAttribute("name"), OrderByType.ASC)
     .setMaxResults(50)
-    .getAll()
-    .await().indefinitely();
+    .getAll();
 ```
 
 ## Configuration & Environment
@@ -616,16 +622,22 @@ public interface IEventsService {
 
 ## Best Practices
 
+### 0. Non-Blocking Rule
+
+Never use `await().indefinitely()` in service flows. Always return `Uni` and continue work via `chain(...)`/`invoke(...)` composition.
+
 ### 1. Security Token Propagation
 
-Always pass `SecurityToken` for access-controlled operations:
+For system-context work, resolve context through `SessionUtils.withActivityMaster(...)` first, then pass the provided token(s) into downstream access-controlled operations:
 
 ```java
 // ✅ Good
-enterpriseService.getEnterprise(id, token);
+SessionUtils.withActivityMaster("acme", "resource-sync", tuple ->
+    resourceItemService.sync(tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4()[0])
+);
 
 // ❌ Bad
-enterpriseService.getEnterprise(id, null);  // No security context
+resourceItemService.sync(session, enterprise, system, null);  // No security context
 ```
 
 ### 2. ActiveFlag Management
@@ -649,13 +661,15 @@ Chain operations with `Uni`:
 // ✅ Good - Reactive chaining
 enterpriseService.createEnterprise(enterprise)
     .chain(created -> addressService.createAddress(address, created.getId()))
-    .await().indefinitely();
+    .replaceWithVoid();
 
 // ❌ Bad - Blocking
-Enterprise created = enterpriseService.createEnterprise(enterprise)
-    .await().indefinitely();
-Address address = addressService.createAddress(address, created.getId())
-    .await().indefinitely();
+enterpriseService.createEnterprise(enterprise)
+    .subscribe().with(created -> {
+        // Breaks chain composition and error propagation across async boundaries
+        addressService.createAddress(address, created.getId()).subscribe().with(_ -> {
+        });
+    });
 ```
 
 ### 4. JPMS Module Declarations

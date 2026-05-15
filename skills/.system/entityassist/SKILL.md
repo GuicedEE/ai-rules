@@ -130,7 +130,7 @@ sessionFactory.withSession(session ->
         entity.builder(session)
               .persist(entity)
     )
-).await().indefinitely();
+).replaceWithVoid();
 ```
 
 ### Find by ID
@@ -141,7 +141,7 @@ sessionFactory.withSession(session ->
         .builder(session)
         .find("test1")
         .get()                       // Uni<EntityClass>
-).await().indefinitely();
+);
 ```
 
 ### Where / Or / OrderBy
@@ -453,13 +453,14 @@ public class EntityAssistReactiveTest {
                 assertNotNull(found);
                 assertEquals("test1", found.getId());
             })
-        ).await().indefinitely();
+        ).replaceWithVoid();
     }
 }
 ```
 
 ## Best Practices
 
+- Never use `await().indefinitely()` in service flows; return `Uni` and keep composition with `chain(...)` / `invoke(...)`
 - Always run in Vert.x context (event loop or worker)
 - Prefer projections for read-heavy paths
 - Use `setFirstResults()` / `setMaxResults()` for pagination

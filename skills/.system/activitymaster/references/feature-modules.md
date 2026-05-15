@@ -134,7 +134,7 @@ conversationsService.createConversation(conversation, List.of(userId1, userId2, 
     .chain(created ->
         conversationsService.sendMessage(created.getId(), "Welcome to the team!", userId1, token)
     )
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ---
@@ -966,7 +966,7 @@ tasksService.createTask(task, assigneeId, creatorId)
                 return taskDocumentService.linkDocument(created.getId(), doc.getId(), token);
             })
     )
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ### Event-Driven Integration

@@ -88,7 +88,7 @@ Enterprise enterprise = new Enterprise()
 
 enterpriseService.createEnterprise(enterprise)
     .invoke(created -> log.info("Created enterprise: {}", created.getId()))
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Enterprise Hierarchy
@@ -108,7 +108,7 @@ enterpriseService.createEnterprise(parent)
             token
         )
     )
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Search Enterprises
@@ -118,7 +118,7 @@ enterpriseService.searchEnterprises("ACME", token)
     .invoke(results -> {
         results.forEach(e -> log.info("Found: {}", e.getName()));
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ---
@@ -219,7 +219,7 @@ Address address = new Address()
 
 addressService.createAddress(address, enterpriseId)
     .invoke(created -> log.info("Address created: {}", created.getId()))
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Validate and Geocode
@@ -232,7 +232,7 @@ addressService.validateAddress(address)
     .invoke(geocoded -> {
         log.info("Coordinates: {}, {}", geocoded.getLatitude(), geocoded.getLongitude());
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ---
@@ -338,7 +338,7 @@ Event event = new Event()
 
 eventsService.createEvent(event, enterpriseId)
     .invoke(created -> log.info("Event created: {}", created.getId()))
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Add Participants
@@ -349,7 +349,7 @@ eventsService.createEvent(event, enterpriseId)
         eventsService.addParticipant(created.getId(), participantId1, token)
             .chain(() -> eventsService.addParticipant(created.getId(), participantId2, token))
     )
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### List Upcoming Events
@@ -361,7 +361,7 @@ eventsService.listUpcomingEvents(token)
             log.info("Upcoming: {} at {}", e.getTitle(), e.getStartTime())
         );
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ---
@@ -456,7 +456,7 @@ arrangementsService.checkAvailability(resourceId, arrangement.getStartTime(), ar
         }
     })
     .invoke(created -> log.info("Arrangement created: {}", created.getId()))
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Find Conflicts
@@ -471,7 +471,7 @@ arrangementsService.findConflicts(resourceId, startTime, endTime)
             );
         }
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ---
@@ -564,7 +564,7 @@ ResourceItem resource = new ResourceItem()
 
 resourceItemService.createResource(resource, enterpriseId)
     .invoke(created -> log.info("Resource created: {}", created.getId()))
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### List Bookable Resources
@@ -576,7 +576,7 @@ resourceItemService.listBookableResources(token)
             log.info("Available: {} ({})", r.getName(), r.getResourceType())
         );
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Check Availability and Quantity
@@ -592,7 +592,7 @@ resourceItemService.checkAvailability(resourceId, startTime, endTime)
             return Uni.createFrom().voidItem();
         }
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ---
@@ -687,7 +687,7 @@ classificationService.createClassification(root)
             token
         )
     )
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Get Classification Tree
@@ -699,7 +699,7 @@ classificationService.getClassificationTree(rootId, token)
             log.info("Classification: {} ({})", c.getName(), c.getCode())
         );
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 #### Find by Code
@@ -709,7 +709,7 @@ classificationService.getClassificationByCode("PROD-ELEC", token)
     .invoke(optional ->
         optional.ifPresent(c -> log.info("Found: {}", c.getName()))
     )
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ---
@@ -746,7 +746,20 @@ All read/update/delete operations require `SecurityToken`:
 SecurityToken token = SecurityToken.fromRequest(request);
 
 enterpriseService.getEnterprise(id, token)
-    .await().indefinitely();
+    .replaceWithVoid();
+```
+
+For system-driven workflows (scheduled tasks, bootstrap loaders, background sync), prefer `SessionUtils.withActivityMaster(...)` to resolve enterprise + system + token context in one place:
+
+```java
+SessionUtils.withActivityMaster("acme", "classification-loader", tuple ->
+    classificationService.refreshDefaults(
+        tuple.getItem1(),
+        tuple.getItem2(),
+        tuple.getItem3(),
+        tuple.getItem4()[0]
+    )
+);
 ```
 
 ### ActiveFlag Pattern
@@ -777,7 +790,7 @@ Uni.combine().all().unis(
         var address = tuple.getItem2();
         var event = tuple.getItem3();
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
 
 ### Error Handling
@@ -790,5 +803,5 @@ enterpriseService.getEnterprise(id, token)
             log.warn("Enterprise not found: {}", id);
         }
     })
-    .await().indefinitely();
+    .replaceWithVoid();
 ```
