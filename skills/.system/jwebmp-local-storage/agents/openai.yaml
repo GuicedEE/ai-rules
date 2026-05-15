@@ -1,0 +1,3 @@
+display_name: "Local Storage"
+short_description: "Local Storage integration for JWebMP"
+default_prompt: "Help me work with Local Storage in JWebMP"

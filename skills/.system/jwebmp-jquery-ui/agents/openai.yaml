@@ -1,0 +1,3 @@
+display_name: "jQuery UI"
+short_description: "jQuery UI integration for JWebMP"
+default_prompt: "Help me work with jQuery UI in JWebMP"

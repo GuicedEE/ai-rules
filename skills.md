@@ -115,21 +115,85 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 
 ### JWebMP
 
+#### Core & Foundation
+
 | Skill | Path | Use for |
 |-------|------|---------|
-| `jwebmp-agcharts` | `skills/.system/jwebmp-agcharts/SKILL.md` | AG Charts community integration |
-| `jwebmp-agcharts-enterprise` | `skills/.system/jwebmp-agcharts-enterprise/SKILL.md` | AG Charts enterprise integration |
-| `jwebmp-aggrid-enterprise` | `skills/.system/jwebmp-aggrid-enterprise/SKILL.md` | AG Grid enterprise integration |
-| `jwebmp-angular` | `skills/.system/jwebmp-angular/SKILL.md` | Angular integration for JWebMP |
-| `jwebmp-chartjs` | `skills/.system/jwebmp-chartjs/SKILL.md` | Chart.js integration |
+| `jwebmp-core` | `skills/.system/jwebmp-core/SKILL.md` | JWebMP core framework (HTML, CSS, events, page configurators) |
 | `jwebmp-client` | `skills/.system/jwebmp-client/SKILL.md` | JWebMP client module |
-| `jwebmp-core` | `skills/.system/jwebmp-core/SKILL.md` | JWebMP core framework (HTML, CSS, events) |
-| `jwebmp-easing` | `skills/.system/jwebmp-easing/SKILL.md` | jQuery easing animations |
+| `jwebmp-vertx` | `skills/.system/jwebmp-vertx/SKILL.md` | JWebMP Vert.x event bus runtime |
+| `jwebmp-tsclient` | `skills/.system/jwebmp-tsclient/SKILL.md` | TypeScript client code generation |
+
+#### Data & Analytics
+
+| Skill | Path | Use for |
+|-------|------|---------|
+| `jwebmp-aggrid` | `skills/.system/jwebmp-aggrid/SKILL.md` | AG Grid community data tables |
+| `jwebmp-aggrid-enterprise` | `skills/.system/jwebmp-aggrid-enterprise/SKILL.md` | AG Grid enterprise data grids |
+| `jwebmp-agcharts` | `skills/.system/jwebmp-agcharts/SKILL.md` | AG Charts community integration |
+| `jwebmp-agcharts-enterprise` | `skills/.system/jwebmp-agcharts-enterprise/SKILL.md` | AG Charts enterprise visualization |
+| `jwebmp-chartjs` | `skills/.system/jwebmp-chartjs/SKILL.md` | Chart.js charting |
+| `jwebmp-c3` | `skills/.system/jwebmp-c3/SKILL.md` | C3 D3-based charting |
+| `jwebmp-d3` | `skills/.system/jwebmp-d3/SKILL.md` | D3.js data visualization |
+| `jwebmp-datatables` | `skills/.system/jwebmp-datatables/SKILL.md` | DataTables advanced HTML tables |
+| `jwebmp-jqplot` | `skills/.system/jwebmp-jqplot/SKILL.md` | jqPlot jQuery charting |
+| `jwebmp-easy-pie-chart` | `skills/.system/jwebmp-easy-pie-chart/SKILL.md` | Animated pie charts |
+
+#### UI Frameworks & Components
+
+| Skill | Path | Use for |
+|-------|------|---------|
+| `jwebmp-angular` | `skills/.system/jwebmp-angular/SKILL.md` | Angular framework integration |
+| `jwebmp-angular-forms` | `skills/.system/jwebmp-angular-forms/SKILL.md` | Angular reactive forms |
+| `jwebmp-angular-material` | `skills/.system/jwebmp-angular-material/SKILL.md` | Angular Material design components |
+| `jwebmp-bootstrap` | `skills/.system/jwebmp-bootstrap/SKILL.md` | Bootstrap CSS framework |
+| `jwebmp-webawesome` | `skills/.system/jwebmp-webawesome/SKILL.md` | Web Awesome community components |
+| `jwebmp-webawesome-pro` | `skills/.system/jwebmp-webawesome-pro/SKILL.md` | Web Awesome pro web components |
+
+#### Calendars & Scheduling
+
+| Skill | Path | Use for |
+|-------|------|---------|
+| `jwebmp-fullcalendar` | `skills/.system/jwebmp-fullcalendar/SKILL.md` | FullCalendar community |
+| `jwebmp-fullcalendar-pro` | `skills/.system/jwebmp-fullcalendar-pro/SKILL.md` | FullCalendar pro with advanced features |
+
+#### Icons & Typography
+
+| Skill | Path | Use for |
+|-------|------|---------|
 | `jwebmp-fontawesome` | `skills/.system/jwebmp-fontawesome/SKILL.md` | Font Awesome free icons |
 | `jwebmp-fontawesome-pro` | `skills/.system/jwebmp-fontawesome-pro/SKILL.md` | Font Awesome pro icons |
-| `jwebmp-fullcalendar` | `skills/.system/jwebmp-fullcalendar/SKILL.md` | FullCalendar community |
-| `jwebmp-fullcalendar-pro` | `skills/.system/jwebmp-fullcalendar-pro/SKILL.md` | FullCalendar pro |
-| `jwebmp-tsclient` | `skills/.system/jwebmp-tsclient/SKILL.md` | TypeScript client generation |
-| `jwebmp-vertx` | `skills/.system/jwebmp-vertx/SKILL.md` | JWebMP Vert.x runtime |
-| `jwebmp-webawesome` | `skills/.system/jwebmp-webawesome/SKILL.md` | Web Awesome community components |
-| `jwebmp-webawesome-pro` | `skills/.system/jwebmp-webawesome-pro/SKILL.md` | Web Awesome pro components |
+| `jwebmp-material-design-icons` | `skills/.system/jwebmp-material-design-icons/SKILL.md` | Google Material Design icons |
+| `jwebmp-material-icons` | `skills/.system/jwebmp-material-icons/SKILL.md` | Google Material icons |
+| `jwebmp-glyph-icons` | `skills/.system/jwebmp-glyph-icons/SKILL.md` | Glyph icons |
+| `jwebmp-themify-icons` | `skills/.system/jwebmp-themify-icons/SKILL.md` | Themify icon fonts |
+| `jwebmp-weather-icons` | `skills/.system/jwebmp-weather-icons/SKILL.md` | Weather icon fonts |
+| `jwebmp-skycons` | `skills/.system/jwebmp-skycons/SKILL.md` | Animated weather icons |
+
+#### Library Foundations
+
+| Skill | Path | Use for |
+|-------|------|---------|
+| `jwebmp-jquery` | `skills/.system/jwebmp-jquery/SKILL.md` | jQuery DOM manipulation library |
+| `jwebmp-jquery-ui` | `skills/.system/jwebmp-jquery-ui/SKILL.md` | jQuery UI widgets and interactions |
+| `jwebmp-easing` | `skills/.system/jwebmp-easing/SKILL.md` | jQuery easing animations |
+
+#### Client-Side Storage & Effects
+
+| Skill | Path | Use for |
+|-------|------|---------|
+| `jwebmp-local-storage` | `skills/.system/jwebmp-local-storage/SKILL.md` | Browser local storage persistence |
+| `jwebmp-session-storage` | `skills/.system/jwebmp-session-storage/SKILL.md` | Browser session storage |
+| `jwebmp-waves-effect` | `skills/.system/jwebmp-waves-effect/SKILL.md` | Material Design ripple effects |
+
+#### Utilities & Enhancements
+
+| Skill | Path | Use for |
+|-------|------|---------|
+| `jwebmp-markdown` | `skills/.system/jwebmp-markdown/SKILL.md` | Markdown parsing and rendering |
+| `jwebmp-toastr` | `skills/.system/jwebmp-toastr/SKILL.md` | Toast notification alerts |
+| `jwebmp-prism` | `skills/.system/jwebmp-prism/SKILL.md` | Prism syntax highlighting |
+| `jwebmp-prettify` | `skills/.system/jwebmp-prettify/SKILL.md` | Google Prettify code highlighting |
+| `jwebmp-globalize` | `skills/.system/jwebmp-globalize/SKILL.md` | Internationalization (i18n) |
+| `jwebmp-waypoints` | `skills/.system/jwebmp-waypoints/SKILL.md` | Scroll-triggered callbacks |
+| `jwebmp-plus-as-tab` | `skills/.system/jwebmp-plus-as-tab/SKILL.md` | Plus button tab navigation |

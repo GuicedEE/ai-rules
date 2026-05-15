@@ -1,0 +1,3 @@
+display_name: "Google Prettify"
+short_description: "Google Prettify integration for JWebMP"
+default_prompt: "Help me work with Google Prettify in JWebMP"

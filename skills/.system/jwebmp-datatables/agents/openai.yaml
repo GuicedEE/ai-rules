@@ -1,0 +1,3 @@
+display_name: "DataTables"
+short_description: "DataTables integration for JWebMP"
+default_prompt: "Help me work with DataTables in JWebMP"

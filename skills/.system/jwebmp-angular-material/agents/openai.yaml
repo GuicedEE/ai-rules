@@ -1,0 +1,3 @@
+display_name: "Angular Material"
+short_description: "Angular Material integration for JWebMP"
+default_prompt: "Help me work with Angular Material in JWebMP"

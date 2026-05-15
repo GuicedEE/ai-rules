@@ -1,0 +1,3 @@
+display_name: "Session Storage"
+short_description: "Session Storage integration for JWebMP"
+default_prompt: "Help me work with Session Storage in JWebMP"
