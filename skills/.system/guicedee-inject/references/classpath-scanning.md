@@ -91,6 +91,61 @@ public class MyConfig implements IGuiceConfigurator<MyConfig> {
 
 Without registration, scanning is unrestricted and may incur a performance penalty on large classpaths.
 
+## Enabling Scanning (required for annotation discovery)
+
+Scanning is **off by default** (`classpathScanning`/`pathScanning` start `false`) and
+**GuicedEE ships no `IGuiceConfigurator` that turns it on** — the application must.
+If nothing enables it, `inject()` never runs `loadScanner()`, the `ScanResult` carries
+no class/annotation/package info, and annotation-driven discovery silently finds
+**nothing** (REST `@Path`, service-registry `@RegisteredService`, OpenAPI, etc. all
+come up empty — e.g. *"registry initialized with 0 services"*).
+
+Enable a full scan **before** `inject()`. The canonical one-liner (mirrors the
+framework's own fallback in `IGuiceContext`):
+
+```java
+IGuiceContext.instance()
+    .getConfig()
+    .setClasspathScanning(true)
+    .setAnnotationScanning(true)   // enables enableClassInfo + enableAnnotationInfo
+    .setMethodInfo(true)
+    .setFieldInfo(true);
+IGuiceContext.instance().inject();
+```
+
+`setServiceLoadWithClassPath(true)` is the shorthand that flips all of the above on.
+
+> **Tests boot the same singleton.** A test that calls `inject()` directly must
+> enable scanning the same way in `@BeforeAll` — `main()` is not on the path. The
+> first boot in a JVM wins (the injector is a singleton; later `inject()` calls are
+> no-ops), so every entry point that may boot first must enable scanning.
+
+## Persisting the Scan Graph (skip scanning on later boots)
+
+ClassGraph can serialise a completed scan and rebuild it, so subsequent boots can
+**skip the scan** entirely:
+
+- **Save:** `String json = IGuiceContext.instance().getScanResult().toJSON();` after
+  `inject()` (the scan completes synchronously inside `inject()`).
+- **Reuse:** before `inject()`, deserialise and install it, then disable scanning so
+  the engine doesn't re-scan and overwrite it:
+
+```java
+ScanResult cached = ScanResult.fromJSON(Files.readString(graphFile));
+GuiceContext.instance().setScanResult(cached);                 // concrete GuiceContext
+IGuiceContext.instance().getConfig()
+    .setClasspathScanning(false).setPathScanning(false);       // skip loadScanner()
+IGuiceContext.instance().inject();                             // reuses the cached graph
+```
+
+Because `loadScanner()` only runs when `classpathScanning || pathScanning` is true at
+the `inject()` check, pre-installing the `ScanResult` **and** clearing those flags makes
+`getScanResult()` return the cached graph with no live scan. Requires
+`requires com.guicedee.guicedinjection;` (for `GuiceContext.setScanResult`) and
+`requires io.github.classgraph;`. Gate the write behind a flag and only read when the
+file exists. The serialised graph must come from a scan with class/annotation info
+enabled (see above), or the rebuilt result won't answer annotation queries.
+
 ## Default Exclusions
 
 `GuiceDefaultModuleExclusions` ships with a large exclusion list covering JDK internal modules, common library modules (Guice, Jackson, Hibernate, Hazelcast, Log4j, etc.), and framework modules. These are applied by default and rarely need modification.

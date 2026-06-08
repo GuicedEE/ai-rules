@@ -22,22 +22,25 @@ Annotate your methods with standard `@Counted`, `@Timed`, and custom `@MetricMet
        enabled = true,
        jmxEnabled = true,
        baseName = "my-app",
-       prometheus = @PrometheusOptions(enabled = true, endpoint = "/metrics")
+       prometheus = @MetricsOptions.PrometheusOptions(enabled = true, endpoint = "/metrics")
    )
    public class MyAppConfig {}
    ```
-3. Annotate methods:
+3. Annotate methods. `@Counted`/`@Timed` are the **MicroProfile Metrics** annotations from `org.eclipse.microprofile.metrics.annotation` (packaged in the `com.codahale.metrics` JPMS module, not `com.guicedee.metrics`):
    ```java
-   @Counted(name = "orders-placed", tags = {"env=prod"})
-   public void placeOrder(Order order) { ... }
+   import org.eclipse.microprofile.metrics.annotation.Counted;
+   import org.eclipse.microprofile.metrics.annotation.Timed;
 
-   @Timed(name = "order-processing-time")
-   public void processOrder(Order order) { ... }
+   // absolute = true → use the name verbatim (no declaring-class prefix)
+   @Counted(name = "orders_placed_total", absolute = true, description = "Orders placed")
+   @Timed(name = "order_processing_seconds", absolute = true, description = "Order processing time")
+   public void placeOrder(Order order) { ... }
    ```
-4. Configure `module-info.java`:
+4. Configure `module-info.java`. The MicroProfile annotations require `com.codahale.metrics`:
    ```java
    module my.app {
-       requires com.guicedee.metrics;
+       requires com.guicedee.metrics;   // configurators + Prometheus /metrics endpoint
+       requires com.codahale.metrics;   // @Counted / @Timed annotations + MetricRegistry
        opens my.app.services to com.google.guice;
    }
    ```
@@ -90,8 +93,43 @@ IGuiceContext.instance().inject()
 ## Non-Negotiable Constraints
 
 - Module must `requires com.guicedee.metrics;`.
+- To use `@Counted`/`@Timed`, also `requires com.codahale.metrics;` (that module supplies the MicroProfile annotations **and** the `MetricRegistry`).
 - Intercepted classes must be in packages opened to `com.google.guice`.
+- Interception only fires on **Guice-managed instances** (`IGuiceContext.get(...)` / injected) — calling `new MyResource()` bypasses the AOP interceptors.
 - The metrics module is registered automatically — no `provides` needed.
 - Guice AOP requires non-final, non-private methods for interception.
+
+## Testing
+
+The shared `MetricRegistry` is injectable, so metrics can be asserted directly without scraping `/metrics`. Boot the context, resolve the **Guice-managed** bean (so AOP fires), invoke it, then read the registry:
+
+```java
+@BeforeAll
+static void boot() {
+    IGuiceContext.registerModule("my.app");
+    IGuiceContext.instance().inject();
+}
+
+@Test
+void metricsAreRecorded() {
+    MyResource resource = IGuiceContext.get(MyResource.class); // managed → interceptors fire
+    for (int i = 0; i < 3; i++) resource.placeOrder(order);
+
+    MetricRegistry registry = IGuiceContext.get(MetricRegistry.class);
+
+    // Names carry suffixes/tags in the registry — match by substring
+    Counter counter = registry.getCounters().entrySet().stream()
+        .filter(e -> e.getKey().contains("orders_placed_total"))
+        .map(Map.Entry::getValue).findFirst().orElseThrow();
+    assertTrue(counter.getCount() >= 3);
+
+    Timer timer = registry.getTimers().entrySet().stream()
+        .filter(e -> e.getKey().contains("order_processing_seconds"))
+        .map(Map.Entry::getValue).findFirst().orElseThrow();
+    assertTrue(timer.getCount() >= 3);
+}
+```
+
+Test `module-info.java` needs `requires com.codahale.metrics;` (for `MetricRegistry`/`Counter`/`Timer`) and access to the metered class.
 
 

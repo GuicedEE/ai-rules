@@ -58,6 +58,20 @@ All hooks extend `IDefaultService<J>` (CRTP) — override `sortOrder()` to contr
 - All SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - `sortOrder()` controls execution order — lower runs first.
 - Lifecycle hooks are grouped by `sortOrder()` — all futures in a group must complete before the next group.
+- `IGuicePreStartup.onStartup()` returns `List<Future<Boolean>>` — uses **Vert.x `io.vertx.core.Future`**.
+- `IGuicePostStartup.postLoad()` returns `List<Uni<Boolean>>` — uses **Mutiny `io.smallrye.mutiny.Uni`**.
+- These are DIFFERENT types — do not confuse them.
 
+## Common JPMS Module Names
 
+When adding `requires` directives, use the correct module names:
 
+| Maven Artifact | JPMS Module Name |
+|---|---|
+| `io.vertx:vertx-core` | `io.vertx.core` |
+| `io.vertx:vertx-web` | `io.vertx.web` |
+| `io.vertx:vertx-web-client` | `io.vertx.web.client` |
+| `io.vertx:vertx-service-resolver` | `io.vertx.serviceresolver` |
+| `io.smallrye.reactive:mutiny` | `io.smallrye.mutiny` |
+| `io.github.classgraph:classgraph` | `io.github.classgraph` |
+| `com.google.inject:guice` | `com.google.guice` |

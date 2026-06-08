@@ -1,0 +1,4 @@
+interface:
+  display_name: "GuicedEE Cloud App"
+  short_description: "Scaffold a multi-module GuicedEE cloud application"
+  default_prompt: "Use guicedee-cloud-app to scaffold or audit a multi-module GuicedEE cloud application: aggregator/parent POM, BOM submodule, feature service modules, and the local observability stack."

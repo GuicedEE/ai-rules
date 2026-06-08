@@ -26,6 +26,25 @@ Annotate your classes and methods with `@Trace` and `@SpanAttribute` — the fra
    )
    public class MyAppConfig {}
    ```
+   > **Per-signal endpoints & automatic sub-paths.** `otlpEndpoint` is treated as
+   > a **base** URL — the configurator appends the correct signal sub-path
+   > (`/v1/traces`, `/v1/logs`) automatically when it is missing, so
+   > `http://localhost:4318` and `http://localhost:4318/v1/traces` both work.
+   >
+   > **Tempo/Jaeger are traces-only.** Sending OTLP **logs** to a traces backend
+   > yields **HTTP 404 on `/v1/logs`**. You have two correct options:
+   > - **Disable log export**: `@TelemetryOptions(exportLogs = false)` (no log
+   >   exporter, logger provider, or OTel Log4j2 appender is registered). Ship
+   >   logs to Loki out-of-band (Grafana Alloy / Promtail).
+   > - **Point logs at a logs backend**: set `logsEndpoint` (and optionally
+   >   `tracesEndpoint`) to send each signal to a different collector, e.g.
+   >   `tracesEndpoint = "http://tempo:4318/v1/traces"`,
+   >   `logsEndpoint = "http://loki:3100/otlp/v1/logs"`.
+   >
+   > Standard OTel env vars are honoured too:
+   > `OTEL_EXPORTER_OTLP_ENDPOINT` (base, sub-path appended),
+   > `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` / `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
+   > (full URLs, used verbatim).
 3. Annotate methods to trace:
    ```java
    @Trace("place-order")
@@ -80,7 +99,10 @@ Parent spans are propagated through GuicedEE's `CallScoper`. Nested `@Trace` met
 |---|---|
 | `enabled` | Enable/disable tracing |
 | `serviceName` | OpenTelemetry service name |
-| `otlpEndpoint` | OTLP HTTP exporter endpoint |
+| `otlpEndpoint` | OTLP HTTP **base** endpoint (signal sub-path appended automatically) |
+| `tracesEndpoint` | Optional full URL for spans (used verbatim); derives from base when blank |
+| `logsEndpoint` | Optional full URL for logs (used verbatim); point at a logs backend, not Tempo |
+| `exportLogs` | Set `false` for traces-only backends (Tempo) to skip OTLP log export entirely |
 | `serviceVersion` | Service version resource attribute |
 | `deploymentEnvironment` | Deployment environment attribute |
 | `useInMemoryExporters` | In-memory exporters for unit testing |

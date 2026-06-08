@@ -1,6 +1,6 @@
 ---
 name: guicedee-rest-client
-description: "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient: @Endpoint declarations, RestClient<Send, Receive> injection, authentication strategies (Bearer, Basic, API Key), path parameters, environment variable overrides, package-level endpoints, and RestClientConfigurator SPI. Use when making outbound REST calls, configuring REST client endpoints, or wiring reactive HTTP clients with Guice injection."
+description: "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient: @Endpoint declarations, RestClient<Send, Receive> injection, authentication strategies (Bearer, Basic, API Key, OAuth2, mTLS), path parameters, environment variable overrides, package-level endpoints, service registry integration (bare name or registry: prefix), and RestClientConfigurator SPI. Use when making outbound REST calls, configuring REST client endpoints, or wiring reactive HTTP clients with Guice injection."
 metadata:
   short-description: Annotation-driven REST client with Vert.x WebClient inside GuicedEE
 ---
@@ -46,6 +46,30 @@ Declare an `@Endpoint` on any `RestClient<Send, Receive>` field, add `@Named`, a
    }
    ```
 
+## Service Registry Integration
+
+When `service-registry` is on the classpath, URLs auto-resolve from the registry (no hard dependency):
+
+```java
+// 1. Explicit registry: prefix — always resolves from registry
+@Endpoint(url = "registry:jwebmp-website")
+@Named("jwebmp") private RestClient<Void, Response> client;
+
+// 2. Bare service name — if registered, uses registry URL
+@Endpoint(url = "jwebmp-website")
+@Named("jwebmp") private RestClient<Void, Response> client;
+
+// 3. Full URL — passes through unchanged
+@Endpoint(url = "https://api.example.com/v1")
+@Named("example") private RestClient<Void, Response> client;
+```
+
+Resolution logic in `RestClientRegistry.resolveUrl()`:
+1. Resolves `${ENV_VAR}` placeholders first
+2. If starts with `registry:` → resolves via `ServiceRegistry.resolve()`
+3. If bare name (no `://`, no `/` prefix) → tries registry, falls back to original value
+4. Uses reflection — no compile-time dependency on service-registry module
+
 ## Sending Requests
 
 ```java
@@ -76,7 +100,9 @@ getUserClient.pathParam("userId", "123").send();
 |---|---|
 | Bearer/JWT | `@EndpointSecurity(value = SecurityType.Bearer, token = "${API_TOKEN}")` |
 | Basic | `@EndpointSecurity(value = SecurityType.Basic, username = "user", password = "${PASSWORD}")` |
-| API Key | `@EndpointSecurity(value = SecurityType.ApiKey, apiKeyName = "X-API-Key", apiKeyValue = "${API_KEY}")` |
+| API Key | `@EndpointSecurity(value = SecurityType.ApiKey, apiKey = "${API_KEY}", apiKeyHeader = "X-API-Key")` |
+| OAuth2 | `@EndpointSecurity(value = SecurityType.OAuth2, oauth2TokenUrl = "...", oauth2ClientId = "...", oauth2ClientSecret = "${SECRET}")` |
+| mTLS | `@EndpointSecurity(value = SecurityType.ClientCert, clientCertPath = "...", clientCertPassword = "${CERT_PASS}")` |
 
 ## Package-Level Endpoints
 

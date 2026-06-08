@@ -343,51 +343,163 @@ public class ForumPost extends BaseEntity<ForumPost, ForumPost.ForumPostQueryBui
 ## Geography Module
 
 ### Overview
-Geospatial services, location tracking, and proximity search.
+On-demand GeoNames geographic data management. Geography data is **never loaded at startup** — only the
+lightweight classification taxonomy (planet, continents, geographic hierarchy types) is created during
+system installation. All bulk data (countries, provinces, districts, towns/cities, postal codes,
+timezones, languages, feature codes) is loaded **on demand** via REST endpoints or Vert.x event bus messages.
 
-### Entity Model
+The module uses the FSDM `Geography` entity with `Classification` relationships to model the full
+geographic hierarchy: Planet → Continent → Country → Province → City/District → Town → PostalCode → Suburb.
 
-```java
-@Entity
-@Table(name = "locations")
-public class Location extends BaseEntity<Location, Location.LocationQueryBuilder, String> {
-    @Id
-    private String id;
+### Architecture
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "latitude", nullable = false)
-    private Double latitude;
-
-    @Column(name = "longitude", nullable = false)
-    private Double longitude;
-
-    @Column(name = "altitude")
-    private Double altitude;
-
-    @Column(name = "accuracy")
-    private Double accuracy;
-
-    @Column(name = "recorded_at")
-    private LocalDateTime recordedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise enterprise;
-}
 ```
+Startup (GeographySystemInstall @SortedUpdate 1000):
+  └─ Creates classification taxonomy (Planet, Continent, Country, Province, City, Town, etc.)
+  └─ Creates planet "Earth" + 7 continents
+  └─ Creates feature class classifications
+
+On-Demand (REST or Event Bus):
+  └─ POST install/languages          → loads ISO-639 languages
+  └─ POST install/countries          → loads all countries from GeoNames countryInfo.txt
+  └─ POST install/feature-codes      → loads GeoNames feature codes
+  └─ POST install/timezones          → loads timezone data
+  └─ POST install/country/{CC}       → full country install (download + provinces + districts + geodata + postal codes)
+  └─ POST install/country/{CC}/provinces   → provinces only
+  └─ POST install/country/{CC}/districts   → districts only
+  └─ POST install/country/{CC}/geodata     → towns/cities only
+  └─ POST install/country/{CC}/postalcodes → postal codes only
+  └─ POST download/{CC}              → download GeoNames files without DB install
+```
+
+### Data Source
+
+GeoNames export files (downloaded on demand to user home directory):
+- `countryInfo.txt` — All country metadata
+- `admin1CodesASCII.txt` — Province/state codes
+- `admin2Codes.txt` — District/city codes
+- `{CC}.txt` — Per-country geo-data (towns, cities, places)
+- `{CC}.txt` (postal) — Per-country postal codes
+- `hierarchy.txt` — Parent/child geographic relationships
+- `iso-languagecodes.txt` — ISO-639 language codes
+- `timeZones.txt` — Timezone offsets
+- `featureCodes_en.txt` — GeoNames feature code descriptions
 
 ### Service API
 
 ```java
-public interface IGeographyService {
-    Uni<Location> recordLocation(Location location, String enterpriseId);
-    Uni<List<Location>> findNearbyLocations(Double lat, Double lng, Double radiusKm, SecurityToken token);
-    Uni<Double> calculateDistance(String locationId1, String locationId2);
-    Uni<List<Location>> getLocationHistory(String enterpriseId, LocalDateTime since, SecurityToken token);
+public interface IGeographyService<J extends IGeographyService<J>> {
+    String GeographySystemName = "Geography System";
+
+    // Planet & Continent
+    Uni<IGeography<?, ?>> createPlanet(Mutiny.Session session, String value, String originalUniqueID, ISystems<?, ?> system, UUID... identityToken);
+    Uni<IGeography<?, ?>> createContinent(Mutiny.Session session, String planetName, GeographyContinent continent, ISystems<?, ?> system, String originalUniqueID, UUID... identityToken);
+    Uni<IGeography<?, ?>> findPlanet(Mutiny.Session session, String name, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyContinent> findContinent(Mutiny.Session session, GeographyContinent continent, ISystems<?, ?> system, UUID... identityToken);
+
+    // Country
+    Uni<GeographyCountry> findCountry(Mutiny.Session session, GeographyCountry country, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyCountry> findCountryDetailed(Mutiny.Session session, String iso, ISystems<?, ?> system, UUID... identityToken);
+
+    // On-demand data loading
+    Uni<Void> loadLanguages(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadCountryInfo(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadFeatureCodes(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadTimeZones(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadProvincesASCII1(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadDistrictsASCII2(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadTownsAndCities(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadPostalCodes(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
+
+    // Per-country download and install
+    Uni<Void> downloadCountryData(String countryCode, UUID... identityToken);
+    Uni<Void> installCountry(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadCountryGeoData(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadCountryPostalCodes(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+
+    // Lookups
+    Uni<IGeography<?, ?>> findGeographyById(Mutiny.Session session, UUID geographyID, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyPostalCode> findPostalCode(Mutiny.Session session, GeographyPostalCode postalCode, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyTimezone> findTimezone(Mutiny.Session session, GeographyTimezone timezone, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyFeatureCode> findFeatureCode(Mutiny.Session session, String featureCode, ISystems<?, ?> system, UUID... identityToken);
 }
 ```
+
+### REST Endpoints
+
+All mounted under `/{enterprise}/geography/{system}/`:
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `country/{iso}` | Find country by ISO-3166 alpha-2 code |
+| POST | `install/languages` | Load ISO-639 language data |
+| POST | `install/countries` | Load all country info |
+| POST | `install/feature-codes` | Load GeoNames feature codes |
+| POST | `install/timezones` | Load timezone data |
+| POST | `download/{countryCode}` | Download GeoNames files (no DB install) |
+| POST | `install/country/{countryCode}` | Full country install (end-to-end) |
+| POST | `install/country/{countryCode}/provinces` | Load provinces only |
+| POST | `install/country/{countryCode}/districts` | Load districts only |
+| POST | `install/country/{countryCode}/geodata` | Load towns/cities only |
+| POST | `install/country/{countryCode}/postalcodes` | Load postal codes only |
+
+### Event Bus Addresses
+
+All consumers run on worker threads (`@VertxEventOptions(worker = true)`):
+
+| Address | Body | Description |
+|---------|------|-------------|
+| `geography.install.country` | ISO-3166 code (e.g. "ZA") | Full country install |
+| `geography.install.languages` | Enterprise name | Load language data |
+| `geography.install.countries` | Enterprise name | Load country info |
+| `geography.install.featurecodes` | Enterprise name | Load feature codes |
+| `geography.install.timezones` | Enterprise name | Load timezones |
+| `geography.download.country` | ISO-3166 code (e.g. "ZA") | Download GeoNames files only |
+
+### Query Approach
+
+Geography services use **EntityAssist query builders** for all database queries:
+
+```java
+// Finding a country by ISO code and classification
+return new Geography().builder(session)
+    .withName(iso)
+    .withClassification((Classification) classification)
+    .inActiveRange()
+    .inDateRange()
+    .withEnterprise(enterprise)
+    .get();
+
+// Counting before create (upsert pattern)
+return geo.builder(session)
+    .withGeoNameID(geoData.getGeonameId().toString())
+    .getCount()
+    .chain(count -> { ... });
+```
+
+Direct `session.find(Geography.class, id)` and `session.persist(geo)` are used as **optimizations**
+for primary-key lookups and inserts only.
+
+### Usage Example
+
+```java
+// Install South Africa on demand via REST
+// POST /myenterprise/geography/Geography System/install/country/ZA
+
+// Or via event bus
+@Inject @Named("geography.install.country")
+private VertxEventPublisher<String> installPublisher;
+
+installPublisher.request("ZA");  // request/reply
+```
+
+### Key Design Decisions
+
+1. **No data at startup** — Only the classification schema + planet + continents are created during `GeographySystemInstall`. All bulk CSV data loading is triggered on demand.
+2. **EntityAssist query builders** — All queries use the fluent builder pattern (`new Geography().builder(session).withName(...).get()`).
+3. **Direct session for optimization** — `session.find()` for PK lookups and `session.persist()` for inserts are kept for performance.
+4. **Per-country install** — Countries can be installed individually via `installCountry(session, system, "ZA")` which downloads GeoNames files if needed and loads provinces → districts → towns → postal codes.
+5. **Worker threads for events** — All event bus consumers use `worker = true` since data loading involves blocking IO (CSV parsing, HTTP downloads).
 
 ---
 
@@ -973,7 +1085,7 @@ tasksService.createTask(task, assigneeId, creatorId)
 
 ```java
 // Notification on task assignment
-@ApplicationScoped
+@Singleton
 public class TaskEventHandler {
     @Inject
     INotificationsService notificationsService;

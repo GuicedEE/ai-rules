@@ -1,6 +1,6 @@
 ---
 name: jwebmp-tsclient
-description: TypeScript client generation for JWebMP plugins. Provides annotations and utilities for generating TypeScript interfaces, components, services, and modules from Java code. Supports @TsDependency, @TsDevDependency, @NgComponent, @NgDataService annotations. Use when creating JWebMP plugins that generate TypeScript code, defining npm dependencies, or building Angular-integrated components.
+description: TypeScript client generation for JWebMP plugins. Provides annotations and utilities for generating TypeScript interfaces, components, services, and modules from Java code. Supports @TsDependency, @TsDevDependency, @NgComponent, @NgDataService, @NgRestClient annotations. Use when creating JWebMP plugins that generate TypeScript code, defining npm dependencies, building Angular-integrated components, or generating typed Angular REST client services.
 metadata:
   short-description: TypeScript code generation utilities
 ---
@@ -66,6 +66,71 @@ public class MyService implements INgDataService<MyService> {
 }
 ```
 
+### @NgRestClient
+
+Generate a fully typed, signal-based `@Injectable` Angular REST service from a
+single Java class — the REST equivalent of `@NgGraphQL`. One annotated class
+targets **one** endpoint (one HTTP method + URL). No handwritten TypeScript.
+
+Package: `com.jwebmp.core.base.angular.client.annotations.angular`
+
+```java
+@NgRestClient(
+    url = "/api/orders",
+    method = NgRestClient.HttpMethod.POST,
+    responseType = OrderResult.class,
+    authType = NgRestClient.AuthType.BEARER,
+    retryCount = 3)
+@NgRestClientHeader(name = "Content-Type", value = "application/json")
+@NgRestClientQueryParam(name = "tenant", value = "acme")
+public class OrderClient implements INgRestClient<OrderClient> {}
+```
+
+#### Attributes
+
+| Attribute | Default | Purpose |
+|---|---|---|
+| `url()` | — (required) | Endpoint URL/path (relative or absolute) |
+| `method()` | `GET` | HTTP method: `GET/POST/PUT/DELETE/PATCH` |
+| `value()` | `""` | Friendly service name for generated class |
+| `responseType()` | `INgDataType.class` (`any`) | Typed response body class |
+| `responseArray()` | `false` | Response is an array of `responseType` |
+| `singleton()` | `true` | `providedIn: 'root'` vs `'any'` |
+| `fetchOnCreate()` | `false` | Auto-fire request on injection |
+| `pollingEnabled()` | `false` | Re-fetch at a fixed interval |
+| `pollingIntervalMs()` | `30000` | Polling interval |
+| `cachingEnabled()` | `false` | Cache last successful response |
+| `cacheTtlMs()` | `60000` | Cache TTL |
+| `deduplication()` | `true` | Share in-flight requests |
+| `deepMerge()` | `false` | Deep-merge responses into the signal |
+| `retryCount()` | `0` | Retry attempts on failure |
+| `retryDelayMs()` | `1000` | Delay between retries |
+| `authType()` | `NONE` | `NONE/BEARER/BASIC/CUSTOM` |
+| `authTokenField()` | `localStorage.getItem('token')` | TS expression resolving the token |
+| `authHeaderName()` | `Authorization` | Header name for `CUSTOM` auth |
+
+#### Companion annotations
+
+Both are `@Repeatable` (container forms `@NgRestClientHeaders` / `@NgRestClientQueryParams`):
+
+```java
+@NgRestClientHeader(name = "Accept", value = "application/json")    // static header
+@NgRestClientQueryParam(name = "format", value = "json")           // static query param
+```
+
+#### Generated TypeScript service
+
+The `INgRestClient<J>` interface drives generation of an `@Injectable` that uses
+Angular `HttpClient` and exposes reactive `signal()` state:
+
+- Signals: `data`, `loading`, `error`, `success`, `polling`
+- `execute(params?, extraHeaders?)` and — for POST/PUT/PATCH — `executeWithBody(body, params?, extraHeaders?)`
+- `buildHttpRequest$()` / `buildHeaders()` (static + runtime headers, default + runtime query params, auth injection)
+- `handleResponse()` with optional deep-merge (id-keyed array merging)
+- `startPolling()` / `stopPolling()`, `isCacheValid()` / `invalidateCache()`
+- `reset()` and `ngOnDestroy()` cleanup via `DestroyRef` + `destroy$`
+- Automatic Angular/RxJS imports and response-type import wiring
+
 ## Interfaces
 
 ### INgComponent
@@ -93,6 +158,20 @@ public interface INgDirective<J extends INgDirective<J>> {
     String getSelector();
     Map<String, String> getInputs();
     Map<String, String> getOutputs();
+}
+```
+
+### INgRestClient
+
+Drives `@NgRestClient` codegen — extends `IComponent<J>` and renders the typed
+Angular REST service (signals, HTTP methods, polling, caching, retry, auth).
+
+```java
+public interface INgRestClient<J extends INgRestClient<J>> extends IComponent<J> {
+    default NgRestClient getAnnotation() {
+        return getClass().getAnnotation(NgRestClient.class);
+    }
+    // fields(), constructorBody(), methods() emit the @Injectable service
 }
 ```
 

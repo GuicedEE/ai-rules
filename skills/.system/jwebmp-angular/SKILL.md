@@ -116,6 +116,30 @@ public class UserService implements INgDataService<UserService> {
 }
 ```
 
+### @NgRestClient
+
+Generate a fully typed, signal-based `@Injectable` Angular REST service from a
+single Java class — the REST counterpart to `@NgGraphQL`. Defined in the
+`tsclient` plugin (`com.jwebmp.core.base.angular.client.annotations.angular`);
+see the **jwebmp-tsclient** skill for the full attribute reference.
+
+```java
+@NgRestClient(
+    url = "/api/users",
+    method = NgRestClient.HttpMethod.GET,
+    responseType = User.class,
+    responseArray = true,
+    cachingEnabled = true,
+    pollingEnabled = true)
+@NgRestClientHeader(name = "Accept", value = "application/json")
+@NgRestClientQueryParam(name = "active", value = "true")
+public class UsersClient implements INgRestClient<UsersClient> {}
+```
+
+Generates an `@Injectable` HttpClient service exposing `data`/`loading`/`error`/
+`success`/`polling` signals, `execute()` / `executeWithBody()`, plus polling,
+caching, deduplication, deep-merge, retry, and `NONE/BEARER/BASIC/CUSTOM` auth.
+
 ## STOMP/WebSocket Communication
 
 ### WebSocket Bridge Flow

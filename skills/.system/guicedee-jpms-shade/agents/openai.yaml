@@ -1,0 +1,4 @@
+interface:
+  display_name: "GuicedEE JPMS Shade"
+  short_description: "Shade automatic modules into JPMS services"
+  default_prompt: "Use $guicedee-jpms-shade to convert an automatic-module dependency into a GuicedEE shaded JPMS service module with a moditect module-info, BOM registration, and clean jlink wiring."

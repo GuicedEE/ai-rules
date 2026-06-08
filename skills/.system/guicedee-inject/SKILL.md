@@ -100,6 +100,7 @@ Pools auto-shutdown via `IGuicePreDestroy`.
 - Every SPI must be dual-registered (`module-info.java` + `META-INF/services/`).
 - Injection packages must `opens` to `com.google.guice`.
 - `IGuiceContext.registerModuleForScanning.add("my.module")` must be called before `instance()`.
+- Scanning is **off by default** and no built-in configurator enables it — call `IGuiceContext.instance().getConfig().setClasspathScanning(true).setAnnotationScanning(true).setMethodInfo(true).setFieldInfo(true)` (or `setServiceLoadWithClassPath(true)`) **before** `inject()`, or annotation discovery finds nothing. Tests that boot directly must do the same in `@BeforeAll`.
 - All lifecycle hooks must extend `IDefaultService<J>` (CRTP) and override `sortOrder()`.
 
 ## References

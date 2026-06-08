@@ -46,7 +46,7 @@ public class EnterpriseLifecycleManager {
 
 ```java
 @Path("/enterprises")
-@ApplicationScoped
+@Singleton
 public class EnterpriseResource {
     @Inject
     EnterpriseLifecycleManager lifecycleManager;
@@ -136,7 +136,7 @@ public @interface SortedUpdate {
 #### 1. Default Roles Update
 
 ```java
-@ApplicationScoped
+@Singleton
 @SortedUpdate(priority = 10)
 public class DefaultRolesUpdate implements ISystemUpdate {
     @Inject
@@ -196,7 +196,7 @@ public class DefaultRolesUpdate implements ISystemUpdate {
 #### 2. Default Classifications Update
 
 ```java
-@ApplicationScoped
+@Singleton
 @SortedUpdate(priority = 20)
 public class DefaultClassificationsUpdate implements ISystemUpdate {
     @Inject
@@ -265,7 +265,7 @@ public class DefaultClassificationsUpdate implements ISystemUpdate {
 #### 3. Default Address Update
 
 ```java
-@ApplicationScoped
+@Singleton
 @SortedUpdate(priority = 30)
 public class DefaultAddressUpdate implements ISystemUpdate {
     @Inject
@@ -307,7 +307,7 @@ public class DefaultAddressUpdate implements ISystemUpdate {
 #### 4. Module Initialization Update
 
 ```java
-@ApplicationScoped
+@Singleton
 @SortedUpdate(priority = 40)
 public class ModuleInitializationUpdate implements ISystemUpdate {
     @Inject
@@ -379,10 +379,11 @@ public class ModuleInitializationUpdate implements ISystemUpdate {
 ### loadUpdates() Implementation
 
 ```java
-@ApplicationScoped
+@Singleton
 public class EnterpriseLifecycleManager {
-    @Inject
-    Instance<ISystemUpdate> allUpdates;
+    // GuicedEE discovers SPI implementations via ServiceLoader, not CDI Instance<>.
+    private final Set<ISystemUpdate> allUpdates =
+            IGuiceContext.loaderToSet(ServiceLoader.load(ISystemUpdate.class));
 
     public Uni<Void> loadUpdates(Enterprise enterprise, SecurityToken token) {
         // Get all updates and sort by priority
@@ -432,7 +433,9 @@ public class EnterpriseLifecycleManager {
 Final activation and initialization after all updates are applied.
 
 ```java
-@ApplicationScoped
+import com.google.inject.Singleton;
+
+@Singleton
 public class EnterpriseLifecycleManager {
     @Inject
     IEnterpriseService enterpriseService;
@@ -441,9 +444,9 @@ public class EnterpriseLifecycleManager {
         log.info("Starting enterprise: {}", enterprise.getId());
 
         return validateEnterpriseReady(enterprise, token)
-            .chain(() -> activateEnterprise(enterprise, token))
-            .chain(activated -> performStartupTasks(activated, token))
-            .invoke(started -> log.info("Enterprise {} started successfully", started.getId()));
+                .chain(() -> activateEnterprise(enterprise, token))
+                .chain(activated -> performStartupTasks(activated, token))
+                .invoke(started -> log.info("Enterprise {} started successfully", started.getId()));
     }
 
     private Uni<Void> validateEnterpriseReady(Enterprise enterprise, SecurityToken token) {
@@ -470,13 +473,101 @@ public class EnterpriseLifecycleManager {
 
 ---
 
+## Phase 3b: Default Security Provisioning
+
+During install (`SecurityTokenSystem.createDefaults` → `applyDefaultsToNewEnterprise` /
+`applyDefaultsToNewEnterpriseAfterActivityMaster`) every warehouse record is given its default
+security — a fan-out of canonical group/folder grants. Because this can be an *exhaustive* number of
+inserts, it runs as **batched inserts on a `Mutiny.StatelessSession`**.
+
+### Why creation is NOT gated by the security-enabled flag
+
+`ActivityMasterConfiguration.isSecurityEnabled()` is **call-scoped** (`CallScopeProperties` key
+`fsdm.securities`) and **secure-by-default** (returns `true` with no scope/property). It governs
+row-level read **enforcement**, not data creation. The install deliberately **disables** it for the
+duration of bootstrap (`EnterpriseService.startNewEnterprise` → `setSecurityEnabled(false)`) so the
+bulk securing queries are not filtered while the security graph is still being built.
+
+Because the flag is `false` throughout install — *including inside the stateless transaction* —
+gating default-security row creation on it would skip provisioning entirely and leave every installed
+record with zero security. Default-security creation is therefore **unconditional**; the flag only
+decides whether later reads are filtered. (If you need a true opt-out, add a separate
+deployment-level flag rather than overloading the read-enforcement bypass.)
+
+### Per-record grant matrix (7 rows)
+
+| Token (`SECURITY_*`) | Resolver | C | U | D | R |
+|---|---|:-:|:-:|:-:|:-:|
+| `ADMINISTRATORS` | `getAdministratorsFolder` | ✅ | ✅ | ✅ | ✅ |
+| `EVERYONE`       | `getEveryoneGroup`        | ❌ | ❌ | ❌ | ❌ |
+| `EVERYWHERE`     | `getEverywhereGroup`      | ❌ | ❌ | ❌ | ✅ |
+| `SYSTEMS`        | `getSystemsFolder`        | ✅ | ✅ | ❌ | ✅ |
+| `APPLICATIONS`   | `getApplicationsFolder`   | ✅ | ✅ | ❌ | ✅ |
+| `PLUGINS`        | `getPluginsFolder`        | ✅ | ✅ | ❌ | ✅ |
+| `GUESTS`         | `getGuestsFolder`         | ❌ | ❌ | ❌ | ✅ |
+
+### Install flow
+
+```java
+// SecurityTokenSystem (simplified) — creation is unconditional (NOT flag-gated)
+private Uni<Void> createDefaultSecurityForTableReactive(Mutiny.Session session,
+        WarehouseCoreTable<?,?,?,?> table, ISystems<?,?> system, UUID... token) {
+
+    return resolveDefaultSecurityContext(session, system, token)  // 7 tokens + ent + activeFlag (cached once)
+        .chain(ctx -> table.builder(session).inDateRange().getAll()
+            .chain(items -> {
+                // idempotency gate: cheap countDefaultSecurity per row, keep only rows with 0
+                // then batch-insert the rest on ONE stateless transaction:
+                return sessionFactory.withStatelessTransaction(stateless -> {
+                    Uni<Long> chain = Uni.createFrom().item(0L);
+                    for (var item : pending) {
+                        chain = chain.chain(t -> item.createDefaultSecurity(
+                                stateless, system, ctx.enterprise(), ctx.activeFlag(), ctx.tokens(), token)
+                            .map(t::sum));
+                    }
+                    return chain;
+                }).replaceWithVoid();
+            }));
+}
+```
+
+Enable JDBC batching in `persistence.xml`:
+
+```xml
+<property name="hibernate.jdbc.batch_size" value="50"/>
+<property name="hibernate.jdbc.batch_versioned_data" value="true"/>
+<property name="hibernate.order_inserts" value="true"/>
+<property name="hibernate.order_updates" value="true"/>
+```
+
+### Canonical user-group / folder hierarchy
+
+`createGroupsAndFolders(...)` links parent→child edges in `security.securitytokenxsecuritytoken`;
+membership is walked child→parent by `getApplicableSecurityTokenIds(...)`:
+
+```
+(enterprise root)
+  ├── Everyone
+  │     ├── Administrators
+  │     └── Guests
+  │           ├── Registered Guests
+  │           └── Visitors Guests
+  └── Everywhere
+```
+
+> **Single-session rule:** never run `createDefaultSecurity` concurrently on one session. Records must
+> be committed before being secured on a *separate* stateless transaction (FK visibility) — the
+> install loads committed rows, then secures them on a fresh stateless transaction.
+
+---
+
 ## Complete Lifecycle Flow
 
 ### Full Enterprise Creation Flow
 
 ```java
 @Path("/enterprises")
-@ApplicationScoped
+@Singleton
 public class EnterpriseResource {
     @Inject
     EnterpriseLifecycleManager lifecycleManager;
@@ -553,7 +644,7 @@ Any → Deleted       (via force delete)
 ### State Transition Implementation
 
 ```java
-@ApplicationScoped
+@Singleton
 public class EnterpriseStateManager {
     @Inject
     IEnterpriseService enterpriseService;
@@ -648,7 +739,7 @@ public class SystemUpdateAudit extends BaseEntity<SystemUpdateAudit, SystemUpdat
 ### Audit Service
 
 ```java
-@ApplicationScoped
+@Singleton
 public class UpdateAuditService {
     @Inject
     Mutiny.SessionFactory sessionFactory;

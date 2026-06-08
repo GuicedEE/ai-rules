@@ -1,0 +1,5 @@
+interface:
+  display_name: "JWebMP Angular Apollo GraphQL"
+  short_description: "Apollo GraphQL client generation for JWebMP"
+  default_prompt: "Use $jwebmp-angular-graphql to generate an apollo-angular service from a @NgGraphQL annotated query, mutation, or subscription."
+

@@ -91,11 +91,13 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `guicedee-cdi` | `skills/.system/guicedee-cdi/SKILL.md` | CDI integration |
 | `guicedee-cerial` | `skills/.system/guicedee-cerial/SKILL.md` | Serialization framework |
 | `guicedee-client` | `skills/.system/guicedee-client/SKILL.md` | HTTP client integration |
+| `guicedee-cloud-app` | `skills/.system/guicedee-cloud-app/SKILL.md` | Multi-module cloud app scaffolding/audit (parent + BOM + service modules + observability stack) |
 | `guicedee-config` | `skills/.system/guicedee-config/SKILL.md` | MicroProfile Config |
 | `guicedee-creator` | `skills/.system/guicedee-creator/SKILL.md` | GuicedEE project scaffolding and baseline verification |
 | `guicedee-health` | `skills/.system/guicedee-health/SKILL.md` | MicroProfile Health |
 | `guicedee-inject` | `skills/.system/guicedee-inject/SKILL.md` | Guice DI with classpath scanning and lifecycle |
 | `guicedee-installer` | `skills/.system/guicedee-installer/SKILL.md` | Module installation and retrofit |
+| `guicedee-jpms-shade` | `skills/.system/guicedee-jpms-shade/SKILL.md` | Shade automatic-module JARs into JPMS service modules for the jlink pipeline |
 | `guicedee-metrics` | `skills/.system/guicedee-metrics/SKILL.md` | MicroProfile Metrics |
 | `guicedee-openapi` | `skills/.system/guicedee-openapi/SKILL.md` | OpenAPI/Swagger integration |
 | `guicedee-persistence` | `skills/.system/guicedee-persistence/SKILL.md` | JPA/Hibernate persistence wiring |
@@ -106,6 +108,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `guicedee-rabbitmq` | `skills/.system/guicedee-rabbitmq/SKILL.md` | RabbitMQ messaging |
 | `guicedee-rest` | `skills/.system/guicedee-rest/SKILL.md` | JAX-RS REST endpoints |
 | `guicedee-rest-client` | `skills/.system/guicedee-rest-client/SKILL.md` | MicroProfile REST Client |
+| `guicedee-service-registry` | `skills/.system/guicedee-service-registry/SKILL.md` | Named service registry with health-aware URL resolution |
 | `guicedee-swagger-ui` | `skills/.system/guicedee-swagger-ui/SKILL.md` | Swagger UI serving |
 | `guicedee-telemetry` | `skills/.system/guicedee-telemetry/SKILL.md` | OpenTelemetry integration |
 | `guicedee-vertx` | `skills/.system/guicedee-vertx/SKILL.md` | Vert.x 5 event-bus, verticles, reactive wiring |
@@ -145,6 +148,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 |-------|------|---------|
 | `jwebmp-angular` | `skills/.system/jwebmp-angular/SKILL.md` | Angular framework integration |
 | `jwebmp-angular-forms` | `skills/.system/jwebmp-angular-forms/SKILL.md` | Angular reactive forms |
+| `jwebmp-angular-graphql` | `skills/.system/jwebmp-angular-graphql/SKILL.md` | Apollo GraphQL client generation (@NgGraphQL) |
 | `jwebmp-angular-material` | `skills/.system/jwebmp-angular-material/SKILL.md` | Angular Material design components |
 | `jwebmp-bootstrap` | `skills/.system/jwebmp-bootstrap/SKILL.md` | Bootstrap CSS framework |
 | `jwebmp-webawesome` | `skills/.system/jwebmp-webawesome/SKILL.md` | Web Awesome community components |

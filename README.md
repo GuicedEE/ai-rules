@@ -43,8 +43,8 @@ AIRules/
     └── .system/           ← project-specific skills for GuicedEE / JWebMP / ActivityMaster
         ├── activitymaster/
         ├── entityassist/
-        ├── guicedee-*/           (18 guicedee skills)
-        ├── jwebmp-*/             (16 jwebmp skills)
+        ├── guicedee-*/           (29 guicedee skills)
+        ├── jwebmp-*/             (44 jwebmp skills)
         ├── skill-creator/
         └── skill-installer/
 ```
@@ -153,17 +153,20 @@ Project-specific skills for the GuicedEE ecosystem:
 | `guicedee-cdi` | CDI integration for GuicedEE |
 | `guicedee-cerial` | Serialization framework |
 | `guicedee-client` | HTTP client integration |
+| `guicedee-cloud-app` | Multi-module cloud app scaffolding/audit with observability stack |
 | `guicedee-config` | MicroProfile Config integration |
 | `guicedee-creator` | GuicedEE project scaffolding |
 | `guicedee-health` | MicroProfile Health integration |
 | `guicedee-inject` | Guice DI with classpath scanning |
 | `guicedee-installer` | Module installation and retrofit |
+| `guicedee-jpms-shade` | Shade automatic-module JARs into JPMS service modules |
 | `guicedee-metrics` | MicroProfile Metrics integration |
 | `guicedee-openapi` | OpenAPI/Swagger integration |
 | `guicedee-persistence` | JPA/Hibernate persistence wiring |
 | `guicedee-rabbitmq` | RabbitMQ messaging integration |
 | `guicedee-rest` | JAX-RS REST endpoint wiring |
 | `guicedee-rest-client` | MicroProfile REST Client |
+| `guicedee-service-registry` | Named service registry with health-aware URL resolution |
 | `guicedee-swagger-ui` | Swagger UI serving |
 | `guicedee-telemetry` | OpenTelemetry integration |
 | `guicedee-vertx` | Vert.x 5 event-bus, verticles, and reactive wiring |
@@ -174,6 +177,7 @@ Project-specific skills for the GuicedEE ecosystem:
 | `jwebmp-agcharts-enterprise` | AG Charts enterprise integration |
 | `jwebmp-aggrid-enterprise` | AG Grid enterprise integration |
 | `jwebmp-angular` | Angular integration for JWebMP |
+| `jwebmp-angular-graphql` | Apollo GraphQL client generation (@NgGraphQL) |
 | `jwebmp-chartjs` | Chart.js integration |
 | `jwebmp-client` | JWebMP client module |
 | `jwebmp-core` | JWebMP core framework (HTML, CSS, events) |
