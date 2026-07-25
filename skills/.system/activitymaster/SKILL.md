@@ -225,20 +225,21 @@ public Uni<EventDTO> create(..., EventCreateDTO dto) {
     );
 }
 
-// Each relationship category gets its own session + transaction
+// Default mechanism for multiple relationships: parallel independent transactions.
+// This avoids session-level concurrency issues while maximizing throughput.
 private void persistCreateRelationshipsAsync(String enterprise, String system, UUID id, CreateDTO dto) {
-    SessionUtils.fireAndForget(SessionUtils.withActivityMaster(enterprise, system, tuple -> {
-        Mutiny.Session s = tuple.getItem1();
-        ISystems<?, ?> sys = tuple.getItem3();
-        UUID[] token = tuple.getItem4();
-        return service.find(s, id).chain(entity -> {
-            Uni<Void> chain = Uni.createFrom().voidItem();
-            for (var entry : dto.classifications.entrySet()) {
-                chain = chain.chain(() -> entity.addOrUpdateClassification(s, entry.getKey(), entry.getValue(), sys, token).replaceWithVoid());
-            }
-            return chain;
-        });
-    }), "entity " + id + " classifications");
+    Uni<Void> parallelAdd = Multi.createFrom().iterable(dto.classifications.entrySet())
+            .onItem().transformToUniAndMerge(entry -> SessionUtils.withActivityMaster(enterprise, system, tuple -> {
+                Mutiny.Session s = tuple.getItem1();
+                ISystems<?, ?> sys = tuple.getItem3();
+                UUID[] token = tuple.getItem4();
+                return service.find(s, id).chain(entity ->
+                        entity.addOrUpdateClassification(s, entry.getKey(), entry.getValue(), sys, token).replaceWithVoid()
+                );
+            }))
+            .collect().asList().replaceWithVoid();
+
+    SessionUtils.fireAndForget(parallelAdd, "entity " + id + " classifications");
 }
 ```
 
@@ -1604,6 +1605,32 @@ Uni.combine().all()
         List<Event> events = tuple.getItem3();
         // Process combined results
     });
+```
+
+### Parallel Mutations (Independent Transactions)
+
+Hibernate Reactive (and thus ActivityMaster) only allows one active operation per session at a time. To perform multiple mutations in parallel (e.g. adding several classifications to one entity), you **must** use independent sessions/transactions. This is the **default mechanism** for ActivityMaster relationship management.
+
+```java
+// ✅ Correct: Parallel mutations using independent sessions via Multi
+Multi.createFrom().iterable(dto.classifications.entrySet())
+    .onItem().transformToUniAndMerge(entry ->
+        sessionFactory.withStatelessTransaction(session ->
+            activityMaster(session).chain(sys ->
+                entity.addClassification(session, entry.getKey(), entry.getValue(), sys)
+            )
+        )
+    )
+    .collect().asList()
+    .await().atMost(Duration.ofMinutes(2));
+
+// ❌ Incorrect: Concurrent ops on the same session will fail
+sessionFactory.withStatelessTransaction(session ->
+    Uni.combine().all().unis(
+        entity.addClassification(session, "A", "val1", sys),
+        entity.addClassification(session, "B", "val2", sys)
+    ).discardItems()
+);
 ```
 
 ### Error Handling

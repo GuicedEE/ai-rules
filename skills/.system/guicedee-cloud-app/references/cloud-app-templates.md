@@ -122,7 +122,7 @@ inherited by every consuming module.
     <packaging>pom</packaging>
 
     <properties>
-        <guicedee.version>2.1.1-SNAPSHOT</guicedee.version>
+        <guicedee.version>2.2.0</guicedee.version>
         <activitymaster.version>3.0.0-SNAPSHOT</activitymaster.version>
         <jwebmp.version>2.0.3-SNAPSHOT</jwebmp.version>
     </properties>
