@@ -11,7 +11,7 @@ Production-ready application metrics using Vert.x 5 Dropwizard Metrics and the M
 
 ## Core Concept
 
-Annotate your methods with standard `@Counted`, `@Timed`, and custom `@MetricMethod` — interceptors are bound through Guice AOP, metrics are collected into a shared `MetricRegistry`, and a Prometheus-compatible scrape endpoint is exposed on the Vert.x Web `Router` automatically.
+Annotate your methods with standard `@Counted`, `@Timed`, and custom `@MetricMethod` — interceptors are bound through Guice AOP, metrics are collected into a shared `MetricRegistry`, and a Prometheus-compatible scrape endpoint is exposed on the Vert.x Web `RouterConfig` automatically.
 
 ## Required Flow
 

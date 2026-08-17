@@ -11,7 +11,7 @@ Lightweight Jakarta REST (JAX-RS) adapter for Vert.x 5 with full GuicedEE integr
 
 ## Core Concept
 
-Annotate your classes with standard `@Path`, `@GET`, `@POST`, etc. — routes are discovered at startup via ClassGraph and registered on the Vert.x `Router` automatically. Resource instances are created through Guice, so `@Inject` works everywhere.
+Annotate your classes with standard `@Path`, `@GET`, `@POST`, etc. — routes are discovered at startup via ClassGraph and registered on the Vert.x `RouterConfig` automatically. Resource instances are created through Guice, so `@Inject` works everywhere.
 
 ## Required Flow
 
