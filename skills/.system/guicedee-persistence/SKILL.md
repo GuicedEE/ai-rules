@@ -127,8 +127,6 @@ Built-in `ConnectionBaseInfo` implementations:
 - Always use `ReactivePersistenceProvider` — standard JPA providers are not supported.
 - `persistence.xml` must exist in `META-INF/`.
 - DatabaseModule subclass must be registered as an `IGuiceModule` SPI.
-- Entity packages must `opens` to `com.fasterxml.jackson.databind` and `org.hibernate.orm.core`.
+- Entity packages must `opens` to `tools.jackson.databind` and `org.hibernate.orm.core`.
 - Module must `requires com.guicedee.persistence;`.
 - SPI implementations must be dual-registered for tests to find services (`module-info.java` + `META-INF/services/`).
-
-

@@ -508,11 +508,12 @@ public class EntityAssistReactiveDBModule
     protected ConnectionBaseInfo getConnectionBaseInfo(
             PersistenceUnitDescriptor unit, Properties filteredProperties) {
         PostgresConnectionBaseInfo connectionInfo = new PostgresConnectionBaseInfo();
-        connectionInfo.setServerName("localhost");
-        connectionInfo.setPort("5432");
-        connectionInfo.setDatabaseName("mydb");
-        connectionInfo.setUsername(System.getenv("DB_USER"));
-        connectionInfo.setPassword(System.getenv("DB_PASSWORD"));
+        // Always resolve config via com.guicedee.client.Environment — never System.getenv/getProperty.
+        connectionInfo.setServerName(Environment.getSystemPropertyOrEnvironment("DB_HOST", "localhost"));
+        connectionInfo.setPort(Environment.getSystemPropertyOrEnvironment("DB_PORT", "5432"));
+        connectionInfo.setDatabaseName(Environment.getSystemPropertyOrEnvironment("DB_NAME", "mydb"));
+        connectionInfo.setUsername(Environment.getSystemPropertyOrEnvironment("DB_USER", "postgres"));
+        connectionInfo.setPassword(Environment.getSystemPropertyOrEnvironment("DB_PASSWORD", "postgres"));
         connectionInfo.setDefaultConnection(true);
         connectionInfo.setReactive(true);
         return connectionInfo;

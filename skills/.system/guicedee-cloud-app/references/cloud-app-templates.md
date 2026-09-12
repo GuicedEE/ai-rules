@@ -122,7 +122,7 @@ inherited by every consuming module.
     <packaging>pom</packaging>
 
     <properties>
-        <guicedee.version>2.2.0</guicedee.version>
+        <guicedee.version>2.1.1-SNAPSHOT</guicedee.version>
         <activitymaster.version>3.0.0-SNAPSHOT</activitymaster.version>
         <jwebmp.version>2.0.3-SNAPSHOT</jwebmp.version>
     </properties>
@@ -230,8 +230,8 @@ module <module.name> {
     requires com.guicedee.client;
     requires org.apache.logging.log4j;
 
-    opens <module.name>            to com.google.guice, com.guicedee.vertx, com.fasterxml.jackson.databind;
-    opens <module.name>.rest       to com.google.guice, com.guicedee.rest, com.fasterxml.jackson.databind;
+    opens <module.name>            to com.google.guice, com.guicedee.vertx, tools.jackson.databind;
+    opens <module.name>.rest       to com.google.guice, com.guicedee.rest, tools.jackson.databind;
     opens <module.name>.health     to com.google.guice;
 
     exports <module.name>;
@@ -421,4 +421,3 @@ Endpoints once running:
   `/openapi.json`, `/openapi.yaml`, `/swagger/`, `/metrics`.
 - Grafana `http://localhost:3000` (anonymous Admin) → Explore: Tempo / Loki / Prometheus.
 - Keycloak `http://localhost:8080` (admin/admin); OIDC issuer `/realms/<realm>`.
-

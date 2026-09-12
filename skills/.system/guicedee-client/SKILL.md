@@ -33,7 +33,7 @@ This library provides the interfaces and annotations for the GuicedEE lifecycle.
 
 ## Lifecycle Hook Interfaces
 
-All hooks extend `IDefaultService<J>` (CRTP) — override `sortOrder()` to control execution order and `enabled()` to conditionally skip.
+All hooks extend `IDefaultService<J>` (CRTP). Override `sortOrder()` to control execution order. There is **no `enabled()` method** — to conditionally skip work, branch inside the hook method itself (e.g. an `IGuicePostStartup` returns an empty `List.of()`; an `IGuicePreStartup` returns an empty list of futures).
 
 | Interface | When | Purpose |
 |---|---|---|
@@ -48,19 +48,44 @@ All hooks extend `IDefaultService<J>` (CRTP) — override `sortOrder()` to contr
 | Class | Purpose |
 |---|---|
 | `IGuiceContext` | Singleton access to injector and context |
-| `IDefaultService` | Base for all SPI hooks (CRTP) with `sortOrder()` and `enabled()` |
+| `IDefaultService` | Base for all SPI hooks (CRTP) with `sortOrder()` (default `100`; some hooks override the default, e.g. `IGuicePostStartup` = `50`) |
+| `Environment` | **Canonical** environment-variable / system-property resolver — always use this instead of `System.getenv`/`System.getProperty` |
 | `CallScope` / `CallScopeProperties` | Request-scoped injection context |
 | `IJsonRepresentation` | Jackson ObjectMapper configuration contract |
+
+## Environment Variables — always use `Environment`
+
+**Never** call `System.getenv(...)` / `System.getProperty(...)` directly, and **never** write a local `env(...)`/`getProperty(...)` helper. Resolve every environment variable and system property through `com.guicedee.client.Environment`:
+
+```java
+import com.guicedee.client.Environment;
+
+// name, default — returns the resolved value (never null; empty string if no default)
+String enterprise = Environment.getSystemPropertyOrEnvironment("AM_ENTERPRISE_NAME", "NE1 World");
+boolean enabled   = Boolean.parseBoolean(
+        Environment.getSystemPropertyOrEnvironment("AM_INSTALL_ENABLED", "true"));
+```
+
+`Environment.getSystemPropertyOrEnvironment(name, default)` resolves with this precedence (highest first):
+
+1. System property (`-Dname=value`)
+2. OS environment variable (`name`, then the upper-cased/underscored `NAME` variant)
+3. `.env.local` file (local overrides, typically git-ignored)
+4. `.env` file (shared defaults, may be committed)
+5. the provided default (with `${...}` placeholders resolved)
+
+Other helpers: `Environment.getProperty(name, default)` (lighter system-property/env only), `Environment.resolvePlaceholders(value)` for `${VAR:-default}` strings, and `Environment.reloadDotEnv()` for tests. All string config attributes therefore support `${ENV_VAR}` placeholders for free.
 
 ## Non-Negotiable Constraints
 
 - Module must `requires com.guicedee.client;`.
 - All SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
-- `sortOrder()` controls execution order — lower runs first.
+- `sortOrder()` controls execution order — lower runs first. There is **no `enabled()`** on `IDefaultService`; gate work inside the hook method.
 - Lifecycle hooks are grouped by `sortOrder()` — all futures in a group must complete before the next group.
 - `IGuicePreStartup.onStartup()` returns `List<Future<Boolean>>` — uses **Vert.x `io.vertx.core.Future`**.
 - `IGuicePostStartup.postLoad()` returns `List<Uni<Boolean>>` — uses **Mutiny `io.smallrye.mutiny.Uni`**.
 - These are DIFFERENT types — do not confuse them.
+- Resolve env vars/system properties **only** through `Environment.getSystemPropertyOrEnvironment(name, default)` — never `System.getenv`/`System.getProperty` and never a hand-rolled `env(...)` helper.
 
 ## Common JPMS Module Names
 

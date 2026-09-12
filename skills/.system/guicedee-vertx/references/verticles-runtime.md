@@ -161,7 +161,7 @@ module my.app {
 
     opens my.app to com.google.guice;
     opens my.app.events to com.google.guice, com.guicedee.vertx;
-    opens my.app.model to com.fasterxml.jackson.databind;
+    opens my.app.model to tools.jackson.databind;
 }
 ```
 
@@ -236,4 +236,3 @@ public class OrderService {
     }
 }
 ```
-

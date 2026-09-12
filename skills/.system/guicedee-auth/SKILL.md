@@ -282,7 +282,6 @@ All string attributes support `${ENV_VAR}` placeholders.
 - Each provider's Vert.x dependency must be on the module path.
 - Module must `requires static` the auth module (e.g., `requires io.vertx.auth.jwt;`).
 - SPI implementations must be dual-registered (`module-info.java` provides + `META-INF/services/`).
-- Auth packages must `opens` to `com.google.guice` and `com.fasterxml.jackson.databind`.
+- Auth packages must `opens` to `com.google.guice` and `tools.jackson.databind`.
 - OTP **requires** `IOtpAuthenticatorService` SPI — no storage = no auth.
 - `@RolesAllowed` only works on REST resources when the `rest` module is present.
-

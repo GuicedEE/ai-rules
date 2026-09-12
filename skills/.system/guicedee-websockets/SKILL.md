@@ -99,8 +99,6 @@ Client connects (ws://...)
 
 - Module must `requires com.guicedee.vertx.sockets;`.
 - Message receiver packages must `opens` to `com.google.guice`.
-- DTO packages must `opens` to `com.fasterxml.jackson.databind`.
+- DTO packages must `opens` to `tools.jackson.databind`.
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - `receiveMessage()` returns `Uni<Void>` for non-blocking composition.
-
-

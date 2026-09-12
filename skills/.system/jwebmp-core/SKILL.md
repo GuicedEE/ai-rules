@@ -196,7 +196,7 @@ module com.jwebmp.core {
     requires transitive com.jwebmp.client;
     requires transitive com.guicedee.client;
     requires transitive com.guicedee.vertx;
-    requires transitive com.fasterxml.jackson.databind;
+    requires transitive tools.jackson.databind;
 
     exports com.jwebmp.core;
     exports com.jwebmp.core.base;

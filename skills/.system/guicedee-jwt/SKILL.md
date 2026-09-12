@@ -1,6 +1,6 @@
 ---
 name: guicedee-jwt
-description: "MicroProfile JWT Auth bridge for GuicedEE with Vert.x 5: VertxJsonWebToken (Vert.x User → JsonWebToken), @Claim injection without @Inject, MicroProfileJwtContext (CallScope-aware request context), ClaimValueProvider, SPI registration (InjectionPointProvider, NamedAnnotationProvider, BindingAnnotationProvider), type-specific claim bindings (String, Set<String>, Long, Integer, Boolean, Optional<T>), Keycloak/OIDC integration via JWKS, and Guice-managed JsonWebToken. Use when bridging Vert.x JWT auth to MicroProfile JWT, injecting JWT claims, configuring @Claim fields, implementing JWT context propagation, or integrating with Keycloak/OIDC identity providers."
+description: "MicroProfile JWT Auth bridge for GuicedEE with Vert.x 5: VertxJsonWebToken (Vert.x User → JsonWebToken), @Claim injection without @Inject, MicroProfileJwtContext (CallScope-aware request context), ClaimValueProvider, SPI registration (InjectionPointProvider, NamedAnnotationProvider, BindingAnnotationProvider), type-specific claim bindings (String, Set of String, Long, Integer, Boolean, Optional), Keycloak/OIDC integration via JWKS, and Guice-managed JsonWebToken. Use when bridging Vert.x JWT auth to MicroProfile JWT, injecting JWT claims, configuring @Claim fields, implementing JWT context propagation, or integrating with Keycloak/OIDC identity providers."
 metadata:
   short-description: MicroProfile JWT Auth bridge for GuicedEE with Vert.x 5
 ---
@@ -179,4 +179,3 @@ IGuiceContext.instance().inject()
 - The Vert.x auth JWT dependency (`io.vertx:vertx-auth-jwt`) is required at runtime for token verification.
 - `JsonWebToken` binding resolves from `MicroProfileJwtContext` — it is `null` outside a request scope.
 - Claim name resolution: `@Claim("name")` → value attribute; `@Claim(standard = Claims.sub)` → standard enum name.
-

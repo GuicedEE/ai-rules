@@ -11,7 +11,7 @@ Reactive HTTP/HTTPS server bootstrap for GuicedEE applications using Vert.x 5.
 
 ## Core Concept
 
-Provides the `RouterConfig`, `HttpServer`, and `BodyHandler` plumbing that higher-level modules (`rest`, `websockets`, etc.) build on top of. Configuration is environment-driven; extension is SPI-driven. The server starts automatically via `IGuicePostStartup`.
+Provides the `Router`, `HttpServer`, and `BodyHandler` plumbing that higher-level modules (`rest`, `websockets`, etc.) build on top of. Configuration is environment-driven; extension is SPI-driven. The server starts automatically via `IGuicePostStartup`.
 
 ## Required Flow
 
@@ -52,7 +52,7 @@ All SPIs are discovered via `ServiceLoader`. Register with JPMS `provides...with
 |---|---|---|
 | `VertxHttpServerOptionsConfigurator` | Before servers created | Customize `HttpServerOptions` (ports, TLS, compression) |
 | `VertxHttpServerConfigurator` | After server creation | Configure `HttpServer` instance (WebSocket upgrade, connection hooks) |
-| `VertxRouterConfigurator` | After body handler | Add routes, middleware, handlers to the `RouterConfig` |
+| `VertxRouterConfigurator` | After body handler | Add routes, middleware, handlers to the `Router` |
 
 ## Configuration
 
@@ -97,6 +97,3 @@ IGuiceContext.instance().inject()
 - Module must `requires com.guicedee.vertx.web;`.
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - `VertxRouterConfigurator` implementations control ordering via `sortOrder()`.
-
-
-

@@ -119,8 +119,8 @@ module com.example.my.module {
     requires com.google.guice;
 
     // Open package(s) as needed for reflection/injection/serialization/runtime hooks.
-    opens com.example.my.module.core to com.google.guice, com.fasterxml.jackson.databind, com.guicedee.vertx;
-    opens com.example.my.module.dto to com.fasterxml.jackson.databind;
+    opens com.example.my.module.core to com.google.guice, tools.jackson.databind, com.guicedee.vertx;
+    opens com.example.my.module.dto to tools.jackson.databind;
     opens com.example.my.module.vertx to com.guicedee.vertx;
 
     exports com.example.my.module.api;
@@ -219,7 +219,7 @@ com.example.my.module.lifecycle.ExamplePreStartup
 - Test source packages must end with `.test` (for example `com.example.my.module.core.test`).
 - Do not reuse the exact same package name in both main and test source sets.
 - Any package requiring injection must include `opens <package> to com.google.guice;`.
-- Any package containing DTO/JSON deserialization objects must include `opens <package> to com.fasterxml.jackson.databind;`.
+- Any package containing DTO/JSON deserialization objects must include `opens <package> to tools.jackson.databind;`.
 - Any package using Vert.x features must include `opens <package> to com.guicedee.vertx;`.
 - Every test package must include `opens <package> to org.junit.platform.commons;`.
 - Safe default: if a package is used by multiple reflective runtimes, open it to all required targets in one directive.

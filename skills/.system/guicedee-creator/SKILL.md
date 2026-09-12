@@ -19,7 +19,7 @@ Create a new module with GuicedEE baseline constraints and validate them determi
    - Test module must `requires` JUnit Jupiter module(s) for the `junit-jupiter` dependency
    - Every test package must be opened to `org.junit.platform.commons`
    - Any package requiring injection must open to `com.google.guice`
-   - Any DTO/JSON deserialization package must open to `com.fasterxml.jackson.databind`
+   - Any DTO/JSON deserialization package must open to `tools.jackson.databind`
    - Any package using Vert.x features must open to `com.guicedee.vertx`
    - Safe default: open each used package to all required runtime targets
 5. Ensure package separation:
@@ -58,9 +58,9 @@ Create a new module with GuicedEE baseline constraints and validate them determi
 - Test module must declare `requires` for JUnit Jupiter (for example `requires org.junit.jupiter.api;`).
 - Every test package must include an `opens <package> to org.junit.platform.commons;` directive.
 - Injection packages must `opens` to `com.google.guice`.
-- DTO/JSON deserialization packages must `opens` to `com.fasterxml.jackson.databind`.
+- DTO/JSON deserialization packages must `opens` to `tools.jackson.databind`.
 - Vert.x packages must `opens` to `com.guicedee.vertx`.
-- Safe default for main module packages: open used packages to all required targets (`com.google.guice`, `com.fasterxml.jackson.databind`, `com.guicedee.vertx`).
+- Safe default for main module packages: open used packages to all required targets (`com.google.guice`, `tools.jackson.databind`, `com.guicedee.vertx`).
 - Safe default for test module packages: also include `org.junit.platform.commons`.
 - A bootstrap `main()` class must exist in `src/main/java` and register the current module name.
 - Lifecycle SPI implementations must be registered in both `module-info.java` and `META-INF/services`.

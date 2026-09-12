@@ -11,7 +11,7 @@ Seamless MicroProfile Health integration for GuicedEE using Vert.x 5 Health Chec
 
 ## Core Concept
 
-Annotate your classes with standard `@Liveness`, `@Readiness`, and `@Startup` — health checks are discovered at startup via ClassGraph, registered with Vert.x `HealthChecks`, and exposed as JSON endpoints on the Vert.x Web `RouterConfig` automatically.
+Annotate your classes with standard `@Liveness`, `@Readiness`, and `@Startup` — health checks are discovered at startup via ClassGraph, registered with Vert.x `HealthChecks`, and exposed as JSON endpoints on the Vert.x Web `Router` automatically.
 
 ## Required Flow
 
@@ -102,5 +102,3 @@ IGuiceContext.instance().inject()
 - Health check classes are discovered via classpath scanning — no `provides` needed.
 - `@Inject` works inside health checks (Guice-managed).
 - Each check has a 2-second timeout to prevent hanging endpoints.
-
-

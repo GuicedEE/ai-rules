@@ -2,6 +2,16 @@
 
 Complete reference for all Functional Service Data Model (FSDM) domain services.
 
+## Contents
+
+- [Enterprise Service](#enterprise-service)
+- [Address Service](#address-service)
+- [Events Service](#events-service)
+- [Arrangements Service](#arrangements-service)
+- [ResourceItem Service](#resourceitem-service)
+- [Classification Service](#classification-service)
+- [Common Patterns](#common-patterns)
+
 ## Enterprise Service
 
 ### Overview

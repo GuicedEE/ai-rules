@@ -24,12 +24,12 @@ Copy-paste templates for a GuicedEE JPMS shade module. Replace `<...>` placehold
     <parent>
         <groupId>com.guicedee</groupId>
         <artifactId>parent</artifactId>
-        <version>2.2.0</version>
+        <version>2.1.1-SNAPSHOT</version>
     </parent>
     <groupId>com.guicedee.modules.services</groupId>
     <artifactId><ARTIFACT_ID></artifactId>
     <name><MODULE_NAME></name>          <!-- conventionally the JPMS module name -->
-    <version>2.2.0</version>
+    <version>2.1.1-SNAPSHOT</version>
     <description>JPMS modularized shade of <UPSTREAM_GA> exposing the <MODULE_NAME> module.</description>
     <url>https://guicedee.com</url>
     <licenses>
@@ -199,4 +199,3 @@ In the GuicedEE module's `pom.xml`:
 ```
 
 The consumer `module-info.java` keeps `requires <MODULE_NAME>;` unchanged.
-
