@@ -9,9 +9,9 @@ com.guicedee.vertx
  ├── io.vertx.core                    (Vert.x 5 runtime)
  ├── io.vertx.mutiny                  (Mutiny bindings)
  ├── io.smallrye.mutiny               (reactive streams)
- ├── com.fasterxml.jackson.databind   (JSON mapping)
+ ├── tools.jackson.databind   (JSON mapping)
  ├── com.fasterxml.jackson.annotation
- ├── com.fasterxml.jackson.core
+ ├── tools.jackson.core
  ├── org.apache.logging.log4j         (logging)
  ├── jakarta.cdi                      (CDI annotations)
  └── lombok                           (static, compile-only)
@@ -33,6 +33,7 @@ Both packages are `opens` to `com.google.guice` for injection.
 | `IGuiceModule` | `VertXModule` |
 | `IGuiceConfigurator` | `VertxClassScanConfig` |
 | `VerticleStartup` | `VertxConsumersStartup` |
+| `io.vertx.core.spi.JsonFactory` | `GuicedVertxJsonFactory` (routes all Vert.x JSON through the GuicedEE Jackson 3 mapper) |
 
 ## SPI Consumed (user-implementable)
 
@@ -40,4 +41,3 @@ Both packages are `opens` to `com.google.guice` for injection.
 |---|---|
 | `VertxConfigurator` | Customize `VertxBuilder` at startup |
 | `VerticleStartup` | Register custom verticle bootstrap logic |
-

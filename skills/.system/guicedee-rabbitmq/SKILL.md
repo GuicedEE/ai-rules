@@ -103,9 +103,7 @@ IGuiceContext.instance().inject()
 
 - Module must `requires com.guicedee.rabbit;`.
 - Consumer/publisher packages must `opens` to `com.google.guice` and `com.guicedee.rabbit`.
-- DTO packages must `opens` to `com.fasterxml.jackson.databind`.
+- DTO packages must `opens` to `tools.jackson.databind`.
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - `@RabbitConnectionOptions` and `@QueueExchange` can be placed on `package-info.java` (preferred) or any class.
 - Verticle-scoped connections use `@Verticle` on the package.
-
-

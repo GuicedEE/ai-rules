@@ -33,7 +33,7 @@ IGuiceContext.instance().inject();
 2. Configure `module-info.java`:
    - `requires com.guicedee.vertx;`
    - `opens` consumer/publisher packages to `com.google.guice` and `com.guicedee.vertx`
-   - `opens` DTO packages to `com.fasterxml.jackson.databind`
+   - `opens` DTO packages to `tools.jackson.databind`
 3. Declare consumers with `@VertxEventDefinition` on methods (preferred) or classes.
 4. Inject publishers via `@Inject @Named("address") VertxEventPublisher<T>`.
 5. Optionally configure runtime via `@VertX`, `@EventBusOptions`, `@MetricsOptions`, `@FileSystemOptions`, `@AddressResolverOptions` on `package-info.java` (preferred) or any class.
@@ -86,7 +86,8 @@ publisher.publishLocal(order); // local-only broadcast
 - Never create `Vertx` manually — use the injected instance from `VertXModule`.
 - At most **one** `@VertX` annotation per application.
 - Consumer/publisher packages must `opens` to `com.google.guice` and `com.guicedee.vertx`.
-- DTO packages must `opens` to `com.fasterxml.jackson.databind`.
+- DTO packages must `opens` to `tools.jackson.databind`.
+- JSON is **Jackson 3** (`tools.jackson.databind`/`tools.jackson.core`); only annotations stay on `com.fasterxml.jackson.annotation` (2.x). Vert.x JSON (`Json.encode`/`decode`, `JsonObject.mapTo`/`mapFrom`, event-bus payloads) is routed through the shared `DefaultObjectMapper` via the registered `io.vertx.core.spi.JsonFactory` (`GuicedVertxJsonFactory`).
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - Use `worker = true` for any blocking or IO-bound consumer.
 - `package-info.java` is preferred for package-level annotations; classes work too.

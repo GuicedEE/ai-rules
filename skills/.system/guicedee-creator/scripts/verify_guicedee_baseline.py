@@ -25,8 +25,9 @@ MAIN_OPEN_TARGET_PATTERNS: dict[str, tuple[str, ...]] = {
         r"\bimport\s+(?:jakarta|javax)\.inject\.",
         r"@\s*Inject\b",
     ),
-    "com.fasterxml.jackson.databind": (
-        r"\bimport\s+com\.fasterxml\.jackson\.",
+    "tools.jackson.databind": (
+        r"\bimport\s+tools\.jackson\.",
+        r"\bimport\s+com\.fasterxml\.jackson\.annotation\.",
         r"@\s*Json[A-Za-z0-9_]*\b",
     ),
     "com.guicedee.vertx": (

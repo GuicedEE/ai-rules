@@ -1,6 +1,6 @@
 ---
 name: activitymaster
-description: Open-source implementation of the Functional Service Data Model (FSDM) for enterprise resource management. Provides canonical domain services (Enterprise, Address, Events, Arrangements, ResourceItem, Classification, InvolvedParty, Rules, Products) with reactive persistence via Hibernate Reactive 7, Vert.x 5, GuicedEE DI, and PostgreSQL. Features security token propagation, an ActivityMaster-native Vert.x auth bridge (User + roles from the DB on the call scope), IProgressable SPI progress reporting for on-demand loaders, ActiveFlag row-state enforcement, flag-driven scope-restricted (secure-by-default) row security, geography-mirrored scope tokens, client libraries, modular service APIs, JAX-RS REST endpoints, GraphQL schema federation, Vert.x event bus consumers, and on-demand data loading patterns. Use when working with Activity Master services, FSDM domain models, enterprise management, reactive persistence, authentication/auth context, security/scope tokens, progress reporting, REST/GraphQL APIs, event bus integration, or building applications with canonical warehouse schemas.
+description: Open-source Functional Service Data Model (FSDM) implementation for enterprise resource management. Canonical domain services (Enterprise, Address, Events, Arrangements, ResourceItem, Classification, InvolvedParty, Rules, Products) on reactive persistence (Hibernate Reactive 7, Vert.x 5, GuicedEE DI, PostgreSQL). Covers security-token propagation, scope-restricted secure-by-default row security, geography-mirrored scope tokens, the security implementation update path for existing-database clients, IProgressable progress reporting, ActiveFlag row state, a MongoDB document store for JSON-typed ResourceItem payloads, JAX-RS REST, GraphQL schema federation, and Vert.x event-bus consumers. Use when working with Activity Master / FSDM services, enterprise management, reactive persistence, auth / security / scope tokens, upgrading security on existing databases, JSON resource items / MongoDB document storage, REST / GraphQL APIs, or building canonical warehouse schemas.
 metadata:
   short-description: FSDM enterprise resource management platform
 ---
@@ -225,21 +225,20 @@ public Uni<EventDTO> create(..., EventCreateDTO dto) {
     );
 }
 
-// Default mechanism for multiple relationships: parallel independent transactions.
-// This avoids session-level concurrency issues while maximizing throughput.
+// Each relationship category gets its own session + transaction
 private void persistCreateRelationshipsAsync(String enterprise, String system, UUID id, CreateDTO dto) {
-    Uni<Void> parallelAdd = Multi.createFrom().iterable(dto.classifications.entrySet())
-            .onItem().transformToUniAndMerge(entry -> SessionUtils.withActivityMaster(enterprise, system, tuple -> {
-                Mutiny.Session s = tuple.getItem1();
-                ISystems<?, ?> sys = tuple.getItem3();
-                UUID[] token = tuple.getItem4();
-                return service.find(s, id).chain(entity ->
-                        entity.addOrUpdateClassification(s, entry.getKey(), entry.getValue(), sys, token).replaceWithVoid()
-                );
-            }))
-            .collect().asList().replaceWithVoid();
-
-    SessionUtils.fireAndForget(parallelAdd, "entity " + id + " classifications");
+    SessionUtils.fireAndForget(SessionUtils.withActivityMaster(enterprise, system, tuple -> {
+        Mutiny.Session s = tuple.getItem1();
+        ISystems<?, ?> sys = tuple.getItem3();
+        UUID[] token = tuple.getItem4();
+        return service.find(s, id).chain(entity -> {
+            Uni<Void> chain = Uni.createFrom().voidItem();
+            for (var entry : dto.classifications.entrySet()) {
+                chain = chain.chain(() -> entity.addOrUpdateClassification(s, entry.getKey(), entry.getValue(), sys, token).replaceWithVoid());
+            }
+            return chain;
+        });
+    }), "entity " + id + " classifications");
 }
 ```
 
@@ -577,15 +576,19 @@ module com.guicedee.activitymaster.{modulename} {
 ### Step 3: Create ISystemUpdate for Schema Setup
 
 Only the lightweight taxonomy/type system is installed at startup. Never load bulk data at startup.
+`@SortedUpdate` takes `sortOrder` (ordering/dedup key) and `taskCount` (progress total contribution);
+`ISystemUpdate.update(...)` returns `Uni<Boolean>` — resolve the ActivityMaster system yourself from
+the passed `enterprise` (the method is **not** handed a `system`/`identityToken`). Implement the
+**stateless** overload (see *ISystemUpdate & @SortedUpdate Mechanism* below).
 
 ```java
-@SortedUpdate(order = {appropriate_order})
+@SortedUpdate(sortOrder = {appropriate_order}, taskCount = {number_of_progress_tasks})
 public class {ModuleName}Install implements ISystemUpdate {
+    // Stateless-session overload (JDBC-batchable, no growing persistence context)
     @Override
-    public Uni<Void> runUpdate(Mutiny.Session session, IEnterprise<?, ?> enterprise,
-                               ISystems<?, ?> system, UUID... identityToken) {
-        // Create classification hierarchies, type records, etc.
-        // Do NOT load bulk data here
+    public Uni<Boolean> update(Mutiny.StatelessSession session, IEnterprise<?, ?> enterprise) {
+        // Create classification hierarchies, type records, etc. — NO bulk data.
+        // Advance progress with logProgress(source, message, delta); return true when done.
     }
 }
 ```
@@ -988,6 +991,16 @@ resolves the 7 tokens once (cached per install), runs a cheap per-row `countDefa
 gate (skip rows already secured), then batch-inserts the rest on a stateless transaction. Enable JDBC
 batching in `persistence.xml` (`hibernate.jdbc.batch_size`, `hibernate.order_inserts`) for throughput.
 
+> **Existing-database clients — the security implementation update path.** Because every step is
+> idempotent (canonical classification/token `create` is name+concept+enterprise scoped; the per-row
+> `countDefaultSecurity` gate secures only rows with **zero** security and skips already-secured rows),
+> **re-running `createDefaults` is the upgrade/migration path** for a client that already has a populated
+> database: it (re)builds/repairs the canonical **security hierarchy** first, then secures all pre-existing
+> rows. Run this **baseline security implementation before adopting the hierarchy-driven security update**
+> (geography-mirrored scope tokens, the scope-restricted matrix, flag-driven secure-by-default) — you
+> cannot scope-restrict records that lack baseline security. Full detail:
+> [references/enterprise-lifecycle.md](references/enterprise-lifecycle.md) → *Existing-database clients — the security implementation update path*.
+
 ### Scope-Restricted Security (location/branch restriction)
 
 Beyond the world-readable default matrix, records can opt into a **scope-restricted** matrix that is
@@ -1079,6 +1092,7 @@ securityTokenService.applyScopeRestrictedSecurity(session, recordScopes, system,
 > restrict anything (the identity already matches the universal `Everywhere` read). A record is only
 > truly restricted when it carries **no `Everywhere = read`** grant **and** a scope-token read grant —
 > i.e. the scope-restricted matrix. Public reference data (e.g. geography rows) stays public on purpose.
+
 
 ### Geography Scope Tokens (mirroring location into the token graph)
 
@@ -1339,6 +1353,54 @@ qb.where(qb.getAttribute("activeFlag"),
          ActiveFlag.getActiveRange());  // Active to Permanent
 ```
 
+## JSON Resource Items (MongoDB Document Store)
+
+Resource items whose **type is a JSON type** (`JsonPacket`, any type name containing `json`, or any name
+in `RESOURCE_ITEM_JSON_TYPES`) store their payload as a MongoDB **document** instead of the relational
+`resource.resourceitemdatavalue` column — the relational SCD/security rows are still written (empty
+payload) so visibility/security behave identically; only the bytes move. Implemented by
+`com.guicedee.activitymaster.fsdm.ResourceItemJsonStore` (core, `@Singleton`).
+
+The capability is **opt-in**: the store resolves a Vert.x `MongoClient` lazily and is **disabled** (all
+reads/writes fall back to relational) unless one is bound — ActivityMaster ships `ActivityMasterMongoModule`,
+gated by `MONGO_*` env vars. JSON items support named collections, id/name/criteria reads, partial field &
+child updates (`$set`/`$unset`/`$push`/`$pull`), and a fluent `ResourceItem`/`IResourceItemService` document
+API; everything no-ops when MongoDB is absent so the same code runs in both configurations.
+
+### Dual representation: Mongo = current JSON, relational = versioned/timed history
+
+Treat the two stores as complementary, not as a one-or-the-other swap:
+
+- **MongoDB holds the *current* JSON representation** — the live, mutable document read back on load and
+  updated in place (whole-document upsert, or partial `$set`/`$push`/`$pull` for hot paths).
+- **The relational ActivityMaster ResourceItem (SCD rows) is the *versioned/timed history*** — keep writing
+  it on every save (it carries the effective-from/to window, ActiveFlag and security matrix). It is the
+  audit/history record **and** the read fallback when a Mongo document is absent (mid-migration, Mongo
+  unavailable, or a Mongo-less deployment).
+
+This makes the dual-write **permanent and intentional**: read Mongo-first, fall back to relational; never
+drop the relational write just because Mongo now serves reads. A per-record marker (e.g. a classification on
+the owning party) records that a record's live JSON lives in Mongo, so loaders know to source it there.
+
+> **Partial updates require reference-free JSON.** The field/child operations (`$set`/`$unset`/`$push`/`$pull`)
+> are only safe when the document does **not** rely on object-identity / shared-reference serialization
+> (e.g. Jackson `@JsonIdentityInfo`, or any scheme where an entity is written in full once and as a bare
+> id-reference elsewhere). With such references, *which* occurrence is the full copy depends on whole-document
+> serialization order, so a fragment written in isolation can embed a duplicate full object or a dangling
+> reference and corrupt the graph on the next full read. For object-identity documents, use **whole-document
+> upserts only**; reserve partial updates for flat / reference-free payloads.
+
+> **`SessionUtils.withActivityMaster` placement.** Resolve enterprise/system/token via
+> `withActivityMaster(...)` only at **top-level entry points** (REST/event-bus/GUI). It opens its **own**
+> session+transaction, so never nest it inside a flow that already owns a `Mutiny.Session` (e.g. an
+> `ISystemUpdate.update`, or a service method handed a session) — the new session can't see the caller's
+> uncommitted writes. Mid-flow code keeps operating on the supplied session; flag stray
+> `getEnterprise`/`getISystem`/`getISystemToken` as conversion candidates for the nearest top-level caller.
+
+**See [references/json-resource-items.md](references/json-resource-items.md)** for the full API,
+collection routing, MongoDB connection setup, environment variables, and the Testcontainers test module —
+read it when working with JSON resource items / MongoDB document storage.
+
 ## Lifecycle & Bootstrap
 
 ### Enterprise Creation Flow
@@ -1353,46 +1415,152 @@ createNewEnterprise() → loadUpdates() → startNewEnterprise()
 2. **loadUpdates()** — Load classifications/types via `ISystemUpdate`/`@SortedUpdate`
 3. **startNewEnterprise()** — Register admin user via `IPasswordsService`, execute post-startup
 
-### ISystemUpdate Pattern
+### ISystemUpdate & @SortedUpdate Mechanism
 
-System updates use `@SortedUpdate` for ordered execution:
+System bootstrap taxonomy/type data is installed by `ISystemUpdate` implementations, ordered and
+gated by the `@SortedUpdate` annotation. The mechanism is **run-once + idempotent per enterprise**
+with completion tracked in the database, plus a `force` escape hatch for re-runnable updates.
+
+#### The annotation — `@SortedUpdate`
+
+`com.guicedee.activitymaster.fsdm.client.services.systems.SortedUpdate` (a Guice `@BindingAnnotation`,
+`@Retention(RUNTIME)`):
+
+| Attribute | Type | Default | Meaning |
+|---|---|---|---|
+| `sortOrder()` | `int` | — (required) | Ascending execution order **and dedup key**. Updates land in a `TreeMap<Integer, Class>` keyed by `sortOrder`, so **two updates sharing a `sortOrder` collide — the later class silently overrides the earlier one.** Keep them unique. |
+| `taskCount()` | `int` | — (required) | How many progress "tasks" this update contributes. `loadUpdates` **sums `taskCount` across all applicable updates** into `setTotalTasks(...)` before the run, so the `IProgressable` percentage is meaningful. Each update advances it via `logProgress(source, msg, delta)`. |
+| `optional()` | `boolean` | `false` | Declared "may run after install". **Currently not consumed** by the run loop (`getUpdates`/`loadUpdates`/`processUpdates`) — reserved; do not rely on it to gate execution. |
+| `force()` | `boolean` | `false` | **Re-run every install.** See *force semantics* below. |
+
+#### The interface — `ISystemUpdate extends IProgressable`
+
+There is **no `runUpdate(...)`** method and updates are **not** handed a `system` or `identityToken`.
+Implement the **stateless** overload — `update(Mutiny.StatelessSession, IEnterprise<?,?>)` returning
+`Uni<Boolean>` (it defaults to throwing `UnsupportedOperationException` until you override it):
 
 ```java
-@SortedUpdate(order = 100)
-public class LoadClassifications implements ISystemUpdate {
+public interface ISystemUpdate extends IProgressable {
+    // Implement this — the stateless-session overload the install loop runs
+    default Uni<Boolean> update(Mutiny.StatelessSession session, IEnterprise<?,?> enterprise) { throw new UnsupportedOperationException(); }
+}
+```
+
+Resolve the ActivityMaster system yourself inside the body
+(`ISystemsService.findSystem(session, enterprise, ActivityMasterSystemName)`), do the taxonomy/type
+creation on the passed `StatelessSession`, `logProgress(...)` to advance, and `map(... -> true)`:
+
+```java
+@SortedUpdate(sortOrder = 0, taskCount = 6)
+public class ProductsBaseSetup implements ISystemUpdate {
+    @Inject private IClassificationService<?> service;
+
     @Override
-    public Uni<Void> runUpdate(Mutiny.Session session, IEnterprise<?, ?> enterprise,
-                               ISystems<?, ?> system, UUID... identityToken) {
-        // Load classification data — taxonomy and type systems only
+    public Uni<Boolean> update(Mutiny.StatelessSession session, IEnterprise<?,?> enterprise) {
+        return IGuiceContext.get(ISystemsService.class)
+            .findSystem(session, enterprise, ActivityMasterSystemName)
+            .chain(system -> service.create(session, ProductClassifications.Products, system)
+                // … chain the rest of the type/classification creation …
+                .invoke(() -> logProgress("Products System", "Loaded Product Classifications...", 5))
+                .map(r -> true));
     }
 }
 ```
 
-Register via `module-info.java`:
+Register via `module-info.java` (ClassGraph discovers by annotation, so the `provides` is for the
+Guice/ServiceLoader wiring):
 
 ```java
-provides ISystemUpdate with LoadClassifications;
+provides ISystemUpdate with {ModuleName}Install;
 ```
 
-### Current ISystemUpdate Implementations
+#### Discovery, ordering & sequential execution
 
-| Module | Class | Order | Purpose |
-|--------|-------|-------|---------|
-| core | `ClassificationBaseSetup` | — | Base classification types |
-| core | `EventsBaseSetup` | — | Event type classifications |
-| core | `ArrangementsBaseSetup` | — | Arrangement type classifications |
-| core | `AddressBaseSetup` | — | Address type classifications |
-| core | `ResourceItemsBaseSetup` | — | Resource item types |
-| core | `ProductsBaseSetup` | — | Product type classifications |
-| core | `TimeServiceSetup` | — | Time-related classifications |
-| core | `UnknownResourceItemTypeSetup` | — | Default unknown resource type |
-| geography | `GeographySystemInstall` | 1000 | Geographic hierarchy taxonomy only |
-| cerial | `CerialMasterInstall` | — | Serial port classifications |
-| profiles | `ProfileMasterInstall` | — | Profile type classifications |
-| mail | `MailMasterInstall` | — | Mail template classifications |
-| user-sessions | `SessionMasterInstall` | — | Session type classifications |
+`EnterpriseService.loadUpdates(Mutiny.StatelessSession, enterprise)` drives the run:
+
+1. **Discover** — `getUpdates(...)` ClassGraph-scans `getClassesWithAnnotation(SortedUpdate)`, skips
+   abstract/interfaces, and puts each concrete class into a `TreeMap` keyed by `sortOrder` (ascending,
+   dedup by key).
+2. **Filter** against already-applied updates (see completion tracking) — this yields the
+   *applicable* map.
+3. **Sum `taskCount`** across the applicable updates → `setCurrentTask(0)` + `setTotalTasks(sum)`.
+4. **Execute sequentially** via `processUpdates(...)` recursion (never in parallel — one update per
+   session at a time). Each update is instantiated through `IGuiceContext.get(clazz)` so `@Inject`
+   fields are populated, wrapped with `IOnSystemUpdate` start/end/fail callbacks.
+5. **Stamp completion date** — after the sweep, `updateLastUpdateDate` upserts
+   `EnterpriseClassifications.LastUpdateDate` = today on the enterprise.
+
+> **A failing update does not abort the sweep.** `processUpdates` does `.onFailure().recoverWithItem(null)`,
+> logs the error, fires `IOnSystemUpdate.onSystemUpdateFail(clazz)`, and continues to the next update.
+> Because completion is only recorded on **success** (below), a failed update stays "not applied" and
+> is retried on the next install.
+
+#### Completion tracking — persisted as an enterprise classification (not a table)
+
+There is **no dedicated "applied updates" table/version column**. Completion is recorded as a
+relationship classification on the **Enterprise** itself under the
+`EnterpriseClassifications.UpdateClass` name:
+
+- **Record (on success):** `performUpdate(...)` chains after a successful `o.update(...)` and calls
+  `enterprise.addClassification(session, UpdateClass.toString(), o.getClass().getCanonicalName(), system)`.
+- **Read:** `getEnterpriseAppliedUpdates(...)` does
+  `enterprise.findClassifications(session, UpdateClass.toString(), system)` and returns the `Set<String>`
+  of stored canonical class names. Guice enhancer suffixes are stripped
+  (`…$$EnhancerByGuice$$…` → base class name) on **both** the write-comparison and read side so a
+  proxied instance still matches its plain class name.
+
+#### `force` semantics — the exact skip rule
+
+The applicability filter in `getUpdates(...)` is a single line, applied per candidate update:
+
+```java
+// value = the @SortedUpdate class; classValue = its (enhancer-stripped) canonical name
+SortedUpdate du = value.getAnnotation(SortedUpdate.class);
+if (!enterpriseAppliedUpdates.contains(classValue) || du.force()) {
+    applicableUpdates.put(key, value);   // include it in this install run
+}
+```
+
+| `force()` | Already applied to this enterprise? | Included this run? |
+|---|:--:|:--:|
+| `false` (default) | no  | ✅ runs once |
+| `false` (default) | yes | ⛔ **skipped** (idempotent run-once) |
+| `true` | no  | ✅ runs |
+| `true` | yes | ✅ **runs again every install** (skip bypassed) |
+
+So `force = true` means **"always re-run, ignore the applied-updates record"** — use it for updates
+that must reconcile/repair state on every boot (they must be safe to re-execute: the underlying
+`IClassificationService.create(...)` is name+concept+enterprise scoped and therefore idempotent). With
+`force = false`, an update runs **exactly once per enterprise** — the first successful run writes the
+`UpdateClass` classification, and every later install sees it in `enterpriseAppliedUpdates` and skips
+it. Note `force` still records completion each successful run (re-adding the same classification is a
+harmless upsert); it does not clear it.
+
+#### Current ISystemUpdate implementations
+
+| Module | Class | `sortOrder` | `taskCount` | Purpose |
+|--------|-------|:--:|:--:|---------|
+| core | `ClassificationBaseSetup` | `-500` | 3 | Base classification attribute types (ISO attrs, etc.) — earliest |
+| core | `AddressBaseSetup` | `-400` | 15 | Address type classifications |
+| core | `ArrangementsBaseSetup` | `-300` | 3 | Arrangement type classifications |
+| core | `UnknownResourceItemTypeSetup` | `-201` | 1 | Default unknown resource type |
+| core | `ResourceItemsBaseSetup` | `-200` | 3 | Resource item types |
+| core | `EventsBaseSetup` | `-100` | 3 | Event type classifications |
+| core | `ProductsBaseSetup` | `0` | 6 | Product type classifications |
+| profiles | `ProfileMasterInstall` | `50` | 1 | Profile type classifications |
+| user-sessions | `SessionMasterInstall` | `75` | 1 | Session type classifications |
+| cerial | `CerialMasterInstall` | `500` | 3 | Serial port classifications |
+| geography | `GeographySystemInstall` | `1000` | 12 | Geographic hierarchy **taxonomy only** |
+| images | `ImageSystemInstall` | `1100` | 1 | Image type classifications |
+| mail | `MailMasterInstall` | `1500` | 4 | Mail template classifications |
+| core | `TimeServiceSetup` | `Integer.MAX_VALUE - 200` | 1 | Time-related classifications — runs last |
+
+> Negative `sortOrder`s deliberately run the **core taxonomy first** (attribute classifications other
+> installs depend on), then feature modules, with `TimeServiceSetup` pinned to the very end. When
+> adding a module, pick a `sortOrder` that slots after every taxonomy it consumes.
 
 **Important:** ISystemUpdate should ONLY create taxonomy/type structures. Never load bulk data at startup.
+
 
 ## On-Demand Data Loading Pattern
 
@@ -1607,32 +1775,6 @@ Uni.combine().all()
     });
 ```
 
-### Parallel Mutations (Independent Transactions)
-
-Hibernate Reactive (and thus ActivityMaster) only allows one active operation per session at a time. To perform multiple mutations in parallel (e.g. adding several classifications to one entity), you **must** use independent sessions/transactions. This is the **default mechanism** for ActivityMaster relationship management.
-
-```java
-// ✅ Correct: Parallel mutations using independent sessions via Multi
-Multi.createFrom().iterable(dto.classifications.entrySet())
-    .onItem().transformToUniAndMerge(entry ->
-        sessionFactory.withStatelessTransaction(session ->
-            activityMaster(session).chain(sys ->
-                entity.addClassification(session, entry.getKey(), entry.getValue(), sys)
-            )
-        )
-    )
-    .collect().asList()
-    .await().atMost(Duration.ofMinutes(2));
-
-// ❌ Incorrect: Concurrent ops on the same session will fail
-sessionFactory.withStatelessTransaction(session ->
-    Uni.combine().all().unis(
-        entity.addClassification(session, "A", "val1", sys),
-        entity.addClassification(session, "B", "val2", sys)
-    ).discardItems()
-);
-```
-
 ### Error Handling
 
 ```java
@@ -1663,11 +1805,11 @@ public class ActivityMasterDBModule
     protected ConnectionBaseInfo getConnectionBaseInfo(
             PersistenceUnitDescriptor unit, Properties filteredProperties) {
         PostgresConnectionBaseInfo info = new PostgresConnectionBaseInfo();
-        info.setServerName(System.getenv("DB_HOST"));
-        info.setPort(System.getenv("DB_PORT"));
-        info.setDatabaseName(System.getenv("DB_NAME"));
-        info.setUsername(System.getenv("DB_USER"));
-        info.setPassword(System.getenv("DB_PASS"));
+        info.setServerName(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_HOST", null));
+        info.setPort(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_PORT", null));
+        info.setDatabaseName(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_NAME", null));
+        info.setUsername(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_USER", null));
+        info.setPassword(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_PASS", null));
         info.setDefaultConnection(true);
         info.setReactive(true);
         return info;
@@ -1766,7 +1908,7 @@ public class PostgreSQLTestDBModule
         implements IGuiceModule<PostgreSQLTestDBModule> {
 
     private static final PostgreSQLContainer<?> postgres =
-        new PostgreSQLContainer<>(System.getenv("TEST_DB_CONTAINER_IMAGE"))
+        new PostgreSQLContainer<>(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("TEST_DB_CONTAINER_IMAGE", null))
             .withDatabaseName("activitymaster_test")
             .withUsername("postgres")
             .withPassword("postgres");
@@ -2005,7 +2147,7 @@ Bulk data (CSVs, external API imports, reference data) must never be loaded in `
 
 ```java
 // ✅ Good — taxonomy structure only at startup
-@SortedUpdate(order = 1000)
+@SortedUpdate(sortOrder = 1000, taskCount = 1)
 public class GeographySystemInstall implements ISystemUpdate {
     // Creates: Planet → Continent → Country hierarchy TYPES only
     // Does NOT load actual country data
@@ -2016,7 +2158,7 @@ public class GeographySystemInstall implements ISystemUpdate {
 public Uni<String> installCountries(...) { ... }
 
 // ❌ Bad — loading CSV data at startup
-@SortedUpdate(order = 1200)
+@SortedUpdate(sortOrder = 1200, taskCount = 1)
 public class GeographyInstallCountries implements ISystemUpdate {
     // DO NOT parse countryInfo.txt here
 }
@@ -2260,3 +2402,4 @@ If GraphQL schema fails to compile at startup:
 **For module details:** See [references/feature-modules.md](references/feature-modules.md)
 **For configuration:** See [references/configuration.md](references/configuration.md)
 **For enterprise lifecycle:** See [references/enterprise-lifecycle.md](references/enterprise-lifecycle.md)
+**For JSON resource items (MongoDB):** See [references/json-resource-items.md](references/json-resource-items.md)

@@ -118,9 +118,8 @@ IGuiceContext.instance().inject()
 
 - Module must `requires com.guicedee.ibmmq;`.
 - Consumer/publisher packages must `opens` to `com.google.guice` and `com.guicedee.ibmmq`.
-- DTO packages must `opens` to `com.fasterxml.jackson.databind`.
+- DTO packages must `opens` to `tools.jackson.databind`.
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - `@IBMMQConnectionOptions` can be placed on `package-info.java` (preferred) or any class.
 - Consumer classes must implement `IBMMQConsumer` and be annotated with `@IBMMQQueueDefinition`.
 - IBM MQ client JAR (`com.ibm.mq.allclient`) must be available on the module path.
-

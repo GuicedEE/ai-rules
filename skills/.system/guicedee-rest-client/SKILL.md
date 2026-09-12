@@ -1,6 +1,6 @@
 ---
 name: guicedee-rest-client
-description: "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient: @Endpoint declarations, RestClient<Send, Receive> injection, authentication strategies (Bearer, Basic, API Key, OAuth2, mTLS), path parameters, environment variable overrides, package-level endpoints, service registry integration (bare name or registry: prefix), and RestClientConfigurator SPI. Use when making outbound REST calls, configuring REST client endpoints, or wiring reactive HTTP clients with Guice injection."
+description: "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient: @Endpoint declarations, typed RestClient injection (send/receive payload types), authentication strategies (Bearer, Basic, API Key, OAuth2, mTLS), path parameters, environment variable overrides, package-level endpoints, service registry integration (bare name or registry: prefix), and RestClientConfigurator SPI. Use when making outbound REST calls, configuring REST client endpoints, or wiring reactive HTTP clients with Guice injection."
 metadata:
   short-description: Annotation-driven REST client with Vert.x WebClient inside GuicedEE
 ---
@@ -21,7 +21,7 @@ Declare an `@Endpoint` on any `RestClient<Send, Receive>` field, add `@Named`, a
    module my.app {
        requires com.guicedee.rest.client;
        opens my.app.clients to com.google.guice, com.guicedee.rest.client;
-       opens my.app.dto to com.fasterxml.jackson.databind;
+       opens my.app.dto to tools.jackson.databind;
    }
    ```
 3. Declare a REST client field with `@Endpoint`:
@@ -134,9 +134,7 @@ IGuiceContext.instance().inject()
 ## Non-Negotiable Constraints
 
 - Client packages must `opens` to `com.google.guice` and `com.guicedee.rest.client`.
-- DTO packages must `opens` to `com.fasterxml.jackson.databind`.
+- DTO packages must `opens` to `tools.jackson.databind`.
 - Module must `requires transitive com.guicedee.rest.client;`.
 - Only one `@Endpoint` field is needed per named endpoint; other classes inject by `@Named` alone.
 - `RestClientConfigurator` SPI implementations must be dual-registered for tests.
-
-

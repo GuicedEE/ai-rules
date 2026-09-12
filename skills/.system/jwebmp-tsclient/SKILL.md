@@ -80,7 +80,10 @@ Package: `com.jwebmp.core.base.angular.client.annotations.angular`
     method = NgRestClient.HttpMethod.POST,
     responseType = OrderResult.class,
     authType = NgRestClient.AuthType.BEARER,
-    retryCount = 3)
+    retryCount = 3,
+    retryBackoff = true,        // exponential backoff between retries
+    retryMaxDelayMs = 10_000,   // cap the backoff delay
+    timeoutMs = 8_000)          // per-attempt request timeout
 @NgRestClientHeader(name = "Content-Type", value = "application/json")
 @NgRestClientQueryParam(name = "tenant", value = "acme")
 public class OrderClient implements INgRestClient<OrderClient> {}
@@ -104,10 +107,19 @@ public class OrderClient implements INgRestClient<OrderClient> {}
 | `deduplication()` | `true` | Share in-flight requests |
 | `deepMerge()` | `false` | Deep-merge responses into the signal |
 | `retryCount()` | `0` | Retry attempts on failure |
-| `retryDelayMs()` | `1000` | Delay between retries |
+| `retryDelayMs()` | `1000` | Delay between retries (base delay when backoff is on) |
+| `retryBackoff()` | `false` | Exponential backoff: delay = `retryDelayMs * 2^(n-1)` |
+| `retryMaxDelayMs()` | `0` | Cap for the backoff delay (`0` = no cap) |
+| `timeoutMs()` | `0` | Per-attempt request timeout (`0` = disabled) |
 | `authType()` | `NONE` | `NONE/BEARER/BASIC/CUSTOM` |
 | `authTokenField()` | `localStorage.getItem('token')` | TS expression resolving the token |
 | `authHeaderName()` | `Authorization` | Header name for `CUSTOM` auth |
+
+> **Resilience pipeline order:** `timeout` is applied **before** `retry`, so each attempt
+> is independently time-bounded and a timed-out attempt participates in the retry budget.
+> With `retryBackoff = true` the delay grows exponentially per attempt
+> (`retryDelayMs * 2^(retryCount-1)`), optionally capped by `retryMaxDelayMs`; otherwise a
+> fixed `retryDelayMs` is used.
 
 #### Companion annotations
 
@@ -126,6 +138,7 @@ Angular `HttpClient` and exposes reactive `signal()` state:
 - Signals: `data`, `loading`, `error`, `success`, `polling`
 - `execute(params?, extraHeaders?)` and — for POST/PUT/PATCH — `executeWithBody(body, params?, extraHeaders?)`
 - `buildHttpRequest$()` / `buildHeaders()` (static + runtime headers, default + runtime query params, auth injection)
+- `timeout` (per-attempt) and `retry` (fixed delay or exponential backoff via a `timer`-based delay function) wired into `buildHttpRequest$()`
 - `handleResponse()` with optional deep-merge (id-keyed array merging)
 - `startPolling()` / `stopPolling()`, `isCacheValid()` / `invalidateCache()`
 - `reset()` and `ngOnDestroy()` cleanup via `DestroyRef` + `destroy$`
@@ -164,7 +177,7 @@ public interface INgDirective<J extends INgDirective<J>> {
 ### INgRestClient
 
 Drives `@NgRestClient` codegen — extends `IComponent<J>` and renders the typed
-Angular REST service (signals, HTTP methods, polling, caching, retry, auth).
+Angular REST service (signals, HTTP methods, polling, caching, retry/backoff, timeout, auth).
 
 ```java
 public interface INgRestClient<J extends INgRestClient<J>> extends IComponent<J> {

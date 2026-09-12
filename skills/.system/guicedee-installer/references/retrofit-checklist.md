@@ -61,7 +61,7 @@ Example:
 - Test module must include `requires` for JUnit Jupiter modules (for example `requires org.junit.jupiter.api;`).
 - Every test package must include `opens <package> to org.junit.platform.commons;`.
 - Packages requiring injection must include `opens <package> to com.google.guice;`.
-- Packages with DTO/JSON deserialization objects must include `opens <package> to com.fasterxml.jackson.databind;`.
+- Packages with DTO/JSON deserialization objects must include `opens <package> to tools.jackson.databind;`.
 - Packages using Vert.x features must include `opens <package> to com.guicedee.vertx;`.
 - Safe default: open each used package to all required runtime targets.
 
@@ -93,7 +93,7 @@ Behavior reminders:
 - Test packages must end with `.test`.
 - Rename test packages if required, then update imports and module `exports/opens` directives.
 - Safe module rule for migrated projects:
-  - main packages can be opened to `com.google.guice`, `com.fasterxml.jackson.databind`, and `com.guicedee.vertx` together
+  - main packages can be opened to `com.google.guice`, `tools.jackson.databind`, and `com.guicedee.vertx` together
   - test packages should also include `org.junit.platform.commons`
 
 ## 8) Final validation

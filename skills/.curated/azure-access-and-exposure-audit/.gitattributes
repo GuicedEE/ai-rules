@@ -1,0 +1,8 @@
+# Shell scripts MUST keep LF endings. A CRLF checkout fails on Linux/macOS with
+# "bad interpreter: /usr/bin/env bash^M" - a confusing error that looks like a missing shell.
+*.sh text eol=lf
+
+# PowerShell is happy either way; pin CRLF so Windows diffs stay clean.
+*.ps1 text eol=crlf
+
+*.md  text

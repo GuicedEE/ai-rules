@@ -11,7 +11,7 @@ Lightweight Jakarta REST (JAX-RS) adapter for Vert.x 5 with full GuicedEE integr
 
 ## Core Concept
 
-Annotate your classes with standard `@Path`, `@GET`, `@POST`, etc. — routes are discovered at startup via ClassGraph and registered on the Vert.x `RouterConfig` automatically. Resource instances are created through Guice, so `@Inject` works everywhere.
+Annotate your classes with standard `@Path`, `@GET`, `@POST`, etc. — routes are discovered at startup via ClassGraph and registered on the Vert.x `Router` automatically. Resource instances are created through Guice, so `@Inject` works everywhere.
 
 ## Required Flow
 
@@ -21,7 +21,7 @@ Annotate your classes with standard `@Path`, `@GET`, `@POST`, etc. — routes ar
    module my.app {
        requires com.guicedee.rest;
        opens my.app.resources to com.google.guice, com.guicedee.rest;
-       opens my.app.dto to com.fasterxml.jackson.databind;
+       opens my.app.dto to tools.jackson.databind;
    }
    ```
 3. Create resource classes with Jakarta REST annotations:
@@ -80,17 +80,20 @@ IGuiceContext.instance().inject()
 ## Return Types
 
 Methods can return:
-- Plain objects (serialized to JSON via Jackson)
+- Plain objects (serialized to JSON via the GuicedEE **Jackson 3** `DefaultObjectMapper`)
 - `Uni<T>` for reactive composition
 - `Future<T>` for Vert.x futures
 - `void` for fire-and-forget operations
 
+> Response bodies are serialized by `ResponseHandler` using the shared `DefaultObjectMapper`
+> (`tools.jackson.databind`), not Vert.x's built-in codec. Jackson **annotations** remain on
+> `com.fasterxml.jackson.annotation` (2.x), so `@JsonProperty`, `@JsonInclude`,
+> `@JsonAutoDetect`, `@JsonIdentityInfo`, and reference annotations work unchanged.
+
 ## Non-Negotiable Constraints
 
 - Resource classes must be in packages opened to `com.google.guice` and `com.guicedee.rest`.
-- DTO packages must `opens` to `com.fasterxml.jackson.databind`.
+- DTO packages must `opens` to `tools.jackson.databind`.
 - Module must `requires com.guicedee.rest;`.
 - The `web` module is included transitively — do not create `HttpServer` manually.
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
-
-

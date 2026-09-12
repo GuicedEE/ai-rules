@@ -2,6 +2,26 @@
 
 Complete reference for all ActivityMaster feature modules beyond the core FSDM services.
 
+## Contents
+
+- [Module Categories](#module-categories)
+- [Conversations Module](#conversations-module)
+- [Documents Module](#documents-module)
+- [Files Module](#files-module)
+- [Forums Module](#forums-module)
+- [Geography Module](#geography-module)
+- [Images Module](#images-module)
+- [Mail Module](#mail-module)
+- [Notifications Module](#notifications-module)
+- [Payments Module](#payments-module)
+- [Profiles Module](#profiles-module)
+- [Tasks Module](#tasks-module)
+- [Todo Module](#todo-module)
+- [User Sessions Module](#user-sessions-module)
+- [Wallet Module](#wallet-module)
+- [Realtor Module](#realtor-module)
+- [Module Integration Patterns](#module-integration-patterns)
+
 ## Module Categories
 
 ### Core Infrastructure

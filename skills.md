@@ -11,6 +11,8 @@ Skills are organized into two tiers:
 
 Each skill is a self-contained folder with a required `SKILL.md` (YAML frontmatter + Markdown instructions) and optional `agents/`, `references/`, `scripts/`, and `assets/` subdirectories.
 
+The catalog contains **117 skills: 39 curated and 78 system**. Refreshed from the global `~/.agents/skills/` collection on 2026-09-12, including bundled references, scripts, and agent metadata. Repository-only skills remain available.
+
 ## Load Order
 
 1. Identify the task scope and select relevant skills from the catalogs below.
@@ -30,6 +32,7 @@ General-purpose skills available to any project:
 | `aggrid` | `skills/.curated/aggrid/SKILL.md` | AG Grid MCP integration, column definitions, row models, version migrations |
 | `api-integration-specialist` | `skills/.curated/api-integration-specialist/SKILL.md` | API integration design and implementation |
 | `arm-to-terraform-migration` | `skills/.curated/arm-to-terraform-migration/SKILL.md` | Azure ARM template → Terraform migration |
+| `azure-access-and-exposure-audit` | `skills/.curated/azure-access-and-exposure-audit/SKILL.md` | Azure public exposure audits, RBAC/PIM access diagnosis, and PowerShell/bash audit tools |
 | `changelog-generator` | `skills/.curated/changelog-generator/SKILL.md` | Automated changelog generation from commits |
 | `code-reviewer` | `skills/.curated/code-reviewer/SKILL.md` | Structured code review with checklists and diff analysis |
 | `dispatching-parallel-agents` | `skills/.curated/dispatching-parallel-agents/SKILL.md` | Parallel agent orchestration and dispatch patterns |
@@ -38,6 +41,7 @@ General-purpose skills available to any project:
 | `gh-address-comments` | `skills/.curated/gh-address-comments/SKILL.md` | GitHub PR comment resolution |
 | `gh-fix-ci` | `skills/.curated/gh-fix-ci/SKILL.md` | GitHub CI failure diagnosis and repair |
 | `git-commit-helper` | `skills/.curated/git-commit-helper/SKILL.md` | Conventional commit message crafting |
+| `git-commit-signing` | `skills/.curated/git-commit-signing/SKILL.md` | Configure and troubleshoot Git commit signing |
 | `information-architect` | `skills/.curated/information-architect/SKILL.md` | Information architecture and content strategy |
 | `playwright` | `skills/.curated/playwright/SKILL.md` | Playwright end-to-end test authoring |
 | `screenshot` | `skills/.curated/screenshot/SKILL.md` | Screenshot capture and visual comparison |
@@ -89,8 +93,8 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 |-------|------|---------|
 | `guicedee-auth` | `skills/.system/guicedee-auth/SKILL.md` | Authentication and authorization (OAuth2, JWT, ABAC, OTP, Property File, LDAP, htpasswd, htdigest) |
 | `guicedee-cdi` | `skills/.system/guicedee-cdi/SKILL.md` | CDI integration |
-| `guicedee-cerial` | `skills/.system/guicedee-cerial/SKILL.md` | Serialization framework |
-| `guicedee-client` | `skills/.system/guicedee-client/SKILL.md` | HTTP client integration |
+| `guicedee-cerial` | `skills/.system/guicedee-cerial/SKILL.md` | Serial port connectivity with jSerialComm and Vert.x |
+| `guicedee-client` | `skills/.system/guicedee-client/SKILL.md` | Runtime context, lifecycle SPI contracts, and environment configuration |
 | `guicedee-cloud-app` | `skills/.system/guicedee-cloud-app/SKILL.md` | Multi-module cloud app scaffolding/audit (parent + BOM + service modules + observability stack) |
 | `guicedee-config` | `skills/.system/guicedee-config/SKILL.md` | MicroProfile Config |
 | `guicedee-creator` | `skills/.system/guicedee-creator/SKILL.md` | GuicedEE project scaffolding and baseline verification |
@@ -98,6 +102,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `guicedee-inject` | `skills/.system/guicedee-inject/SKILL.md` | Guice DI with classpath scanning and lifecycle |
 | `guicedee-installer` | `skills/.system/guicedee-installer/SKILL.md` | Module installation and retrofit |
 | `guicedee-jpms-shade` | `skills/.system/guicedee-jpms-shade/SKILL.md` | Shade automatic-module JARs into JPMS service modules for the jlink pipeline |
+| `guicedee-jwt` | `skills/.system/guicedee-jwt/SKILL.md` | MicroProfile JWT bridge, claim injection, and role-based access |
 | `guicedee-metrics` | `skills/.system/guicedee-metrics/SKILL.md` | MicroProfile Metrics |
 | `guicedee-openapi` | `skills/.system/guicedee-openapi/SKILL.md` | OpenAPI/Swagger integration |
 | `guicedee-persistence` | `skills/.system/guicedee-persistence/SKILL.md` | JPA/Hibernate persistence wiring |
@@ -107,7 +112,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `guicedee-mail-client` | `skills/.system/guicedee-mail-client/SKILL.md` | SMTP mail client |
 | `guicedee-rabbitmq` | `skills/.system/guicedee-rabbitmq/SKILL.md` | RabbitMQ messaging |
 | `guicedee-rest` | `skills/.system/guicedee-rest/SKILL.md` | JAX-RS REST endpoints |
-| `guicedee-rest-client` | `skills/.system/guicedee-rest-client/SKILL.md` | MicroProfile REST Client |
+| `guicedee-rest-client` | `skills/.system/guicedee-rest-client/SKILL.md` | Typed REST clients using @Endpoint and Vert.x WebClient |
 | `guicedee-service-registry` | `skills/.system/guicedee-service-registry/SKILL.md` | Named service registry with health-aware URL resolution |
 | `guicedee-swagger-ui` | `skills/.system/guicedee-swagger-ui/SKILL.md` | Swagger UI serving |
 | `guicedee-telemetry` | `skills/.system/guicedee-telemetry/SKILL.md` | OpenTelemetry integration |
@@ -153,6 +158,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `jwebmp-bootstrap` | `skills/.system/jwebmp-bootstrap/SKILL.md` | Bootstrap CSS framework |
 | `jwebmp-webawesome` | `skills/.system/jwebmp-webawesome/SKILL.md` | Web Awesome community components |
 | `jwebmp-webawesome-pro` | `skills/.system/jwebmp-webawesome-pro/SKILL.md` | Web Awesome pro web components |
+| `jwebmp-website-aside-routing` | `skills/.system/jwebmp-website-aside-routing/SKILL.md` | WaPage named aside outlets, route synchronization, and empty-aside layout collapse |
 
 #### Calendars & Scheduling
 

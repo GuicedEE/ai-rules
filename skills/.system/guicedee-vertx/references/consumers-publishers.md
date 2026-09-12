@@ -140,11 +140,18 @@ public class OrderService {
 
 ### Codecs
 
-Custom types are serialized via `DynamicCodec` (Jackson-backed). Codecs are registered automatically at startup by `CodecRegistry.createAndRegisterCodecsForAllEventTypes(vertx)`.
+Custom types are serialized via `DynamicCodec` (Jackson 3 / `tools.jackson`-backed). Codecs are registered automatically at startup by `CodecRegistry.createAndRegisterCodecsForAllEventTypes(vertx)`.
 
 Standard Vert.x types (`String`, `JsonObject`, `JsonArray`, `Buffer`, primitives, `byte[]`) do not need custom codecs.
 
-Ensure DTO packages are opened to `com.fasterxml.jackson.databind`.
+Ensure DTO packages are opened to `tools.jackson.databind`.
+
+> **Vert.x JSON uses the GuicedEE Jackson 3 mapper.** The module registers an
+> `io.vertx.core.spi.JsonFactory` (`GuicedVertxJsonFactory`, lowest `order()`) backed by the
+> shared `DefaultObjectMapper`. All Vert.x JSON — `Json.encode`/`decode`,
+> `JsonObject.mapTo`/`mapFrom`, and event-bus payloads — flows through that single Jackson 3
+> mapper, instead of Vert.x's built-in Jackson 2 fallback codec. Jackson **annotations** stay on
+> `com.fasterxml.jackson.annotation` (2.x, per JSTEP-1); only databind/core moved to `tools.jackson`.
 
 ## Runtime Environment Variable Overrides
 
@@ -164,4 +171,3 @@ All `@VertxEventOptions` fields can be overridden globally via environment varia
 | `VERTX_EVENT_BATCH_MAX` | int | Max batch size |
 | `VERTX_EVENT_MAX_BUFFERED_MESSAGES` | int | Backpressure buffer limit |
 | `VERTX_EVENT_RESUME_AT_MESSAGES` | int | Resume threshold |
-
