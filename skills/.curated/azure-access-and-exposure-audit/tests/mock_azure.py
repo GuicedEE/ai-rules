@@ -29,12 +29,25 @@ def main():
         path = urlsplit(uri).path
         query = parse_qs(urlsplit(uri).query)
         if method.upper() in ('PATCH', 'PUT'):
-            json.loads(body)  # malformed JSON must fail exactly as ARM would
+            props = json.loads(body)['properties']
+            if method.upper() == 'PUT':
+                deactivate = props['requestType'] == 'SelfDeactivate'
+                selected = fixture['active' if deactivate else 'eligible'][0]['properties']
+                expected = selected['scope'] + '/providers/Microsoft.Authorization/roleAssignmentScheduleRequests/'
+                if not path.startswith(expected):
+                    raise RuntimeError('Request did not use the selected assignment scope')
+                if deactivate:
+                    if props.get('targetRoleAssignmentScheduleId') != selected['roleAssignmentScheduleId']:
+                        raise RuntimeError('Deactivation did not target the active schedule')
+                    if any(key in props for key in ['linkedRoleAssignmentScheduleId', 'linkedRoleEligibilityScheduleId', 'scheduleInfo']):
+                        raise RuntimeError('Invalid deactivation body')
             fail('approve' if method.upper() == 'PATCH' else 'activate')
             return {'properties': {'status': 'Provisioned'}}
         if path.endswith('/resources'):
             fail('inventory')
             resource_type = query['$filter'][0].split("'")[1]
+            if fixture.get('inventory_failure_type') == resource_type:
+                raise RuntimeError('Fixture inventory failure for ' + resource_type)
             return {'value': [r for r in fixture.get('resources', []) if r['type'] == resource_type]}
         if path.endswith('/securityPolicies'):
             fail('waf')
@@ -89,6 +102,8 @@ def main():
         data = {'accessToken': 'header.' + payload + '.signature'}
     elif args[:2] == ['resource', 'list']:
         fail('inventory')
+        if fixture.get('inventory_failure_type') == option('--resource-type'):
+            raise RuntimeError('Fixture inventory failure for ' + option('--resource-type'))
         data = [r for r in fixture.get('resources', []) if r['type'] == option('--resource-type')]
     elif args[:2] == ['resource', 'show']:
         data = arm('GET', 'https://management.azure.com' + option('--ids'), '')
@@ -101,6 +116,9 @@ def main():
         data = {'displayName': 'Fixture Group'}
     elif args[:3] == ['ad', 'group', 'list']:
         data = [{'id': 'group-id', 'displayName': 'Fixture Group'}]
+    elif args[:4] == ['ad', 'group', 'member', 'list']:
+        fail('members')
+        data = fixture.get('members', [])
     elif args[:3] == ['role', 'assignment', 'list']:
         fail('active')
         data = fixture.get('roles', [])
@@ -108,8 +126,8 @@ def main():
         if option('--subscription') != 'target-sub':
             raise RuntimeError('Unscoped or wrong-subscription hardening command')
         fail('hardening-read' if 'show' in args else 'hardening-write')
-        data = {'publicNetworkAccess': 'Disabled', 'networkRuleSet': {'defaultAction': 'Allow'},
-                'properties': {'publicNetworkAccess': 'Disabled', 'networkAcls': {'defaultAction': 'Allow'}}}
+        data = {'publicNetworkAccess': 'Disabled', 'networkRuleSet': {'defaultAction': 'Allow', 'bypass': 'None'},
+                'properties': {'publicNetworkAccess': 'Disabled', 'networkAcls': {'defaultAction': 'Allow', 'bypass': 'None'}}}
     else:
         raise RuntimeError('Unexpected CLI invocation: ' + repr(args))
 

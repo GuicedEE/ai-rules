@@ -167,36 +167,45 @@ try {
     }
 } catch { throw "Cannot read PIM state or policy: $($_.Exception.Message)" }
 
-$targets = @($elig | Where-Object { $_.properties.expandedProperties.roleDefinition.displayName -eq $Role })
-if ($targets.Count -gt 1) { throw 'Multiple eligible assignments match; inspect role and scope before activation' }
+$candidates = if ($Deactivate) { $act } else { $elig }
+$targets = @($candidates | Where-Object { $_.properties.expandedProperties.roleDefinition.displayName -eq $Role })
+if ($targets.Count -gt 1) { throw 'Multiple assignments match; inspect role and scope before requesting a change' }
 $target = $targets | Select-Object -First 1
 if (-not $target) {
     Write-Host ""
-    Write-Host "Role '$Role' is not in your eligible set - nothing further to do." -ForegroundColor Yellow
+    Write-Host "Role '$Role' is not in the selected $(if ($Deactivate) { 'active' } else { 'eligible' }) set - nothing further to do." -ForegroundColor Yellow
     if ($Activate -or $Deactivate) { exit 1 }
     return
 }
 $roleDefId = $target.properties.roleDefinitionId
+$targetScope = $target.properties.scope
+if ([string]::IsNullOrWhiteSpace($roleDefId) -or [string]::IsNullOrWhiteSpace($targetScope) -or -not $targetScope.StartsWith('/')) {
+    throw 'Selected assignment is missing a role definition or ARM scope'
+}
+$requestBase = "https://management.azure.com$($targetScope.TrimEnd('/'))/providers/Microsoft.Authorization"
+if ($Deactivate -and $target.properties.principalId -ne $oid) { throw 'Selected active assignment does not belong to the caller' }
 
-# governing policy
+# Activation policy belongs to the selected assignment scope. Deactivation needs no eligibility or activation policy.
 $maxHours = $Hours; $needs = @()
-try {
-    $paUrl = "$base/roleManagementPolicyAssignments" + "?$api" + '&$filter=' + [uri]::EscapeDataString("roleDefinitionId eq '$roleDefId'")
-    $pa = @(Get-ArmList $paUrl) | Select-Object -First 1
-    if (-not $pa) { throw 'No governing policy assignment returned' }
-    if ($pa) {
-        $policy = Get-Arm "https://management.azure.com$($pa.properties.policyId)?$api"
-        Write-Host ""
-        Write-Host "--- Policy for '$Role' ---" -ForegroundColor Cyan
-        foreach ($r in @($policy.properties.rules)) {
-            switch ($r.id) {
-                'Expiration_EndUser_Assignment' { $maxHours = [System.Xml.XmlConvert]::ToTimeSpan($r.maximumDuration).TotalHours; Write-Host "  max duration      : $($r.maximumDuration)" }
-                'Enablement_EndUser_Assignment' { $needs = @($r.enabledRules); Write-Host "  required          : $(if($needs.Count){$needs -join ', '}else{'nothing'})" }
-                'Approval_EndUser_Assignment'   { Write-Host "  approval required : $([bool]$r.setting.isApprovalRequired)" }
+if (-not $Deactivate) {
+    try {
+        $paUrl = "$requestBase/roleManagementPolicyAssignments" + "?$api" + '&$filter=' + [uri]::EscapeDataString("roleDefinitionId eq '$roleDefId'")
+        $pa = @(Get-ArmList $paUrl) | Select-Object -First 1
+        if (-not $pa) { throw 'No governing policy assignment returned' }
+        if ($pa) {
+            $policy = Get-Arm "https://management.azure.com$($pa.properties.policyId)?$api"
+            Write-Host ""
+            Write-Host "--- Policy for '$Role' ---" -ForegroundColor Cyan
+            foreach ($r in @($policy.properties.rules)) {
+                switch ($r.id) {
+                    'Expiration_EndUser_Assignment' { $maxHours = [System.Xml.XmlConvert]::ToTimeSpan($r.maximumDuration).TotalHours; Write-Host "  max duration      : $($r.maximumDuration)" }
+                    'Enablement_EndUser_Assignment' { $needs = @($r.enabledRules); Write-Host "  required          : $(if($needs.Count){$needs -join ', '}else{'nothing'})" }
+                    'Approval_EndUser_Assignment'   { Write-Host "  approval required : $([bool]$r.setting.isApprovalRequired)" }
+                }
             }
         }
-    }
-} catch { throw "Cannot read PIM state or policy: $($_.Exception.Message)" }
+    } catch { throw "Cannot read PIM state or policy: $($_.Exception.Message)" }
+}
 $duration = [TimeSpan]::FromHours([Math]::Min([double]$Hours, [double]$maxHours))
 
 if (-not $Activate -and -not $Deactivate) {
@@ -211,7 +220,12 @@ $props = @{
     requestType = if ($Deactivate) { 'SelfDeactivate' } else { 'SelfActivate' }
     justification = $Justification
 }
-if (-not $Deactivate) {
+if ($Deactivate) {
+    $scheduleId = $target.properties.roleAssignmentScheduleId
+    if ([string]::IsNullOrWhiteSpace($scheduleId)) { throw 'Selected active instance has no roleAssignmentScheduleId' }
+    $props.targetRoleAssignmentScheduleId = $scheduleId
+} else {
+    if ([string]::IsNullOrWhiteSpace($target.properties.roleEligibilityScheduleId)) { throw 'Selected eligibility has no roleEligibilityScheduleId' }
     $props.scheduleInfo = @{
         startDateTime = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
         expiration    = @{ type = 'AfterDuration'; duration = [System.Xml.XmlConvert]::ToString($duration) }
@@ -227,7 +241,7 @@ $reqId = [guid]::NewGuid().ToString()
 Write-Host ""
 try {
     $res = Invoke-RestMethod -Method PUT -Headers $H -ContentType 'application/json' `
-        -Uri "$base/roleAssignmentScheduleRequests/$reqId`?$api" `
+        -Uri "$requestBase/roleAssignmentScheduleRequests/$reqId`?$api" `
         -Body (@{ properties = $props } | ConvertTo-Json -Depth 6) -ErrorAction Stop
     Write-Host "  status: $($res.properties.status)" -ForegroundColor Green
     if ($res.properties.status -like '*Approval*') {

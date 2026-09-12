@@ -98,8 +98,8 @@ foreach ($t in $targets) {
         Write-Host "    publicNetworkAccess          = $($j.publicNetworkAccess)"
         Write-Host "    networkRuleSet.defaultAction = $($j.networkRuleSet.defaultAction)   (desired: Deny)"
         if ($j.networkRuleSet.defaultAction -eq 'Deny') { Write-Host "    already compliant" -ForegroundColor Green; continue }
-        if (-not $Apply) { Write-Host "    WOULD RUN: az storage account update -n $($t.Name) -g $($t.Rg) --subscription $($t.Sub) --default-action Deny --bypass AzureServices" -ForegroundColor Yellow; continue }
-        $r = Invoke-AzSafe storage account update -n $t.Name -g $t.Rg --subscription $t.Sub --default-action Deny --bypass AzureServices -o none
+        if (-not $Apply) { Write-Host "    WOULD RUN: az storage account update -n $($t.Name) -g $($t.Rg) --subscription $($t.Sub) --default-action Deny" -ForegroundColor Yellow; continue }
+        $r = Invoke-AzSafe storage account update -n $t.Name -g $t.Rg --subscription $t.Sub --default-action Deny -o none
         if ($r.ExitCode -eq 0) { Write-Host "    set defaultAction=Deny" -ForegroundColor Green; $changed++ }
         else { Write-Host "    FAILED (exit $($r.ExitCode)): $(Format-AzError $r.Output)" -ForegroundColor Red; $failures++ }
     }
@@ -114,8 +114,8 @@ foreach ($t in $targets) {
         Write-Host "    publicNetworkAccess       = $($j.properties.publicNetworkAccess)"
         Write-Host "    networkAcls.defaultAction = $(if ($da) { $da } else { '<networkAcls ABSENT>' })   (desired: Deny)"
         if ($da -eq 'Deny') { Write-Host "    already compliant" -ForegroundColor Green; continue }
-        if (-not $Apply) { Write-Host "    WOULD RUN: az keyvault update -n $($t.Name) -g $($t.Rg) --subscription $($t.Sub) --default-action Deny --bypass AzureServices" -ForegroundColor Yellow; continue }
-        $r = Invoke-AzSafe keyvault update -n $t.Name -g $t.Rg --subscription $t.Sub --default-action Deny --bypass AzureServices -o none
+        if (-not $Apply) { Write-Host "    WOULD RUN: az keyvault update -n $($t.Name) -g $($t.Rg) --subscription $($t.Sub) --default-action Deny" -ForegroundColor Yellow; continue }
+        $r = Invoke-AzSafe keyvault update -n $t.Name -g $t.Rg --subscription $t.Sub --default-action Deny -o none
         if ($r.ExitCode -eq 0) { Write-Host "    set defaultAction=Deny" -ForegroundColor Green; $changed++ }
         else { Write-Host "    FAILED (exit $($r.ExitCode)): $(Format-AzError $r.Output)" -ForegroundColor Red; $failures++ }
     }

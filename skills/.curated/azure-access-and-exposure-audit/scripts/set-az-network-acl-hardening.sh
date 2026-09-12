@@ -121,11 +121,11 @@ while IFS="	" read -r kind sub rg name label; do
     printf '    networkRuleSet.defaultAction = %s   (desired: Deny)\n' "$da"
     if [ "$da" = "Deny" ]; then printf '    already compliant\n'; continue; fi
     if [ "$APPLY" -eq 0 ]; then
-      printf '    WOULD RUN: az storage account update -n %s -g %s --subscription %s --default-action Deny --bypass AzureServices\n' "$name" "$rg" "$sub"
+      printf '    WOULD RUN: az storage account update -n %s -g %s --subscription %s --default-action Deny\n' "$name" "$rg" "$sub"
       continue
     fi
     if err="$(az storage account update -n "$name" -g "$rg" --subscription "$sub" \
-                --default-action Deny --bypass AzureServices -o none 2>&1)"; then
+                --default-action Deny -o none 2>&1)"; then
       printf '    set defaultAction=Deny\n'; changed=$((changed+1))
     else
       printf '    FAILED: %s\n' "$(printf '%s' "$err" | head -1)"; failures=$((failures+1))
@@ -148,11 +148,11 @@ while IFS="	" read -r kind sub rg name label; do
     fi
     if [ "$da" = "Deny" ]; then printf '    already compliant\n'; continue; fi
     if [ "$APPLY" -eq 0 ]; then
-      printf '    WOULD RUN: az keyvault update -n %s -g %s --subscription %s --default-action Deny --bypass AzureServices\n' "$name" "$rg" "$sub"
+      printf '    WOULD RUN: az keyvault update -n %s -g %s --subscription %s --default-action Deny\n' "$name" "$rg" "$sub"
       continue
     fi
     if err="$(az keyvault update -n "$name" -g "$rg" --subscription "$sub" \
-                --default-action Deny --bypass AzureServices -o none 2>&1)"; then
+                --default-action Deny -o none 2>&1)"; then
       printf '    set defaultAction=Deny\n'; changed=$((changed+1))
     else
       printf '    FAILED: %s\n' "$(printf '%s' "$err" | head -1)"; failures=$((failures+1))

@@ -57,8 +57,9 @@ preferred — they use only `az`, `Invoke-RestMethod` and built-in cmdlets.
 
 **Verification status:** this revision is checked with PowerShell parsing, bash syntax/help/
 argument/encoding checks, and offline CLI/ARM fixtures on Windows PowerShell 5.1 and WSL Ubuntu.
-The fixtures exercise read failures, scoped hardening, exposure controls, RBAC scopes, and PIM
-request bodies. No live cloud audit, activation, approval, or hardening operation was performed
+The fixtures exercise read and membership failures, scoped hardening with preserved bypasses,
+exposure controls and CSV identities, RBAC scopes, and scoped PIM activation/deactivation bodies.
+No live cloud audit, activation, approval, or hardening operation was performed
 for this revision. Perform a report-only pass before using these scripts in a new estate.
 
 Run the regression suite from this skill directory with Python 3 and its test-only dependency:
@@ -119,6 +120,9 @@ PowerShell takes JSON objects
 bash takes the same fields as **tab-separated** lines (`kind<TAB>sub<TAB>rg<TAB>name<TAB>label`,
 `#` comments allowed).
 
+The hardening commands change only `defaultAction` to `Deny`; they omit `--bypass` to preserve
+the existing Storage or Key Vault bypass configuration in both report and apply modes.
+
 **Before applying:** confirm whether the platform's IaC manages these properties — if it does, the
 change belongs in the module or it will be reverted on the next apply. Apply to non-production
 first, then run a plan and check for drift. If the storage account is an **IaC state backend**,
@@ -146,6 +150,9 @@ includes the scope of every assignment. Only successful, empty reads are flagged
 for that group/subscription pair. Failed queries are `UNVERIFIABLE` and return nonzero; do not call
 those groups dead. Compare each reported scope with the failing operation's resource scope;
 nested groups, deny assignments, conditions, and directory roles need separate evaluation.
+Optional member-query failures are reported separately as `MEMBERS: UNVERIFIABLE` and return
+nonzero while preserving successfully read RBAC data. Only a successful empty member lookup
+reports `MEMBERS(0)`.
 In a real case two of five groups — the two most obvious names —
 carried zero RBAC on both subscriptions; requests against them never reached the queue of the group
 that did grant access.
@@ -166,6 +173,10 @@ scripts/get-az-pim-status.sh -L -P
 ```
 
 PowerShell reads the governing policy and clamps duration, including fractional-hour maxima.
+Policy lookup and activation requests use the selected eligibility's `properties.scope`, including
+resource-group and resource scopes. Deactivation (`-Deactivate` / `-D`) selects an active assignment
+belonging to the caller and sends its `roleAssignmentScheduleId` as `targetRoleAssignmentScheduleId`
+at that assignment's scope; it does not require an eligibility record or activation-policy lookup.
 Supply `-TicketNumber` and `-TicketSystem` when ticketing is required; the script stops before
 writing if they are absent. Bash sends the requested `-t` duration and lets ARM enforce the
 policy; use `-k` / `-y` for ticket number/system. It returns nonzero on rejection. Bash activation

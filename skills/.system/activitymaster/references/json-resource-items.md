@@ -64,8 +64,8 @@ public class MyAppMongoModule extends MongoModule<MyAppMongoModule>
     @Override protected MongoConnectionInfo getMongoConnectionInfo() {
         return new MongoConnectionInfo()
                 .setName("activityMaster")
-                .setConnectionString(Environment.getProperty("MONGO_URL", "mongodb://localhost:27017"))
-                .setDatabaseName(Environment.getProperty("MONGO_DATABASE", "activitymaster"))
+                .setConnectionString(Environment.getSystemPropertyOrEnvironment("MONGO_URL", "mongodb://localhost:27017"))
+                .setDatabaseName(Environment.getSystemPropertyOrEnvironment("MONGO_DATABASE", "activitymaster"))
                 .setDefaultConnection(true);   // bind without @Named so ResourceItemJsonStore resolves it
     }
 }

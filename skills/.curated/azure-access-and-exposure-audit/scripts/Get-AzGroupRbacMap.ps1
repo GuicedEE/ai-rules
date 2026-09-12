@@ -116,9 +116,11 @@ foreach ($sub in $SubscriptionId) {
 
 
         $members = @()
+        $memberQueryFailed = $false
         if ($ShowMembers) {
             $m = Invoke-AzSafe ad group member list --group $g.Id --query '[].userPrincipalName' -o tsv
             if ($m.ExitCode -eq 0) { $members = @($m.Output | Where-Object { $_ -match '\S' }) }
+            else { $memberQueryFailed = $true; $failures++ }
         }
 
         if ($queryFailed) { $failures++ }
@@ -131,7 +133,8 @@ foreach ($sub in $SubscriptionId) {
             Eligible     = if ($eligible.Count) { $eligible -join ', ' } else { if ($queryFailed) { '(unknown)' } else { '(none)' } }
             QueryStatus = if ($queryFailed) { 'UNVERIFIABLE (partial results)' } else { 'complete' }
             GrantsAnything = $grants
-            Members      = if ($ShowMembers) { $members.Count } else { $null }
+            MemberQueryFailed = $memberQueryFailed
+            Members      = if ($ShowMembers -and -not $memberQueryFailed) { $members.Count } else { $null }
             MemberList   = if ($ShowMembers) { $members -join ', ' } else { $null }
         })
     }
@@ -148,7 +151,10 @@ foreach ($sub in ($rows.Subscription | Sort-Object -Unique)) {
         Write-Host "$flag $($r.Group) - $($r.QueryStatus)" -ForegroundColor $col
         Write-Host "      ACTIVE   : $($r.Active)"
         Write-Host "      ELIGIBLE : $($r.Eligible)"
-        if ($ShowMembers) { Write-Host "      MEMBERS($($r.Members)): $($r.MemberList)" -ForegroundColor DarkGray }
+        if ($ShowMembers) {
+            if ($r.MemberQueryFailed) { Write-Host '      MEMBERS: UNVERIFIABLE (member query failed)' -ForegroundColor Yellow }
+            else { Write-Host "      MEMBERS($($r.Members)): $($r.MemberList)" -ForegroundColor DarkGray }
+        }
     }
 }
 

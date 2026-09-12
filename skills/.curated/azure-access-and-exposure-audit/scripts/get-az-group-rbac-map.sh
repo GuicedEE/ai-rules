@@ -138,9 +138,13 @@ for sub in $SUBS; do
     printf '      ELIGIBLE : %s\n' "$elig"
 
     if [ "$SHOW_MEMBERS" -eq 1 ]; then
-      mem="$(az ad group member list --group "$id" --query '[].userPrincipalName' -o tsv 2>/dev/null | join_csv)"
-      mc="$(printf '%s' "$mem" | tr ',' '\n' | grep -c . || true)"
-      printf '      MEMBERS(%s): %s\n' "${mc:-0}" "$mem"
+      if mem="$(az ad group member list --group "$id" --query '[].userPrincipalName' -o tsv | join_csv)"; then
+        mc="$(printf '%s' "$mem" | tr ',' '\n' | grep -c . || true)"
+        printf '      MEMBERS(%s): %s\n' "${mc:-0}" "$mem"
+      else
+        printf '      MEMBERS: UNVERIFIABLE (member query failed)\n'
+        failures=$((failures+1))
+      fi
     fi
   done < "$GROUPS_FILE"
 done

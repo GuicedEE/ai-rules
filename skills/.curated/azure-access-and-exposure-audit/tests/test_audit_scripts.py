@@ -1,4 +1,6 @@
 """Run on Windows for PowerShell 5.1, and Linux/macOS for bash. No Azure access."""
+import copy
+import csv
 import json
 import os
 from pathlib import Path
@@ -17,6 +19,8 @@ ELIGIBLE = {'properties': {'expandedProperties': {'roleDefinition': {'displayNam
                           'memberType': 'Direct', 'roleDefinitionId': '/subscriptions/target-sub/providers/Microsoft.Authorization/roleDefinitions/role',
                           'roleEligibilityScheduleId': '/subscriptions/target-sub/providers/Microsoft.Authorization/roleEligibilitySchedules/eligible',
                           'scope': '/subscriptions/target-sub/resourceGroups/allowed'}}
+ACTIVE = {'properties': {**ELIGIBLE['properties'], 'assignmentType': 'Activated',
+                         'principalId': 'fixture-user-id', 'roleAssignmentScheduleId': 'active-schedule'}}
 
 
 def resource(kind, properties, **extra):
@@ -25,7 +29,7 @@ def resource(kind, properties, **extra):
 
 
 class Scripts(unittest.TestCase):
-    def run_script(self, kind, fixture, ps_args=None, sh_args=None):
+    def run_script(self, kind, fixture, ps_args=None, sh_args=None, capture_csv=False):
         names = {'exposure': ('Get-AzPublicExposure.ps1', 'get-az-public-exposure.sh'),
                  'hardening': ('Set-AzNetworkAclHardening.ps1', 'set-az-network-acl-hardening.sh'),
                  'pim': ('Get-AzPimStatus.ps1', 'get-az-pim-status.sh'),
@@ -39,6 +43,9 @@ class Scripts(unittest.TestCase):
                        AUDIT_PYTHON=sys.executable, AUDIT_MOCK=str(HERE / 'mock_azure.py'))
             params = dict(ps_args or {})
             options = list(sh_args or [])
+            if capture_csv:
+                params['CsvPath'] = str(root / 'exposure.csv')
+                options.extend(['-c', str(root / 'exposure.csv')])
             if kind == 'hardening':
                 (root / 'targets.json').write_text(json.dumps([{'Kind': fixture.get('kind', 'storage'), 'Sub': 'target-sub', 'Rg': 'rg', 'Name': 'same-name'}]), encoding='utf-8')
                 (root / 'targets.tsv').write_text(f"{fixture.get('kind', 'storage')}\ttarget-sub\trg\tsame-name\n", encoding='utf-8')
@@ -75,6 +82,10 @@ exit $LASTEXITCODE
                 command = ['bash', str(SCRIPTS / names[kind][1]), *options]
             proc = subprocess.run(command, env=env, capture_output=True, text=True, timeout=60)
             calls = [json.loads(line) for line in calls_file.read_text(encoding='utf-8').splitlines()] if calls_file.exists() else []
+            if capture_csv:
+                with (root / 'exposure.csv').open(encoding='utf-8-sig', newline='') as stream:
+                    rows = list(csv.DictReader(stream))
+                return proc.returncode, proc.stdout + proc.stderr, calls, rows
             return proc.returncode, proc.stdout + proc.stderr, calls
 
     def exposure(self, item, **fixture):
@@ -142,6 +153,8 @@ exit $LASTEXITCODE
                 self.assertEqual(rc, 0, out)
                 updates = [call for call in calls if 'update' in call]
                 self.assertEqual(len(updates), 1, calls)
+                self.assertNotIn('--bypass', updates[0])
+                self.assertNotIn('--bypass', out)
                 for call in calls:
                     self.assertNotEqual(call[:2], ['account', 'set'])
                     if call[0] in ['storage', 'keyvault']:
@@ -151,6 +164,16 @@ exit $LASTEXITCODE
         rc, out, calls = self.run_script('hardening', {'failure': 'hardening-read'}, {'Apply': True}, ['-A'])
         self.assertNotEqual(rc, 0, out)
         self.assertFalse(any('update' in call for call in calls))
+
+    def test_hardening_report_preserves_bypass_and_never_updates(self):
+        for kind in ['storage', 'keyvault']:
+            with self.subTest(kind=kind):
+                rc, out, calls = self.run_script('hardening', {'kind': kind})
+                self.assertEqual(rc, 0, out)
+                self.assertIn('WOULD RUN:', out)
+                self.assertIn('--default-action Deny', out)
+                self.assertNotIn('--bypass', out)
+                self.assertFalse(any('update' in call for call in calls))
 
     def approvals(self, **extra):
         fixture = {'approvals': [{'id': APPROVAL}], 'stages': [{'id': STAGE, 'properties': {'status': 'InProgress', 'assignedToMe': True}}], **extra}
@@ -189,6 +212,81 @@ exit $LASTEXITCODE
         props = json.loads(writes[0][3] if PS else writes[0][writes[0].index('--body') + 1])['properties']
         self.assertEqual(props['justification'], justification)
         self.assertEqual(props['scheduleInfo']['expiration']['duration'], 'PT2H30M' if PS else 'PT4H')
+        scope = ELIGIBLE['properties']['scope']
+        if PS:
+            policies = [call[2] for call in calls if '/roleManagementPolicyAssignments?' in str(call)]
+            self.assertTrue(policies, calls)
+            self.assertTrue(all(uri.startswith('https://management.azure.com' + scope + '/') for uri in policies))
+
+    def test_activation_uses_resource_scope(self):
+        eligible = copy.deepcopy(ELIGIBLE)
+        eligible['properties']['scope'] += '/providers/Microsoft.Storage/storageAccounts/example'
+        rc, out, _ = self.run_script('pim', {'eligible': [eligible]},
+                                     {'SubscriptionId': 'target-sub', 'Activate': True}, ['-s', 'target-sub', '-A'])
+        self.assertEqual(rc, 0, out)  # the transport rejects a PUT at any other scope
+
+    def test_deactivation_uses_active_schedule_without_eligibility_or_policy(self):
+        active = copy.deepcopy(ACTIVE)
+        active['properties'].pop('roleEligibilityScheduleId')
+        rc, out, calls = self.run_script('pim', {'active': [active], 'failure': 'policy'},
+                                         {'SubscriptionId': 'target-sub', 'Deactivate': True}, ['-s', 'target-sub', '-D'])
+        self.assertEqual(rc, 0, out)
+        writes = [call for call in calls if 'PUT' in call]
+        self.assertEqual(len(writes), 1, calls)
+        props = json.loads(writes[0][3] if PS else writes[0][writes[0].index('--body') + 1])['properties']
+        self.assertEqual(props['requestType'], 'SelfDeactivate')
+        self.assertEqual(props['targetRoleAssignmentScheduleId'], 'active-schedule')
+        self.assertFalse(any('/roleManagementPolic' in str(call) for call in calls))
+
+    def test_invalid_active_assignment_prevents_deactivation(self):
+        for field, value in [('roleAssignmentScheduleId', None), ('principalId', 'different-user'), ('scope', None)]:
+            with self.subTest(field=field):
+                active = copy.deepcopy(ACTIVE)
+                active['properties'][field] = value
+                rc, out, calls = self.run_script('pim', {'active': [active]},
+                                                 {'SubscriptionId': 'target-sub', 'Deactivate': True}, ['-s', 'target-sub', '-D'])
+                self.assertNotEqual(rc, 0, out)
+                self.assertFalse(any('PUT' in call for call in calls))
+
+    def test_member_failure_preserves_rbac_without_claiming_empty_membership(self):
+        scope = '/subscriptions/target-sub/resourceGroups/allowed'
+        fixture = {'failure': 'members', 'roles': [{'roleDefinitionName': 'Reader', 'scope': scope}]}
+        rc, out, _ = self.run_script('rbac', fixture,
+                                     {'GroupId': ['group-id'], 'SubscriptionId': ['target-sub'], 'ShowMembers': True},
+                                     ['-g', 'group-id', '-s', 'target-sub', '-m'])
+        self.assertNotEqual(rc, 0, out)
+        self.assertIn('MEMBERS: UNVERIFIABLE', out)
+        self.assertNotIn('MEMBERS(0)', out)
+        self.assertIn('Reader', out)
+        self.assertIn(scope, out)
+
+    def test_successful_empty_membership_reports_zero(self):
+        rc, out, _ = self.run_script('rbac', {},
+                                     {'GroupId': ['group-id'], 'SubscriptionId': ['target-sub'], 'ShowMembers': True},
+                                     ['-g', 'group-id', '-s', 'target-sub', '-m'])
+        self.assertEqual(rc, 0, out)
+        self.assertIn('MEMBERS(0)', out)
+
+    def test_inventory_failure_csv_does_not_reuse_previous_resource_id(self):
+        site = resource('Microsoft.Web/sites', {'publicNetworkAccess': 'Disabled'})
+        rc, out, _, rows = self.run_script('exposure', {'resources': [site], 'inventory_failure_type': 'Microsoft.KeyVault/vaults'},
+                                           {'SubscriptionId': ['target-sub'], 'IncludeCompliant': True},
+                                           ['-s', 'target-sub', '-a'], capture_csv=True)
+        self.assertNotEqual(rc, 0, out)
+        failed = [row for row in rows if row['Type'] == 'Microsoft.KeyVault/vaults']
+        self.assertEqual(len(failed), 1, rows)
+        self.assertEqual(failed[0]['ResourceId'], '')
+        self.assertTrue(any(row['ResourceId'] == site['id'] for row in rows))
+
+    def test_slot_csv_preserves_slot_and_parent_identities(self):
+        site = resource('Microsoft.Web/sites', {'publicNetworkAccess': 'Disabled'})
+        slot = {'id': site['id'] + '/slots/staging', 'name': 'sample/staging', 'properties': {'publicNetworkAccess': 'Enabled'}}
+        rc, out, _, rows = self.run_script('exposure', {'resources': [site], 'slots': [slot]},
+                                           {'SubscriptionId': ['target-sub'], 'IncludeCompliant': True},
+                                           ['-s', 'target-sub', '-a'], capture_csv=True)
+        self.assertEqual(rc, 2, out)  # enabled slots still need access-restriction assessment
+        self.assertEqual(next(row['ResourceId'] for row in rows if row['Type'] == 'Microsoft.Web/sites/slots'), slot['id'])
+        self.assertEqual(next(row['ResourceId'] for row in rows if row['Type'] == 'Microsoft.Web/sites'), site['id'])
 
     @unittest.skipIf(PS, 'PowerShell decodes the ARM token instead of using Graph')
     def test_failed_identity_lookup_prevents_activation(self):

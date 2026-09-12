@@ -111,6 +111,13 @@ active assignments produces a confidently wrong answer.
 Activation policy commonly requires **MFA + justification + approval**, and is time-boxed
 (often max 8h). `PendingApproval` means it is waiting on a human — it is not a failure.
 
+Submit schedule requests at the selected instance's `properties.scope`, including child resource
+groups or resources. Query the governing activation policy at the same scope. For `SelfDeactivate`,
+select from active `roleAssignmentScheduleInstances` and send `properties.roleAssignmentScheduleId`
+as `targetRoleAssignmentScheduleId`; do not depend on a remaining eligibility or send activation
+schedule/ticket fields. The ARM request schema does not define `linkedRoleAssignmentScheduleId`.
+See Microsoft's [schedule request schema](https://learn.microsoft.com/en-us/rest/api/authorization/role-assignment-schedule-requests/create?view=rest-authorization-2020-10-01).
+
 Token refresh rules, which trip people up:
 
 | Change | Fresh token needed? | Why |

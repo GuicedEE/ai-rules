@@ -118,7 +118,7 @@ failures=0
 findings=0
 emit() {
   # Include subscription and resource id so repeated names cannot be confused.
-  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "${4:-(not reported)}" "$5" "$sub" "${id:--}" >> "$RESULTS_FILE"
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "${4:-(not reported)}" "$5" "$sub" "$6" >> "$RESULTS_FILE"
   [ "$1" != unverifiable ] || failures=$((failures+1))
   [ "$1" != FINDING ] || findings=$((findings+1))
   return 0
@@ -141,7 +141,7 @@ for sub in $SUBS; do
   for type in $TYPES; do
     apiv="$(api_version_for "$type")"
     if ! ids="$(az resource list --subscription "$sub" --resource-type "$type" --query '[].id' -o tsv)"; then
-      emit unverifiable "$sub" "$type" 'inventory failed' 'Azure resource list failed'; continue
+      emit unverifiable "$sub" "$type" 'inventory failed' 'Azure resource list failed' ''; continue
     fi
     while IFS= read -r id; do
       [ -n "$id" ] || continue
@@ -149,7 +149,7 @@ for sub in $SUBS; do
       # One direct read, with fixed columns. JSON null is rendered as None in TSV.
       query='[[properties.publicNetworkAccess,properties.network.publicNetworkAccess,sku.name,properties.apiServerAccessProfile.enablePrivateCluster,properties.apiServerAccessProfile.authorizedIPRanges,properties.networkAcls.defaultAction,properties.networkRuleSet.defaultAction,properties.ipRules,properties.isVirtualNetworkFilterEnabled,properties.natGateway.id,properties.ipAddress]]'
       if ! row="$(az resource show --ids "$id" --api-version "$apiv" --query "$query" -o tsv)" || [ -z "$row" ]; then
-        emit unverifiable "$name" "$type" 'ARM read failed' 'Cannot assess resource controls'; continue
+        emit unverifiable "$name" "$type" 'ARM read failed' 'Cannot assess resource controls' "$id"; continue
       fi
       pna="$(printf '%s' "$row" | cut -f1)"
       sev=unverifiable; detail='Missing or unsupported network controls'; verdict="$pna"
@@ -164,7 +164,7 @@ for sub in $SUBS; do
           case "$sku" in
             Standard_AzureFrontDoor|Premium_AzureFrontDoor)
               if ! policies="$(arm_list "https://management.azure.com${id}/securityPolicies?api-version=${apiv}" 'value[].name')"; then
-                emit unverifiable "$name" "$type" 'WAF read failed' 'Cannot enumerate security policies'; continue
+                emit unverifiable "$name" "$type" 'WAF read failed' 'Cannot enumerate security policies' "$id"; continue
               fi
               n="$(printf '%s\n' "$policies" | grep -c . || true)"; verdict="WAF policies: $n"
               if [ "$n" -eq 0 ]; then sev=FINDING; detail='Front Door has no security policy'
@@ -189,7 +189,7 @@ for sub in $SUBS; do
           if [ "$pna" = Disabled ]; then sev=ok; detail='Public network access disabled'
           elif [ "$pna" = Enabled ]; then
             if ! rules="$(arm_list "https://management.azure.com${id}/firewallRules?api-version=${apiv}" 'value[].[properties.startIpAddress,properties.endIpAddress]')"; then
-              emit unverifiable "$name" "$type" 'firewall read failed' 'Cannot assess public endpoint'; continue
+              emit unverifiable "$name" "$type" 'firewall read failed' 'Cannot assess public endpoint' "$id"; continue
             fi
             n="$(printf '%s\n' "$rules" | grep -c . || true)"
             sev=info
@@ -221,23 +221,24 @@ for sub in $SUBS; do
         Microsoft.Web/sites)
           [ "$pna" != Disabled ] || sev=ok
           detail='Enabled/absent PNA requires site access restriction and private endpoint assessment'
-          if slots="$(arm_list "https://management.azure.com${id}/slots?api-version=${apiv}" 'value[].[name,properties.publicNetworkAccess]')"; then
+          if slots="$(arm_list "https://management.azure.com${id}/slots?api-version=${apiv}" 'value[].[name,properties.publicNetworkAccess,id]')"; then
             while IFS= read -r slot; do
               [ -n "$slot" ] || continue
               sn="$(printf '%s' "$slot" | cut -f1)"; sp="$(printf '%s' "$slot" | cut -f2)"
+              slot_id="$(printf '%s' "$slot" | cut -f3)"
               ss=unverifiable; [ "$sp" != Disabled ] || ss=ok
-              emit "$ss" "$sn" 'Microsoft.Web/sites/slots' "$sp" 'Assess slot networking independently of the parent site'
+              emit "$ss" "$sn" 'Microsoft.Web/sites/slots' "$sp" 'Assess slot networking independently of the parent site' "$slot_id"
             done <<EOF
 $slots
 EOF
-          else emit unverifiable "$name" 'Microsoft.Web/sites/slots' 'slot inventory failed' 'Cannot assess deployment slots'; fi
+          else emit unverifiable "$name" 'Microsoft.Web/sites/slots' 'slot inventory failed' 'Cannot assess deployment slots' "${id}/slots"; fi
           ;;
         *)
           if [ "$pna" = Disabled ]; then sev=ok; detail='Public network access disabled'
           else detail='Public endpoint requires service-specific firewall/network rule assessment'; fi
           ;;
       esac
-      emit "$sev" "$name" "$type" "$verdict" "$detail"
+      emit "$sev" "$name" "$type" "$verdict" "$detail" "$id"
     done <<EOF
 $ids
 EOF

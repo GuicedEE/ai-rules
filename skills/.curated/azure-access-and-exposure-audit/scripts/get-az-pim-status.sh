@@ -143,38 +143,44 @@ EOF
   exit 0
 fi
 
-elig="$(arm_list "${BASE}/roleEligibilityScheduleInstances?${API}&\$filter=asTarget()" 'value[].[properties.expandedProperties.roleDefinition.displayName,properties.memberType,properties.roleDefinitionId,properties.roleEligibilityScheduleId]')" || exit 1
-active="$(arm_list "${BASE}/roleAssignmentScheduleInstances?${API}&\$filter=asTarget()" 'value[].[properties.expandedProperties.roleDefinition.displayName,properties.assignmentType,properties.endDateTime]')" || exit 1
+elig="$(arm_list "${BASE}/roleEligibilityScheduleInstances?${API}&\$filter=asTarget()" 'value[].[properties.expandedProperties.roleDefinition.displayName,properties.memberType,properties.roleDefinitionId,properties.roleEligibilityScheduleId,properties.scope,properties.principalId]')" || exit 1
+active="$(arm_list "${BASE}/roleAssignmentScheduleInstances?${API}&\$filter=asTarget()" 'value[].[properties.expandedProperties.roleDefinition.displayName,properties.assignmentType,properties.roleDefinitionId,properties.roleAssignmentScheduleId,properties.scope,properties.principalId,properties.endDateTime]')" || exit 1
 pending="$(arm_list "${BASE}/roleAssignmentScheduleRequests?${API}&\$filter=asTarget()" 'value[].[properties.expandedProperties.roleDefinition.displayName,properties.status,properties.createdOn]')" || exit 1
 printf -- '--- Eligible ---\n%s\n--- Active ---\n%s\n--- Requests ---\n%s\n' "${elig:-(none)}" "${active:-(none)}" "${pending:-(none)}"
 if [ "$DO_ACTIVATE" -eq 0 ] && [ "$DO_DEACTIVATE" -eq 0 ]; then printf '\nREAD-ONLY. Use -A or -D to request a change.\n'; exit 0; fi
 
-ROLEDEF=''; ELIGID=''; matches=0
+ROLEDEF=''; SCHEDULEID=''; TARGET_SCOPE=''; PRINCIPAL=''; matches=0
+candidates="$elig"
+[ "$DO_DEACTIVATE" -eq 0 ] || candidates="$active"
 while IFS= read -r line; do
   [ -n "$line" ] || continue
   if [ "$(printf '%s' "$line" | cut -f1)" = "$ROLE" ]; then
     matches=$((matches+1))
-    ROLEDEF="$(printf '%s' "$line" | cut -f3)"; ELIGID="$(printf '%s' "$line" | cut -f4)"
+    ROLEDEF="$(printf '%s' "$line" | cut -f3)"; SCHEDULEID="$(printf '%s' "$line" | cut -f4)"
+    TARGET_SCOPE="$(printf '%s' "$line" | cut -f5)"; PRINCIPAL="$(printf '%s' "$line" | cut -f6)"
   fi
 done <<EOF
-$elig
+$candidates
 EOF
-[ "$matches" -eq 1 ] && [ -n "$ROLEDEF" ] && [ "$ROLEDEF" != None ] || { echo 'Expected exactly one matching eligible role; inspect role and assignment scope' >&2; exit 1; }
+[ "$matches" -eq 1 ] && [ -n "$ROLEDEF" ] && [ "$ROLEDEF" != None ] || { echo 'Expected exactly one matching assignment in the selected active/eligible set; inspect role and scope' >&2; exit 1; }
 OID="$(az ad signed-in-user show --query id -o tsv)" || { echo 'Cannot identify signed-in user; no PIM request submitted' >&2; exit 1; }
 [ -n "$OID" ] && [ "$OID" != None ] || { echo 'Missing principal id; no PIM request submitted' >&2; exit 1; }
+case "$TARGET_SCOPE" in /*) ;; *) echo 'Selected assignment has no ARM scope' >&2; exit 1 ;; esac
+REQUEST_BASE="https://management.azure.com${TARGET_SCOPE%/}/providers/Microsoft.Authorization"
+[ -n "$SCHEDULEID" ] && [ "$SCHEDULEID" != None ] || { echo 'Missing selected assignment schedule id' >&2; exit 1; }
 props="\"principalId\":$(json_string "$OID"),\"roleDefinitionId\":$(json_string "$ROLEDEF"),\"justification\":$(json_string "$JUST")"
 if [ "$DO_DEACTIVATE" -eq 1 ]; then
-  props="$props,\"requestType\":\"SelfDeactivate\""
+  [ "$PRINCIPAL" = "$OID" ] || { echo 'Selected active assignment does not belong to the caller' >&2; exit 1; }
+  props="$props,\"requestType\":\"SelfDeactivate\",\"targetRoleAssignmentScheduleId\":$(json_string "$SCHEDULEID")"
 else
-  [ -n "$ELIGID" ] && [ "$ELIGID" != None ] || { echo 'Missing eligibility schedule id' >&2; exit 1; }
   if { [ -n "$TICKET_NUMBER" ] && [ -z "$TICKET_SYSTEM" ]; } || { [ -z "$TICKET_NUMBER" ] && [ -n "$TICKET_SYSTEM" ]; }; then echo 'Supply both -k and -y' >&2; exit 2; fi
   if [ -n "$TICKET_NUMBER" ]; then props="$props,\"ticketInfo\":{\"ticketNumber\":$(json_string "$TICKET_NUMBER"),\"ticketSystem\":$(json_string "$TICKET_SYSTEM")}"; fi
   START="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  props="$props,\"requestType\":\"SelfActivate\",\"linkedRoleEligibilityScheduleId\":$(json_string "$ELIGID"),\"scheduleInfo\":{\"startDateTime\":$(json_string "$START"),\"expiration\":{\"type\":\"AfterDuration\",\"duration\":\"PT${HOURS}H\"}}"
+  props="$props,\"requestType\":\"SelfActivate\",\"linkedRoleEligibilityScheduleId\":$(json_string "$SCHEDULEID"),\"scheduleInfo\":{\"startDateTime\":$(json_string "$START"),\"expiration\":{\"type\":\"AfterDuration\",\"duration\":\"PT${HOURS}H\"}}"
 fi
 BODY="{\"properties\":{$props}}"
 REQID="$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen)" || exit 1
-if ! out="$(az rest --method PUT --url "${BASE}/roleAssignmentScheduleRequests/${REQID}?${API}" --headers 'Content-Type=application/json' --body "$BODY" --query properties.status -o tsv 2>&1)"; then
+if ! out="$(az rest --method PUT --url "${REQUEST_BASE}/roleAssignmentScheduleRequests/${REQID}?${API}" --headers 'Content-Type=application/json' --body "$BODY" --query properties.status -o tsv 2>&1)"; then
   printf 'FAILED: %s\nCheck policy maximum duration, ticket, justification, MFA, and current assignment.\n' "$out" >&2; exit 1
 fi
 printf 'status: %s\n' "$out"
