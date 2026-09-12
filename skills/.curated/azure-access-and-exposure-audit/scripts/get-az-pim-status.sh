@@ -154,6 +154,7 @@ candidates="$elig"
 [ "$DO_DEACTIVATE" -eq 0 ] || candidates="$active"
 while IFS= read -r line; do
   [ -n "$line" ] || continue
+  if [ "$DO_DEACTIVATE" -eq 1 ] && [ "$(printf '%s' "$line" | cut -f2)" != Activated ]; then continue; fi
   if [ "$(printf '%s' "$line" | cut -f1)" = "$ROLE" ]; then
     matches=$((matches+1))
     ROLEDEF="$(printf '%s' "$line" | cut -f3)"; SCHEDULEID="$(printf '%s' "$line" | cut -f4)"

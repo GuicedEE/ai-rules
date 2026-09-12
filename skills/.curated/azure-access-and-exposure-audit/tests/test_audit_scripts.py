@@ -48,7 +48,7 @@ class Scripts(unittest.TestCase):
                 options.extend(['-c', str(root / 'exposure.csv')])
             if kind == 'hardening':
                 (root / 'targets.json').write_text(json.dumps([{'Kind': fixture.get('kind', 'storage'), 'Sub': 'target-sub', 'Rg': 'rg', 'Name': 'same-name'}]), encoding='utf-8')
-                (root / 'targets.tsv').write_text(f"{fixture.get('kind', 'storage')}\ttarget-sub\trg\tsame-name\n", encoding='utf-8')
+                (root / 'targets.tsv').write_text(fixture.get('targets_tsv', f"{fixture.get('kind', 'storage')}\ttarget-sub\trg\tsame-name\n"), encoding='utf-8')
                 params['TargetJsonPath'] = str(root / 'targets.json')
                 options.extend(['-f', str(root / 'targets.tsv')])
             if PS:
@@ -247,6 +247,53 @@ exit $LASTEXITCODE
                                                  {'SubscriptionId': 'target-sub', 'Deactivate': True}, ['-s', 'target-sub', '-D'])
                 self.assertNotEqual(rc, 0, out)
                 self.assertFalse(any('PUT' in call for call in calls))
+
+    def test_deactivation_excludes_assigned_and_unknown_types(self):
+        for assignment_type in ['Assigned', None]:
+            with self.subTest(assignment_type=assignment_type):
+                standing = copy.deepcopy(ACTIVE)
+                standing['properties']['assignmentType'] = assignment_type
+                rc, out, calls = self.run_script('pim', {'active': [standing]},
+                                                 {'SubscriptionId': 'target-sub', 'Deactivate': True}, ['-s', 'target-sub', '-D'])
+                self.assertNotEqual(rc, 0, out)
+                self.assertFalse(any('PUT' in call for call in calls), calls)
+
+    def test_deactivation_selects_activation_alongside_standing_assignment(self):
+        standing = copy.deepcopy(ACTIVE)
+        standing['properties'].update(assignmentType='Assigned', roleAssignmentScheduleId='standing-schedule')
+        for instances in [[standing, ACTIVE], [ACTIVE, standing]]:
+            with self.subTest(first=instances[0]['properties']['assignmentType']):
+                rc, out, calls = self.run_script('pim', {'active': instances},
+                                                 {'SubscriptionId': 'target-sub', 'Deactivate': True}, ['-s', 'target-sub', '-D'])
+                self.assertEqual(rc, 0, out)
+                writes = [call for call in calls if 'PUT' in call]
+                self.assertEqual(len(writes), 1, calls)
+                props = json.loads(writes[0][3] if PS else writes[0][writes[0].index('--body') + 1])['properties']
+                self.assertEqual(props['targetRoleAssignmentScheduleId'], 'active-schedule')
+
+    def test_multiple_activations_remain_ambiguous(self):
+        other = copy.deepcopy(ACTIVE)
+        other['properties']['roleAssignmentScheduleId'] = 'other-activation'
+        rc, out, calls = self.run_script('pim', {'active': [ACTIVE, other]},
+                                         {'SubscriptionId': 'target-sub', 'Deactivate': True}, ['-s', 'target-sub', '-D'])
+        self.assertNotEqual(rc, 0, out)
+        self.assertFalse(any('PUT' in call for call in calls), calls)
+
+    @unittest.skipIf(PS, 'TSV input is specific to the bash hardening script')
+    def test_hardening_processes_final_target_without_newline(self):
+        for prefix in ['', 'storage\ttarget-sub\trg\tfirst\n']:
+            for apply in [False, True]:
+                with self.subTest(multiple=bool(prefix), apply=apply):
+                    fixture = {'targets_tsv': prefix + 'keyvault\ttarget-sub\trg\tlast'}
+                    rc, out, calls = self.run_script('hardening', fixture, sh_args=['-A'] if apply else [])
+                    self.assertEqual(rc, 0, out)
+                    reads = [call for call in calls if call[0] in ['storage', 'keyvault'] and 'show' in call]
+                    updates = [call for call in calls if 'update' in call]
+                    names = ['first', 'last'] if prefix else ['last']
+                    self.assertEqual([call[call.index('-n') + 1] for call in reads], names)
+                    self.assertEqual([call[call.index('-n') + 1] for call in updates], names if apply else [])
+                    if not apply:
+                        self.assertIn('WOULD RUN: az keyvault update -n last', out)
 
     def test_member_failure_preserves_rbac_without_claiming_empty_membership(self):
         scope = '/subscriptions/target-sub/resourceGroups/allowed'

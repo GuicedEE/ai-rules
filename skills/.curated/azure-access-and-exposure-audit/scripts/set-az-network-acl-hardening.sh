@@ -96,7 +96,8 @@ printf '==> network ACL hardening\n    account : %s\n    mode    : %s\n\n' \
 failures=0
 changed=0
 
-while IFS="	" read -r kind sub rg name label; do
+# read still populates the final record when EOF arrives without a trailing newline.
+while IFS="	" read -r kind sub rg name label || [ -n "${kind:-}${sub:-}${rg:-}${name:-}${label:-}" ]; do
   case "${kind:-}" in ''|\#*) continue ;; esac
 
   if [ -z "$sub" ] || [ -z "$rg" ] || [ -z "$name" ]; then

@@ -167,7 +167,7 @@ try {
     }
 } catch { throw "Cannot read PIM state or policy: $($_.Exception.Message)" }
 
-$candidates = if ($Deactivate) { $act } else { $elig }
+$candidates = if ($Deactivate) { $act | Where-Object { $_.properties.assignmentType -eq 'Activated' } } else { $elig }
 $targets = @($candidates | Where-Object { $_.properties.expandedProperties.roleDefinition.displayName -eq $Role })
 if ($targets.Count -gt 1) { throw 'Multiple assignments match; inspect role and scope before requesting a change' }
 $target = $targets | Select-Object -First 1

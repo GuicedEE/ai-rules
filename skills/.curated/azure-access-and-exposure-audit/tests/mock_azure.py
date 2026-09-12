@@ -32,7 +32,14 @@ def main():
             props = json.loads(body)['properties']
             if method.upper() == 'PUT':
                 deactivate = props['requestType'] == 'SelfDeactivate'
-                selected = fixture['active' if deactivate else 'eligible'][0]['properties']
+                if deactivate:
+                    matches = [item['properties'] for item in fixture.get('active', [])
+                               if item['properties'].get('roleAssignmentScheduleId') == props.get('targetRoleAssignmentScheduleId')]
+                    if len(matches) != 1 or matches[0].get('assignmentType') != 'Activated':
+                        raise RuntimeError('Deactivation must target a unique Activated schedule')
+                    selected = matches[0]
+                else:
+                    selected = fixture['eligible'][0]['properties']
                 expected = selected['scope'] + '/providers/Microsoft.Authorization/roleAssignmentScheduleRequests/'
                 if not path.startswith(expected):
                     raise RuntimeError('Request did not use the selected assignment scope')

@@ -174,9 +174,10 @@ scripts/get-az-pim-status.sh -L -P
 
 PowerShell reads the governing policy and clamps duration, including fractional-hour maxima.
 Policy lookup and activation requests use the selected eligibility's `properties.scope`, including
-resource-group and resource scopes. Deactivation (`-Deactivate` / `-D`) selects an active assignment
+resource-group and resource scopes. Deactivation (`-Deactivate` / `-D`) selects an `Activated` assignment
 belonging to the caller and sends its `roleAssignmentScheduleId` as `targetRoleAssignmentScheduleId`
 at that assignment's scope; it does not require an eligibility record or activation-policy lookup.
+Standing `Assigned` instances remain visible in the report but are excluded from deactivation selection.
 Supply `-TicketNumber` and `-TicketSystem` when ticketing is required; the script stops before
 writing if they are absent. Bash sends the requested `-t` duration and lets ARM enforce the
 policy; use `-k` / `-y` for ticket number/system. It returns nonzero on rejection. Bash activation

@@ -74,7 +74,7 @@ boolean enabled   = Boolean.parseBoolean(
 4. `.env` file (shared defaults, may be committed)
 5. the provided default (with `${...}` placeholders resolved)
 
-Other helpers: `Environment.getProperty(name, default)` (lighter system-property/env only), `Environment.resolvePlaceholders(value)` for `${VAR:-default}` strings, and `Environment.reloadDotEnv()` for tests. All string config attributes therefore support `${ENV_VAR}` placeholders for free.
+`Environment.getProperty(name, default)` is an alias of `getSystemPropertyOrEnvironment` with the same precedence, `.env.local`/`.env` lookup, and placeholder resolution. Use the canonical `getSystemPropertyOrEnvironment` spelling in new code. Other helpers include `Environment.resolvePlaceholders(value)` for `${VAR:-default}` strings and `Environment.reloadDotEnv()` for tests. All string config attributes therefore support `${ENV_VAR}` placeholders for free.
 
 ## Non-Negotiable Constraints
 
