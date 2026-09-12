@@ -1,6 +1,6 @@
 ---
 name: guicedee-client
-description: "GuicedEE client SPI contracts: IGuiceContext, lifecycle hook interfaces (IGuicePreStartup, IGuiceModule, IGuicePostStartup, IGuicePreDestroy, IGuiceConfigurator) — all extending IDefaultService for sort ordering and enablement, CallScope and CallScopeProperties, IJsonRepresentation for Jackson serialization, and JPMS module setup. Use when programming against GuicedEE SPI contracts, understanding the lifecycle hook interfaces, implementing IDefaultService, using call scoping, or referencing the client API without the full runtime."
+description: "GuicedEE client SPI contracts: IGuiceContext, lifecycle hook interfaces (IGuicePreStartup, IGuiceModule, IGuicePostStartup, IGuicePreDestroy, IGuiceConfigurator) — all extending IDefaultService for sort ordering, with module-specific enablement, CallScope and CallScopeProperties, IJsonRepresentation for Jackson serialization, and JPMS module setup. Use when programming against GuicedEE SPI contracts, understanding the lifecycle hook interfaces, implementing IDefaultService, using call scoping, or referencing the client API without the full runtime."
 metadata:
   short-description: GuicedEE client SPI contracts and lifecycle interfaces
 ---
@@ -33,7 +33,7 @@ This library provides the interfaces and annotations for the GuicedEE lifecycle.
 
 ## Lifecycle Hook Interfaces
 
-All hooks extend `IDefaultService<J>` (CRTP). Override `sortOrder()` to control execution order. There is **no `enabled()` method** — to conditionally skip work, branch inside the hook method itself (e.g. an `IGuicePostStartup` returns an empty `List.of()`; an `IGuicePreStartup` returns an empty list of futures).
+All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` when a custom execution order is needed. `IGuiceModule` additionally declares `enabled()` (default `true`). `IDefaultService`, startup, shutdown, and configurator hooks do not declare `enabled()`; gate their work inside the hook body.
 
 | Interface | When | Purpose |
 |---|---|---|
@@ -80,7 +80,7 @@ Other helpers: `Environment.getProperty(name, default)` (lighter system-property
 
 - Module must `requires com.guicedee.client;`.
 - All SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
-- `sortOrder()` controls execution order — lower runs first. There is **no `enabled()`** on `IDefaultService`; gate work inside the hook method.
+- `sortOrder()` controls execution order — lower runs first. `IGuiceModule.enabled()` controls module enablement; other hooks gate work inside their method.
 - Lifecycle hooks are grouped by `sortOrder()` — all futures in a group must complete before the next group.
 - `IGuicePreStartup.onStartup()` returns `List<Future<Boolean>>` — uses **Vert.x `io.vertx.core.Future`**.
 - `IGuicePostStartup.postLoad()` returns `List<Uni<Boolean>>` — uses **Mutiny `io.smallrye.mutiny.Uni`**.

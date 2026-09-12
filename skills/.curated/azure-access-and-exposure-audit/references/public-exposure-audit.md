@@ -10,7 +10,8 @@
 
 1. **Inventory** with Resource Graph or `resources?$filter=resourceType eq '...'`.
 2. **Verdict** with a **direct ARM GET on each resource**. Never from Resource Graph.
-3. Classify each result as: finding / weak-second-control / explained / compliant.
+3. Classify each result as: finding / weak-second-control / explained / info / compliant /
+   unverifiable. Failed reads and unsupported controls are unverifiable, never empty/compliant.
 
 ### Resource Graph cannot give the verdict
 
@@ -27,7 +28,8 @@ the types below first — that is a handful of calls.
 
 ## Types that can carry exposure
 
-Anything not in this list cannot be publicly reachable on its own.
+This is a bounded inventory of 17 selected types, not an exhaustive list of public Azure services.
+Assess resource types outside this list separately.
 
 | Type | Property that decides it |
 |---|---|
@@ -54,13 +56,25 @@ Anything not in this list cannot be publicly reachable on its own.
 - `networkAcls.defaultAction` → the second line of defence. `Allow` (or an absent `networkAcls`
   block) is *not* an exposure, but leaves the resource resting on a single control.
 
-**App Service slots** — a slot inherits the parent site's private endpoint, so a scanner reporting
-`HasPrivateEndpoint=No / PrivateEndpointCount=0` on a slot is **expected and not a gap**. The slot
-carries its **own** `publicNetworkAccess` though — always read it separately via `/slots`.
+**App Service slots** — assess each slot independently. Do not infer its private endpoint or
+public access state from the parent site. Always read the slot via `/slots`; enabled/absent PNA
+needs access-restriction and endpoint assessment. The scripts mark that case unverifiable.
+See [App Service private endpoints](https://learn.microsoft.com/en-us/azure/app-service/networking/private-endpoint).
 
-**Front Door / CDN** — public **by design**; it is the intended ingress. The verdict is not
-"is it public" but **"is a WAF attached"** (`GET {profile}/securityPolicies`). Zero security
-policies on an internet-facing edge is a real finding.
+**Front Door / CDN** — query `securityPolicies` only for `Standard_AzureFrontDoor` and
+`Premium_AzureFrontDoor`. Classic CDN profiles require a separate assessment and are reported as
+unsupported. Failed policy reads are unverifiable; a successful empty list is a finding. A
+nonempty list is informational: verify its domain/path associations and WAF mode before claiming
+protection. See the [Microsoft security policy schema](https://learn.microsoft.com/en-us/azure/templates/microsoft.cdn/profiles/securitypolicies).
+
+**Script coverage** — AKS uses `apiServerAccessProfile.enablePrivateCluster` and reports public
+API authorized ranges. PostgreSQL/MySQL use `network.publicNetworkAccess`; their enabled public
+endpoints and SQL servers require a successful firewall-rule read. Storage, Key Vault, ACR, and
+Cognitive Services inspect their ACL default action; Cosmos inspects IP rules and virtual-network
+filtering. A deny ACL or configured allow rules are informational, not proof of compliance.
+For other listed services the scripts recognize explicit disabled PNA, but report enabled/absent
+PNA as unverifiable until service-specific rules are assessed. Configuration alone does not prove
+actual internet reachability.
 
 ## False positives
 

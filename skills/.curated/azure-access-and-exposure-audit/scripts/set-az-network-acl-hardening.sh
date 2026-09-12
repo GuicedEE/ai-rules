@@ -99,14 +99,17 @@ changed=0
 while IFS="	" read -r kind sub rg name label; do
   case "${kind:-}" in ''|\#*) continue ;; esac
 
-  az account set --subscription "$sub" >/dev/null 2>&1
+  if [ -z "$sub" ] || [ -z "$rg" ] || [ -z "$name" ]; then
+    echo "Missing target subscription, resource group, or name" >&2
+    failures=$((failures+1)); continue
+  fi
   printf -- '--- [%s] %s (%s) ---\n' "${label:-}" "$name" "$kind"
 
   if [ "$kind" = "storage" ]; then
     # DOUBLE brackets: `--query '[a,b]' -o tsv` emits one value per LINE, so cut -f returns the
     # whole blob and the "already compliant" test never matches. `[[a,b]]` emits ONE tab-separated
     # row. Verified on Linux.
-    row="$(az storage account show -n "$name" -g "$rg" \
+    row="$(az storage account show -n "$name" -g "$rg" --subscription "$sub" \
              --query '[[publicNetworkAccess, networkRuleSet.defaultAction]]' -o tsv 2>&1)"
     if [ $? -ne 0 ]; then
       printf '    CANNOT READ: %s\n' "$(printf '%s' "$row" | head -1)"
@@ -118,10 +121,10 @@ while IFS="	" read -r kind sub rg name label; do
     printf '    networkRuleSet.defaultAction = %s   (desired: Deny)\n' "$da"
     if [ "$da" = "Deny" ]; then printf '    already compliant\n'; continue; fi
     if [ "$APPLY" -eq 0 ]; then
-      printf '    WOULD RUN: az storage account update -n %s -g %s --default-action Deny --bypass AzureServices\n' "$name" "$rg"
+      printf '    WOULD RUN: az storage account update -n %s -g %s --subscription %s --default-action Deny --bypass AzureServices\n' "$name" "$rg" "$sub"
       continue
     fi
-    if err="$(az storage account update -n "$name" -g "$rg" \
+    if err="$(az storage account update -n "$name" -g "$rg" --subscription "$sub" \
                 --default-action Deny --bypass AzureServices -o none 2>&1)"; then
       printf '    set defaultAction=Deny\n'; changed=$((changed+1))
     else
@@ -129,7 +132,7 @@ while IFS="	" read -r kind sub rg name label; do
     fi
 
   elif [ "$kind" = "keyvault" ]; then
-    row="$(az keyvault show -n "$name" -g "$rg" \
+    row="$(az keyvault show -n "$name" -g "$rg" --subscription "$sub" \
              --query '[[properties.publicNetworkAccess, properties.networkAcls.defaultAction]]' -o tsv 2>&1)"
     if [ $? -ne 0 ]; then
       printf '    CANNOT READ: %s\n' "$(printf '%s' "$row" | head -1)"
@@ -145,10 +148,10 @@ while IFS="	" read -r kind sub rg name label; do
     fi
     if [ "$da" = "Deny" ]; then printf '    already compliant\n'; continue; fi
     if [ "$APPLY" -eq 0 ]; then
-      printf '    WOULD RUN: az keyvault update -n %s -g %s --default-action Deny --bypass AzureServices\n' "$name" "$rg"
+      printf '    WOULD RUN: az keyvault update -n %s -g %s --subscription %s --default-action Deny --bypass AzureServices\n' "$name" "$rg" "$sub"
       continue
     fi
-    if err="$(az keyvault update -n "$name" -g "$rg" \
+    if err="$(az keyvault update -n "$name" -g "$rg" --subscription "$sub" \
                 --default-action Deny --bypass AzureServices -o none 2>&1)"; then
       printf '    set defaultAction=Deny\n'; changed=$((changed+1))
     else

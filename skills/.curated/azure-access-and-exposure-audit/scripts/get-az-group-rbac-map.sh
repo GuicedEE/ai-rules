@@ -65,8 +65,8 @@ az() { command az "$@" </dev/null | tr -d '\r'; }
 # NOTE: bare `mktemp` is a GNU extension. BSD/macOS mktemp requires a template or -t, so an
 # explicit template is used - bare mktemp fails there and, with no `set -e`, the script would
 # carry on writing to an empty path and silently report nothing.
-GROUPS_FILE="$(mktemp "${TMPDIR:-/tmp}/azrbac.XXXXXX")"   # id <TAB> name
-DEAD_FILE="$(mktemp "${TMPDIR:-/tmp}/azrbac.XXXXXX")"
+GROUPS_FILE="$(mktemp "${TMPDIR:-/tmp}/azrbac.XXXXXX")" || exit 1   # id <TAB> name
+DEAD_FILE="$(mktemp "${TMPDIR:-/tmp}/azrbac.XXXXXX")" || exit 1
 trap 'rm -f "$GROUPS_FILE" "$DEAD_FILE"' EXIT
 
 # Join stdin lines with ", ".
@@ -76,9 +76,11 @@ trap 'rm -f "$GROUPS_FILE" "$DEAD_FILE"' EXIT
 # silently wrong access answer, exactly what this skill exists to prevent.
 join_csv() { paste -sd, - | sed 's/,/, /g'; }
 
+failures=0
+
 if [ -n "$PREFIX" ]; then
   az ad group list --filter "startswith(displayName,'${PREFIX}')" \
-     --query '[].[id,displayName]' -o tsv 2>/dev/null >> "$GROUPS_FILE"
+     --query '[].[id,displayName]' -o tsv 2>/dev/null >> "$GROUPS_FILE" || { echo "Group lookup failed" >&2; exit 1; }
 fi
 for gid in $GIDS; do
   nm="$(az ad group show --group "$gid" --query displayName -o tsv 2>/dev/null)"
@@ -104,34 +106,32 @@ fi
 printf '\n================ GROUP -> RBAC ================\n'
 
 for sub in $SUBS; do
-  az account set --subscription "$sub" >/dev/null 2>&1 || { echo "cannot select $sub" >&2; continue; }
-  sub_name="$(az account show --query name -o tsv 2>/dev/null)"
+  sub_name="$sub"
   printf '\n--- %s ---\n' "$sub_name"
 
   while IFS="	" read -r id nm; do
     [ -n "$id" ] || continue
 
-    # ACTIVE assignments
-    active="$(az role assignment list --assignee "$id" --subscription "$sub" \
-                --query '[].roleDefinitionName' -o tsv 2>/dev/null | sort -u | join_csv)"
-    [ -n "$active" ] || active="(none)"
-
-    # PIM-ELIGIBLE assignments. A group can grant NOTHING active yet be the only route to
-    # Contributor. Miss this and the whole picture is wrong.
-    # NOTE: the $filter contains parentheses; on Linux/macOS `az` is a python shim so this is fine.
-    # On Windows `az.cmd` goes through cmd, which mangles ( ) - use the PowerShell script there.
-    elig="$(az rest --method GET \
-              --url "https://management.azure.com/subscriptions/${sub}/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01&\$filter=principalId+eq+'${id}'" \
-              --query 'value[].properties.expandedProperties.roleDefinition.displayName' \
-              -o tsv 2>/dev/null | sort -u | join_csv)"
-    [ -n "$elig" ] || elig="(none)"
-
-    if [ "$active" = "(none)" ] && [ "$elig" = "(none)" ]; then
-      flag="[!]"
-      printf '%s\n' "$nm" >> "$DEAD_FILE"
-    else
-      flag="   "
-    fi
+    query_failed=0
+    if active="$(az role assignment list --assignee "$id" --subscription "$sub" --all --include-inherited \
+        --query '[].[roleDefinitionName,scope]' -o tsv | sort -u | join_csv)"; then
+      [ -n "$active" ] || active='(none)'
+    else active='(unknown: active query failed)'; query_failed=1; fi
+    # Include scope with every eligible grant; follow pagination and fail on any unreadable page.
+    elig=''
+    url="https://management.azure.com/subscriptions/${sub}/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01&\$filter=principalId+eq+'${id}'"
+    while [ -n "$url" ] && [ "$url" != None ]; do
+      if ! page="$(az rest --method GET --url "$url" --query 'value[].[properties.expandedProperties.roleDefinition.displayName,properties.scope]' -o tsv)"; then query_failed=1; break; fi
+      elig="${elig}${page} "
+      if ! url="$(az rest --method GET --url "$url" --query nextLink -o tsv)"; then query_failed=1; break; fi
+    done
+    elig="$(printf '%s' "$elig" | sed 's/[[:space:]]*$//')"
+    [ -n "$elig" ] || elig='(none)'
+    if [ "$query_failed" -eq 1 ]; then
+      flag='[?]'; failures=$((failures+1)); elig="$elig (UNVERIFIABLE: partial results)"
+    elif [ "$active" = '(none)' ] && [ "$elig" = '(none)' ]; then
+      flag='[!]'; printf '%s in subscription %s\n' "$nm" "$sub" >> "$DEAD_FILE"
+    else flag='   '; fi
 
     printf '%s %s\n' "$flag" "$nm"
     printf '      ACTIVE   : %s\n' "$active"
@@ -146,13 +146,9 @@ for sub in $SUBS; do
 done
 
 if [ -s "$DEAD_FILE" ]; then
-  printf '\n[!] These groups grant NOTHING (no active, no eligible RBAC):\n'
+  printf '\n[!] No active or eligible assignments found for these group/subscription pairs:\n'
   sort -u "$DEAD_FILE" | while IFS= read -r d; do printf '      %s\n' "$d"; done
-  cat <<'EOF'
-    Requesting them achieves nothing and their requests will not appear in the
-    approval queue of the group that DOES grant access. Confirm which group a
-    pending request actually targeted before hunting for it.
-EOF
+  printf 'Other subscriptions, nested groups, deny assignments, conditions, and directory roles require separate evaluation.\n'
 fi
-
+[ "$failures" -eq 0 ] || exit 1
 exit 0

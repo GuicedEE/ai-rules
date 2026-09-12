@@ -40,7 +40,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 # Types that can carry inbound public exposure, with the api-version that exposes the property.
-# Anything not in this list cannot be publicly reachable on its own.
+# This inventory is bounded; resources outside it require a separate assessment.
 $TypeMap = [ordered]@{
     'Microsoft.Web/sites'                                          = '2023-01-01'
     'Microsoft.KeyVault/vaults'                                    = '2023-07-01'
@@ -61,139 +61,144 @@ $TypeMap = [ordered]@{
     'Microsoft.Cdn/profiles'                                       = '2023-05-01'
 }
 
-function Invoke-Arm {
-    # Isolates $ErrorActionPreference so a native/HTTP failure reports instead of killing the run.
-    param([string]$Uri, [hashtable]$Headers)
-    try { return Invoke-RestMethod -Method GET -Uri $Uri -Headers $Headers -ErrorAction Stop }
-    catch { return $null }
+function Invoke-AzChecked {
+    $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    try {
+        $out = & az @args 2>&1
+        if ($LASTEXITCODE -ne 0) { throw "Azure CLI failed: $out" }
+        return ($out | Out-String).Trim()
+    } finally { $ErrorActionPreference = $prev }
 }
 
-if (-not $SubscriptionId -or $SubscriptionId.Count -eq 0) {
-    $cur = (& az account show -o json | ConvertFrom-Json)
-    $SubscriptionId = @($cur.id)
+function Get-Arm {
+    param([string]$Uri)
+    return Invoke-RestMethod -Method GET -Uri $Uri -Headers $H -ErrorAction Stop
 }
 
+function Get-ArmList {
+    param([string]$Uri)
+    do {
+        $page = Get-Arm $Uri
+        if ($null -eq $page.value) { throw "ARM list has no value collection: $Uri" }
+        $page.value
+        $Uri = $page.nextLink
+    } while ($Uri)
+}
+
+function Add-Result {
+    param([string]$Severity, [string]$Name, [string]$Type, [string]$Verdict, [string]$Detail, [string]$Id)
+    [void]$findings.Add([pscustomobject]@{
+        Subscription = $sub; Name = $Name; Type = $Type; ResourceId = $Id
+        Severity = $Severity; Verdict = $Verdict; Detail = $Detail
+    })
+}
+
+if (-not $SubscriptionId) {
+    $SubscriptionId = @((Invoke-AzChecked account show -o json | ConvertFrom-Json).id)
+    if (-not $SubscriptionId[0]) { throw 'No current subscription. Supply -SubscriptionId.' }
+}
 $findings = New-Object System.Collections.ArrayList
-
 foreach ($sub in $SubscriptionId) {
-    & az account set --subscription $sub | Out-Null
-    $subName = (& az account show -o json | ConvertFrom-Json).name
-    $token = (& az account get-access-token --resource https://management.azure.com --query accessToken -o tsv)
-    $H = @{ Authorization = "Bearer $token" }
-
-    Write-Host ""
-    Write-Host "==> $subName" -ForegroundColor Cyan
-    Write-Host "    $sub" -ForegroundColor DarkGray
-
+    Write-Host "==> $sub"
+    try {
+        $token = Invoke-AzChecked account get-access-token --subscription $sub --resource https://management.azure.com --query accessToken -o tsv
+        if (-not $token) { throw 'No ARM access token returned' }
+        $H = @{ Authorization = "Bearer $token" }
+    } catch { Add-Result 'unverifiable' $sub 'subscription' 'token failed' $_.Exception.Message ''; continue }
     foreach ($type in $TypeMap.Keys) {
         $apiv = $TypeMap[$type]
-        $listUri = "https://management.azure.com/subscriptions/$sub/resources?api-version=2021-04-01&`$filter=" +
-                   [uri]::EscapeDataString("resourceType eq '$type'")
-        $list = Invoke-Arm -Uri $listUri -Headers $H
-        if (-not $list) { continue }
-
-        foreach ($r in @($list.value)) {
-            $full = Invoke-Arm -Uri "https://management.azure.com$($r.id)?api-version=$apiv" -Headers $H
-            if (-not $full) { continue }
-
-            $p = $full.properties
-            $verdict = 'unknown'; $detail = ''; $severity = 'info'
-
-            switch -Wildcard ($type) {
-                'Microsoft.Network/publicIPAddresses' {
-                    # A public IP is NOT automatically exposure. NAT-gateway / LB-outbound IPs are
-                    # EGRESS ONLY and accept no inbound connections. Scanners flag these constantly.
-                    $assoc = 'unattached'
-                    if ($p.ipConfiguration.id)   { $assoc = 'ipConfiguration' }
-                    if ($p.natGateway.id)        { $assoc = 'natGateway (EGRESS ONLY)' }
-                    $verdict  = $p.ipAddress
-                    $detail   = "attached to: $assoc"
-                    $severity = if ($assoc -like 'natGateway*') { 'explained' } else { 'info' }
-                }
-                'Microsoft.Cdn/profiles' {
-                    # Front Door is public BY DESIGN. What matters is whether a WAF is attached.
-                    $sp = Invoke-Arm -Headers $H -Uri ("https://management.azure.com$($r.id)/securityPolicies?api-version=$apiv")
-                    $n  = @($sp.value).Count
-                    $verdict  = "WAF security policies: $n"
-                    $severity = if ($n -eq 0) { 'FINDING' } else { 'ok' }
-                    $detail   = if ($n -eq 0) { 'internet-facing edge with NO WAF attached' } else { (@($sp.value).name -join ', ') }
-                }
-                'Microsoft.Storage/storageAccounts' {
-                    $verdict = $p.publicNetworkAccess
-                    $da      = $p.networkAcls.defaultAction
-                    $detail  = "networkAcls.defaultAction=$da; allowBlobPublicAccess=$($p.allowBlobPublicAccess)"
-                    if ($verdict -ne 'Disabled')      { $severity = 'FINDING' }
-                    elseif ($da -ne 'Deny')           { $severity = 'weak-2nd-control' }
-                    else                              { $severity = 'ok' }
-                }
-                'Microsoft.KeyVault/vaults' {
-                    $verdict = $p.publicNetworkAccess
-                    # @($null).Count returns 1 in PowerShell - null-check BEFORE counting or you
-                    # will report a non-existent IP allow-list.
-                    $acls    = $p.networkAcls
-                    $da      = if ($acls) { $acls.defaultAction } else { $null }
-                    $ipCount = if ($acls -and $acls.ipRules) { @($acls.ipRules).Count } else { 0 }
-                    $detail  = if ($acls) { "networkAcls.defaultAction=$da; ipRules=$ipCount" } else { 'networkAcls ABSENT' }
-                    if ($verdict -ne 'Disabled')      { $severity = 'FINDING' }
-                    elseif (-not $acls -or $da -ne 'Deny') { $severity = 'weak-2nd-control' }
-                    else                              { $severity = 'ok' }
-                }
-                'Microsoft.Web/sites' {
-                    $verdict  = $p.publicNetworkAccess
-                    $detail   = "httpsOnly=$($full.properties.httpsOnly)"
-                    $severity = if ($verdict -eq 'Disabled') { 'ok' } else { 'FINDING' }
-                    # Slots inherit the parent's private endpoint but carry their OWN
-                    # publicNetworkAccess - always check them separately.
-                    $slots = Invoke-Arm -Headers $H -Uri ("https://management.azure.com$($r.id)/slots?api-version=$apiv")
-                    foreach ($s in @($slots.value)) {
-                        $sv = $s.properties.publicNetworkAccess
-                        [void]$findings.Add([pscustomobject]@{
-                            Subscription = $subName; Type = 'Microsoft.Web/sites/slots'
-                            Name = $s.name; ResourceGroup = $r.resourceGroup
-                            Verdict = $sv; Detail = 'slot inherits parent private endpoint'
-                            Severity = if ($sv -eq 'Disabled') { 'ok' } else { 'FINDING' }
-                        })
+        $listUri = "https://management.azure.com/subscriptions/$sub/resources?api-version=2021-04-01&`$filter=" + [uri]::EscapeDataString("resourceType eq '$type'")
+        try { $resources = @(Get-ArmList $listUri) }
+        catch { Add-Result 'unverifiable' $sub $type 'inventory failed' $_.Exception.Message ''; continue }
+        foreach ($r in $resources) {
+            try {
+                $full = Get-Arm "https://management.azure.com$($r.id)?api-version=$apiv"
+                if (-not $full.properties) { throw 'Resource response has no properties' }
+                $p = $full.properties; $pna = $p.publicNetworkAccess
+                $severity = 'unverifiable'; $verdict = "$pna"; $detail = 'Missing or unsupported network controls'
+                switch ($type) {
+                    'Microsoft.Network/publicIPAddresses' {
+                        $verdict = $p.ipAddress; $severity = 'info'; $detail = 'Association requires inbound rule assessment'
+                        if ($p.natGateway.id) { $severity = 'explained'; $detail = 'natGateway (EGRESS ONLY)' }
+                    }
+                    'Microsoft.Cdn/profiles' {
+                        if ($full.sku.name -notin @('Standard_AzureFrontDoor','Premium_AzureFrontDoor')) {
+                            $verdict = 'unsupported CDN SKU'; $detail = "SKU=$($full.sku.name); assess CDN endpoint WAF separately"
+                        } else {
+                            $policies = @(Get-ArmList "https://management.azure.com$($r.id)/securityPolicies?api-version=$apiv")
+                            $verdict = "WAF policies: $($policies.Count)"
+                            if ($policies.Count -eq 0) { $severity = 'FINDING'; $detail = 'Front Door has no security policy' }
+                            else { $severity = 'info'; $detail = 'Policies present; verify domain/path associations and WAF mode' }
+                        }
+                    }
+                    'Microsoft.ContainerService/managedClusters' {
+                        $private = $p.apiServerAccessProfile.enablePrivateCluster
+                        $verdict = "enablePrivateCluster=$private"
+                        if ($private -eq $true) { $severity = 'ok'; $detail = 'Private API server' }
+                        elseif ($private -eq $false) {
+                            $ranges = @($p.apiServerAccessProfile.authorizedIPRanges | Where-Object { $_ })
+                            $severity = if ($ranges.Count -gt 0) { 'info' } else { 'FINDING' }
+                            $detail = "Public API server; authorizedIPRanges=$($ranges -join ',')"
+                        }
+                    }
+                    { $_ -in @('Microsoft.Sql/servers','Microsoft.DBforPostgreSQL/flexibleServers','Microsoft.DBforMySQL/flexibleServers') } {
+                        if ($type -ne 'Microsoft.Sql/servers') { $pna = $p.network.publicNetworkAccess }
+                        $verdict = "$pna"
+                        if ($pna -eq 'Disabled') { $severity = 'ok'; $detail = 'Public network access disabled' }
+                        elseif ($pna -eq 'Enabled') {
+                            $rules = @(Get-ArmList "https://management.azure.com$($r.id)/firewallRules?api-version=$apiv")
+                            $wide = @($rules | Where-Object { $_.properties.startIpAddress -eq '0.0.0.0' -and $_.properties.endIpAddress -eq '255.255.255.255' })
+                            $severity = if ($wide.Count) { 'FINDING' } else { 'info' }
+                            $detail = "Public endpoint; firewallRules=$($rules.Count); review ranges and service bypasses"
+                        }
+                    }
+                    { $_ -in @('Microsoft.Storage/storageAccounts','Microsoft.KeyVault/vaults','Microsoft.CognitiveServices/accounts','Microsoft.ContainerRegistry/registries') } {
+                        $acl = if ($type -eq 'Microsoft.ContainerRegistry/registries') { $p.networkRuleSet } else { $p.networkAcls }
+                        $da = $acl.defaultAction
+                        $ips = @($acl.ipRules | Where-Object { $_ }).Count
+                        $detail = "defaultAction=$da; ipRules=$ips; review allow rules and bypasses"
+                        if ($pna -eq 'Disabled') { $severity = if ($da -eq 'Deny') { 'ok' } else { 'weak-2nd-control' } }
+                        elseif ($pna -eq 'Enabled') {
+                            if ($da -eq 'Allow') { $severity = 'FINDING' }
+                            elseif ($da -eq 'Deny') { $severity = 'info' }
+                        }
+                    }
+                    'Microsoft.DocumentDB/databaseAccounts' {
+                        $ips = @($p.ipRules | Where-Object { $_ }).Count
+                        $detail = "ipRules=$ips; isVirtualNetworkFilterEnabled=$($p.isVirtualNetworkFilterEnabled)"
+                        if ($pna -eq 'Disabled') { $severity = 'ok' }
+                        elseif ($pna -eq 'Enabled' -and $null -ne $p.isVirtualNetworkFilterEnabled -and $null -ne $p.ipRules) {
+                            $severity = if ($ips -gt 0 -or $p.isVirtualNetworkFilterEnabled) { 'info' } else { 'FINDING' }
+                        }
+                    }
+                    'Microsoft.Web/sites' {
+                        $severity = if ($pna -eq 'Disabled') { 'ok' } else { 'unverifiable' }
+                        $detail = 'Enabled/absent PNA requires site access restriction and private endpoint assessment'
+                        try {
+                            $slots = @(Get-ArmList "https://management.azure.com$($r.id)/slots?api-version=$apiv")
+                            foreach ($slot in $slots) {
+                                $sv = $slot.properties.publicNetworkAccess
+                                $ss = if ($sv -eq 'Disabled') { 'ok' } else { 'unverifiable' }
+                                Add-Result $ss $slot.name 'Microsoft.Web/sites/slots' "$sv" 'Assess slot networking independently of the parent site' $slot.id
+                            }
+                        } catch { Add-Result 'unverifiable' $r.name 'Microsoft.Web/sites/slots' 'slot inventory failed' $_.Exception.Message $r.id }
+                    }
+                    default {
+                        if ($pna -eq 'Disabled') { $severity = 'ok'; $detail = 'Public network access disabled' }
+                        else { $detail = 'Public endpoint requires service-specific firewall/network rule assessment' }
                     }
                 }
-                default {
-                    $verdict = if ($null -ne $p.publicNetworkAccess) { $p.publicNetworkAccess } else { '(not reported)' }
-                    $severity = if ($verdict -eq 'Disabled') { 'ok' } elseif ($verdict -eq '(not reported)') { 'info' } else { 'FINDING' }
-                }
-            }
-
-            [void]$findings.Add([pscustomobject]@{
-                Subscription = $subName; Type = $type; Name = $r.name
-                ResourceGroup = $r.resourceGroup; Verdict = $verdict
-                Detail = $detail; Severity = $severity
-            })
+                Add-Result $severity $r.name $type $verdict $detail $r.id
+            } catch { Add-Result 'unverifiable' $r.name $type 'ARM read failed' $_.Exception.Message $r.id }
         }
     }
 }
-
 $show = if ($IncludeCompliant) { $findings } else { $findings | Where-Object { $_.Severity -ne 'ok' } }
-
-Write-Host ""
-Write-Host "================ RESULTS ================" -ForegroundColor Cyan
-foreach ($grp in @('FINDING', 'weak-2nd-control', 'explained', 'info', 'ok')) {
-    $rows = @($show | Where-Object { $_.Severity -eq $grp })
-    if ($rows.Count -eq 0) { continue }
-    $colour = switch ($grp) {
-        'FINDING'          { 'Red' }
-        'weak-2nd-control' { 'Yellow' }
-        'explained'        { 'DarkGray' }
-        default            { 'Gray' }
-    }
-    Write-Host ""
-    Write-Host "--- $grp ($($rows.Count)) ---" -ForegroundColor $colour
-    $rows | Format-Table Name, Type, Verdict, Detail -AutoSize | Out-String | Write-Host
-}
-
-Write-Host ""
-Write-Host "Totals: $(@($findings | Where-Object {$_.Severity -eq 'FINDING'}).Count) finding(s), " -NoNewline -ForegroundColor Red
-Write-Host "$(@($findings | Where-Object {$_.Severity -eq 'weak-2nd-control'}).Count) weak second control, " -NoNewline -ForegroundColor Yellow
-Write-Host "$(@($findings | Where-Object {$_.Severity -eq 'ok'}).Count) compliant." -ForegroundColor Green
-
-if ($CsvPath) {
-    $findings | Export-Csv -NoTypeInformation -Path $CsvPath
-    Write-Host "CSV written: $CsvPath" -ForegroundColor Green
-}
+$show | Format-Table Subscription, Name, Severity, Verdict, Detail -AutoSize | Out-String -Width 300 | Write-Host
+$failed = @($findings | Where-Object { $_.Severity -eq 'unverifiable' }).Count
+$found = @($findings | Where-Object { $_.Severity -eq 'FINDING' }).Count
+Write-Host "Totals: $found finding(s), $failed unverifiable result(s). This is a configuration audit, not a connectivity test."
+if ($CsvPath) { $findings | Export-Csv -NoTypeInformation -Path $CsvPath }
+if ($failed -gt 0) { exit 2 }
+if ($found -gt 0) { exit 1 }
+exit 0

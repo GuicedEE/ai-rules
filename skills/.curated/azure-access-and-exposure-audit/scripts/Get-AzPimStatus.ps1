@@ -49,6 +49,8 @@ param(
     [string]$Role = 'Contributor',
     [ValidateRange(1, 24)][int]$Hours = 4,
     [string]$Justification = 'Operational task',
+    [string]$TicketNumber,
+    [string]$TicketSystem,
     [switch]$Activate,
     [switch]$Deactivate,
     [switch]$Approvals,
@@ -57,10 +59,21 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-if (-not $SubscriptionId) { $SubscriptionId = (& az account show -o json | ConvertFrom-Json).id }
-& az account set --subscription $SubscriptionId | Out-Null
-$acct  = (& az account show -o json | ConvertFrom-Json)
-$token = (& az account get-access-token --resource https://management.azure.com --query accessToken -o tsv)
+function Invoke-AzChecked {
+    $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    try {
+        $out = & az @args 2>&1
+        if ($LASTEXITCODE -ne 0) { throw "Azure CLI failed: $out" }
+        return ($out | Out-String).Trim()
+    } finally { $ErrorActionPreference = $prev }
+}
+if ($Activate -and $Deactivate) { throw 'Choose -Activate or -Deactivate' }
+if ($Approve -and -not $Approvals) { throw '-Approve requires -Approvals' }
+if ($Approvals -and ($Activate -or $Deactivate)) { throw 'Approval and activation modes are separate' }
+if (-not $SubscriptionId) { $SubscriptionId = (Invoke-AzChecked account show -o json | ConvertFrom-Json).id }
+if (-not $SubscriptionId) { throw 'No target subscription' }
+$acct = Invoke-AzChecked account show --subscription $SubscriptionId -o json | ConvertFrom-Json
+$token = Invoke-AzChecked account get-access-token --subscription $SubscriptionId --resource https://management.azure.com --query accessToken -o tsv
 $H     = @{ Authorization = "Bearer $token" }
 $scope = "/subscriptions/$SubscriptionId"
 $api   = 'api-version=2020-10-01'
@@ -70,11 +83,23 @@ $base  = "https://management.azure.com$scope/providers/Microsoft.Authorization"
 $pl = ($token.Split('.')[1]).Replace('_','/').Replace('-','+'); while ($pl.Length % 4) { $pl += '=' }
 $oid = ([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($pl)) | ConvertFrom-Json).oid
 
+if (-not $oid) { throw 'ARM token has no oid claim; cannot identify the principal' }
+
 Write-Host "==> PIM  $($acct.name)" -ForegroundColor Cyan
 Write-Host "    account: $($acct.user.name)  ($oid)"
 Write-Host ""
 
 function Get-Arm { param([string]$Url) return Invoke-RestMethod -Method GET -Uri $Url -Headers $H -ErrorAction Stop }
+
+function Get-ArmList {
+    param([string]$Url)
+    do {
+        $page = Get-Arm $Url
+        if ($null -eq $page.value) { throw "ARM list has no value collection: $Url" }
+        $page.value
+        $Url = $page.nextLink
+    } while ($Url)
+}
 
 # ---------------- approvals mode ----------------
 if ($Approvals) {
@@ -83,10 +108,10 @@ if ($Approvals) {
     $list = @()
     try {
         $u = "$base/roleAssignmentApprovals" + "?$aapi" + '&$filter=asApprover()'
-        $list = @((Get-Arm $u).value)
+        $list = @(Get-ArmList $u)
     } catch {
         Write-Host "Could not read approvals: $($_.Exception.Message)" -ForegroundColor Red
-        return
+        exit 1
     }
     if ($list.Count -eq 0) {
         Write-Host "Nothing is awaiting your approval." -ForegroundColor Yellow
@@ -95,13 +120,13 @@ if ($Approvals) {
         return
     }
     foreach ($a in $list) {
-        $stages = @((Get-Arm "$base/roleAssignmentApprovals/$($a.id)/stages`?$aapi").value)
+        $stages = @(Get-ArmList "https://management.azure.com$($a.id)/stages`?$aapi")
         Write-Host "  approvalId: $($a.id)"
         foreach ($s in $stages) {
-            Write-Host "     stage=$($s.id) status=$($s.status) assignedToMe=$($s.properties.assignedToMe)"
-            if ($Approve -and $s.status -eq 'InProgress') {
+            Write-Host "     stage=$($s.id) status=$($s.properties.status) assignedToMe=$($s.properties.assignedToMe)"
+            if ($Approve -and $s.properties.status -eq 'InProgress' -and $s.properties.assignedToMe -eq $true) {
                 $body = @{ properties = @{ reviewResult = 'Approve'; justification = $Justification } } | ConvertTo-Json -Depth 5
-                Invoke-RestMethod -Method PATCH -Uri "$base/roleAssignmentApprovals/$($a.id)/stages/$($s.id)`?$aapi" `
+                Invoke-RestMethod -Method PATCH -Uri "https://management.azure.com$($s.id)`?$aapi" `
                     -Headers $H -ContentType 'application/json' -Body $body | Out-Null
                 Write-Host "     APPROVED" -ForegroundColor Green
             }
@@ -112,7 +137,7 @@ if ($Approvals) {
 }
 
 # ---------------- report ----------------
-$elig = @((Get-Arm ("$base/roleEligibilityScheduleInstances" + "?$api" + '&$filter=asTarget()')).value)
+$elig = @(Get-ArmList ("$base/roleEligibilityScheduleInstances" + "?$api" + '&$filter=asTarget()'))
 Write-Host "--- Eligible to activate ---" -ForegroundColor Cyan
 if ($elig.Count -eq 0) {
     Write-Host "  none." -ForegroundColor Yellow
@@ -121,7 +146,7 @@ if ($elig.Count -eq 0) {
     foreach ($e in $elig) { Write-Host ("  * {0,-30} via {1}" -f $e.properties.expandedProperties.roleDefinition.displayName, $e.properties.memberType) }
 }
 
-$act = @((Get-Arm ("$base/roleAssignmentScheduleInstances" + "?$api" + '&$filter=asTarget()')).value)
+$act = @(Get-ArmList ("$base/roleAssignmentScheduleInstances" + "?$api" + '&$filter=asTarget()'))
 Write-Host ""
 Write-Host "--- Active right now ---" -ForegroundColor Cyan
 foreach ($a in $act) {
@@ -130,7 +155,7 @@ foreach ($a in $act) {
 }
 
 try {
-    $reqs = @((Get-Arm ("$base/roleAssignmentScheduleRequests" + "?$api" + '&$filter=asTarget()')).value)
+    $reqs = @(Get-ArmList ("$base/roleAssignmentScheduleRequests" + "?$api" + '&$filter=asTarget()'))
     $pending = @($reqs | Where-Object { $_.properties.status -notin @('Provisioned','Revoked','Canceled','Denied') })
     if ($pending.Count) {
         Write-Host ""
@@ -140,12 +165,15 @@ try {
         }
         Write-Host "  PendingApproval means an APPROVER must action it - see -Approvals." -ForegroundColor DarkGray
     }
-} catch { }
+} catch { throw "Cannot read PIM state or policy: $($_.Exception.Message)" }
 
-$target = $elig | Where-Object { $_.properties.expandedProperties.roleDefinition.displayName -eq $Role } | Select-Object -First 1
+$targets = @($elig | Where-Object { $_.properties.expandedProperties.roleDefinition.displayName -eq $Role })
+if ($targets.Count -gt 1) { throw 'Multiple eligible assignments match; inspect role and scope before activation' }
+$target = $targets | Select-Object -First 1
 if (-not $target) {
     Write-Host ""
     Write-Host "Role '$Role' is not in your eligible set - nothing further to do." -ForegroundColor Yellow
+    if ($Activate -or $Deactivate) { exit 1 }
     return
 }
 $roleDefId = $target.properties.roleDefinitionId
@@ -154,21 +182,22 @@ $roleDefId = $target.properties.roleDefinitionId
 $maxHours = $Hours; $needs = @()
 try {
     $paUrl = "$base/roleManagementPolicyAssignments" + "?$api" + '&$filter=' + [uri]::EscapeDataString("roleDefinitionId eq '$roleDefId'")
-    $pa = @((Get-Arm $paUrl).value) | Select-Object -First 1
+    $pa = @(Get-ArmList $paUrl) | Select-Object -First 1
+    if (-not $pa) { throw 'No governing policy assignment returned' }
     if ($pa) {
         $policy = Get-Arm "https://management.azure.com$($pa.properties.policyId)?$api"
         Write-Host ""
         Write-Host "--- Policy for '$Role' ---" -ForegroundColor Cyan
         foreach ($r in @($policy.properties.rules)) {
             switch ($r.id) {
-                'Expiration_EndUser_Assignment' { if ($r.maximumDuration -match 'PT(\d+)H') { $maxHours = [int]$Matches[1] }; Write-Host "  max duration      : $($r.maximumDuration)" }
+                'Expiration_EndUser_Assignment' { $maxHours = [System.Xml.XmlConvert]::ToTimeSpan($r.maximumDuration).TotalHours; Write-Host "  max duration      : $($r.maximumDuration)" }
                 'Enablement_EndUser_Assignment' { $needs = @($r.enabledRules); Write-Host "  required          : $(if($needs.Count){$needs -join ', '}else{'nothing'})" }
                 'Approval_EndUser_Assignment'   { Write-Host "  approval required : $([bool]$r.setting.isApprovalRequired)" }
             }
         }
     }
-} catch { }
-if ($Hours -gt $maxHours) { $Hours = $maxHours }
+} catch { throw "Cannot read PIM state or policy: $($_.Exception.Message)" }
+$duration = [TimeSpan]::FromHours([Math]::Min([double]$Hours, [double]$maxHours))
 
 if (-not $Activate -and -not $Deactivate) {
     Write-Host ""
@@ -185,10 +214,13 @@ $props = @{
 if (-not $Deactivate) {
     $props.scheduleInfo = @{
         startDateTime = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
-        expiration    = @{ type = 'AfterDuration'; duration = "PT${Hours}H" }
+        expiration    = @{ type = 'AfterDuration'; duration = [System.Xml.XmlConvert]::ToString($duration) }
     }
     $props.linkedRoleEligibilityScheduleId = $target.properties.roleEligibilityScheduleId
-    if ($needs -contains 'Ticketing') { $props.ticketInfo = @{ ticketNumber = 'CHANGE-ME'; ticketSystem = 'Jira' } }
+    if ($needs -contains 'Ticketing' -and ([string]::IsNullOrWhiteSpace($TicketNumber) -or [string]::IsNullOrWhiteSpace($TicketSystem))) {
+        throw 'Policy requires -TicketNumber and -TicketSystem'
+    }
+    if ($TicketNumber -and $TicketSystem) { $props.ticketInfo = @{ ticketNumber = $TicketNumber; ticketSystem = $TicketSystem } }
 }
 
 $reqId = [guid]::NewGuid().ToString()
@@ -204,10 +236,11 @@ try {
     }
 } catch {
     $d = ''
-    try { $d = (New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())).ReadToEnd() } catch { }
+    try { $d = (New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())).ReadToEnd() } catch { $d = '' }
     Write-Host "  FAILED: $($_.Exception.Message)" -ForegroundColor Red
     if ($d) { Write-Host "  $d" -ForegroundColor Red }
     Write-Host "  RoleAssignmentRequestPolicyValidationFailed -> justification/ticket/MFA missing or duration too long" -ForegroundColor DarkGray
     Write-Host "  MfaRule / interaction_required             -> re-authenticate: az login" -ForegroundColor DarkGray
     Write-Host "  RoleAssignmentExists                       -> already active" -ForegroundColor DarkGray
+    exit 1
 }

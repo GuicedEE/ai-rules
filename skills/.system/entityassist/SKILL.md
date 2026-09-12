@@ -512,8 +512,13 @@ public class EntityAssistReactiveDBModule
         connectionInfo.setServerName(Environment.getSystemPropertyOrEnvironment("DB_HOST", "localhost"));
         connectionInfo.setPort(Environment.getSystemPropertyOrEnvironment("DB_PORT", "5432"));
         connectionInfo.setDatabaseName(Environment.getSystemPropertyOrEnvironment("DB_NAME", "mydb"));
-        connectionInfo.setUsername(Environment.getSystemPropertyOrEnvironment("DB_USER", "postgres"));
-        connectionInfo.setPassword(Environment.getSystemPropertyOrEnvironment("DB_PASSWORD", "postgres"));
+        String username = Environment.getSystemPropertyOrEnvironment("DB_USER", null);
+        String password = Environment.getSystemPropertyOrEnvironment("DB_PASSWORD", null);
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+            throw new IllegalStateException("DB_USER and DB_PASSWORD must be configured");
+        }
+        connectionInfo.setUsername(username);
+        connectionInfo.setPassword(password);
         connectionInfo.setDefaultConnection(true);
         connectionInfo.setReactive(true);
         return connectionInfo;

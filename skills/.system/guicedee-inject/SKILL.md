@@ -60,7 +60,7 @@ provides com.guicedee.client.services.lifecycle.IGuiceModule with my.app.AppModu
 | `IGuicePostStartup` | After injector is ready — async, grouped by `sortOrder()` | `List<Uni<Boolean>>` |
 | `IGuicePreDestroy` | On shutdown — cleanup resources | `void` |
 
-All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` to control execution order and `enabled()` to conditionally skip.
+All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` when a custom execution order is needed. `IGuiceModule` additionally declares `enabled()` (default `true`). `IDefaultService`, startup, shutdown, and configurator hooks do not declare `enabled()`; gate their work inside the hook body.
 
 ## Logging
 
@@ -101,7 +101,7 @@ Pools auto-shutdown via `IGuicePreDestroy`.
 - Injection packages must `opens` to `com.google.guice`.
 - `IGuiceContext.registerModuleForScanning.add("my.module")` must be called before `instance()`.
 - Scanning is **off by default** and no built-in configurator enables it — call `IGuiceContext.instance().getConfig().setClasspathScanning(true).setAnnotationScanning(true).setMethodInfo(true).setFieldInfo(true)` (or `setServiceLoadWithClassPath(true)`) **before** `inject()`, or annotation discovery finds nothing. Tests that boot directly must do the same in `@BeforeAll`.
-- All lifecycle hooks must extend `IDefaultService<J>` (CRTP) and override `sortOrder()`. There is **no `enabled()`** hook method — gate work inside the hook body.
+- All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` when a custom execution order is needed. `IGuiceModule` additionally declares `enabled()` (default `true`). `IDefaultService`, startup, shutdown, and configurator hooks do not declare `enabled()`; gate their work inside the hook body.
 - Resolve env vars/system properties **only** via `com.guicedee.client.Environment.getSystemPropertyOrEnvironment(name, default)` — never `System.getenv`/`System.getProperty` and never a hand-rolled `env(...)` helper. It layers system properties → env vars → `.env.local` → `.env` → default and resolves `${VAR:-default}` placeholders.
 
 ## References

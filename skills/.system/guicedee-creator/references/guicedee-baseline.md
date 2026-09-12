@@ -176,7 +176,7 @@ Use the GuicedEE lifecycle SPI interfaces when you need to alter startup/injecti
   - Runs after startup in sort order.
   - Duplicate `sortOrder` values run tasks in parallel on Vert.x.
 
-All lifecycle hooks extend `IDefaultService<J>` (CRTP); always override `sortOrder()` to control execution order and `enabled()` to conditionally skip.
+All lifecycle hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` to control execution order. `IGuiceModule` additionally declares `enabled()` (default `true`); startup, shutdown, and configurator hooks gate work inside their body.
 
 ```java
 @Override

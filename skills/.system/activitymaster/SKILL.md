@@ -1442,7 +1442,7 @@ Implement the **stateless** overload — `update(Mutiny.StatelessSession, IEnter
 ```java
 public interface ISystemUpdate extends IProgressable {
     // Implement this — the stateless-session overload the install loop runs
-    default Uni<Boolean> update(Mutiny.StatelessSession session, IEnterprise<?,?> enterprise) { /* throws by default */ }
+    default Uni<Boolean> update(Mutiny.StatelessSession session, IEnterprise<?,?> enterprise) { throw new UnsupportedOperationException(); }
 }
 ```
 
@@ -1805,11 +1805,11 @@ public class ActivityMasterDBModule
     protected ConnectionBaseInfo getConnectionBaseInfo(
             PersistenceUnitDescriptor unit, Properties filteredProperties) {
         PostgresConnectionBaseInfo info = new PostgresConnectionBaseInfo();
-        info.setServerName(System.getenv("DB_HOST"));
-        info.setPort(System.getenv("DB_PORT"));
-        info.setDatabaseName(System.getenv("DB_NAME"));
-        info.setUsername(System.getenv("DB_USER"));
-        info.setPassword(System.getenv("DB_PASS"));
+        info.setServerName(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_HOST", null));
+        info.setPort(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_PORT", null));
+        info.setDatabaseName(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_NAME", null));
+        info.setUsername(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_USER", null));
+        info.setPassword(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("DB_PASS", null));
         info.setDefaultConnection(true);
         info.setReactive(true);
         return info;
@@ -1908,7 +1908,7 @@ public class PostgreSQLTestDBModule
         implements IGuiceModule<PostgreSQLTestDBModule> {
 
     private static final PostgreSQLContainer<?> postgres =
-        new PostgreSQLContainer<>(System.getenv("TEST_DB_CONTAINER_IMAGE"))
+        new PostgreSQLContainer<>(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("TEST_DB_CONTAINER_IMAGE", null))
             .withDatabaseName("activitymaster_test")
             .withUsername("postgres")
             .withPassword("postgres");
@@ -2147,7 +2147,7 @@ Bulk data (CSVs, external API imports, reference data) must never be loaded in `
 
 ```java
 // ✅ Good — taxonomy structure only at startup
-@SortedUpdate(order = 1000)
+@SortedUpdate(sortOrder = 1000, taskCount = 1)
 public class GeographySystemInstall implements ISystemUpdate {
     // Creates: Planet → Continent → Country hierarchy TYPES only
     // Does NOT load actual country data
@@ -2158,7 +2158,7 @@ public class GeographySystemInstall implements ISystemUpdate {
 public Uni<String> installCountries(...) { ... }
 
 // ❌ Bad — loading CSV data at startup
-@SortedUpdate(order = 1200)
+@SortedUpdate(sortOrder = 1200, taskCount = 1)
 public class GeographyInstallCountries implements ISystemUpdate {
     // DO NOT parse countryInfo.txt here
 }

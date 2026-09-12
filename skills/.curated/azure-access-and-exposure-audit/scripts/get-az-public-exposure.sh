@@ -68,7 +68,7 @@ if [ -z "${SUBS// /}" ]; then
 fi
 
 # Types that can carry inbound public exposure, with the api-version that exposes the property.
-# Anything not listed cannot be publicly reachable on its own.
+# Bounded inventory; other resource types require a separate assessment.
 TYPES="
 Microsoft.Web/sites
 Microsoft.KeyVault/vaults
@@ -112,155 +112,152 @@ api_version_for() {
   esac
 }
 
-# NOTE: bare `mktemp` is a GNU extension. BSD/macOS mktemp requires a template or -t, so an
-# explicit template is used - bare mktemp fails there and, with no `set -e`, the audit would carry
-# on appending to an empty path and report "0 findings" on a subscription it never examined.
-RESULTS_FILE="$(mktemp "${TMPDIR:-/tmp}/azexposure.XXXXXX")"
+RESULTS_FILE="$(mktemp "${TMPDIR:-/tmp}/azexposure.XXXXXX")" || exit 2
 trap 'rm -f "$RESULTS_FILE"' EXIT
+failures=0
+findings=0
+emit() {
+  # Include subscription and resource id so repeated names cannot be confused.
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "${4:-(not reported)}" "$5" "$sub" "${id:--}" >> "$RESULTS_FILE"
+  [ "$1" != unverifiable ] || failures=$((failures+1))
+  [ "$1" != FINDING ] || findings=$((findings+1))
+  return 0
+}
 
-emit() { # severity | name | type | verdict | detail
-  printf '%s\t%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "$4" "$5" >> "$RESULTS_FILE"
+# Follow list pagination, preserving failure status. A partial list is never a clean result.
+arm_list() {
+  local url="$1" query="$2" page next
+  while [ -n "$url" ] && [ "$url" != None ]; do
+    page="$(az rest --method GET --url "$url" --query "$query" -o tsv)" || return 1
+    next="$(az rest --method GET --url "$url" --query nextLink -o tsv)" || return 1
+    [ -z "$page" ] || printf '%s\n' "$page"
+    url="$next"
+  done
 }
 
 for sub in $SUBS; do
-  az account set --subscription "$sub" >/dev/null 2>&1 || { echo "cannot select subscription $sub" >&2; continue; }
-  sub_name="$(az account show --query name -o tsv 2>/dev/null)"
-  printf '\n==> %s\n    %s\n' "$sub_name" "$sub"
-
+  printf '\n==> %s\n' "$sub"
+  id=""
   for type in $TYPES; do
     apiv="$(api_version_for "$type")"
-
-    ids="$(az resource list --resource-type "$type" --query '[].id' -o tsv 2>/dev/null)"
-    [ -n "$ids" ] || continue
-
+    if ! ids="$(az resource list --subscription "$sub" --resource-type "$type" --query '[].id' -o tsv)"; then
+      emit unverifiable "$sub" "$type" 'inventory failed' 'Azure resource list failed'; continue
+    fi
     while IFS= read -r id; do
       [ -n "$id" ] || continue
       name="${id##*/}"
-      rg="$(printf '%s' "$id" | sed -n 's#.*/resourceGroups/\([^/]*\)/.*#\1#p')"
-
+      # One direct read, with fixed columns. JSON null is rendered as None in TSV.
+      query='[[properties.publicNetworkAccess,properties.network.publicNetworkAccess,sku.name,properties.apiServerAccessProfile.enablePrivateCluster,properties.apiServerAccessProfile.authorizedIPRanges,properties.networkAcls.defaultAction,properties.networkRuleSet.defaultAction,properties.ipRules,properties.isVirtualNetworkFilterEnabled,properties.natGateway.id,properties.ipAddress]]'
+      if ! row="$(az resource show --ids "$id" --api-version "$apiv" --query "$query" -o tsv)" || [ -z "$row" ]; then
+        emit unverifiable "$name" "$type" 'ARM read failed' 'Cannot assess resource controls'; continue
+      fi
+      pna="$(printf '%s' "$row" | cut -f1)"
+      sev=unverifiable; detail='Missing or unsupported network controls'; verdict="$pna"
       case "$type" in
-
         Microsoft.Network/publicIPAddresses)
-          # A public IP is NOT automatically exposure. NAT-gateway / LB-outbound IPs are EGRESS
-          # ONLY and accept no inbound connections. Scanners flag these constantly.
-          # NOTE the DOUBLE brackets: `--query '[a,b]' -o tsv` emits one value per LINE, so cut -f
-          # returns the whole blob and every comparison below is wrong. `[[a,b]]` emits ONE
-          # tab-separated row. Verified on Linux.
-          row="$(az resource show --ids "$id" --api-version "$apiv" \
-                 --query '[[properties.ipAddress, properties.natGateway.id, properties.ipConfiguration.id]]' \
-                 -o tsv 2>/dev/null)"
-          ip="$(printf '%s' "$row" | cut -f1)"
-          natgw="$(printf '%s' "$row" | cut -f2)"
-          ipcfg="$(printf '%s' "$row" | cut -f3)"
-          if [ -n "$natgw" ] && [ "$natgw" != "None" ]; then
-            emit "explained" "$name" "$type" "$ip" "attached to: natGateway (EGRESS ONLY)"
-          elif [ -n "$ipcfg" ] && [ "$ipcfg" != "None" ]; then
-            emit "info" "$name" "$type" "$ip" "attached to: ipConfiguration"
-          else
-            emit "info" "$name" "$type" "$ip" "unattached"
-          fi
+          natgw="$(printf '%s' "$row" | cut -f10)"; verdict="$(printf '%s' "$row" | cut -f11)"
+          sev=info; detail='Association requires inbound rule assessment'
+          if [ -n "$natgw" ] && [ "$natgw" != None ]; then sev=explained; detail='natGateway (EGRESS ONLY)'; fi
           ;;
-
         Microsoft.Cdn/profiles)
-          # Front Door is public BY DESIGN. What matters is whether a WAF is attached.
-          n="$(az rest --method GET \
-                 --url "https://management.azure.com${id}/securityPolicies?api-version=${apiv}" \
-                 --query 'value[].name' -o tsv 2>/dev/null | grep -c . || true)"
-          if [ "${n:-0}" -eq 0 ]; then
-            emit "FINDING" "$name" "$type" "WAF policies: 0" "internet-facing edge with NO WAF attached"
-          else
-            emit "ok" "$name" "$type" "WAF policies: $n" "attached"
+          sku="$(printf '%s' "$row" | cut -f3)"
+          case "$sku" in
+            Standard_AzureFrontDoor|Premium_AzureFrontDoor)
+              if ! policies="$(arm_list "https://management.azure.com${id}/securityPolicies?api-version=${apiv}" 'value[].name')"; then
+                emit unverifiable "$name" "$type" 'WAF read failed' 'Cannot enumerate security policies'; continue
+              fi
+              n="$(printf '%s\n' "$policies" | grep -c . || true)"; verdict="WAF policies: $n"
+              if [ "$n" -eq 0 ]; then sev=FINDING; detail='Front Door has no security policy'
+              else sev=info; detail='Policies present; verify domain/path associations and WAF mode'; fi
+              ;;
+            *) verdict='unsupported CDN SKU'; detail="SKU=$sku; assess CDN endpoint WAF separately" ;;
+          esac
+          ;;
+        Microsoft.ContainerService/managedClusters)
+          private="$(printf '%s' "$row" | cut -f4)"; ranges="$(printf '%s' "$row" | cut -f5)"
+          verdict="enablePrivateCluster=$private"
+          case "$private" in
+            true|True) sev=ok; detail='Private API server' ;;
+            false|False)
+              detail="Public API server; authorizedIPRanges=$ranges"
+              case "$ranges" in ''|None|'[]') sev=FINDING ;; *) sev=info ;; esac ;;
+          esac
+          ;;
+        Microsoft.Sql/servers|Microsoft.DBforPostgreSQL/flexibleServers|Microsoft.DBforMySQL/flexibleServers)
+          [ "$type" = Microsoft.Sql/servers ] || pna="$(printf '%s' "$row" | cut -f2)"
+          verdict="$pna"
+          if [ "$pna" = Disabled ]; then sev=ok; detail='Public network access disabled'
+          elif [ "$pna" = Enabled ]; then
+            if ! rules="$(arm_list "https://management.azure.com${id}/firewallRules?api-version=${apiv}" 'value[].[properties.startIpAddress,properties.endIpAddress]')"; then
+              emit unverifiable "$name" "$type" 'firewall read failed' 'Cannot assess public endpoint'; continue
+            fi
+            n="$(printf '%s\n' "$rules" | grep -c . || true)"
+            sev=info
+            if printf '%s\n' "$rules" | grep -q "^0\.0\.0\.0$(printf '\t')255\.255\.255\.255$"; then sev=FINDING; fi
+            detail="Public endpoint; firewallRules=$n; review ranges and service bypasses"
           fi
           ;;
-
-        Microsoft.Storage/storageAccounts)
-          row="$(az resource show --ids "$id" --api-version "$apiv" \
-                 --query '[[properties.publicNetworkAccess, properties.networkAcls.defaultAction, properties.allowBlobPublicAccess]]' \
-                 -o tsv 2>/dev/null)"
-          pna="$(printf '%s' "$row" | cut -f1)"
-          da="$(printf '%s'  "$row" | cut -f2)"
-          blob="$(printf '%s' "$row" | cut -f3)"
-          detail="networkAcls.defaultAction=$da; allowBlobPublicAccess=$blob"
-          if [ "$pna" != "Disabled" ]; then   emit "FINDING" "$name" "$type" "$pna" "$detail"
-          elif [ "$da" != "Deny" ]; then      emit "weak-2nd-control" "$name" "$type" "$pna" "$detail"
-          else                                emit "ok" "$name" "$type" "$pna" "$detail"; fi
+        Microsoft.Storage/storageAccounts|Microsoft.KeyVault/vaults|Microsoft.CognitiveServices/accounts|Microsoft.ContainerRegistry/registries)
+          da="$(printf '%s' "$row" | cut -f6)"
+          [ "$type" != Microsoft.ContainerRegistry/registries ] || da="$(printf '%s' "$row" | cut -f7)"
+          detail="defaultAction=$da; review allow rules and bypasses"
+          if [ "$pna" = Disabled ]; then
+            if [ "$da" = Deny ]; then sev=ok; else sev=weak-2nd-control; fi
+          elif [ "$pna" = Enabled ]; then
+            case "$da" in Allow) sev=FINDING ;; Deny) sev=info ;; esac
+          fi
           ;;
-
-        Microsoft.KeyVault/vaults)
-          row="$(az resource show --ids "$id" --api-version "$apiv" \
-                 --query '[[properties.publicNetworkAccess, properties.networkAcls.defaultAction]]' \
-                 -o tsv 2>/dev/null)"
-          pna="$(printf '%s' "$row" | cut -f1)"
-          da="$(printf '%s'  "$row" | cut -f2)"
-          if [ -z "$da" ] || [ "$da" = "None" ]; then detail="networkAcls ABSENT"; da=""
-          else detail="networkAcls.defaultAction=$da"; fi
-          if [ "$pna" != "Disabled" ]; then   emit "FINDING" "$name" "$type" "$pna" "$detail"
-          elif [ "$da" != "Deny" ]; then      emit "weak-2nd-control" "$name" "$type" "$pna" "$detail"
-          else                                emit "ok" "$name" "$type" "$pna" "$detail"; fi
+        Microsoft.DocumentDB/databaseAccounts)
+          ips="$(printf '%s' "$row" | cut -f8)"; vnet="$(printf '%s' "$row" | cut -f9)"
+          detail="ipRules=$ips; isVirtualNetworkFilterEnabled=$vnet"
+          if [ "$pna" = Disabled ]; then sev=ok
+          elif [ "$pna" = Enabled ] && [ "$ips" != None ]; then
+            case "$vnet" in
+              true|True) sev=info ;;
+              false|False) if [ "$ips" = '[]' ]; then sev=FINDING; elif [ -n "$ips" ]; then sev=info; fi ;;
+            esac
+          fi
           ;;
-
         Microsoft.Web/sites)
-          pna="$(az resource show --ids "$id" --api-version "$apiv" \
-                 --query 'properties.publicNetworkAccess' -o tsv 2>/dev/null)"
-          [ "$pna" = "Disabled" ] && sev="ok" || sev="FINDING"
-          emit "$sev" "$name" "$type" "$pna" "site"
-          # A slot inherits the parent's private endpoint but carries its OWN publicNetworkAccess.
-          slots="$(az rest --method GET \
-                     --url "https://management.azure.com${id}/slots?api-version=${apiv}" \
-                     --query 'value[].[name,properties.publicNetworkAccess]' -o tsv 2>/dev/null)"
-          if [ -n "$slots" ]; then
-            while IFS= read -r sline; do
-              [ -n "$sline" ] || continue
-              sname="$(printf '%s' "$sline" | cut -f1)"
-              spna="$(printf '%s' "$sline" | cut -f2)"
-              [ "$spna" = "Disabled" ] && ssev="ok" || ssev="FINDING"
-              emit "$ssev" "$sname" "Microsoft.Web/sites/slots" "$spna" "slot inherits parent private endpoint"
+          [ "$pna" != Disabled ] || sev=ok
+          detail='Enabled/absent PNA requires site access restriction and private endpoint assessment'
+          if slots="$(arm_list "https://management.azure.com${id}/slots?api-version=${apiv}" 'value[].[name,properties.publicNetworkAccess]')"; then
+            while IFS= read -r slot; do
+              [ -n "$slot" ] || continue
+              sn="$(printf '%s' "$slot" | cut -f1)"; sp="$(printf '%s' "$slot" | cut -f2)"
+              ss=unverifiable; [ "$sp" != Disabled ] || ss=ok
+              emit "$ss" "$sn" 'Microsoft.Web/sites/slots' "$sp" 'Assess slot networking independently of the parent site'
             done <<EOF
 $slots
 EOF
-          fi
+          else emit unverifiable "$name" 'Microsoft.Web/sites/slots' 'slot inventory failed' 'Cannot assess deployment slots'; fi
           ;;
-
         *)
-          pna="$(az resource show --ids "$id" --api-version "$apiv" \
-                 --query 'properties.publicNetworkAccess' -o tsv 2>/dev/null)"
-          if [ -z "$pna" ] || [ "$pna" = "None" ]; then emit "info" "$name" "$type" "(not reported)" ""
-          elif [ "$pna" = "Disabled" ]; then            emit "ok" "$name" "$type" "$pna" ""
-          else                                          emit "FINDING" "$name" "$type" "$pna" ""; fi
+          if [ "$pna" = Disabled ]; then sev=ok; detail='Public network access disabled'
+          else detail='Public endpoint requires service-specific firewall/network rule assessment'; fi
           ;;
       esac
+      emit "$sev" "$name" "$type" "$verdict" "$detail"
     done <<EOF
 $ids
 EOF
   done
 done
 
-# ---------------- report ----------------
-printf '\n================ RESULTS ================\n'
-for sev in FINDING weak-2nd-control explained info ok; do
-  [ "$SHOW_ALL" -eq 0 ] && [ "$sev" = "ok" ] && continue
-  rows="$(grep "^${sev}	" "$RESULTS_FILE" 2>/dev/null || true)"
-  [ -n "$rows" ] || continue
-  count="$(printf '%s\n' "$rows" | grep -c . || true)"
-  printf '\n--- %s (%s) ---\n' "$sev" "$count"
-  printf '%s\n' "$rows" | while IFS="	" read -r s n t v d; do
-    printf '  %-38s %-42s %-12s %s\n' "$n" "$t" "$v" "$d"
-  done
-done
-
-nf="$(grep -c '^FINDING	'          "$RESULTS_FILE" 2>/dev/null || true)"
-nw="$(grep -c '^weak-2nd-control	' "$RESULTS_FILE" 2>/dev/null || true)"
-no="$(grep -c '^ok	'               "$RESULTS_FILE" 2>/dev/null || true)"
-printf '\nTotals: %s finding(s), %s weak second control, %s compliant.\n' "${nf:-0}" "${nw:-0}" "${no:-0}"
-
+printf '\nSeverity\tName\tType\tVerdict\tDetail\tSubscription\tResourceId\n'
+if [ "$SHOW_ALL" -eq 1 ]; then cat "$RESULTS_FILE"
+else grep -v "^ok$(printf '\t')" "$RESULTS_FILE" || true; fi
+printf '\nTotals: %s finding(s), %s unverifiable result(s). Configuration audit, not a connectivity test.\n' "$findings" "$failures"
 if [ -n "$CSV_PATH" ]; then
-  { echo "Severity,Name,Type,Verdict,Detail"
-    while IFS="	" read -r s n t v d; do
-      printf '"%s","%s","%s","%s","%s"\n' "$s" "$n" "$t" "$v" "$d"
+  # Quote every field, doubling embedded quotes. TSV fields contain no newlines.
+  { echo 'Severity,Name,Type,Verdict,Detail,Subscription,ResourceId'
+    while IFS= read -r line; do
+      escaped="${line//\"/\"\"}"
+      escaped="${escaped//$'\t'/\",\"}"
+      printf '"%s"\n' "$escaped"
     done < "$RESULTS_FILE"
-  } > "$CSV_PATH"
-  printf 'CSV written: %s\n' "$CSV_PATH"
+  } > "$CSV_PATH" || exit 2
 fi
-
-[ "${nf:-0}" -gt 0 ] && exit 1
+[ "$failures" -eq 0 ] || exit 2
+[ "$findings" -eq 0 ] || exit 1
 exit 0

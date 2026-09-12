@@ -227,6 +227,10 @@ frontmatter and local links. Run bundled script checks without invoking live clo
 operations. Keep bash scripts as LF without a BOM, as specified by the Azure skill's
 `.gitattributes`.
 
+Review incoming changes against corrections already maintained here; an older global
+installation must not overwrite newer repository fixes. The Azure skill includes
+offline regression tests for its scripts, documented in its `SKILL.md`.
+
 The global installation is the input to this refresh; updating this checkout does
 not install skills into agent profiles or publish changes upstream.
 

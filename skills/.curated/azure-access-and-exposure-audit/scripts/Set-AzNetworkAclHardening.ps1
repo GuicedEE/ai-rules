@@ -85,25 +85,26 @@ Write-Host "    mode    : $(if ($Apply) { 'APPLY' } else { 'REPORT ONLY' })"
 Write-Host ""
 
 $failures = 0
+$changed = 0
 foreach ($t in $targets) {
-    & az account set --subscription $t.Sub | Out-Null
+    if (-not $t.Sub -or -not $t.Rg -or -not $t.Name) { Write-Host "Missing target Sub, Rg, or Name"; $failures++; continue }
     $label = if ($t.Label) { "[$($t.Label)] " } else { '' }
     Write-Host "--- $label$($t.Name) ($($t.Kind)) ---" -ForegroundColor Cyan
 
     if ($t.Kind -eq 'storage') {
-        $show = Invoke-AzSafe storage account show -n $t.Name -g $t.Rg -o json
+        $show = Invoke-AzSafe storage account show -n $t.Name -g $t.Rg --subscription $t.Sub -o json
         if ($show.ExitCode -ne 0) { Write-Host "    CANNOT READ: $(Format-AzError $show.Output)" -ForegroundColor Red; $failures++; continue }
         $j = $show.Output | ConvertFrom-Json
         Write-Host "    publicNetworkAccess          = $($j.publicNetworkAccess)"
         Write-Host "    networkRuleSet.defaultAction = $($j.networkRuleSet.defaultAction)   (desired: Deny)"
         if ($j.networkRuleSet.defaultAction -eq 'Deny') { Write-Host "    already compliant" -ForegroundColor Green; continue }
-        if (-not $Apply) { Write-Host "    WOULD RUN: az storage account update -n $($t.Name) -g $($t.Rg) --default-action Deny --bypass AzureServices" -ForegroundColor Yellow; continue }
-        $r = Invoke-AzSafe storage account update -n $t.Name -g $t.Rg --default-action Deny --bypass AzureServices -o none
-        if ($r.ExitCode -eq 0) { Write-Host "    set defaultAction=Deny" -ForegroundColor Green }
+        if (-not $Apply) { Write-Host "    WOULD RUN: az storage account update -n $($t.Name) -g $($t.Rg) --subscription $($t.Sub) --default-action Deny --bypass AzureServices" -ForegroundColor Yellow; continue }
+        $r = Invoke-AzSafe storage account update -n $t.Name -g $t.Rg --subscription $t.Sub --default-action Deny --bypass AzureServices -o none
+        if ($r.ExitCode -eq 0) { Write-Host "    set defaultAction=Deny" -ForegroundColor Green; $changed++ }
         else { Write-Host "    FAILED (exit $($r.ExitCode)): $(Format-AzError $r.Output)" -ForegroundColor Red; $failures++ }
     }
     elseif ($t.Kind -eq 'keyvault') {
-        $show = Invoke-AzSafe keyvault show -n $t.Name -g $t.Rg -o json
+        $show = Invoke-AzSafe keyvault show -n $t.Name -g $t.Rg --subscription $t.Sub -o json
         if ($show.ExitCode -ne 0) { Write-Host "    CANNOT READ: $(Format-AzError $show.Output)" -ForegroundColor Red; $failures++; continue }
         $j = $show.Output | ConvertFrom-Json
         # @($null).Count returns 1 in PowerShell - null-check the ACL block BEFORE counting rules,
@@ -113,9 +114,9 @@ foreach ($t in $targets) {
         Write-Host "    publicNetworkAccess       = $($j.properties.publicNetworkAccess)"
         Write-Host "    networkAcls.defaultAction = $(if ($da) { $da } else { '<networkAcls ABSENT>' })   (desired: Deny)"
         if ($da -eq 'Deny') { Write-Host "    already compliant" -ForegroundColor Green; continue }
-        if (-not $Apply) { Write-Host "    WOULD RUN: az keyvault update -n $($t.Name) -g $($t.Rg) --default-action Deny --bypass AzureServices" -ForegroundColor Yellow; continue }
-        $r = Invoke-AzSafe keyvault update -n $t.Name -g $t.Rg --default-action Deny --bypass AzureServices -o none
-        if ($r.ExitCode -eq 0) { Write-Host "    set defaultAction=Deny" -ForegroundColor Green }
+        if (-not $Apply) { Write-Host "    WOULD RUN: az keyvault update -n $($t.Name) -g $($t.Rg) --subscription $($t.Sub) --default-action Deny --bypass AzureServices" -ForegroundColor Yellow; continue }
+        $r = Invoke-AzSafe keyvault update -n $t.Name -g $t.Rg --subscription $t.Sub --default-action Deny --bypass AzureServices -o none
+        if ($r.ExitCode -eq 0) { Write-Host "    set defaultAction=Deny" -ForegroundColor Green; $changed++ }
         else { Write-Host "    FAILED (exit $($r.ExitCode)): $(Format-AzError $r.Output)" -ForegroundColor Red; $failures++ }
     }
     else { Write-Host "    unknown Kind '$($t.Kind)' - expected 'storage' or 'keyvault'" -ForegroundColor Red; $failures++ }
@@ -133,7 +134,7 @@ if ($Apply -and $failures -eq 0) {
 } elseif (-not $Apply) {
     Write-Host "Report only. Re-run with -Apply to make the changes." -ForegroundColor Yellow
 } else {
-    Write-Host "Nothing was changed - resolve the failures above and re-run." -ForegroundColor Yellow
+    Write-Host "$changed target(s) changed; resolve the failures above and re-run." -ForegroundColor Yellow
 }
 
 exit $(if ($failures -gt 0) { 1 } else { 0 })

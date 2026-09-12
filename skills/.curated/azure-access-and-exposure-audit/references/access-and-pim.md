@@ -120,6 +120,12 @@ Token refresh rules, which trip people up:
 
 ## Escalation template
 
+For scripted approvals, preserve the full ARM `id` returned for both approval and stage.
+Read `properties.status` and `properties.assignedToMe`; PATCH the returned stage ID only when
+it is in progress and assigned to the caller. Serialize the justification as a JSON string.
+Read and write failures must return nonzero rather than claiming an empty queue or success.
+See Microsoft's [approval stage schema](https://learn.microsoft.com/en-us/rest/api/authorization/role-assignment-approval-step/get-by-id?view=rest-authorization-2021-01-01-preview).
+
 When the answer is "a platform admin must do it", make the ticket self-contained:
 
 - The **exact** ARM action and scope from the error.

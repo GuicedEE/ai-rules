@@ -24,7 +24,8 @@ because it caused a real wrong answer. **Report evidence, not inference.**
 
 ## Scripts — pick your platform
 
-Every tool ships twice. Same logic, same output shape.
+Every tool ships in PowerShell and bash. Both report incomplete reads explicitly;
+their presentation and PIM policy handling differ as described below.
 
 | Task | Windows (PowerShell 5.1+) | Linux / macOS (bash) |
 |---|---|---|
@@ -54,11 +55,21 @@ preferred — they use only `az`, `Invoke-RestMethod` and built-in cmdlets.
 > Use the `.ps1` versions on Windows; they call ARM directly with a bearer token. **WSL is fine** and
 > is a good place to test the `.sh` variants — it does not rewrite argument paths.
 
-**Verification status:** the four `.ps1` scripts were run end-to-end against a live estate and
-reproduced a known-good audit. The four `.sh` scripts are verified by `bash -n`, `-h` output, LF
-line endings, no BOM, and a bash-3.2-only construct scan; their `az`/JMESPath queries are identical
-to the PowerShell versions. **They have not had a live end-to-end run** — do a `-h` and a
-report-only pass first on a new platform.
+**Verification status:** this revision is checked with PowerShell parsing, bash syntax/help/
+argument/encoding checks, and offline CLI/ARM fixtures on Windows PowerShell 5.1 and WSL Ubuntu.
+The fixtures exercise read failures, scoped hardening, exposure controls, RBAC scopes, and PIM
+request bodies. No live cloud audit, activation, approval, or hardening operation was performed
+for this revision. Perform a report-only pass before using these scripts in a new estate.
+
+Run the regression suite from this skill directory with Python 3 and its test-only dependency:
+
+```text
+python -m pip install -r tests/requirements.txt
+python -B tests/test_audit_scripts.py
+```
+
+On Linux/macOS use `python3`. Run on Windows for PowerShell coverage and on Linux/macOS for bash
+coverage. The fake transport rejects unrecognized calls and never invokes a live Azure command.
 
 ## Workflow A — public exposure audit
 
@@ -71,16 +82,21 @@ scripts/Get-AzPublicExposure.ps1 -SubscriptionId <sub1>,<sub2> -CsvPath .\exposu
 scripts/get-az-public-exposure.sh -s <sub1> -s <sub2> -c ./exposure.csv
 ```
 
-Enumerates only the ~17 types that can carry exposure, reads each with a direct ARM GET, and
-classifies results as `FINDING` / `weak-2nd-control` / `explained` / `ok`.
+Enumerates 17 selected resource types and reads each with a direct ARM GET. This is a bounded
+configuration audit, not proof of network reachability or exhaustive Azure coverage. Results are
+`FINDING`, `weak-2nd-control`, `explained`, `info`, `ok`, or `unverifiable`. Read failures and
+unsupported/missing controls remain visible; `info` requires interpretation and is not compliance.
+Exit codes: `2` means an incomplete audit, `1` means findings with no incomplete reads, and `0`
+means neither. `0` does not certify informational results. CSV output includes subscription and
+resource identity. `-a` / `-IncludeCompliant` also shows `ok` results.
 
 Then:
 
 1. **Re-verify every item on the supplied list.** Compliance lists are frequently wrong; say so
    with evidence when they are.
 2. **Explain the false positives** rather than silently dropping them — NAT-gateway public IPs are
-   egress-only, App Service slots inherit the parent private endpoint, Front Door is public by
-   design. They will be raised again on the next scan.
+   egress-only and Front Door is public by design. Assess App Service slots separately; they do
+   not share the parent's private endpoint. Record the evidence for the next scan.
 3. **Report gaps the list missed.** These are usually the real finding.
 4. **Check the edge for a WAF**, not just for "is it public".
 
@@ -126,7 +142,11 @@ scripts/get-az-group-rbac-map.sh -p '<app group prefix>' -s <sub1> -s <sub2> -m
 ```
 
 Maps every matching group to the RBAC it **actually** grants, active **and** PIM-eligible, and
-flags groups that grant nothing. In a real case two of five groups — the two most obvious names —
+includes the scope of every assignment. Only successful, empty reads are flagged as no assignments
+for that group/subscription pair. Failed queries are `UNVERIFIABLE` and return nonzero; do not call
+those groups dead. Compare each reported scope with the failing operation's resource scope;
+nested groups, deny assignments, conditions, and directory roles need separate evaluation.
+In a real case two of five groups — the two most obvious names —
 carried zero RBAC on both subscriptions; requests against them never reached the queue of the group
 that did grant access.
 
@@ -144,6 +164,14 @@ scripts/get-az-pim-status.sh -A -t 2 -j '<why>'       # raise activation
 scripts/get-az-pim-status.sh -L                       # as the APPROVER identity
 scripts/get-az-pim-status.sh -L -P
 ```
+
+PowerShell reads the governing policy and clamps duration, including fractional-hour maxima.
+Supply `-TicketNumber` and `-TicketSystem` when ticketing is required; the script stops before
+writing if they are absent. Bash sends the requested `-t` duration and lets ARM enforce the
+policy; use `-k` / `-y` for ticket number/system. It returns nonzero on rejection. Bash activation
+requires a successful `az ad signed-in-user show` lookup; PowerShell gets the principal from the
+ARM token. Approval mode in both variants uses returned full resource IDs and approves only
+`InProgress` stages assigned to the current caller. List/read/PATCH failures return nonzero.
 
 Three things to establish early, in order:
 

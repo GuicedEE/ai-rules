@@ -294,7 +294,7 @@ wa-page[view='mobile'] > [slot='aside'] {
 ```
 
 Extend the same idea to **desktop/tablet** by driving a CSS class off an Angular
-signal that is updated in lockstep with the existing `NavigationEnd` sync logic —
+signal that tracks the actual aside outlet activation —
 don't rely on `:empty`/`:has()` selectors, since the `<router-outlet>` leaves a
 comment-node placeholder that makes empty-state selectors unreliable across browsers.
 
@@ -320,33 +320,24 @@ public List<String> fields() {
 
 (`signal` must already be imported via `@NgImportReference(value = "signal", reference = "@angular/core")`.)
 
-### 7.2 Update the signal inside the existing NavigationEnd subscription
+### 7.2 Track the actual outlet activation
 
-Set `asideActive` right after computing `asidePath` — no separate subscription is
-needed, just one extra line in the handler from section 3:
+Replace the aside outlet construction from section 1 with event bindings:
 
 ```java
-init.add("""
-        this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
-            if (this._asideNavigating) return;
-            const navEnd = e as NavigationEnd;
-            const parsedUrl = this.router.parseUrl(navEnd.urlAfterRedirects);
-            const primarySegments = parsedUrl.root.children['primary']?.segments || [];
-            const primaryPath = primarySegments.map((s: any) => s.path).join('/');
-            const asidePath = this.asideRoutes[primaryPath];
-
-            this.asideActive.set(!!asidePath);
-
-            const currentAside = parsedUrl.root.children['aside'];
-            const currentAsidePath = currentAside?.segments?.map((s: any) => s.path).join('/') || null;
-
-            if (asidePath && currentAsidePath !== asidePath) {
-                // ...existing activate branch...
-            } else if (!asidePath && currentAside) {
-                // ...existing deactivate branch...
-            }
-        });""");
+var asideOutlet = new RouterOutlet<>("aside");
+asideOutlet.addAttribute("(activate)", "asideActive.set(true)");
+asideOutlet.addAttribute("(deactivate)", "asideActive.set(false)");
+asideOutlet.addAttribute("(attach)", "asideActive.set(true)");
+asideOutlet.addAttribute("(detach)", "asideActive.set(false)");
+page.getAside().add(asideOutlet);
 ```
+
+Do not set the signal from the requested route mapping. A cancelled, rejected, or
+failed navigation may leave the old outlet active or leave it empty. The outlet
+activation/deactivation events reflect what actually rendered; attach/detach cover
+route reuse. Keep the navigation guard reset in both success and failure handlers.
+See the [Angular RouterOutlet events](https://angular.dev/api/router/RouterOutlet).
 
 ### 7.3 Bind the class onto the `wa-page` element
 
@@ -382,12 +373,11 @@ when a route actually has aside content.
   for its activated component (or nothing when inactive), so `[slot='aside']:empty`
   is inconsistent across zones/renderers and won't reliably reflect "no aside route
   active".
-- Driving it from the same signal that already tracks `asidePath` costs one extra
-  line and guarantees the CSS class and the outlet activation can never disagree.
+- Driving it from the outlet activation signal adds a small event
+  binding and keeps the CSS class aligned with the actual outlet activation.
 - If you don't use Angular signals in your component base, a plain boolean field with
   manual change detection (`this.cdr.markForCheck()`) or a `BehaviorSubject` + `async`
-  pipe works identically — the important part is deriving it from `asideRoutes` lookup
-  in the same place, not a separate/duplicated check.
+  pipe works identically — the important part is deriving it from actual outlet events, including route reuse.
 
 ## Gotchas
 
