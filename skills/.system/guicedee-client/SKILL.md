@@ -1,6 +1,6 @@
 ---
 name: guicedee-client
-description: "GuicedEE client SPI contracts: IGuiceContext, lifecycle hook interfaces (IGuicePreStartup, IGuiceModule, IGuicePostStartup, IGuicePreDestroy, IGuiceConfigurator) — all extending IDefaultService for sort ordering, with module-specific enablement, CallScope and CallScopeProperties, IJsonRepresentation for Jackson serialization, and JPMS module setup. Use when programming against GuicedEE SPI contracts, understanding the lifecycle hook interfaces, implementing IDefaultService, using call scoping, or referencing the client API without the full runtime."
+description: "Implement GuicedEE lifecycle/SPIs, IGuiceContext, call scopes, and Environment configuration without depending on the full runtime."
 metadata:
   short-description: GuicedEE client SPI contracts and lifecycle interfaces
 ---

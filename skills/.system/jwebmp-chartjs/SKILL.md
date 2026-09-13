@@ -1,6 +1,6 @@
 ---
 name: jwebmp-chartjs
-description: Chart.js integration for JWebMP providing simple yet flexible charting. Supports line, bar, radar, doughnut, pie, polar area, bubble, and scatter charts with responsive design, animations, and plugins. Use when working with Chart.js, creating simple charts, building dashboards, or implementing lightweight charting in JWebMP applications.
+description: "Build responsive Chart.js charts in JWebMP with Java options, data series, animations, and plugins."
 metadata:
   short-description: Chart.js charting integration
 ---

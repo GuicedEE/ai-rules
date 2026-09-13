@@ -1,6 +1,6 @@
 ---
 name: jwebmp-core
-description: Strongly-typed HTML/CSS/JS component model for Java — the heart of JWebMP. Provides typed HTML elements, CSS builder, server-driven events, dual rendering (HTML/JSON), CRTP fluent API, and page configurators. Use when working with JWebMP Core features, HTML component creation, CSS styling, event handling, page configuration, or any JWebMP page/component development tasks.
+description: "Build Java-authored JWebMP HTML components, typed CSS, fluent layouts, page configuration, and server-side events."
 metadata:
   short-description: JWebMP Core framework development
 ---

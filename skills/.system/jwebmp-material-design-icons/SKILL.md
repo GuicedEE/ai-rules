@@ -1,6 +1,6 @@
 ---
 name: jwebmp-material-design-icons
-description: Google Material Design Icons font library for JWebMP providing Material Design icon fonts. Use when adding Material Design icons to JWebMP applications.
+description: "Add Google Material Design Icons to JWebMP interfaces."
 metadata:
   short-description: Material Design Icons
 ---

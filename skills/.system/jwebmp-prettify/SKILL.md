@@ -1,6 +1,6 @@
 ---
 name: jwebmp-prettify
-description: Google Prettify syntax highlighter integration for JWebMP. Use when displaying and highlighting code snippets.
+description: "Highlight code snippets in JWebMP with Google Prettify."
 metadata:
   short-description: Google Prettify
 ---

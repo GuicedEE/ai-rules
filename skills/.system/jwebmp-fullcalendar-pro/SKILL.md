@@ -1,6 +1,6 @@
 ---
 name: jwebmp-fullcalendar-pro
-description: FullCalendar Premium integration for JWebMP with advanced calendar features. Extends jwebmp-fullcalendar with resource scheduling, timeline views, vertical resource view, premium plugins, and enterprise features. Requires FullCalendar Premium license. Use when working with FullCalendar Premium features, resource scheduling, timeline views, or advanced calendar capabilities.
+description: "Add licensed FullCalendar Premium resource scheduling and timeline views to JWebMP calendars."
 metadata:
   short-description: FullCalendar Premium features
 ---

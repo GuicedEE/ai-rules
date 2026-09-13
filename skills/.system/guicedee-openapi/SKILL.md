@@ -1,6 +1,6 @@
 ---
 name: guicedee-openapi
-description: "Automatic OpenAPI 3.1 spec generation and serving for GuicedEE with Vert.x 5: scans Jakarta REST resources at startup, serves /openapi.json and /openapi.yaml endpoints, Swagger annotations support, @OpenAPIDefinition configuration, and companion Swagger UI module. Use when generating API documentation, serving OpenAPI specs, or configuring Swagger annotations on REST resources."
+description: "Generate and serve GuicedEE OpenAPI specs from Jakarta REST resources and Swagger annotations."
 metadata:
   short-description: OpenAPI 3.1 spec generation and serving inside GuicedEE
 ---

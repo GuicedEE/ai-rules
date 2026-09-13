@@ -1,6 +1,6 @@
 ---
 name: jwebmp-webawesome-pro
-description: WebAwesome Pro premium component integration for JWebMP — combobox, date input/picker, file input, chart family (bar/line/pie/doughnut/radar/polar-area/scatter/bubble/sparkline), video/video-playlist, premium icons (WaIconFA), and toast notifications (WaToastContainer, WaToastDataService, angular-awesome WaToastService). Extends jwebmp-webawesome with these Pro-licensed form/data/media components. Use when working with WaCombobox, date pickers, file uploads, charts, video embeds, premium icons, or toast/notification banners in JWebMP applications.
+description: "Use JWebMP WebAwesome Pro comboboxes, date pickers, uploads, charts, video, premium icons, and toast notifications."
 metadata:
   short-description: WebAwesome Pro premium components
 ---

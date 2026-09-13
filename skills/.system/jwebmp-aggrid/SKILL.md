@@ -1,6 +1,6 @@
 ---
 name: jwebmp-aggrid
-description: AG Grid community integration with data tables, sorting, filtering, pagination, and row selection. Type-safe component model with CRTP API, dual rendering (HTML/JSON), and JWebMP integration. Use when working with AG Grid, creating data-heavy tables, grids with advanced filtering, or enterprise data presentation.
+description: "Build JWebMP AG Grid community tables with Java column models, filtering, sorting, pagination, selection, and data binding."
 metadata:
   short-description: AG Grid Community
 ---

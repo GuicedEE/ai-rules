@@ -1,6 +1,6 @@
 ---
 name: guicedee-service-registry
-description: "Named service registry with health-aware resolution for GuicedEE. Register services by simple name, auto-construct URLs from cloud DNS suffix, monitor health status, resolve services via registry:name prefix or bare name in rest-client @Endpoint. Supports aliases, multiple external URLs, Kubernetes internal URLs, and per-service health paths. Use when registering named services, checking service health, resolving service URLs by name, or integrating with rest-client for service-to-service calls."
+description: "Register GuicedEE services by name, resolve their URLs and aliases, and configure health-aware service discovery."
 metadata:
   short-description: Named service registry with health-aware resolution
 ---

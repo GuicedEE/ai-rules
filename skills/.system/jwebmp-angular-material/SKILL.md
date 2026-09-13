@@ -1,6 +1,6 @@
 ---
 name: jwebmp-angular-material
-description: Angular Material design components integrated into JWebMP. Provides Material Design UI components with theme support and built-in accessibility. Use when building modern Material Design interfaces with Angular in JWebMP.
+description: "Build JWebMP Angular Material interfaces with themed, accessible Material Design components."
 metadata:
   short-description: Angular Material
 ---

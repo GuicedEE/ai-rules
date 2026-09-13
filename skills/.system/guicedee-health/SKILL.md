@@ -1,6 +1,6 @@
 ---
 name: guicedee-health
-description: "MicroProfile Health integration for GuicedEE with Vert.x 5: @Liveness, @Readiness, @Startup annotations, automatic health check discovery via ClassGraph, JSON health endpoints (/health, /health/live, /health/ready, /health/started), @HealthOptions configuration, environment variable overrides, and Guice-managed check instances. Use when adding health checks, configuring health endpoints, or implementing liveness/readiness probes."
+description: "Implement GuicedEE MicroProfile Health checks, liveness/readiness/startup probes, and health endpoints."
 metadata:
   short-description: MicroProfile Health checks with auto-discovery inside GuicedEE
 ---

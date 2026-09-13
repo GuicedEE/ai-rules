@@ -1,6 +1,6 @@
 ---
 name: "screenshot"
-description: "Use when the user explicitly asks for a desktop or system screenshot (full screen, specific app or window, or a pixel region), or when tool-specific capture capabilities are unavailable and an OS-level capture is needed."
+description: "Capture desktop, window, or region screenshots when explicitly requested or when tool-specific capture is unavailable."
 ---
 
 

@@ -1,6 +1,6 @@
 ---
 name: guicedee-auth
-description: "Annotation-driven authentication and authorization for GuicedEE with Vert.x 5: 8 optional providers (OAuth2/OIDC, JWT, ABAC, OTP/TOTP/HOTP, Property File, LDAP, htpasswd, htdigest), ChainAuth, @AuthOptions, @RolesAllowed/@PermitAll/@DenyAll, IGuicedAuthenticationProvider and IGuicedAuthorizationProvider SPIs, env var overrides, and Guice injection of all provider types. Use when adding authentication, authorization, security annotations, configuring auth providers, or implementing custom auth SPIs."
+description: "Configure GuicedEE authentication providers, authorization annotations, and custom auth SPIs for REST and reactive services."
 metadata:
   short-description: Authentication and authorization providers for GuicedEE with Vert.x 5
 ---

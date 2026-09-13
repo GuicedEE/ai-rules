@@ -1,6 +1,6 @@
 ---
 name: jwebmp-angular-forms
-description: Angular reactive and template-driven forms for JWebMP. Provides form validation, binding, and submission handling integrated with the JWebMP component model. Use when building complex forms with Angular in JWebMP applications.
+description: "Build JWebMP Angular reactive or template-driven forms with bindings, validation, and submission handling."
 metadata:
   short-description: Angular Forms
 ---

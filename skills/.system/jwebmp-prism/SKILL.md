@@ -1,6 +1,6 @@
 ---
 name: jwebmp-prism
-description: Prism syntax highlighter integration for JWebMP providing powerful code highlighting with line numbers, copy button, and themes. Use when displaying highlighted code with advanced features.
+description: "Highlight JWebMP code blocks with Prism themes, line numbers, and copy controls."
 metadata:
   short-description: Prism Syntax Highlighting
 ---

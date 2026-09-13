@@ -1,6 +1,6 @@
 ---
 name: jwebmp-website-aside-routing
-description: Secondary named-outlet "aside" routing pattern used by the GuicedEE and JWebMP marketing websites (WaPage main + aside router-outlets, per-page NgRoutable aside components, and automatic aside-outlet synchronization on navigation). Use when building a JWebMP/WebAwesome WaPage-based site that needs an "On this page" side panel that follows the primary route automatically, or when replicating the GuicedEE/JWebMP website navigation architecture.
+description: "Synchronize JWebMP WaPage main and named aside routes for per-page side panels and \"On this page\" navigation."
 ---
 
 # JWebMP Website Aside Routing

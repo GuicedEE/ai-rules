@@ -76,6 +76,13 @@ python skills/.system/skill-creator/scripts/generate_openai_yaml.py skills/.syst
 
 See `skills/.system/skill-creator/SKILL.md` for the full creation guide.
 
+### Validating the catalog
+
+Run `python -B -X utf8 scripts/validate-skills.py` to check all skill frontmatters, existing UI
+metadata/assets, and local Markdown links and anchors. See
+[skill catalog maintenance](docs/skill-catalog-maintenance.md) for the current OpenAI creator
+source, description-budget guidance, and global installation workflow.
+
 ## Skill Catalogs
 
 ### Curated Skills (`.curated/`)

@@ -1,6 +1,6 @@
 ---
 name: jwebmp-jqplot
-description: jqPlot jQuery charting plugin integration for JWebMP creating line, bar, pie, and other chart types. Use when building chart dashboards with jqPlot.
+description: "Build jqPlot line, bar, pie, and dashboard charts in JWebMP."
 metadata:
   short-description: jqPlot Charting
 ---

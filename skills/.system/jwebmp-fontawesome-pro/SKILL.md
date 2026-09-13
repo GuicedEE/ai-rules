@@ -1,6 +1,6 @@
 ---
 name: jwebmp-fontawesome-pro
-description: FontAwesome Pro integration for JWebMP with 30,000+ premium icons. Extends jwebmp-fontawesome with Light, Thin, Sharp, Duotone, Sharp Duotone styles, icon kits, and premium features. Requires FontAwesome Pro license. Use when working with FontAwesome Pro icons, premium styles, icon kits, or advanced icon features in JWebMP applications.
+description: "Use licensed FontAwesome Pro icons, premium families, styles, and icon kits in JWebMP."
 metadata:
   short-description: FontAwesome Pro premium icon integration
 ---

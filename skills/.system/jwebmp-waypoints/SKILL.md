@@ -1,6 +1,6 @@
 ---
 name: jwebmp-waypoints
-description: Waypoints jQuery plugin for JWebMP triggering functions when elements enter the viewport. Use when implementing scroll-based interactions and animations.
+description: "Trigger JWebMP scroll interactions when elements reach viewport waypoints."
 metadata:
   short-description: Waypoints Scroll Plugin
 ---

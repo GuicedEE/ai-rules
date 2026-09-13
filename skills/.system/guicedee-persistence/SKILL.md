@@ -1,6 +1,6 @@
 ---
 name: guicedee-persistence
-description: "Reactive JPA persistence with Hibernate Reactive 7, Vert.x 5 SQL clients, and Mutiny sessions inside GuicedEE: DatabaseModule setup, persistence.xml configuration, multi-database support, @EntityManager scoping, and environment variable resolution. Use when adding database persistence, configuring Hibernate Reactive, creating DatabaseModule subclasses, wiring Mutiny.SessionFactory, or managing multiple persistence units."
+description: "Configure GuicedEE DatabaseModule, Hibernate Reactive session factories, persistence units, and multiple databases."
 metadata:
   short-description: Reactive JPA persistence with Hibernate Reactive inside GuicedEE
 ---

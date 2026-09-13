@@ -1,6 +1,6 @@
 ---
 name: guicedee-jwt
-description: "MicroProfile JWT Auth bridge for GuicedEE with Vert.x 5: VertxJsonWebToken (Vert.x User → JsonWebToken), @Claim injection without @Inject, MicroProfileJwtContext (CallScope-aware request context), ClaimValueProvider, SPI registration (InjectionPointProvider, NamedAnnotationProvider, BindingAnnotationProvider), type-specific claim bindings (String, Set of String, Long, Integer, Boolean, Optional), Keycloak/OIDC integration via JWKS, and Guice-managed JsonWebToken. Use when bridging Vert.x JWT auth to MicroProfile JWT, injecting JWT claims, configuring @Claim fields, implementing JWT context propagation, or integrating with Keycloak/OIDC identity providers."
+description: "Bridge Vert.x authentication to MicroProfile JWT in GuicedEE, inject Claim values, and propagate JWT context."
 metadata:
   short-description: MicroProfile JWT Auth bridge for GuicedEE with Vert.x 5
 ---

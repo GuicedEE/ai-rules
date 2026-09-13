@@ -1,6 +1,6 @@
 ---
 name: jwebmp-d3
-description: D3.js integration for JWebMP enabling powerful data-driven document visualization. Provides access to D3 selections, scales, axes, and transitions. Use when building custom data visualizations or complex interactive graphics.
+description: "Build custom D3 visualizations in JWebMP using selections, scales, axes, and transitions."
 metadata:
   short-description: D3.js Data Visualization
 ---

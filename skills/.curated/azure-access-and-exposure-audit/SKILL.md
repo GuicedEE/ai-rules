@@ -1,6 +1,6 @@
 ---
 name: azure-access-and-exposure-audit
-description: Audit Azure public network exposure and investigate Azure access/RBAC/PIM problems with evidence rather than assumption. Use when (1) responding to a public-access, internet-exposure or "public network access elimination" compliance finding, (2) auditing whether Azure resources are genuinely reachable from the internet, (3) hardening networkAcls / defaultAction / private endpoints / Front Door WAF, (4) debugging AuthorizationFailed, "I requested access and nothing happened", or "I can't find their request to approve", (5) working with Azure PIM eligible-vs-active roles, activations and approvals, or (6) deciding which AD group actually grants a required Azure role. Also covers PowerShell and az CLI traps that silently produce wrong audit results.
+description: "Audit Azure network exposure and harden ACLs, or diagnose RBAC/PIM access, activation, and approval failures with PowerShell or bash."
 ---
 
 # Azure access and exposure audit

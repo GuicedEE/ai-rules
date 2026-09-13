@@ -1,6 +1,6 @@
 ---
 name: jwebmp-tsclient
-description: TypeScript client generation for JWebMP plugins. Provides annotations and utilities for generating TypeScript interfaces, components, services, and modules from Java code. Supports @TsDependency, @TsDevDependency, @NgComponent, @NgDataService, @NgRestClient annotations. Use when creating JWebMP plugins that generate TypeScript code, defining npm dependencies, building Angular-integrated components, or generating typed Angular REST client services.
+description: "Define JWebMP TypeScript generation, npm dependencies, Angular annotations, and typed NgRestClient services from Java."
 metadata:
   short-description: TypeScript code generation utilities
 ---

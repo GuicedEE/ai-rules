@@ -1,6 +1,6 @@
 ---
 name: jwebmp-vertx
-description: Portable connector between JWebMP and Vert.x 5 powered by GuicedEE. Provides automatic page routing, AJAX event pipeline, data component servlet, CSS endpoint, site-loader script, WebSocket broadcasting via event bus, user-agent detection, and call-scope integration. Use when working with JWebMP Vert.x integration, HTTP routing, AJAX handling, WebSocket communication, or building reactive web applications with JWebMP.
+description: "Connect JWebMP pages to Vert.x HTTP routing, AJAX, data/CSS endpoints, WebSocket broadcasts, and call scopes."
 metadata:
   short-description: JWebMP Vert.x 5 integration
 ---

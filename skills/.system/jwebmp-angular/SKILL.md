@@ -1,6 +1,6 @@
 ---
 name: jwebmp-angular
-description: Generates Angular 21 TypeScript projects from JWebMP annotations and serves SPAs via Vert.x with STOMP/WebSocket bridging. Provides @NgApp, @NgComponent, @NgRoutable, @NgDataService annotations, TypeScript code generation, reactive messaging, Angular control-flow components, and WebSocket group management. Use when working with JWebMP Angular integration, TypeScript generation, Angular components, STOMP/WebSocket communication, or building Angular 21 applications with JWebMP.
+description: "Generate Angular apps from JWebMP Java annotations; configure components, routes, services, control flow, and STOMP messaging."
 metadata:
   short-description: Angular 21 integration and TypeScript generation
 ---

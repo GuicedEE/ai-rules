@@ -1,6 +1,6 @@
 ---
 name: jwebmp-easing
-description: jQuery Easing plugin integration for JWebMP providing smooth animation easing functions. Supports 30+ easing functions (easeInOutQuad, easeInOutCubic, easeInOutElastic, etc.) for animations, transitions, and scrolling. Use when working with animations, smooth transitions, scroll effects, or custom easing functions in JWebMP applications.
+description: "Configure jQuery easing functions for JWebMP animations, transitions, and scrolling effects."
 metadata:
   short-description: jQuery Easing animation functions
 ---

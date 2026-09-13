@@ -1,6 +1,6 @@
 ---
 name: guicedee-rabbitmq
-description: "Annotation-driven RabbitMQ integration for GuicedEE with Vert.x 5: @RabbitConnectionOptions, @QueueExchange, @QueueDefinition, QueueConsumer/QueuePublisher injection, exchange management, queue options (priority, TTL, prefetch), publisher confirms, environment variable overrides, and verticle-scoped connections. Use when adding RabbitMQ messaging, declaring exchanges and queues, creating consumers and publishers, or configuring AMQP topology."
+description: "Configure GuicedEE RabbitMQ exchanges, queues, connections, consumers, publishers, and delivery options."
 metadata:
   short-description: Annotation-driven RabbitMQ messaging inside GuicedEE
 ---

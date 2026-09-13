@@ -1,6 +1,6 @@
 ---
 name: guicedee-jpms-shade
-description: "Convert an automatic-module (or non-modular) JAR dependency into a GuicedEE shaded JPMS service module so the GuicedEE/jlink pipeline stays clean. Use when a GuicedEE module requires an automatic module (a JAR with only an Automatic-Module-Name or none), when jlink/jpms complains about automatic modules on the module path, or when adding a new `com.guicedee.modules.services` shade under `services/Libraries`. Covers the maven-shade + moditect module-info pattern, version + BOM registration (Versioner, StandaloneBOM, guicedee-bom), dev-suite build registration, and rewiring the consuming module."
+description: "Wrap non-modular JARs as GuicedEE JPMS service modules for jlink, including shade/moditect setup, BOM registration, and consumers."
 ---
 
 # GuicedEE JPMS Shade

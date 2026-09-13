@@ -1,6 +1,6 @@
 ---
 name: jwebmp-skycons
-description: Skycons animated weather icons for JWebMP creating beautiful animated SVG weather visualizations. Use when rendering weather data with animated icons.
+description: "Render animated weather icons in JWebMP with Skycons."
 metadata:
   short-description: Skycons Weather Icons
 ---

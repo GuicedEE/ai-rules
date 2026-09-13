@@ -1,6 +1,6 @@
 ---
 name: jwebmp-client
-description: Client SPI library for JWebMP — defines AJAX pipeline contracts (AjaxCall/AjaxResponse), page contracts (IPage/IPageConfigurator), component model interfaces, and interceptor SPIs. Use when working with JWebMP client interfaces, AJAX interception, page configuration SPIs, component model interfaces, or extending JWebMP with custom interceptors and configurators.
+description: "Implement JWebMP AJAX/page contracts, component interfaces, interceptors, and page configurator SPIs."
 metadata:
   short-description: JWebMP Client SPI and contracts
 ---

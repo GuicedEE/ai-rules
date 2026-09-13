@@ -1,6 +1,6 @@
 ---
 name: guicedee-creator
-description: Create new GuicedEE-ready Maven modules with enforced Maven 4 and JDK 25+ baselines, GuicedEE BOM import, and JPMS main/test module boundaries. Use when scaffolding a new module, generating initial `pom.xml` and `module-info.java` files, or validating that module/test packages are separated (`.test` suffix in tests).
+description: "Scaffold new GuicedEE Maven modules with BOM imports, Maven/JDK baselines, and separate JPMS main/test packages."
 ---
 
 # GuicedEE Creator

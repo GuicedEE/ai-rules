@@ -1,6 +1,6 @@
 ---
 name: guicedee-vertx
-description: "Build reactive services using Vert.x 5 inside the GuicedEE DI lifecycle: event-bus consumers, publishers, verticle deployment, codecs, throttling, clustering, SPI hooks, and JPMS module setup. Use when adding Vert.x event-bus messaging, deploying verticles, wiring reactive endpoints with Guice injection, configuring Vert.x runtime options, or implementing custom codecs and cluster managers."
+description: "Build GuicedEE Vert.x event-bus consumers, publishers, codecs, verticles, clustering, and reactive runtime extensions."
 ---
 
 # GuicedEE Vert.x

@@ -1,6 +1,6 @@
 ---
 name: jwebmp-aggrid-enterprise
-description: AG Grid Enterprise integration for JWebMP with premium data grid features. Extends aggrid skill with row grouping, aggregation, pivoting, master/detail, server-side row model, Excel export, range selection, clipboard operations, status bar, charts integration, and advanced filtering. Requires AG Grid Enterprise license. Use when working with AG Grid Enterprise features, complex data grids, pivoting, grouping, or advanced grid capabilities.
+description: "Add licensed AG Grid Enterprise features to JWebMP: grouping, pivoting, master/detail, server-side rows, and Excel export."
 metadata:
   short-description: AG Grid Enterprise premium features
 ---

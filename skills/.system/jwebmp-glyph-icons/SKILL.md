@@ -1,6 +1,6 @@
 ---
 name: jwebmp-glyph-icons
-description: Glyph Icons font library for JWebMP providing icon typography for Bootstrap and other projects. Use when adding icon fonts to Bootstrap-based JWebMP applications.
+description: "Add Glyph Icons to Bootstrap-based JWebMP interfaces."
 metadata:
   short-description: Glyph Icons
 ---

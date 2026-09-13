@@ -1,6 +1,6 @@
 ---
 name: guicedee-rest
-description: "Build Jakarta REST (JAX-RS) services on Vert.x 5 inside GuicedEE: @Path/@GET/@POST route registration, parameter binding (@PathParam, @QueryParam, @HeaderParam, etc.), Guice-managed resource classes, response handling, content negotiation, and JPMS module setup. Use when creating REST endpoints, configuring Jakarta REST resources, or wiring JAX-RS services with Guice injection."
+description: "Build GuicedEE Jakarta REST endpoints with parameter binding, content negotiation, Guice resources, and Vert.x routing."
 metadata:
   short-description: Jakarta REST (JAX-RS) services on Vert.x inside GuicedEE
 ---

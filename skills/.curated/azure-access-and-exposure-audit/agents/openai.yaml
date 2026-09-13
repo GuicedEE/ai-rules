@@ -1,4 +1,4 @@
 interface:
   display_name: "Azure Access & Exposure Audit"
   short_description: "Audit Azure public exposure and untangle access/PIM problems"
-  default_prompt: "Audit the public network exposure of this Azure estate and report what is genuinely exposed"
+  default_prompt: "Use $azure-access-and-exposure-audit to assess this Azure estate and report verified exposure and access findings."

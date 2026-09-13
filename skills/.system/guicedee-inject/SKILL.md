@@ -1,6 +1,6 @@
 ---
 name: guicedee-inject
-description: "Bootstrap and manage the GuicedEE runtime engine: classpath scanning, Guice injector creation, lifecycle hooks, logging configuration, job pools, and module registration. Use when wiring up a GuicedEE application, configuring classpath scanning SPIs, setting up Log4j2 logging with LogUtils or @InjectLogger, managing JobService pools, implementing lifecycle hooks (IGuicePreStartup, IGuiceModule, IGuicePostStartup, IGuicePreDestroy), or troubleshooting the DI bootstrap sequence."
+description: "Bootstrap or debug GuicedEE scanning, Guice injection, lifecycle hooks, module registration, logging, and job pools."
 ---
 
 # GuicedEE Inject

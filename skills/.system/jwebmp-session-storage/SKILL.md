@@ -1,6 +1,6 @@
 ---
 name: jwebmp-session-storage
-description: Browser Session Storage integration for JWebMP providing client-side temporary data storage for the browser session. Use when storing temporary user session data.
+description: "Store temporary JWebMP browser data for the current tab/session using Session Storage."
 metadata:
   short-description: Session Storage
 ---

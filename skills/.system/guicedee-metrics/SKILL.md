@@ -1,6 +1,6 @@
 ---
 name: guicedee-metrics
-description: "Application metrics for GuicedEE using Vert.x 5 Dropwizard Metrics and MicroProfile Metrics 5.1: @Counted, @Timed, @MetricMethod annotations, Guice AOP interceptors, Prometheus scrape endpoint, Graphite reporting, JMX exposure, @MetricsOptions configuration, environment variable overrides, and Vert.x built-in metrics (event bus, HTTP, pools). Use when adding application metrics, configuring Prometheus endpoints, creating custom counters/timers, or monitoring Vert.x internals."
+description: "Instrument GuicedEE with MicroProfile/Vert.x metrics, custom counters/timers, and Prometheus reporting."
 metadata:
   short-description: Application metrics with Prometheus and Dropwizard inside GuicedEE
 ---

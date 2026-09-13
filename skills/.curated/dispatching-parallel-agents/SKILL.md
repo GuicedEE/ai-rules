@@ -1,6 +1,6 @@
 ---
 name: dispatching-parallel-agents
-description: Use when splitting complex work into parallelizable tasks and coordinating multiple agents. Focus on clear task boundaries, shared context, and consolidation of results.
+description: "Split complex work into independent tasks and coordinate parallel agents with clear ownership, context, and consolidated results."
 ---
 
 # Dispatching Parallel Agents

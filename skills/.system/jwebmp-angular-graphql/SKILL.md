@@ -1,6 +1,6 @@
 ---
 name: jwebmp-angular-graphql
-description: Apollo GraphQL client generation for JWebMP. Exposes the @NgGraphQL annotation to generate typed apollo-angular services from Java for GraphQL queries, mutations, and subscriptions, with signal-based state, polling, fetch/error policies, and default variables via @NgGraphQLVariable. Use when working with GraphQL in JWebMP, generating Apollo Angular clients, mapping GraphQL operations to Angular services, or building reactive GraphQL-backed UIs in JWebMP applications.
+description: "Generate typed Apollo Angular services from JWebMP NgGraphQL annotations for GraphQL queries, mutations, and subscriptions."
 metadata:
   short-description: Apollo GraphQL client generation for JWebMP
 ---

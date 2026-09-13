@@ -1,6 +1,6 @@
 ---
 name: guicedee-telemetry
-description: "OpenTelemetry distributed tracing for GuicedEE using Guice AOP and OTLP exporters: @Trace and @SpanAttribute annotations, automatic span creation, Uni-aware span lifecycle, call-scope span propagation, @TelemetryOptions configuration, OTLP HTTP export to Tempo/Jaeger, in-memory exporters for testing, Log4j2 OpenTelemetry appender, and environment variable overrides. Use when adding distributed tracing, configuring OpenTelemetry, or instrumenting methods with spans."
+description: "Instrument GuicedEE with OpenTelemetry spans, call-scope propagation, Uni lifecycles, and OTLP export."
 metadata:
   short-description: OpenTelemetry distributed tracing inside GuicedEE
 ---

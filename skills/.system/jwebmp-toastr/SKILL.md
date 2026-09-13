@@ -1,6 +1,6 @@
 ---
 name: jwebmp-toastr
-description: Toastr jQuery notification plugin integration for JWebMP displaying non-blocking toast notifications. Use when showing transient user notifications and alerts.
+description: "Show non-blocking toast notifications in JWebMP using the jQuery Toastr integration."
 metadata:
   short-description: Toastr Notifications
 ---

@@ -13,6 +13,11 @@ Each skill is a self-contained folder with a required `SKILL.md` (YAML frontmatt
 
 The catalog contains **117 skills: 39 curated and 78 system**. Refreshed from the global `~/.agents/skills/` collection on 2026-09-12, including bundled references, scripts, and agent metadata. Repository-only skills remain available.
 
+Descriptions are kept concise for discovery; larger guides route to workflow references. Run
+`python -B -X utf8 scripts/validate-skills.py` after edits. See
+[catalog maintenance](docs/skill-catalog-maintenance.md) for validation, OpenAI creator provenance,
+and global installation details.
+
 ## Load Order
 
 1. Identify the task scope and select relevant skills from the catalogs below.

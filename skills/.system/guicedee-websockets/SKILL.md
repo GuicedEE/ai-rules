@@ -1,6 +1,6 @@
 ---
 name: guicedee-websockets
-description: "RFC 6455 WebSocket support for GuicedEE using Vert.x 5: call-scoped connections, action-based message routing via IWebSocketMessageReceiver SPI, group management and broadcasting, WebSocketServerOptions, and lifecycle hooks. Use when adding WebSocket messaging, implementing real-time communication, managing WebSocket groups, or creating message receivers."
+description: "Implement GuicedEE WebSocket receivers, action routing, call-scoped connections, groups, and broadcasts."
 metadata:
   short-description: WebSocket messaging with action-based routing inside GuicedEE
 ---

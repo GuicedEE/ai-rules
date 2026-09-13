@@ -1,6 +1,6 @@
 ---
 name: skill-adopter
-description: "Adopt and wire enterprise skills into a target project for the AI agent(s) in use. Scans a project to detect its tech stack and configured AI agents (Codex, Copilot, Cursor, Junie, AI Assistant, Claude, Roo), selects relevant skills from the enterprise skills repository, and generates or updates the agent-native configuration files (AGENTS.md, .github/copilot-instructions.md, .cursor/rules.md, .junie/guidelines.md, .aiassistant/rules/, .cursorrules, .roo/rules). Use when onboarding a project onto enterprise skills, switching AI agents, refreshing stale agent configs, or aligning a project's AI setup with the current skills catalog."
+description: "Select enterprise skills for a project's stack and generate or refresh native Codex, Copilot, Cursor, Junie, Claude, or Roo configuration."
 metadata:
   short-description: Adopt enterprise skills into a project for any AI agent
 ---

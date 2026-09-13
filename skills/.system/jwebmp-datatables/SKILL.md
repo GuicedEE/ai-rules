@@ -1,6 +1,6 @@
 ---
 name: jwebmp-datatables
-description: DataTables.net integration for JWebMP providing advanced interactive HTML tables with sorting, filtering, pagination, and AJAX capabilities. Use when building sophisticated data tables with search, sort, and export functionality.
+description: "Build searchable, sortable, paginated JWebMP tables through the DataTables.net integration."
 metadata:
   short-description: DataTables
 ---

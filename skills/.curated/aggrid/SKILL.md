@@ -1,6 +1,6 @@
 ---
 name: aggrid
-description: Use the AG Grid MCP server to implement, upgrade, and troubleshoot AG Grid in React, Angular, Vue, and vanilla JavaScript projects. Trigger when tasks mention AG Grid tables, column definitions, row models, renderers/editors, AG Grid version migrations, or AG Grid MCP setup files (mcp.json, .vscode/mcp.json, .cursor/mcp.json, .aiassistant/mcp.json, .junie/mcp.json).
+description: "Implement, upgrade, or debug AG Grid in JavaScript/TypeScript frameworks using its MCP server. For Java-authored JWebMP grids, use jwebmp-aggrid."
 ---
 
 # AG Grid MCP

@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: "Test-driven development workflow (red → green → refactor) for features, bug fixes, and refactors. Use when implementing behavior changes and you want to drive design via tests, prevent regressions, and keep code modular and well-factored."
+description: "Apply red-green-refactor when using test-driven development for behavior changes, bug fixes, or refactoring."
 ---
 
 # Test-Driven Development

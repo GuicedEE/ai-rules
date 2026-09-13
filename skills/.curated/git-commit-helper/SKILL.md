@@ -1,6 +1,6 @@
 ---
 name: git-commit-helper
-description: Help craft clear, conventional commits. Use when preparing commit messages, organizing changes into commits, or documenting intent and scope for code changes.
+description: "Draft conventional commit messages and organize changes into commits with clear intent and scope."
 ---
 
 # Git Commit Helper

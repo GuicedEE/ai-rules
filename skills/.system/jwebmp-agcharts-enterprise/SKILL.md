@@ -1,6 +1,6 @@
 ---
 name: jwebmp-agcharts-enterprise
-description: AG Charts Enterprise integration for JWebMP with premium charting features. Extends jwebmp-agcharts with advanced chart types (heatmaps, treemaps, sunburst, sankey, waterfall), financial charts (candlestick, OHLC), advanced animations, and enterprise-grade features. Requires AG Charts Enterprise license. Use when working with AG Charts Enterprise features, advanced visualizations, financial charts, or premium charting capabilities.
+description: "Add licensed AG Charts Enterprise visualizations to JWebMP, including financial charts, heatmaps, treemaps, and sankey diagrams."
 metadata:
   short-description: AG Charts Enterprise premium features
 ---

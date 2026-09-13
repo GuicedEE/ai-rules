@@ -1,6 +1,6 @@
 ---
 name: senior-qa
-description: "QA workflow for building test strategies and validating releases: risk-based testing, test pyramid decisions, E2E/integration/unit coverage, exploratory testing, and regression planning. Use when creating test plans, reviewing test coverage, triaging flaky tests, or preparing release sign-off criteria."
+description: "Plan risk-based testing, assess coverage, investigate flaky tests, and define release verification criteria."
 ---
 
 # Senior QA

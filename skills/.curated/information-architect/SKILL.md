@@ -1,6 +1,6 @@
 ---
 name: information-architect
-description: "World-class information architecture workflows for product and design teams: define navigation, taxonomy, labeling, content models, and page hierarchy so complex products feel obvious. Use when designing or redesigning an app/website structure, menus, docs/knowledge base IA, onboarding flows, search/filtering, permissions-based navigation, or when turning a messy feature set into a coherent system."
+description: "Design app, website, or documentation navigation, labels, taxonomy, content models, and page hierarchy."
 ---
 
 # Information Architect

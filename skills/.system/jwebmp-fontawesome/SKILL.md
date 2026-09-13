@@ -1,6 +1,6 @@
 ---
 name: jwebmp-fontawesome
-description: FontAwesome icon integration for JWebMP with 6,000+ free icons. Provides typed icon components, CSS classes, solid/regular/brands styles, sizing, rotation, animation, stacking, and duotone support. Use when working with FontAwesome icons, adding icons to components, styling icons, or implementing icon-based UIs in JWebMP applications.
+description: "Add and style free FontAwesome icons in JWebMP, including sizing, rotation, animation, and stacking."
 metadata:
   short-description: FontAwesome 6 free icon integration
 ---

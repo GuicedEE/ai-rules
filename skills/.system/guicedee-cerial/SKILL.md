@@ -1,6 +1,6 @@
 ---
 name: guicedee-cerial
-description: "Lifecycle-aware serial port connectivity for GuicedEE using jSerialComm and Vert.x 5: @Named CerialPortConnection injection by port number, CRTP-fluent configuration, automatic reconnect with exponential backoff, idle monitoring, MicroProfile Health reporting, status lifecycle (12 states), message-delimited reads, per-port logging, and optional OpenTelemetry tracing. Use when connecting to serial ports, configuring baud rate and flow control, handling serial data, or monitoring serial device health."
+description: "Connect serial devices through GuicedEE/jSerialComm; configure ports, framing, reconnects, and device health."
 metadata:
   short-description: Serial port connectivity with jSerialComm inside GuicedEE
 ---

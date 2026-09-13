@@ -1,6 +1,6 @@
 ---
 name: jwebmp-jquery-ui
-description: jQuery UI widget library integration for JWebMP providing interactions (drag, drop, resizable) and widgets (accordion, tabs, datepicker). Use when building interactive jQuery-based UIs.
+description: "Add jQuery UI widgets and drag/drop, resize, sort, or datepicker interactions to JWebMP."
 metadata:
   short-description: jQuery UI
 ---

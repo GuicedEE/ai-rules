@@ -1,6 +1,6 @@
 ---
 name: guicedee-kafka
-description: "Annotation-driven Kafka integration for GuicedEE with Vert.x 5: @KafkaConnectionOptions, @KafkaTopicDefinition, @KafkaTopicCreate, KafkaTopicConsumer/KafkaTopicPublisher injection, KafkaAdminClient binding, per-topic consumers, manual offset commit, worker thread support, partition assignment and revocation handlers, environment variable overrides, call-scoped message handling, and graceful shutdown. Use when adding Kafka messaging, declaring topic consumers and publishers, creating topics via admin client, or configuring Kafka connections."
+description: "Configure GuicedEE Kafka topics, consumers, publishers, connections, offsets, and partition lifecycle handling."
 metadata:
   short-description: Annotation-driven Kafka messaging inside GuicedEE
 ---

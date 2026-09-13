@@ -1,6 +1,6 @@
 ---
 name: jwebmp-markdown
-description: Markdown parser and renderer integration for JWebMP converting Markdown to HTML components. Use when rendering user-generated or CMS content as Markdown.
+description: "Render Markdown content as JWebMP HTML components."
 metadata:
   short-description: Markdown Support
 ---

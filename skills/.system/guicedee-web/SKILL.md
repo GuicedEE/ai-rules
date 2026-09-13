@@ -1,6 +1,6 @@
 ---
 name: guicedee-web
-description: "Bootstrap reactive HTTP/HTTPS servers with Vert.x 5 inside GuicedEE: Router setup, BodyHandler configuration, TLS/HTTPS, SPI extension points (VertxRouterConfigurator, VertxHttpServerOptionsConfigurator, VertxHttpServerConfigurator), per-verticle sub-routers, and environment-driven configuration. Use when setting up the Vert.x web server, configuring HTTP/HTTPS, adding custom routes or middleware, or managing server options."
+description: "Configure GuicedEE Vert.x HTTP/HTTPS servers, routers, middleware, TLS, and server configurator SPIs."
 metadata:
   short-description: Reactive HTTP/HTTPS server bootstrap with Vert.x inside GuicedEE
 ---

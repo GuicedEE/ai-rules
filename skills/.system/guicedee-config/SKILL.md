@@ -1,6 +1,6 @@
 ---
 name: guicedee-config
-description: "MicroProfile Config implementation for GuicedEE using SmallRye Config and Guice: @ConfigProperty injection with type conversion, environment variable / system property / microprofile-config.properties sources, profile support, custom converters, programmatic SmallRyeConfig access, and JPMS setup. Use when injecting configuration values, managing config sources, adding custom converters, or using profile-specific properties."
+description: "Inject MicroProfile Config values in GuicedEE with SmallRye, custom sources/converters, profiles, and ConfigProperty."
 metadata:
   short-description: MicroProfile Config with SmallRye Config inside GuicedEE
 ---

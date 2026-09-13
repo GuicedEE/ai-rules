@@ -1,6 +1,6 @@
 ---
 name: jwebmp-c3
-description: C3 charting library integration for JWebMP providing D3-based reusable chart components. Use when creating data visualizations, time-series charts, or D3-powered dashboards.
+description: "Build C3 charts and time-series dashboards through JWebMP's D3-based C3 integration."
 metadata:
   short-description: C3 Charts
 ---

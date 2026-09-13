@@ -1,6 +1,6 @@
 ---
 name: guicedee-swagger-ui
-description: "Browsable Swagger UI for GuicedEE with Vert.x 5: auto-mounted at /swagger/, reads from /openapi.json endpoint, zero code configuration, companion to the openapi module. Use when adding a browsable API documentation UI to a GuicedEE application."
+description: "Add the browsable Swagger UI to a GuicedEE application's generated OpenAPI specification."
 metadata:
   short-description: Browsable Swagger UI for GuicedEE REST APIs
 ---

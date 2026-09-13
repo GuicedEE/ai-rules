@@ -1,6 +1,6 @@
 ---
 name: jwebmp-themify-icons
-description: Themify Icons font library for JWebMP providing a comprehensive icon font collection. Use when adding Themify icons to projects.
+description: "Add Themify icon fonts to JWebMP interfaces."
 metadata:
   short-description: Themify Icons
 ---

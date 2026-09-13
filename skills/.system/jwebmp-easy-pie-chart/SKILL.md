@@ -1,6 +1,6 @@
 ---
 name: jwebmp-easy-pie-chart
-description: Easy Pie Chart jQuery plugin for JWebMP creating animated pie and doughnut charts with customizable canvas rendering. Use when embedding simple animated pie charts.
+description: "Embed animated Easy Pie Chart pie and doughnut widgets in JWebMP."
 metadata:
   short-description: Easy Pie Chart
 ---

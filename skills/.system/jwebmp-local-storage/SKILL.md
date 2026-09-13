@@ -1,6 +1,6 @@
 ---
 name: jwebmp-local-storage
-description: Browser Local Storage integration for JWebMP providing client-side persistent data storage. Use when implementing offline capability or storing user preferences in the browser.
+description: "Persist JWebMP browser data or preferences across sessions using Local Storage."
 metadata:
   short-description: Local Storage
 ---

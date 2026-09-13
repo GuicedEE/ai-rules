@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: "High-signal code review workflow for pull requests and patches: correctness, readability, API/UX, performance, security, and maintainability. Use when reviewing diffs/PRs, writing review comments, proposing fixes, or producing a structured review report with actionable follow-ups."
+description: "Review PRs and patches for actionable correctness, API/UX, performance, security, and maintainability findings."
 ---
 
 # Code Reviewer

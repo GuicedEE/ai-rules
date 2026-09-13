@@ -1,6 +1,6 @@
 ---
 name: guicedee-rest-client
-description: "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient: @Endpoint declarations, typed RestClient injection (send/receive payload types), authentication strategies (Bearer, Basic, API Key, OAuth2, mTLS), path parameters, environment variable overrides, package-level endpoints, service registry integration (bare name or registry: prefix), and RestClientConfigurator SPI. Use when making outbound REST calls, configuring REST client endpoints, or wiring reactive HTTP clients with Guice injection."
+description: "Make outbound GuicedEE REST calls with typed RestClient/Endpoint bindings, authentication, and service-registry resolution."
 metadata:
   short-description: Annotation-driven REST client with Vert.x WebClient inside GuicedEE
 ---

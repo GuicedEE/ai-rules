@@ -1,6 +1,6 @@
 ---
 name: guicedee-installer
-description: "Retrofit existing Maven modules to GuicedEE baseline standards: Maven 4 wrapper, JDK 25+, GuicedEE BOM import, and JPMS main/test module boundaries. Use when a project already exists and needs GuicedEE dependency management and compliant `module-info.java` plus `.test` package separation."
+description: "Retrofit existing Maven modules with GuicedEE BOMs, Maven/JDK baselines, and JPMS main/test boundaries."
 ---
 
 # GuicedEE Installer

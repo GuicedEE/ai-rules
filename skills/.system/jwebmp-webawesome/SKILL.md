@@ -1,6 +1,6 @@
 ---
 name: jwebmp-webawesome
-description: Full WebAwesome 3.x component library integration for JWebMP — layout primitives (WaPage, WaStack, WaCluster, WaGrid, WaSplit), form controls (WaInput, WaSelect, WaCheckbox, WaRadio, WaRange, WaSwitch, WaTextArea, WaNumberInput, WaTimeInput, WaKnownDate, WaColorPicker), display/data components (WaCard, WaBadge, WaTag, WaTree, WaTabGroup, WaAccordion, WaCarousel, WaAvatar, WaBreadcrumbs, WaProgressBar/Ring, WaSkeleton, WaSpinner, WaQRCode, formatters), overlays (WaDialog, WaDrawer, WaPopover, WaPopup, WaTooltip), and the WaIcon component (FontAwesome-family icon rendering). Use when working with any Web Awesome component, building WaPage-based layouts, or styling JWebMP UIs with Web Awesome tokens (space/border/typography/shadow/transition).
+description: "Build and style JWebMP WebAwesome components, WaPage layouts, forms, overlays, and theme tokens."
 metadata:
   short-description: Full WebAwesome 3.x component library
 ---

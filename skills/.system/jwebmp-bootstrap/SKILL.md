@@ -1,6 +1,6 @@
 ---
 name: jwebmp-bootstrap
-description: Bootstrap 5 CSS framework integration for JWebMP providing responsive grid layout, components, and utilities. Use when building responsive Bootstrap-based websites and applications with JWebMP.
+description: "Build responsive JWebMP layouts and components using the Bootstrap integration."
 metadata:
   short-description: Bootstrap CSS Framework
 ---

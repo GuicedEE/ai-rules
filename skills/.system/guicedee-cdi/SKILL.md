@@ -1,6 +1,6 @@
 ---
 name: guicedee-cdi
-description: "Jakarta CDI bridge for GuicedEE: maps CDI annotations (@Inject, @Named, @ApplicationScoped, @Qualifier) to Guice equivalents, provides BeanManager adapter, CDIProvider registration, GuiceCDIBeanManager lookup API, and scope bridging. Use when using Jakarta CDI annotations with Guice, accessing CDI.current(), performing BeanManager lookups, or bridging CDI-annotated libraries into GuicedEE."
+description: "Bridge Jakarta CDI annotations, scopes, BeanManager lookups, and CDI libraries into GuicedEE's Guice container."
 metadata:
   short-description: Jakarta CDI annotation bridge for GuicedEE / Guice
 ---

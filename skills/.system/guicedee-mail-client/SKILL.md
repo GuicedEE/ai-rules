@@ -1,6 +1,6 @@
 ---
 name: guicedee-mail-client
-description: "Annotation-driven SMTP mail client for GuicedEE with Vert.x 5: @MailConnectionOptions for SMTP server configuration, MailService injection for sending text/HTML/multipart emails with attachments, connection pooling, StartTLS/SSL support, DKIM signing, environment variable overrides, and graceful shutdown. Use when sending emails via SMTP, configuring mail connections, or injecting mail services."
+description: "Configure GuicedEE SMTP connections and MailService for email, attachments, TLS, and DKIM."
 metadata:
   short-description: Annotation-driven SMTP mail client inside GuicedEE
 ---

@@ -1,6 +1,6 @@
 ---
 name: guicedee-webservices
-description: "SOAP web services for GuicedEE using Apache CXF conventions: JAX-WS annotations (@WebService, @WebMethod, @WebParam, @WebResult), code-first and WSDL-first approaches, endpoint publishing, CXF interceptors and logging, MTOM, WS-Security (WSS4J), SOAP 1.1/1.2 bindings, and Guice DI integration. Use when creating SOAP services, publishing JAX-WS endpoints, configuring CXF bindings, or adding WS-Security."
+description: "Build GuicedEE SOAP/JAX-WS services with CXF, WSDL bindings, interceptors, MTOM, and WS-Security."
 metadata:
   short-description: SOAP web services with Apache CXF conventions inside GuicedEE
 ---

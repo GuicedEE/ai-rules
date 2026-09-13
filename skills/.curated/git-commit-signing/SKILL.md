@@ -1,6 +1,6 @@
 ---
 name: git-commit-signing
-description: "Configure and manage git commit signing per repository with the correct user identity and signing method (GPG, SSH, or S/MIME). Use when setting up commit signing for a new repo, switching identities between work/personal projects, troubleshooting signing failures, or enforcing signed commits across a team."
+description: "Configure or troubleshoot repository Git signing with GPG, SSH, or S/MIME and the correct work/personal identity."
 ---
 
 # Git Commit Signing

@@ -1,6 +1,6 @@
 ---
 name: jwebmp-material-icons
-description: Google Material Icons (older) font library for JWebMP. Use when integrating classic Material Icons.
+description: "Use the older Google Material Icons integration in JWebMP."
 metadata:
   short-description: Material Icons
 ---

@@ -1,6 +1,6 @@
 ---
 name: jwebmp-jquery
-description: jQuery JavaScript library integration for JWebMP providing foundational DOM manipulation, effects, and AJAX utilities. Foundation for many JWebMP plugin features.
+description: "Use JWebMP's jQuery integration for DOM manipulation, events, effects, AJAX, and plugin dependencies."
 metadata:
   short-description: jQuery Library
 ---

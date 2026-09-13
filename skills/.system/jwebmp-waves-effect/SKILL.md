@@ -1,6 +1,6 @@
 ---
 name: jwebmp-waves-effect
-description: Waves material design ripple effect for JWebMP creating Material Design click ripples on elements. Use when adding Material Design interaction effects.
+description: "Add Waves Material Design ripple effects to JWebMP interactions."
 metadata:
   short-description: Waves Effect
 ---

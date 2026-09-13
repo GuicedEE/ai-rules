@@ -1,6 +1,6 @@
 ---
 name: guicedee-cloud-app
-description: "Scaffold or audit a multi-module GuicedEE cloud application: a pure aggregator/parent POM, a dedicated BOM submodule that imports upstream GuicedEE/JWebMP/ActivityMaster BOMs, one or more feature service modules that merge GuicedEE modules (service-registry, rest, health, openapi, telemetry, metrics) via module-info requires, and a local observability stack (OpenTelemetry Collector, Tempo, Loki, Prometheus, Grafana, Keycloak) wired through docker-compose. Use when creating a new GuicedEE cloud/microservice project from scratch, laying out the root/parent/BOM Maven topology, adding a new service module to an existing platform, wiring telemetry/metrics/health into a deployable service, or standing up the local observability backend."
+description: "Scaffold GuicedEE cloud applications with parent/BOM/service modules and a local observability stack."
 metadata:
   short-description: Multi-module GuicedEE cloud application structure
 ---

@@ -1,6 +1,6 @@
 ---
 name: jwebmp-plus-as-tab
-description: Plus As Tab feature for JWebMP allowing plus symbol (+) to act as tab navigation. Use when implementing tab-like navigation with plus button functionality.
+description: "Configure JWebMP's Plus As Tab integration for keyboard navigation with the plus key."
 metadata:
   short-description: Plus As Tab
 ---

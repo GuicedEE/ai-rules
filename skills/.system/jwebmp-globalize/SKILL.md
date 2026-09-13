@@ -1,6 +1,6 @@
 ---
 name: jwebmp-globalize
-description: Globalize internationalization library integration for JWebMP supporting multi-language content, number/currency formatting, and date handling. Use when building multi-language JWebMP applications.
+description: "Localize JWebMP content and format numbers, currencies, and dates with Globalize."
 metadata:
   short-description: Globalize i18n
 ---

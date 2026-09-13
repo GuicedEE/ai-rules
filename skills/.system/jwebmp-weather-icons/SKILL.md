@@ -1,6 +1,6 @@
 ---
 name: jwebmp-weather-icons
-description: Weather Icons font library for JWebMP providing weather icon fonts. Use when displaying weather-related icons.
+description: "Display weather icon fonts in JWebMP interfaces."
 metadata:
   short-description: Weather Icons
 ---

@@ -10,7 +10,6 @@ dangerous because the output still looks plausible.
 - [Redirected output encoding](#redirected-output-encoding)
 - [Stale reads after a script writes a file](#stale-reads-after-a-script-writes-a-file)
 - [Bash equivalents](#bash-equivalents)
-- [`az` traps found by running the scripts, not reading them](#az-traps-found-by-running-the-scripts-not-reading-them)
   — **start here if a tsv field is empty or a verdict looks surprising**
 
 ## Silent abort on az stderr

@@ -1,6 +1,6 @@
 ---
 name: guicedee-ibmmq
-description: "Annotation-driven IBM MQ integration for GuicedEE with JMS 3.0: @IBMMQConnectionOptions, @IBMMQQueueDefinition, @IBMMQQueueOptions, IBMMQConsumer/IBMMQPublisher injection, JMS ConnectionFactory binding, queue and topic support, durable subscriptions, message selectors, transacted sessions, environment variable overrides, call-scoped message handling, and graceful shutdown. Use when adding IBM MQ messaging, declaring queue/topic consumers and publishers, configuring MQ connections, or integrating with IBM MQ queue managers."
+description: "Configure GuicedEE IBM MQ/JMS connections, queue/topic consumers and publishers, transactions, and lifecycle handling."
 metadata:
   short-description: Annotation-driven IBM MQ messaging inside GuicedEE
 ---

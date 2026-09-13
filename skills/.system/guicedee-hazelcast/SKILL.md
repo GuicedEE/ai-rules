@@ -1,6 +1,6 @@
 ---
 name: guicedee-hazelcast
-description: "Annotation-driven Hazelcast integration for GuicedEE with Vert.x 5: @HazelcastServerOptions for embedded server configuration, @HazelcastClientOptions for client connections, automatic Vert.x cluster manager via HazelcastClusterConfigurator SPI, JCache (JSR-107) annotations (@CacheResult, @CachePut, @CacheRemove), IGuicedHazelcastServerConfig/IGuicedHazelcastClientConfig SPI hooks, distributed maps/queues/locks, multiple join strategies (Multicast, TCP, Kubernetes, None), environment variable overrides (HAZELCAST_*/HAZELCAST_CLIENT_*), and graceful shutdown. Use when adding Hazelcast clustering, configuring Vert.x clustered event-bus, using distributed data structures, or enabling JCache."
+description: "Configure GuicedEE Hazelcast clustering, distributed data structures, Vert.x cluster managers, and JCache."
 metadata:
   short-description: Annotation-driven Hazelcast clustering inside GuicedEE
 ---

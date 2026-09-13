@@ -1,6 +1,6 @@
 ---
 name: senior-prompt-engineer
-description: "Prompt engineering workflow for building reliable assistants and agents: task decomposition, instruction hierarchy, tool-use patterns, safety constraints, and evaluation design. Use when writing or refactoring system prompts, creating structured prompts, building prompt test suites, or debugging regressions in LLM behavior."
+description: "Write, refactor, and evaluate assistant prompts, tool-use instructions, and agent workflows; diagnose LLM behavior regressions."
 ---
 
 # Senior Prompt Engineer
