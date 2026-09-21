@@ -1,6 +1,6 @@
 ---
 name: activitymaster
-description: "Implement ActivityMaster/FSDM services, scope-token security, reactive persistence, and MongoDB JSON resource items."
+description: "Implement ActivityMaster/FSDM services, profiles and user sessions through REST/GraphQL, scope-token security, and reactive persistence."
 metadata:
   short-description: FSDM enterprise resource management platform
 ---
@@ -23,6 +23,7 @@ Open-source implementation of the Functional Service Data Model (FSDM) for enter
 Read the reference for the task you are working on. Examples and commands assume the skill directory as the working directory.
 
 - [Domain and modules](references/guide-domain-and-modules.md): Core Architecture; Module Structure; Adding a New Module.
+- [Profiles and user sessions](references/guide-profiles-and-user-sessions.md): service contracts, profile REST/GraphQL usage, and session transport integration limits.
 - [Transports](references/guide-transports.md): REST API Architecture; GraphQL Architecture; Event Bus Architecture.
 - [Security](references/guide-security.md): Security & Token Propagation.
 - [Lifecycle](references/guide-lifecycle.md): Lifecycle & Bootstrap; On-Demand Data Loading Pattern; Progress Reporting (IProgressable + SPI monitors).

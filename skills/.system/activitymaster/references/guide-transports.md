@@ -6,6 +6,8 @@ Read this reference when working on the topics below. Commands run from the skil
 - [GraphQL Architecture](#graphql-architecture)
 - [Event Bus Architecture](#event-bus-architecture)
 
+For profile endpoints/queries and user-session adapters, read [Profiles and user sessions](guide-profiles-and-user-sessions.md). Profile writes await save/readback; sessions currently have no dedicated transport API.
+
 ## REST API Architecture
 
 ### URL Pattern

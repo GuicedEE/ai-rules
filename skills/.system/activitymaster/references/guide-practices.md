@@ -81,7 +81,9 @@ public class MyTest {
 
 ### 6. REST Create Pattern — Return DTO Immediately
 
-Create endpoints should return a response built from the input DTO immediately. Relationship persistence happens asynchronously:
+This pattern applies to core endpoints designed for asynchronous relationship persistence. Profile create/update instead compose save and readback before responding; session adapters must also await persistence (see [Profiles and user sessions](guide-profiles-and-user-sessions.md)).
+
+For endpoints using this asynchronous contract, return a response built from the input DTO immediately. Relationship persistence happens asynchronously:
 
 ```java
 // ✅ Good — immediate response, async relationship work

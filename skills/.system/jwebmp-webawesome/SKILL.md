@@ -63,6 +63,29 @@ custom icon set), `src` (SVG URL for fully custom icons), `label`, `canvas`
 icons (rather than raw string names), see `WaIconFA` in the `jwebmp-webawesome-pro`
 skill.
 
+Use enums where Web Awesome has a closed value set: `IconCanvas` for canvas and
+`IconFlip` for flip direction; `IconVariant` is also typed. Keep names, libraries, and
+colour values as strings. In particular, `setFamily(String)` intentionally supports
+new Font Awesome families such as `vellum` and kit-defined families before any Java
+enum is updated. CSS colour setters accept literal CSS and theme references, so prefer
+Web Awesome tokens when the colour belongs to the application theme:
+
+```java
+new WaIcon<>("house")
+        .setFamily("vellum")
+        .setVariant(IconVariant.Solid)
+        .setFlip(IconFlip.Y)
+        .setCanvas(IconCanvas.ROOMY)
+        .setFontSize("1.25em")
+        .setColor("var(--wa-color-text-normal)")
+        .setPrimaryColor("var(--wa-color-brand-fill-loud)")
+        .setSecondaryColor("var(--wa-color-brand-fill-quiet)");
+```
+
+`setColor`, `setBackgroundColor`, `setPrimaryColor`, and `setSecondaryColor` support
+hex, `rgb()`, `hsl()`, `currentColor`, and `var(--wa-...)`; use `addStyle(name, value)`
+for additional documented CSS custom properties such as duotone opacity or animation.
+
 ## Layout example (page shell + stack/cluster/grid)
 
 ```java

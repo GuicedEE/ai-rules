@@ -18,6 +18,77 @@ TypeScript client generation for JWebMP plugins.
 
 ## Annotations
 
+### @NgLocale and LocaleService
+
+```java
+import com.jwebmp.core.base.angular.client.annotations.angular.NgLocale;
+
+@NgLocale(value = "en-ZA", supportedLocales = {"de", "fr"})
+```
+
+Place on `@NgApp` or its boot component; the app takes precedence and declarations
+are inherited. The Angular plugin registers locale data before bootstrap and
+provides the startup `LOCALE_ID`. `value` is required; `dataLocale = ""` defaults
+to the same data-file ID (`en-US` maps to `en`), `extraData = false` controls extra
+day-period data for all declared locales, and `supportedLocales = {}` adds data
+for runtime selection. This replaces manual locale import/constructor/provider
+annotations. Use locale files present in the installed Angular package.
+
+Reference `com.jwebmp.core.base.angular.client.services.LocaleService` using
+`@NgComponentReference(LocaleService.class)` to generate the public constructor
+parameter `localeService`. In `@NgMethod` bodies call
+`this.localeService.setLocale('de');` or `this.localeService.resetLocale();`.
+`defaultLocale` holds the startup value, while `locale()` is a read-only signal.
+Bind it explicitly, for example:
+
+```html
+{{ amount | number:'1.2-2':localeService.locale() }}
+{{ date | date:'longDate':undefined:localeService.locale() }}
+```
+
+Do not model runtime selection as mutating `LOCALE_ID`: it remains the app default.
+Only explicit signal bindings update existing pipes; third-party controls need
+their own locale bindings. Missing locale data throws before state changes;
+Angular's registered parent-language fallback still applies. The service is scoped
+to the Angular application instance, and the consumer owns user-profile persistence,
+restoration, and logout reset. No automatic browser storage or message translation.
+
+Source owners: `annotations/angular/NgLocale.java`, `services/LocaleService.java`,
+and Angular's `services/compiler/setup/AngularLocaleConfiguration.java`.
+Verify generated service output with `LocaleServiceRenderingTest`; the Angular
+module has `AngularLocaleConfigurationTest`. The tsclient
+`src/test/scripts/locale-runtime.mjs` checks generated TypeScript and real Angular
+formatting behavior; its header describes setup. Preserve Java annotation patterns
+and regenerate consumers rather than editing generated TypeScript.
+
+### @NgTranslations and TranslationService
+
+Declare translation sources on `@NgApp` or its boot component:
+
+```java
+@NgTranslations(defaultLanguage = "en", supportedLanguages = {"en", "de"})
+@NgTranslationSource(namespace = "orders", resource = "META-INF/jwebmp/i18n/orders")
+@NgTranslationSource(namespace = "orders", url = "/rest/translations/orders/{language}", priority = 200)
+```
+
+Library defaults use `META-INF/jwebmp/i18n/<namespace>/<language>.json` and are
+discovered by the Angular generator through ClassGraph. It emits merged public
+bundles and adds Transloco 8.4 only when this annotation is present. Library
+priority is `0`; classpath and URL sources default to `100`; higher priorities
+override lower ones, while equal-priority conflicts fail. Use `namespaces` to select
+library scopes and `messageFormat = false` to omit ICU message-format support.
+
+`TranslationService` is root-scoped. Reference it using
+`@NgComponentReference(TranslationService.class)`, then use `setLanguage`,
+`setLanguageAndLocale`, `reload`, `clearContext`, or
+`applyTranslations(language, namespace, data)` for dictionaries returned by an
+existing REST client. The optional context argument protects user/tenant switches.
+It loads through Angular `HttpClient`, so interceptors apply; optional URL sources
+fall back to bundled dictionaries and stale responses are discarded. Use Transloco
+pipe/directive keys such as `{{ 'orders.save' | transloco }}`. Keep translation
+language and formatting locale independent, and clear context on logout or tenant
+changes. Persistence is application-owned.
+
 ### @TsDependency
 
 Declare npm runtime dependencies:

@@ -172,7 +172,7 @@ Project-specific skills for the GuicedEE ecosystem:
 | [jwebmp-agcharts-enterprise](skills/.system/jwebmp-agcharts-enterprise/SKILL.md) | AG Charts enterprise visualization |
 | [jwebmp-aggrid](skills/.system/jwebmp-aggrid/SKILL.md) | AG Grid community data tables |
 | [jwebmp-aggrid-enterprise](skills/.system/jwebmp-aggrid-enterprise/SKILL.md) | AG Grid enterprise data grids |
-| [jwebmp-angular](skills/.system/jwebmp-angular/SKILL.md) | Angular framework integration |
+| [jwebmp-angular](skills/.system/jwebmp-angular/SKILL.md) | Angular integration, locale formatting, and runtime translations |
 | [jwebmp-angular-forms](skills/.system/jwebmp-angular-forms/SKILL.md) | Angular reactive forms |
 | [jwebmp-angular-graphql](skills/.system/jwebmp-angular-graphql/SKILL.md) | Apollo GraphQL client generation (@NgGraphQL) |
 | [jwebmp-angular-material](skills/.system/jwebmp-angular-material/SKILL.md) | Angular Material design components |
@@ -205,7 +205,7 @@ Project-specific skills for the GuicedEE ecosystem:
 | [jwebmp-skycons](skills/.system/jwebmp-skycons/SKILL.md) | Animated weather icons |
 | [jwebmp-themify-icons](skills/.system/jwebmp-themify-icons/SKILL.md) | Themify icon fonts |
 | [jwebmp-toastr](skills/.system/jwebmp-toastr/SKILL.md) | Toast notification alerts |
-| [jwebmp-tsclient](skills/.system/jwebmp-tsclient/SKILL.md) | TypeScript client code generation |
+| [jwebmp-tsclient](skills/.system/jwebmp-tsclient/SKILL.md) | TypeScript generation, locale, and translation services |
 | [jwebmp-vertx](skills/.system/jwebmp-vertx/SKILL.md) | JWebMP Vert.x event bus runtime |
 | [jwebmp-waves-effect](skills/.system/jwebmp-waves-effect/SKILL.md) | Material Design ripple effects |
 | [jwebmp-waypoints](skills/.system/jwebmp-waypoints/SKILL.md) | Scroll-triggered callbacks |

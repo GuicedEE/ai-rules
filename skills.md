@@ -135,7 +135,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | `jwebmp-core` | `skills/.system/jwebmp-core/SKILL.md` | JWebMP core framework (HTML, CSS, events, page configurators) |
 | `jwebmp-client` | `skills/.system/jwebmp-client/SKILL.md` | JWebMP client module |
 | `jwebmp-vertx` | `skills/.system/jwebmp-vertx/SKILL.md` | JWebMP Vert.x event bus runtime |
-| `jwebmp-tsclient` | `skills/.system/jwebmp-tsclient/SKILL.md` | TypeScript client code generation |
+| `jwebmp-tsclient` | `skills/.system/jwebmp-tsclient/SKILL.md` | TypeScript generation, locale, and translation services |
 
 #### Data & Analytics
 
@@ -156,7 +156,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 
 | Skill | Path | Use for |
 |-------|------|---------|
-| `jwebmp-angular` | `skills/.system/jwebmp-angular/SKILL.md` | Angular framework integration |
+| `jwebmp-angular` | `skills/.system/jwebmp-angular/SKILL.md` | Angular integration, locale formatting, and runtime translations |
 | `jwebmp-angular-forms` | `skills/.system/jwebmp-angular-forms/SKILL.md` | Angular reactive forms |
 | `jwebmp-angular-graphql` | `skills/.system/jwebmp-angular-graphql/SKILL.md` | Apollo GraphQL client generation (@NgGraphQL) |
 | `jwebmp-angular-material` | `skills/.system/jwebmp-angular-material/SKILL.md` | Angular Material design components |

@@ -9,6 +9,15 @@ metadata:
 
 Angular 21 TypeScript project generation and SPA hosting with STOMP/WebSocket bridge for JWebMP.
 
+## Locale formatting and user preferences
+
+For `@NgLocale`, runtime `LocaleService` selection, pipe bindings, and validation,
+read [Locale formatting and user preferences](references/localization.md).
+
+For ClassGraph-discovered library dictionaries, Transloco runtime loading,
+application overrides, REST sources, and context reset, read
+[Runtime translations](references/translations.md).
+
 ## Core Features
 
 - **TypeScript code generation** from Java annotations

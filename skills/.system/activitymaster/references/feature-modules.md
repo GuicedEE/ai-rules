@@ -757,57 +757,7 @@ public interface IPaymentsService {
 
 ## Profiles Module
 
-### Overview
-User profiles, preferences, and customization settings.
-
-### Entity Model
-
-```java
-@Entity
-@Table(name = "user_profiles")
-public class UserProfile extends BaseEntity<UserProfile, UserProfile.UserProfileQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "display_name")
-    private String displayName;
-
-    @Column(name = "bio", columnDefinition = "TEXT")
-    private String bio;
-
-    @Column(name = "avatar_url")
-    private String avatarUrl;
-
-    @Column(name = "timezone")
-    private String timezone;
-
-    @Column(name = "locale")
-    private String locale;
-
-    @Column(name = "theme")
-    private String theme;
-
-    @OneToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise enterprise;
-
-    @ElementCollection
-    @CollectionTable(name = "profile_preferences")
-    private Map<String, String> preferences;
-}
-```
-
-### Service API
-
-```java
-public interface IProfilesService {
-    Uni<UserProfile> createProfile(UserProfile profile, String enterpriseId);
-    Uni<UserProfile> updateProfile(String id, UserProfile updates, SecurityToken token);
-    Uni<UserProfile> getProfile(String enterpriseId, SecurityToken token);
-    Uni<UserProfile> uploadAvatar(String profileId, InputStream imageData, SecurityToken token);
-    Uni<UserProfile> updatePreference(String profileId, String key, String value, SecurityToken token);
-}
-```
+Profiles use `IProfileService<?>` and `ComprehensiveProfileDTO` backed by FSDM involved-party names and classifications. See [Profiles and user sessions](guide-profiles-and-user-sessions.md) for the actual Java API, REST create/update/find endpoints, and GraphQL profile queries.
 
 ---
 
@@ -920,41 +870,7 @@ public class TodoItem extends BaseEntity<TodoItem, TodoItem.TodoItemQueryBuilder
 
 ## User Sessions Module
 
-### Overview
-Session tracking, analytics, and user activity monitoring.
-
-### Entity Model
-
-```java
-@Entity
-@Table(name = "user_sessions")
-public class UserSession extends BaseEntity<UserSession, UserSession.UserSessionQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "session_token")
-    private String sessionToken;
-
-    @Column(name = "ip_address")
-    private String ipAddress;
-
-    @Column(name = "user_agent")
-    private String userAgent;
-
-    @Column(name = "started_at")
-    private LocalDateTime startedAt;
-
-    @Column(name = "last_activity_at")
-    private LocalDateTime lastActivityAt;
-
-    @Column(name = "ended_at")
-    private LocalDateTime endedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Enterprise user;
-}
-```
+User application state uses `IUserSessionService<?>` and JSON resource items linked to involved parties. See [Profiles and user sessions](guide-profiles-and-user-sessions.md) for loading, value serialization, update/expiry, and REST/GraphQL adapter guidance, including current transport and implementation limits.
 
 ---
 
