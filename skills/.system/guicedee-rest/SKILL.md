@@ -90,6 +90,10 @@ Methods can return:
 > `com.fasterxml.jackson.annotation` (2.x), so `@JsonProperty`, `@JsonInclude`,
 > `@JsonAutoDetect`, `@JsonIdentityInfo`, and reference annotations work unchanged.
 
+## Automatic telemetry
+
+When `com.guicedee.telemetry` is present, the REST router automatically creates a `SERVER` span for each endpoint, extracts W3C request context, keeps the span current across the reactive `Uni` subscription, and ends it when the HTTP response completes. Endpoint authors do not need to add `@Trace` for the HTTP boundary. Resource and service methods may still use `@Trace` for separate internal spans.
+
 ## Non-Negotiable Constraints
 
 - Resource classes must be in packages opened to `com.google.guice` and `com.guicedee.rest`.

@@ -1,148 +1,113 @@
 ---
 name: guicedee-telemetry
-description: "Instrument GuicedEE with OpenTelemetry spans, call-scope propagation, Uni lifecycles, and OTLP export."
+description: "Instrument GuicedEE with OpenTelemetry spans, W3C context propagation, call-scope and Uni lifecycles, HTTP client/server boundaries, service discovery, persistence, and OTLP export."
 metadata:
   short-description: OpenTelemetry distributed tracing inside GuicedEE
 ---
 
 # GuicedEE Telemetry
 
-OpenTelemetry distributed tracing for GuicedEE using Guice AOP and OTLP exporters.
+GuicedEE telemetry has two complementary APIs:
 
-## Core Concept
+- `@Trace` and `@SpanAttribute` provide Guice AOP method tracing.
+- `GuicedTelemetry` provides the explicit boundary API used by infrastructure modules and clients.
 
-Annotate your classes and methods with `@Trace` and `@SpanAttribute` — the framework builds an `OpenTelemetrySdk` at startup, binds a `TraceMethodInterceptor` via Guice AOP, and exports spans and logs to any OTLP-compatible backend (Tempo, Jaeger, etc.) automatically.
+Use the explicit API whenever a trace crosses an asynchronous, network, messaging, discovery, or persistence boundary. A method interceptor alone cannot inject headers into an HTTP request or extract a remote parent from an incoming request.
 
-## Required Flow
+## Consumer setup
 
-1. Add `com.guicedee:guiced-telemetry` dependency.
-2. Configure telemetry:
-   ```java
-   @TelemetryOptions(
-       serviceName = "my-service",
-       otlpEndpoint = "http://localhost:4318",
-       serviceVersion = "1.0.0",
-       deploymentEnvironment = "production"
-   )
-   public class MyAppConfig {}
-   ```
-   > **Per-signal endpoints & automatic sub-paths.** `otlpEndpoint` is treated as
-   > a **base** URL — the configurator appends the correct signal sub-path
-   > (`/v1/traces`, `/v1/logs`) automatically when it is missing, so
-   > `http://localhost:4318` and `http://localhost:4318/v1/traces` both work.
-   >
-   > **Tempo/Jaeger are traces-only.** Sending OTLP **logs** to a traces backend
-   > yields **HTTP 404 on `/v1/logs`**. You have two correct options:
-   > - **Disable log export**: `@TelemetryOptions(exportLogs = false)` (no log
-   >   exporter, logger provider, or OTel Log4j2 appender is registered). Ship
-   >   logs to Loki out-of-band (Grafana Alloy / Promtail).
-   > - **Point logs at a logs backend**: set `logsEndpoint` (and optionally
-   >   `tracesEndpoint`) to send each signal to a different collector, e.g.
-   >   `tracesEndpoint = "http://tempo:4318/v1/traces"`,
-   >   `logsEndpoint = "http://loki:3100/otlp/v1/logs"`.
-   >
-   > Standard OTel env vars are honoured too:
-   > `OTEL_EXPORTER_OTLP_ENDPOINT` (base, sub-path appended),
-   > `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` / `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
-   > (full URLs, used verbatim).
-3. Annotate methods to trace:
-   ```java
-   @Trace("place-order")
-   public void placeOrder(@SpanAttribute("order.id") String orderId,
-                          @SpanAttribute("order.amount") double amount) {
-       // span is created automatically
-   }
+Add the dependency and JPMS requirement:
 
-   @Trace
-   @SpanAttribute("result")
-   public String processPayment(String paymentId) {
-       return "success"; // return value recorded as "result" attribute
-   }
-   ```
-4. Configure `module-info.java`:
-   ```java
-   module my.app {
-       requires com.guicedee.telemetry;
-       opens my.app.services to com.google.guice;
-   }
-   ```
-5. Bootstrap GuicedEE — tracing starts automatically:
-   ```java
-   IGuiceContext.registerModuleForScanning.add("my.app");
-   IGuiceContext.instance().inject();
-   ```
+```xml
+<dependency>
+  <groupId>com.guicedee</groupId>
+  <artifactId>guiced-telemetry</artifactId>
+</dependency>
+```
 
-## Tracing Annotations
+```java
+requires com.guicedee.telemetry;
+```
 
-### `@Trace`
-Creates an OpenTelemetry span around a method invocation.
-- Custom name: `@Trace("fetch-users")`
-- Default name: `ClassName.methodName`
-- Class-level: traces all methods in the class
-
-### `@SpanAttribute`
-Records method parameters or return values as span attributes.
-- Supported types: `String`, `Boolean`, `Long`, `Double`, `Integer`, `Float`
-- Complex objects serialized to JSON via Jackson
-
-### Uni support
-When a `@Trace` method returns a Mutiny `Uni`, the span remains open until the `Uni` completes or fails.
-
-### Span propagation
-Parent spans are propagated through GuicedEE's `CallScoper`. Nested `@Trace` methods create child spans automatically.
+The telemetry module registers its startup and Guice AOP services through `ServiceLoader`; consumers do not add a second `provides` entry. Traced application packages must be opened to `com.google.guice`.
 
 ## Configuration
 
-### `@TelemetryOptions` annotation
-
-| Attribute | Purpose |
-|---|---|
-| `enabled` | Enable/disable tracing |
-| `serviceName` | OpenTelemetry service name |
-| `otlpEndpoint` | OTLP HTTP **base** endpoint (signal sub-path appended automatically) |
-| `tracesEndpoint` | Optional full URL for spans (used verbatim); derives from base when blank |
-| `logsEndpoint` | Optional full URL for logs (used verbatim); point at a logs backend, not Tempo |
-| `exportLogs` | Set `false` for traces-only backends (Tempo) to skip OTLP log export entirely |
-| `serviceVersion` | Service version resource attribute |
-| `deploymentEnvironment` | Deployment environment attribute |
-| `useInMemoryExporters` | In-memory exporters for unit testing |
-| `configureLogs` | Enable Log4j2 OpenTelemetry appender |
-| `maxBatchSize` | Batch span processor max batch size |
-
-### Environment variable overrides
-Every `@TelemetryOptions` attribute can be overridden via system properties or environment variables.
-
-## Startup Flow
-
-```
-IGuiceContext.instance().inject()
- └─ TelemetryPreStartup (scans for @TelemetryOptions)
-     └─ OpenTelemetrySDKConfigurator.initialize()
-         ├─ Build Resource (service.name, version, environment, host)
-         ├─ Create OTLP HTTP exporters (spans + logs)
-         ├─ Build SdkTracerProvider + SdkLoggerProvider
-         ├─ Set GlobalOpenTelemetry
-         └─ Register shutdown hook
- └─ TraceModule (binds TraceMethodInterceptor for @Trace)
+```java
+@TelemetryOptions(
+    serviceName = "orders",
+    serviceVersion = "1.0.0",
+    deploymentEnvironment = "production",
+    otlpEndpoint = "http://localhost:4318",
+    exportLogs = false
+)
+public class OrdersTelemetryConfig {}
 ```
 
-## Testing
+`otlpEndpoint` is a base endpoint. The configurator adds `/v1/traces` and `/v1/logs` when needed. Use `tracesEndpoint` and `logsEndpoint` for separate signal destinations. Tempo and Jaeger are normally trace-only, so set `exportLogs = false` unless logs are sent to an OTLP logs-capable collector. System properties and standard `OTEL_EXPORTER_OTLP_*` environment variables override annotation values.
 
-Use in-memory exporters for unit tests:
+## Explicit boundary API
+
+`GuicedTelemetry` exposes `openTelemetry()`, `tracer(String)`, `currentSpan()`, `startSpan(String)`, `startClientSpan(String,String)`, `startServerSpan(String,String,MultiMap)`, `makeCurrent(Span)`, `inject(MultiMap)`, `extract(MultiMap)`, `end(Span,Throwable)`, `withSpan(Span,Uni<T>)`, and `finish(Span,Uni<T>)`.
+
+For an HTTP client, create a `CLIENT` span, make it current while constructing the request, inject W3C headers, and close it from the asynchronous result:
 
 ```java
-@TelemetryOptions(useInMemoryExporters = true)
-public class TestConfig {}
+Span span = GuicedTelemetry.startClientSpan("GET", url);
+try (Scope ignored = GuicedTelemetry.makeCurrent(span)) {
+    GuicedTelemetry.inject(request.headers());
+}
+return GuicedTelemetry.finish(span, responseUni);
 ```
 
-Access `InMemorySpanExporter` and `InMemoryLogRecordExporter` to assert on captured spans.
+For an HTTP server, extract the incoming parent and create a `SERVER` span:
 
-## Non-Negotiable Constraints
+```java
+Span span = GuicedTelemetry.startServerSpan(
+    context.request().method().name(), route, context.request().headers());
+try (Scope ignored = GuicedTelemetry.makeCurrent(span)) {
+    return invokeResource();
+}
+```
 
-- Module must `requires com.guicedee.telemetry;`.
-- Traced classes must be in packages opened to `com.google.guice`.
-- Guice AOP requires non-final, non-private methods for interception.
-- The telemetry module is registered automatically — no `provides` needed.
-- A JVM shutdown hook flushes pending spans automatically.
+`inject(MultiMap)` and `extract(MultiMap)` use the configured OpenTelemetry propagator. Do not copy trace IDs into application payloads, query parameters, cookies, or authentication claims. Use W3C `traceparent`/`tracestate` headers through the propagation API.
 
+`finish(Span, Uni<T>)` owns completion for the returned `Uni`: it records failures and ends the span when the operation completes. Do not also end that span in the caller.
 
+Use `withSpan(Span, Uni<T>)` when another component owns completion, such as a REST server response handler. It keeps the span current for the full reactive subscription so downstream REST clients create child spans. The response owner must end the server span exactly once.
+
+## GuicedEE module adoption
+
+- `rest-client`: every outbound request creates a `CLIENT` span, records method, URL, and response status, injects the current context, and closes the span with the returned `Uni`.
+- `rest`: inbound route handlers should create a `SERVER` span with request headers and keep it current through resource invocation and asynchronous response completion.
+- `service-registry` and `service-discovery`: wrap registry resolution, health checks, and remote discovery calls in `INTERNAL` or `CLIENT` spans. Record the logical service name and resolved target; do not record credentials or tokens.
+- `persistence`: wrap session acquisition, transaction, query, and flush boundaries in `INTERNAL` spans. Record persistence unit, operation, and bounded query identity. Never record SQL parameters or entity payloads by default.
+- messaging and websocket modules: extract context at ingress, make the consumer span current while dispatching, and inject context for outbound messages.
+
+Boundary modules may use the facade directly. They must preserve the existing GuicedEE module graph and keep telemetry optional unless the module intentionally adopts a compile-time telemetry dependency. If optional integration is required, use a small SPI and `ServiceLoader` rather than reflection that hides module requirements.
+
+## AOP tracing
+
+```java
+@Trace("orders.place")
+public Uni<Order> place(@SpanAttribute("order.id") String orderId) { ... }
+```
+
+`@Trace` creates an `INTERNAL` span. Class-level `@Trace` traces eligible methods. Parameters and return values annotated with `@SpanAttribute` are recorded; complex values are serialized for diagnostics. AOP requires non-final, non-private methods and packages opened to Guice.
+
+Nested AOP spans inherit the current OpenTelemetry context. GuicedEE `CallScoper` and its Mutiny integrations preserve scope state across Vert.x and `Uni` continuations; boundary code must still make the span current around the operation that creates asynchronous work.
+
+## Testing contract
+
+Use `@TelemetryOptions(useInMemoryExporters = true)` for tests. Assert span name and kind, parent/child relationship, propagated `traceparent`, semantic attributes, completion on success/failure/asynchronous completion, and absence of credentials, cookies, SQL values, and unrestricted payloads.
+
+Run focused module tests from the module directory. Do not use Maven `clean` as part of telemetry validation, and inspect Surefire reports when a module configures failure ignoring.
+
+## Non-negotiable rules
+
+- Keep one owner for every span's lifecycle.
+- Use standard OpenTelemetry context propagation at every process boundary.
+- Treat `CallScoper` as JVM-local scope support; it is not distributed propagation by itself.
+- Use stable semantic attributes and bounded cardinality.
+- Do not record authorization credentials, cookies, request bodies, SQL values, or unrestricted exception payloads.
+- Preserve JPMS exports, opens, service descriptors, and the existing GuicedEE dependency direction.

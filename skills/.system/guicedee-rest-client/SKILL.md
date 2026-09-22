@@ -133,6 +133,7 @@ IGuiceContext.instance().inject()
 
 ## Non-Negotiable Constraints
 
+- When `com.guicedee.telemetry` is present, every outbound `RestClient` request automatically creates a `CLIENT` span, injects W3C trace context, records the response status, and completes with the returned `Uni`. Do not add a second manual HTTP span around the same request.
 - Client packages must `opens` to `com.google.guice` and `com.guicedee.rest.client`.
 - DTO packages must `opens` to `tools.jackson.databind`.
 - Module must `requires transitive com.guicedee.rest.client;`.
