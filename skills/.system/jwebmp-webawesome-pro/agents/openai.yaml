@@ -1,4 +1,4 @@
 interface:
   display_name: "JWebMP WebAwesome Pro"
-  short_description: "WebAwesome Pro premium icons"
-  default_prompt: "Use $jwebmp-webawesome-pro for premium WebAwesome icon features."
+  short_description: "Build WebAwesome Pro UI with typed icons"
+  default_prompt: "Use $jwebmp-webawesome-pro to render a catalog icon through WaIconFA and use WebAwesome Pro components."

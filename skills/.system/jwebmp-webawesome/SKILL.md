@@ -28,63 +28,102 @@ extend `DivSimple<J>`, and generate their Angular directive imports automaticall
 | Buttons | `WaButton`, `WaButtonGroup`, `WaSplitButton`, `WaDropDown`, `WaDropdownItem` | `button` |
 | Forms — text/number | `WaInput`, `WaTextArea`, `WaNumberInput`, `WaTimeInput`, `WaKnownDate`, `WaColorPicker` | `input`, `textarea`, `numberinput`, `timeinput`, `knowndate`, `colorpicker` |
 | Forms — choice | `WaCheckbox`, `WaCheckboxGroup`, `WaRadio`, `WaRadioGroup`, `WaSelect`, `WaSelectOption`, `WaSwitch`, `WaRange`, `WaRating` | `checkbox`, `radio`, `select`, `waswitch`, `range`, `rating` |
-| Data display | `WaCard`, `WaBadge`, `WaTag`, `WaAvatar`, `WaAvatarGroup`, `WaCallout`, `WaTree`, `WaTreeItem`, `WaBreadcrumbs`, `WaBreadcrumbItem`, `WaDetails`, `WaAccordion`, `WaAccordionItem`, `WaTabGroup`, `WaTab`, `WaTabPanel`, `WaCarousel`, `WaCarouselItem`, `WaComparison`, `WaImageCompare`, `WaAnimatedImage` | `card`, `badge`, `tag`, `avatar`, `callout`, `tree`, `breadcrumb`, `details`, `accordion`, `tabgroup`, `carousel`, `comparison`, `imagecompare`, `animatedimage` |
+| Data display | `WaCard`, `WaBadge`, `WaTag`, `WaAvatar`, `WaAvatarGroup`, `WaCallout`, `WaTree`, `WaTreeItem`, `WaBreadcrumbs`, `WaBreadcrumbItem`, `WaDetails`, `WaAccordion`, `WaAccordionItem`, `WaTabGroup`, `WaTab`, `WaTabPanel`, `WaCarousel`, `WaCarouselItem`, `WaComparison`, `WaImageCompare`, `WaImage`, `WaAnimatedImage` | `card`, `badge`, `tag`, `avatar`, `callout`, `tree`, `breadcrumb`, `details`, `accordion`, `tabgroup`, `carousel`, `comparison`, `imagecompare`, `image`, `animatedimage` |
 | Feedback / status | `WaProgressBar`, `WaProgressRing`, `WaSkeleton`, `WaSpinner`, `WaRandomContent` | `progressbar`, `progressring`, `skeleton`, `spinner`, `randomcontent` |
 | Overlays | `WaDialog`, `WaDrawer`, `WaPopover`, `WaPopup`, `WaTooltip` | `dialog`, `drawer`, `popover`, `popup`, `tooltip` |
-| Formatters / display helpers | `WaFormatBytes`, `WaFormatDate`, `WaFormatNumber`, `WaRelativeTime`, `WaQRCode`, `WaCopyButton`, `WaText`, `WaMarkdown`, `WaInclude` | `formatbytes`, `formatdate`, `formatnumber`, `relativetime`, `qrcode`, `copybutton`, `text`, `markdown`, `include` |
+| Page copy and typography | `WaText`, `WaMarkdown` | `text`, `markdown` |
+| Formatters / display helpers | `WaFormatBytes`, `WaFormatDate`, `WaFormatNumber`, `WaRelativeTime`, `WaQRCode`, `WaCopyButton`, `WaInclude` | `formatbytes`, `formatdate`, `formatnumber`, `relativetime`, `qrcode`, `copybutton`, `include` |
 | Structural / layout helpers | `WaSplitPanel`, `WaScroller`, `WaDivider`, `WaVariantContainer` | `splitpanel`, `scroller`, `divider`, `variant` |
 | Reactive observers | `WaIntersectionObserver`, `WaMutationObserver`, `WaResizeObserver` | `observer` |
 | Animation | `WaAnimation` | `animation` |
 | Icons | `WaIcon` | `icon` |
 
+## Page text (`WaText`)
+
+Default to `WaText` for visible prose in a WebAwesome-authored page: headings,
+paragraphs, captions, supporting copy, and styled links. It renders a semantic
+HTML tag with the `waText` directive. Set both the tag and the matching
+WebAwesome typography preset; `new WaText<>()` alone defaults to a plain
+`<div>` and does not select a body or heading size.
+
+```java
+import com.jwebmp.webawesome.components.text.WaText;
+
+WaText<?> heading = new WaText<>().setTag("h2")
+        .setWaHeading("m").setText("Recent activity");
+WaText<?> body = new WaText<>().setTag("p")
+        .setWaBody("m").setText("Updates from your team.");
+WaText<?> caption = new WaText<>().setTag("span")
+        .setWaCaption("s").setWaColorText("quiet").setText("Updated today");
+```
+
+Use `setWaLongform(...)` for long-form prose and `setWaLink(...)` on an
+`a` tag for a styled text link. Use `WaMarkdown` when the content contains
+Markdown or rich inline formatting. Keep text owned by controls in their
+components (`WaButton`, `WaInput`, `WaSelectOption`, etc.), and preserve
+specialized semantic elements when their behavior matters. Avoid generic
+`Paragraph`, `Span`, `DivSimple`, or bare text as the default authoring choice
+for ordinary page copy. See `JWebMP/plugins/webawesome/src/main/java/com/jwebmp/webawesome/components/text/WaText.java`
+and `JWebMP/plugins/webawesome/rules/generative/frontend/jwebmp/webawesome/text.rules.md`.
+
+## Page images (`WaImage`)
+
+Default to `WaImage` for ordinary still images in a WebAwesome-authored page.
+It extends JWebMP `Image`, renders a native `<img>`, and exposes Web Awesome
+space and border token helpers. Web Awesome does not have a `<wa-image>`
+custom element. Supply useful alternative text; use an empty `alt` only for a
+decorative image.
+
+```java
+import com.jwebmp.webawesome.components.image.WaImage;
+
+WaImage<?> photo = new WaImage<>("/images/field.jpg", "A field at sunrise");
+card.withImage(photo); // WaCard accepts Image, so WaImage fits its image slot.
+```
+
+Use `WaAnimatedImage` when a GIF/WEBP needs play and pause controls, `WaAvatar`
+for a person or organization avatar, and `WaComparison` or the legacy
+`WaImageCompare` for a before/after comparison. Keep `Image` for non-WebAwesome
+pages or APIs that require the exact core type. See
+`JWebMP/plugins/webawesome/rules/generative/frontend/jwebmp/webawesome/image.rules.md`.
+
 ## Icons (`WaIcon`)
 
-Icons are **not** a separate `Icon`/`IconStyle` API — they're the `WaIcon` component,
-which renders a Web Awesome `<wa-icon>` and supports FontAwesome family/variant names,
-custom SVG sources, or a registered icon library:
+`WaIcon` renders `<wa-icon>`. For shipped Font Awesome icons, choose a
+style-specific free enum (`FontAwesomeFreeSolidIcons`,
+`FontAwesomeFreeRegularIcons`, `FontAwesomeFreeBrandsIcons`) or a Pro/Pro+
+family enum such as `FontAwesomeVellumIcons`. Inspect the enum for the constant;
+never guess a name or assume a style exists in another family. Pass the name,
+family, and variant from the **same** enum value, including when using plain
+`WaIcon`:
 
 ```java
 import com.jwebmp.webawesome.components.icon.WaIcon;
+import com.jwebmp.plugins.fontawesome5.icons.FontAwesomeFreeSolidIcons;
 
-WaIcon<?> icon = new WaIcon<>("house");            // name only
-icon.setFamily("sharp-duotone");                     // FontAwesome family
-icon.addAttribute("label", "Home");                  // accessible label
+var icon = FontAwesomeFreeSolidIcons.house;
+WaIcon<?> waIcon = new WaIcon<>(icon.toAngularIconAttributeName(),
+                                 icon.getFamily(), icon.getVariant());
+waIcon.setLabel("Home");
 ```
 
-Constructor overloads accept `(name)`, `(name, family)`, or `(name, family, variant)`.
-Key attributes: `name`, `family` (FontAwesome family, e.g. `classic`, `sharp-duotone`,
-`brands`), `variant` (`regular`/`solid`/etc. within a family), `library` (registered
-custom icon set), `src` (SVG URL for fully custom icons), `label`, `canvas`
-(`IconCanvas`: unset = fixed 1.25em×1em, `auto`, `square`, `roomy`). Styling setters:
-`setColor`, `setBackgroundColor`, `setFontSize`, `setPrimaryColor`/`setPrimaryOpacity`,
-`setSecondaryColor`/`setSecondaryOpacity` (duotone). Animation CSS custom properties
-(`--flip-angle`, `--beat-scale`, `--bounce-anticipation`, `--wag-angle`,
-`--float-height`, etc.) are set via `addStyle(name, value)`. For FontAwesome-enum-bound
-icons (rather than raw string names), see `WaIconFA` in the `jwebmp-webawesome-pro`
-skill.
+When `web-awesome-pro` is available, `new WaIconFA<>(icon)` performs this
+mapping automatically; `new WaIconFA<>(icon, IconVariant.Thin)` validates the
+requested variant. For Vellum, use `FontAwesomeVellumIcons` and Solid. See the
+`jwebmp-fontawesome` and `jwebmp-fontawesome-pro` skills for the catalogs.
 
-Use enums where Web Awesome has a closed value set: `IconCanvas` for canvas and
-`IconFlip` for flip direction; `IconVariant` is also typed. Keep names, libraries, and
-colour values as strings. In particular, `setFamily(String)` intentionally supports
-new Font Awesome families such as `vellum` and kit-defined families before any Java
-enum is updated. CSS colour setters accept literal CSS and theme references, so prefer
-Web Awesome tokens when the colour belongs to the application theme:
+Do not render Font Awesome icons as `<i>`/`<i/>`, JWebMP `Italic`, or an `<i>`
+with `fa-*` CSS classes. Use `WaIcon`, `WaIconFA`, or the `FontAwesome` component.
+Raw strings and `setFamily(String)` are for explicitly custom Kit uploads or
+application icon libraries without catalog entries, after verifying the asset.
+This icon rule does not restrict ordinary italic text.
 
-```java
-new WaIcon<>("house")
-        .setFamily("vellum")
-        .setVariant(IconVariant.Solid)
-        .setFlip(IconFlip.Y)
-        .setCanvas(IconCanvas.ROOMY)
-        .setFontSize("1.25em")
-        .setColor("var(--wa-color-text-normal)")
-        .setPrimaryColor("var(--wa-color-brand-fill-loud)")
-        .setSecondaryColor("var(--wa-color-brand-fill-quiet)");
-```
-
-`setColor`, `setBackgroundColor`, `setPrimaryColor`, and `setSecondaryColor` support
-hex, `rgb()`, `hsl()`, `currentColor`, and `var(--wa-...)`; use `addStyle(name, value)`
-for additional documented CSS custom properties such as duotone opacity or animation.
+`WaIcon` also supports `library`, custom SVG `src`, accessible `label`,
+`IconCanvas` (`fixed`, `auto`, `square`, `roomy`), `IconFlip`, and styling
+setters including `setColor`, `setFontSize`, `setPrimaryColor`, and
+`setSecondaryColor`. Theme colours such as `var(--wa-color-text-normal)` remain
+CSS strings. Verify the selected licensed pack and version are present in the
+Kit or installed assets; an enum proves catalog membership, not delivery.
 
 ## Layout example (page shell + stack/cluster/grid)
 

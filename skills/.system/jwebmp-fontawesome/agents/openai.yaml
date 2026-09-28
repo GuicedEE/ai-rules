@@ -1,4 +1,4 @@
 interface:
   display_name: "JWebMP FontAwesome"
-  short_description: "Use FontAwesome 6 free icons"
-  default_prompt: "Use $jwebmp-fontawesome to add FontAwesome icons to components with sizing, rotation, and animation utilities."
+  short_description: "Free Font Awesome 7.3.1 icon catalogs"
+  default_prompt: "Use $jwebmp-fontawesome to select a Free Solid, Regular, or Brands enum and render it with a JWebMP icon component."

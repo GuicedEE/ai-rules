@@ -1,80 +1,54 @@
 ---
 name: jwebmp-fontawesome-pro
-description: "Use licensed FontAwesome Pro icons, premium families, styles, and icon kits in JWebMP."
+description: "Use licensed Font Awesome 7.3.1 Pro and Pro+ family catalogs, styles, and icon kits in JWebMP."
 metadata:
-  short-description: FontAwesome Pro premium icon integration
+  short-description: Font Awesome Pro and Pro+ icon catalogs
 ---
 
-# JWebMP FontAwesome Pro
+# JWebMP Font Awesome Pro
 
-FontAwesome Pro integration for JWebMP with 30,000+ premium icons.
+Use the Java source in `JWebMP/plugins/fontawesome-pro` as the API reference.
+Current catalogs are family-specific enums in
+`com.jwebmp.plugins.fontawesome5pro`, for example `FontAwesomeClassicIcons`,
+`FontAwesomeDuotoneIcons`, `FontAwesomeSharpIcons`,
+`FontAwesomeSharpDuotoneIcons`, and `FontAwesomeVellumIcons`. Other Pro+ packs
+have their own enums. Each implements `IFontAwesomeFamilyIcon` and exposes
+`getFamily()`, `getVariant()`, `getSupportedVariants()`, and
+`requireVariant(IconVariant)`. Check that a constant belongs to the selected
+family and style. Pro+ packs have different icon lists; do not assume a
+Classic or legacy Pro name exists in Vellum, Jelly, Mosaic, or another pack.
 
-## Core Features
-
-- **30,000+ Premium Icons**
-- **Additional Styles** — Light, Thin, Sharp, Duotone, Sharp Duotone
-- **Icon Kits** — Custom icon sets
-- **Premium Features** — Advanced duotone, custom uploads
-
-## Additional Styles
-
-```java
-// Light (fal)
-icon.setStyle(IconStyle.LIGHT);
-
-// Thin (fat)
-icon.setStyle(IconStyle.THIN);
-
-// Sharp Solid (fass)
-icon.setStyle(IconStyle.SHARP_SOLID);
-
-// Sharp Regular (fasr)
-icon.setStyle(IconStyle.SHARP_REGULAR);
-
-// Duotone (fad)
-icon.setStyle(IconStyle.DUOTONE);
-
-// Sharp Duotone (fasds)
-icon.setStyle(IconStyle.SHARP_DUOTONE);
-```
-
-## Duotone Styling
+`FontAwesome5ProIcons` is the compatibility union. It has 4,099 original enum
+constants and 673 new names inherited from `FontAwesome5ProAdditionalIcons`.
+The inherited names are `FontAwesomeClassicIcons` fields and do not occur in
+`FontAwesome5ProIcons.values()` or `valueOf()`. Prefer family catalogs for new
+code and enumeration. The canonical source and regeneration script are
+`JWebMP/plugins/fontawesome-pro/scripts/icon-catalog.json` and
+`JWebMP/plugins/fontawesome-pro/scripts/generate-icon-enums.py`.
 
 ```java
-Icon duotone = new Icon()
-    .setIconClass(FontAwesomeIcons.FA_STAR)
-    .setStyle(IconStyle.DUOTONE)
-    .setPrimaryColor("#FFD700")
-    .setSecondaryColor("#FFA500")
-    .setSecondaryOpacity(0.4);
+import com.jwebmp.plugins.fontawesome5.options.IconVariant;
+import com.jwebmp.plugins.fontawesome5pro.FontAwesomeVellumIcons;
+import com.jwebmp.plugins.fontawesome5pro.FontAwesomeSharpIcons;
+
+var vellum = FontAwesomeVellumIcons.address_card; // Vellum Solid only
+vellum.requireVariant(IconVariant.Solid);
+FontAwesomeSharpIcons.house.requireVariant(IconVariant.Thin);
 ```
 
-## Icon Kits
-
-Requires FontAwesome Pro license and kit token:
+For WebAwesome, use `WaIconFA` when `web-awesome-pro` is present. It selects
+the family and default style from the enum, and its variant overload checks
+availability. A plain `WaIcon` must use the enum's name, family, and variant:
 
 ```java
-@PluginConfiguration(
-    kitToken = "your-kit-token"
-)
-public class FontAwesomeProConfig { }
+new WaIconFA<>(FontAwesomeVellumIcons.address_card);
+new WaIconFA<>(FontAwesomeSharpIcons.house, IconVariant.Thin);
+var icon = FontAwesomeVellumIcons.address_card;
+new WaIcon<>(icon.toAngularIconAttributeName(), icon.getFamily(), icon.getVariant());
 ```
 
-## Installation
-
-```xml
-<dependency>
-  <groupId>com.jwebmp.plugins</groupId>
-  <artifactId>fontawesome-pro</artifactId>
-</dependency>
-```
-
-**Note:** Requires valid FontAwesome Pro subscription.
-
-## References
-
-- Module: `com.jwebmp.plugins.fontawesomepro`
-- FontAwesome Pro: 6.x
-- Java: 25+
-- License: Apache 2.0 (code), FontAwesome Pro license required
-- [FontAwesome Pro](https://fontawesome.com/plans)
+Never render a Font Awesome icon with raw `<i>`/`<i/>`, `Italic`, or a guessed
+`fa-*` class or string name. An enum value verifies membership in the 7.3.1
+catalog; the Kit or installed assets must also include that licensed pack and
+version. For an explicitly custom Kit upload without a catalog constant,
+verify the asset and use its documented custom name/library/source.

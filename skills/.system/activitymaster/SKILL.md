@@ -1,6 +1,6 @@
 ---
 name: activitymaster
-description: "Implement ActivityMaster/FSDM services, profiles and user sessions through REST/GraphQL, scope-token security, and reactive persistence."
+description: "Implement ActivityMaster/FSDM services, scoped plugins and transactions, profiles and user sessions, scope-token security, and reactive persistence."
 metadata:
   short-description: FSDM enterprise resource management platform
 ---
@@ -17,6 +17,7 @@ Open-source implementation of the Functional Service Data Model (FSDM) for enter
 - Respect scope-restricted row security and `ActiveFlag` lifecycle rules.
 - Resolve classifications with the data-concept-scoped lookup; classification names are not globally unique.
 - Use the canonical `Environment` resolver for configuration.
+- ActivityMaster owns scoped plugin concepts and persistence; management UI and authenticated plugin endpoints belong in a separate consuming module.
 
 ## Workflow references
 
@@ -26,6 +27,8 @@ Read the reference for the task you are working on. Examples and commands assume
 - [Profiles and user sessions](references/guide-profiles-and-user-sessions.md): service contracts, profile REST/GraphQL usage, and session transport integration limits.
 - [Transports](references/guide-transports.md): REST API Architecture; GraphQL Architecture; Event Bus Architecture.
 - [Security](references/guide-security.md): Security & Token Propagation.
+- [Scoped plugins](references/scoped-plugins.md): installation ownership, access groups, behavior authorization, versioned management and the consuming-module boundary. Read for plugin concept or access changes.
+- [Transactions](references/transactions.md): Wallet Arrangements, parent Events, balanced transaction entries, derived metrics and NE1 authorization. Read for Wallet Master or movement-of-value work.
 - [Lifecycle](references/guide-lifecycle.md): Lifecycle & Bootstrap; On-Demand Data Loading Pattern; Progress Reporting (IProgressable + SPI monitors).
 - [Persistence](references/guide-persistence.md): Quick Start; ActiveFlag Lifecycle; JSON Resource Items (MongoDB Document Store); Reactive Patterns with Mutiny; Database Configuration.
 - [Development](references/guide-development.md): Testing with Testcontainers; CRTP Fluent Builders; Configuration & Environment.

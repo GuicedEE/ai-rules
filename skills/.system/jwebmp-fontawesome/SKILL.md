@@ -1,148 +1,48 @@
 ---
 name: jwebmp-fontawesome
-description: "Add and style free FontAwesome icons in JWebMP, including sizing, rotation, animation, and stacking."
+description: "Use current Free Solid, Regular, and Brands icon enums with JWebMP FontAwesome or WebAwesome icons."
 metadata:
-  short-description: FontAwesome 6 free icon integration
+  short-description: Font Awesome 7.3.1 free icon catalogs
 ---
 
-# JWebMP FontAwesome
+# JWebMP Font Awesome Free
 
-FontAwesome 6 free icon integration for JWebMP with 6,000+ icons.
+Use the Java source in `JWebMP/plugins/fontawesome` as the API reference. The
+7.3.1 free catalogs in `com.jwebmp.plugins.fontawesome5.icons` are
+`FontAwesomeFreeSolidIcons`, `FontAwesomeFreeRegularIcons`, and
+`FontAwesomeFreeBrandsIcons`. Their membership is style-specific; an icon in
+Solid need not be free in Regular. These implement `IFontAwesomeFreeIcon` and
+carry the icon name, `IconFamily`, `IconVariant`, and npm package. Inspect the
+chosen enum for the constant instead of inventing a name.
 
-## Core Features
-
-- **6,000+ Free Icons** — Solid, Regular, Brands styles
-- **Typed Icon Components** — Type-safe icon usage
-- **CSS Utilities** — Sizing, rotation, animation
-- **Icon Stacking** — Layer multiple icons
-- **Duotone Support** — Two-tone icons
-- **Auto CDN/NPM** — Flexible loading
-
-## Quick Start
-
-### Basic Icon Usage
-
-```java
-import com.jwebmp.plugins.fontawesome.icons.*;
-
-Icon icon = new Icon()
-    .setIconClass(FontAwesomeIcons.FA_HOME)
-    .setStyle(IconStyle.SOLID)
-    .setSize(IconSize.LG);
-
-page.getBody().add(icon);
-```
-
-### Icon with Text
+`FontAwesomeIcons` and `FontAwesomeBrandIcons` retain old aliases for existing
+code but do not prove availability in a particular current style. Prefer the
+style-specific enums for new work. The source catalog and refresh script are
+`JWebMP/plugins/fontawesome/scripts/icon-catalog.json` and
+`JWebMP/plugins/fontawesome/scripts/generate-icon-enums.py`.
 
 ```java
-Button<?, ?> btn = new Button<>();
-btn.add(new Icon().setIconClass(FontAwesomeIcons.FA_DOWNLOAD));
-btn.add(new Span<>().setText(" Download"));
+import com.jwebmp.plugins.fontawesome5.FontAwesome;
+import com.jwebmp.plugins.fontawesome5.icons.FontAwesomeFreeRegularIcons;
+import com.jwebmp.plugins.fontawesome5.options.FontAwesomeStyles;
+
+var icon = new FontAwesome<>(FontAwesomeStyles.Classic,
+                             FontAwesomeFreeRegularIcons.heart);
 ```
 
-## Icon Styles
+For WebAwesome, render `<wa-icon>` through `WaIcon`, carrying all three values
+from the same catalog icon. When `web-awesome-pro` is available, `WaIconFA`
+sets family and default variant automatically:
 
 ```java
-// Solid (fas)
-new Icon().setIconClass(FontAwesomeIcons.FA_HOME).setStyle(IconStyle.SOLID);
-
-// Regular (far)
-new Icon().setIconClass(FontAwesomeIcons.FA_HEART).setStyle(IconStyle.REGULAR);
-
-// Brands (fab)
-new Icon().setIconClass(FontAwesomeIcons.FA_GITHUB).setStyle(IconStyle.BRANDS);
+var catalogIcon = FontAwesomeFreeRegularIcons.heart;
+var waIcon = new WaIcon<>(catalogIcon.toAngularIconAttributeName(),
+                          catalogIcon.getFamily(), catalogIcon.getVariant());
+// With web-awesome-pro: new WaIconFA<>(catalogIcon);
 ```
 
-## Icon Sizing
-
-```java
-icon.setSize(IconSize.XS);     // Extra small
-icon.setSize(IconSize.SM);     // Small
-icon.setSize(IconSize.LG);     // Large
-icon.setSize(IconSize.X2);     // 2x
-icon.setSize(IconSize.X3);     // 3x
-icon.setSize(IconSize.X5);     // 5x
-icon.setSize(IconSize.X10);    // 10x
-```
-
-## Icon Utilities
-
-### Rotation
-
-```java
-icon.setRotation(IconRotation.ROTATE_90);
-icon.setRotation(IconRotation.ROTATE_180);
-icon.setRotation(IconRotation.FLIP_HORIZONTAL);
-icon.setRotation(IconRotation.FLIP_VERTICAL);
-```
-
-### Animation
-
-```java
-icon.setAnimation(IconAnimation.SPIN);
-icon.setAnimation(IconAnimation.PULSE);
-```
-
-### Fixed Width
-
-```java
-icon.setFixedWidth(true);  // Consistent width for lists
-```
-
-## Icon Stacking
-
-```java
-IconStack stack = new IconStack();
-stack.add(new Icon()
-    .setIconClass(FontAwesomeIcons.FA_SQUARE)
-    .setStackSize(IconStackSize.STACK_2X));
-stack.add(new Icon()
-    .setIconClass(FontAwesomeIcons.FA_FLAG)
-    .setStackSize(IconStackSize.STACK_1X)
-    .setInverse(true));
-```
-
-## Common Icons
-
-### Navigation
-- `FA_HOME`, `FA_BARS`, `FA_SEARCH`, `FA_USER`
-
-### Actions
-- `FA_PLUS`, `FA_MINUS`, `FA_EDIT`, `FA_TRASH`, `FA_SAVE`
-
-### Media
-- `FA_PLAY`, `FA_PAUSE`, `FA_STOP`, `FA_VOLUME_UP`
-
-### Social
-- `FA_FACEBOOK`, `FA_TWITTER`, `FA_GITHUB`, `FA_LINKEDIN`
-
-### Files
-- `FA_FILE`, `FA_FILE_PDF`, `FA_FILE_EXCEL`, `FA_FILE_WORD`
-
-## Installation
-
-```xml
-<dependency>
-  <groupId>com.jwebmp.plugins</groupId>
-  <artifactId>fontawesome</artifactId>
-</dependency>
-```
-
-## JPMS Module
-
-```java
-module com.jwebmp.plugins.fontawesome {
-    requires transitive com.jwebmp.core;
-    exports com.jwebmp.plugins.fontawesome;
-    exports com.jwebmp.plugins.fontawesome.icons;
-}
-```
-
-## References
-
-- Module: `com.jwebmp.plugins.fontawesome`
-- FontAwesome: 6.x
-- Java: 25+
-- License: Apache 2.0
-- [FontAwesome Docs](https://fontawesome.com/docs)
+Never implement a Font Awesome icon as a raw `<i>`/`<i/>` tag, `Italic`, a
+CSS `fa-*` class on an `<i>`, or an unverified string name. Use an icon
+component and an enum constant. This rule concerns icons, not italic text.
+For an explicitly custom Kit icon or application icon library with no catalog
+entry, use the documented custom name/library/source after verifying the asset.

@@ -141,20 +141,33 @@ Events: `timeupdate`, `play`, `pause`, `volumechange`, `error`, `ended`,
 `fullscreen-icon`, `exit-fullscreen-icon`. CSS custom properties:
 `--controls-color`, `--controls-background`, `--poster-play-button-background`.
 
-## Premium Icons (`WaIconFA`)
+## Font Awesome icons (`WaIconFA`)
 
-`WaIconFA` (in `com.jwebmp.webawesomepro.components.page.faicon`) is a thin `WaIcon`
-subclass that binds directly to FontAwesome 5 / FontAwesome 5 Pro icon enums instead of
-a raw string name — use it when you already depend on `jwebmp-fontawesome-pro` icon
-constants and want them rendered through the Web Awesome `<wa-icon>` element:
+`WaIconFA` (in `com.jwebmp.webawesomepro.components.page.faicon`) extends
+`WaIcon` and renders `<wa-icon>`. Choose an icon from the exact Free Solid,
+Free Regular, Free Brands, Pro or Pro+ enum. It uses the enum's canonical name,
+family, and default variant. The variant overload calls `requireVariant` so a
+missing style fails immediately:
 
 ```java
 import com.jwebmp.webawesomepro.components.page.faicon.WaIconFA;
-import com.jwebmp.plugins.fontawesome5pro.FontAwesome5ProIcons;
-import com.jwebmp.plugins.fontawesome5.options.FontAwesomeStyles;
+import com.jwebmp.plugins.fontawesome5.options.IconVariant;
+import com.jwebmp.plugins.fontawesome5.icons.FontAwesomeFreeRegularIcons;
+import com.jwebmp.plugins.fontawesome5pro.FontAwesomeVellumIcons;
+import com.jwebmp.plugins.fontawesome5pro.FontAwesomeSharpIcons;
 
-new WaIconFA<>(FontAwesome5ProIcons.HOUSE, FontAwesomeStyles.SHARP_DUOTONE);
+new WaIconFA<>(FontAwesomeFreeRegularIcons.heart);
+new WaIconFA<>(FontAwesomeVellumIcons.address_card); // Vellum Solid
+new WaIconFA<>(FontAwesomeSharpIcons.house, IconVariant.Thin);
 ```
+
+When using plain `WaIcon`, derive all three values from the same enum:
+`new WaIcon<>(icon.toAngularIconAttributeName(), icon.getFamily(),
+icon.getVariant())`. Avoid raw `<i>`/`<i/>`, `Italic`, CSS `fa-*` on `<i>`, and
+guessed icon strings. `FontAwesome5ProIcons` is a compatibility union; its
+inherited newer names are absent from `values()`. Check the actual family
+catalog and available style before selecting an icon. Custom Kit uploads may
+use a verified custom name or source when no enum applies.
 
 ## Toast Notifications
 
