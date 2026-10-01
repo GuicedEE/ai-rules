@@ -355,6 +355,27 @@ Existing managed FSDM/core transactions migrations remain prerequisites for the
 domain using them. Run the authorized enterprise update lifecycle for an existing
 enterprise; compile/package success is not proof that its update was applied.
 
+## Age ratings
+
+Plugins carry a catalogue age rating: `Registration`/`Plugin` have an optional
+`ageRating` component (seven/eight-argument constructors default to `All`) and
+built-ins override `IMasterPlugin.getPluginAgeRating()` (default `"All"`).
+Codes are `All`, `FamilyFriendly`, `ParentalGuidance` or `N+` (`AgeRating`).
+`All` needs no date of birth; every other rating requires the verified user's
+profile date of birth, and `N+` requires N completed years. A missing date of
+birth denies. `consent(enabled=true)` and `check` (hence `checkBuiltIn`,
+`execute`, `audit`) fail with `SecurityException("Age restricted…")`.
+`register` accepts numeric ratings only from the administrator's residential
+profile country set (default `13+/16+/18+`); `ageRatingOptions` lists them.
+Non-`All` ratings are stored as the `PluginAgeRating` catalogue classification
+(core forward update 1040); absent means `All`.
+
+`AgeRestrictionService` reads date of birth and country through the
+`IAgeProfileProvider` SPI (core `uses`; Profiles Master `provides`
+`ProfileAgeProfileProvider`, reading `dateOfBirth` and the Residential address
+Country geography code). Without a provider all non-`All` ratings deny. Tests
+register a stub provider through their own JPMS `provides`.
+
 ## Provider behaviors are an additional layer
 
 Keep `PluginService` catalogue/party/dependency consent separate from

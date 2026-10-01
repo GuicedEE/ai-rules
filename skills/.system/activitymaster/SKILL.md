@@ -82,7 +82,7 @@ is stated; skill files can be installed elsewhere without changing these contrac
 - [Security](references/guide-security.md): Security & Token Propagation.
 - [Plugins](references/scoped-plugins.md): System versus Plugin scope, catalogue, party installation, per-user consent, administrator policy, delegation, provenance, forward conversion and provider behavior layers.
 - [Documents plugin](references/documents.md): verified host identity, installation/consent, private buckets, resources, version history and revocation.
-- [Marketplace plugins](references/marketplace.md): separate product producer, seller/row/behavior authority, carts, checkout and settlement boundaries.
+- [Marketplace plugins](references/marketplace.md): separate product producer, seller/row/behavior authority, age ratings, shared FSDM category hierarchy and search, `Marketplace`/`MarketplaceCategory` data concepts, carts, checkout and settlement boundaries.
 - [Mail plugin](references/mail.md): verified mailbox identity, ingestion overloads, private atomic FSDM storage, trusted helpers and SMTP/IMAP job boundaries.
 - [Transactions](references/transactions.md): Wallet Arrangements, parent Events, balanced transaction entries, derived metrics, WalletAuthority, standalone REST/GraphQL, host identity binding and integration validation. Read for Wallet Master or movement-of-value work.
 - [Payments](references/payments.md): reusable host and provider contracts, FSDM payment intents, verified callbacks, atomic wallet settlement and query performance checks. Read for Payment Master work.

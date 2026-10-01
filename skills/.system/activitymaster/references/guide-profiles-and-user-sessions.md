@@ -100,6 +100,14 @@ The current user-sessions module has no dedicated REST resource, typed REST clie
 
 **Current implementation caveat:** `UserSessionService.updateSession` replaces the persistence result with the database session and casts that object to `IUserSession<?>`; the normal path can therefore fail with `ClassCastException` after the write. Fix and test that implementation before relying on successful REST/GraphQL session writes. Do not hide the failure with a successful response. The fake-system path skips persistence. Also verify existing-session resource/data ID handling when integrating expiry/readback; documentation alone does not establish runtime correctness.
 
+## Age restriction source
+
+`ProfileAgeProfileProvider` implements core `IAgeProfileProvider` for plugin and
+marketplace age ratings. It reads `dateOfBirth` (ISO `yyyy-MM-dd`; invalid or
+future values count as missing) and the two-letter Country geography of the
+Residential address (falling back to a two-letter legacy `country`). Missing
+data fails closed for every rating other than `All`.
+
 ## Source anchors
 
 Paths relative to the DevSuite checkout:
