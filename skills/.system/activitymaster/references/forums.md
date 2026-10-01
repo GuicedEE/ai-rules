@@ -24,6 +24,17 @@ belongs in resource data. Hosts must protect privileged generic FSDM row access.
 
 The host binds `ForumIdentityProvider.current()` to a verified, call-scoped
 `ForumIdentity(partyId, enterpriseId, context, identityToken)`. Its default denies.
+For a delegated call, use the five-argument constructor with
+`PluginModels.Invocation(pluginId, installationPartyId)` as its fifth component.
+The four-argument compatibility constructor sets `plugin` to null for ordinary
+host access; never clear it while forwarding an actual plugin invocation.
+Forum/Notification services enforce the current declared target, installation,
+user consent and administrator policy when invocation is present, alongside
+subscriber/domain row access. `ForumApi` audits successful delegated writes;
+lower-level callers compose `PluginService.audit`/`execute` in their transaction.
+Post notification identity must preserve the same invocation, and the extension
+must declare/obtain consent to each target it invokes. See [plugins](scoped-plugins.md).
+
 Use the caller's ActivityMaster credential and current grants; neither path IDs,
 subscriber IDs nor request context establishes the actor's authority.
 

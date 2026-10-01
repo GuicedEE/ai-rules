@@ -1,6 +1,6 @@
 # activitymaster: Security
 
-Read this reference when working on the topics below. Commands run from the skill directory.
+Read this reference when working on the topics below. Build commands use the stated DevSuite module or its POM; interaction examples use the verified host context.
 
 - [Security & Token Propagation](#security--token-propagation)
 
@@ -8,7 +8,15 @@ Read this reference when working on the topics below. Commands run from the skil
 
 ### SecurityToken Metadata
 
-All services propagate `SecurityToken` for access control:
+User/plugin domain flows propagate the verified user's identifying credential
+and use the current [plugin admission contract](scoped-plugins.md). Plugin tokens
+are registration identities, excluded from applicable-token expansion along with
+Plugin ancestors; broad folder grant matrices below never authorize a plugin to
+act on another user's data. The host binds the token to the organic user and
+enterprise before calling these services. Do not treat the following legacy
+illustrative Enterprise API as the PluginService contract.
+
+All services propagate identifying credentials for access control:
 
 ```java
 public interface IEnterpriseService {
@@ -21,35 +29,29 @@ public interface IEnterpriseService {
 
 ### SessionUtils System Context (Preferred)
 
-When code must resolve enterprise + system + system token(s), use `SessionUtils.withActivityMaster(...)`. This is the canonical mechanism for system-context operations.
+Use `SessionUtils.withActivityMaster(...)` to resolve the enterprise, writing
+system and stateless transaction. Technical tuple credentials are for trusted
+bootstrap/provisioning; runtime row checks use the verified user's credential.
+The bound invocation must identify the initiating plugin and authorized party.
 
 ```java
-import com.guicedee.activitymaster.fsdm.client.services.SessionUtils;
-
-SessionUtils.withActivityMaster("acme", "classification-loader", tuple -> {
-    Mutiny.Session session = tuple.getItem1();
-    IEnterprise<?, ?> enterprise = tuple.getItem2();
-    ISystems<?, ?> system = tuple.getItem3();
-    UUID[] tokens = tuple.getItem4();
-
-    return classificationService.ensureDefaults(session, enterprise, system, tokens[0]);
-});
+// Fragment inside a target service: identity/invocation are host-verified;
+// targetWork is the domain callback using this same session and user row checks.
+return SessionUtils.withActivityMaster(enterpriseName, targetSystemName, tuple ->
+        plugins.execute(tuple.getItem1(), tuple.getItem3(), verifiedUser,
+                boundInvocation, "domain.update",
+                user -> targetWork.apply(tuple.getItem1(), user)));
 ```
 
 Do not hand-roll enterprise/system/token resolution when this helper applies.
 
-### SessionUtils.fireAndForget
+### Atomic plugin persistence
 
-For async relationship persistence that should not block the caller:
-
-```java
-SessionUtils.fireAndForget(
-    SessionUtils.withActivityMaster(enterprise, system, tuple -> {
-        // ... async work
-    }),
-    "label for logging"  // used in error logs if the async work fails
-);
-```
+Plugin management and domain writes must compose admission, row/domain checks,
+entity writes, relationship writes, security and audit on the caller's stateless
+transaction and return a Uni that completes after commit. Do not use
+`SessionUtils.fireAndForget` for that work. External mail/provider delivery is a
+separate host workflow after commit; it does not transfer user-data authority.
 
 ### Default Security Creation (Batch + Stateless)
 
@@ -63,7 +65,7 @@ There are **two distinct creation paths**, and only one of them follows the secu
 | Path | Method | Gated by `isSecurityEnabled()`? | Matrix written |
 |---|---|---|---|
 | **Stateless batch** (installer / bulk loaders) | `createDefaultSecurity(Mutiny.StatelessSession, system, enterprise, activeFlag, tokens, …)` | ❌ **Never gated** — always public | The world-readable 7-grant default matrix |
-| **Live single-create** (single-entity creates) | `createDefaultSecurity(Mutiny.Session, system, identity…)` | ✅ **Follows the flag** (see below) | Flag-dependent (scope-restricted vs. public) |
+| **Single-entity create** (single-entity creates) | `createDefaultSecurity(Mutiny.StatelessSession, system, identity…)` | ✅ **Follows the flag** (see below) | Flag-dependent (scope-restricted vs. public) |
 
 #### The stateless batch path is unconditional (never gated)
 
@@ -91,9 +93,9 @@ if (ActivityMasterConfiguration.get().isSecurityEnabled()) {
 > introduce a **separate, persistent/deployment-level** flag — do not overload the call-scoped
 > read-enforcement bypass.
 
-#### The live single-create path IS flag-driven (secure-by-default post-install)
+#### The single-entity create path IS flag-driven (secure-by-default post-install)
 
-The **live** `createDefaultSecurity(Mutiny.Session, ISystems, UUID…)` — called by single-entity
+The **single-entity** `createDefaultSecurity(Mutiny.StatelessSession, ISystems, UUID…)` — called by single-entity
 creates (rules, products, parties, events, resource items, etc.) — **now follows the flag** so the
 runtime is **scope-restricted secure-by-default** the moment install finishes:
 
@@ -103,29 +105,23 @@ runtime is **scope-restricted secure-by-default** the moment install finishes:
 | **`false`** (explicitly cleared during enterprise install/bootstrap) | install only | The historical **world-readable** 7-grant matrix (incl. Everywhere/Guests=read), so reference data provisioned during install stays public. |
 
 ```java
-// Live single-create path — the matrix is chosen at runtime by the flag:
-@Override
-public Uni<Void> createDefaultSecurity(Mutiny.Session session, ISystems<?,?> system, UUID... identity) {
-    if (ActivityMasterConfiguration.get().isSecurityEnabled()) {
-        // secure-by-default: scope-restricted, no world-readable grants
-        return createScopeRestrictedSecurity(session, system, null, identity);
-    }
-    // install/bootstrap: historical world-readable 7-grant matrix
-    return session.flush()
-            .chain(() -> createDefaultAdministratorSecurityAccess(session, system, identity))
-            // … Everyone / Everywhere / Systems / Applications / Plugins / Guests …
-            .replaceWithVoid()
-            // bootstrap-tolerant: skip (don't fail) when the canonical tokens or the owning FK aren't ready yet
-            .onFailure().recoverWithUni(t -> isSecurityNotApplicableYet(t)
-                    ? Uni.createFrom().voidItem() : Uni.createFrom().failure(t));
-}
+// Public single-entity API, on the caller's stateless transaction:
+return row.createDefaultSecurity(session, writerSystem, verifiedUser.tokens())
+        .chain(() -> privateRowSecurity.get());
 ```
 
-**Net effect:** during install (flag `false`) canonical/reference rows stay world-readable; once
-install completes and the runtime returns to secure-by-default (flag `true`), **every subsequent live
-create is automatically scope-restricted** — no per-call opt-in needed. To additionally pin a record
-to a *specific* scope token, use the per-entity `createScopeRestricted(… scopeToken …)` opt-ins
-(below).
+`privateRowSecurity` above is a domain-owned `Supplier<Uni<Void>>` that constrains
+initial grants and writes the actual actor's private grants on this same session;
+it is not a built-in API. Generic default creation alone does not establish
+private ownership or grant the normal user access. Mail's implementation archives
+its initial default grants and grants Administrators plus the verified user.
+Propagate runtime security failures so the domain transaction rolls back.
+
+During authorized bootstrap, canonical/reference rows can receive the public
+matrix. Single-entity runtime defaults follow the call-scoped flag; batch overloads
+are separate explicit reference-data paths. Per-entity scope-restricted APIs can
+pin grants to a specific scope token, but they never replace plugin admission,
+ordinary row permissions or explicit user grants.
 
 #### Security-row counts (and what tests must assert)
 
@@ -135,8 +131,8 @@ that asserts `countDefaultSecurity(session)` must pick the count for the path/fl
 | Path / flag state | Grants written | Rows/record |
 |---|---|:--:|
 | Stateless batch (install/bulk) — always public | Administrators, Everyone, Everywhere, Systems, Applications, Plugins, Guests | **7** |
-| Live single-create, `isSecurityEnabled()` **false** (install/bootstrap) | same world-readable 7-grant matrix | **7** |
-| Live single-create, `isSecurityEnabled()` **true** (steady-state secure-by-default, null scope) | Administrators + Systems/Applications/Plugins | **4** |
+| Single-entity create, `isSecurityEnabled()` **false** (install/bootstrap) | same world-readable 7-grant matrix | **7** |
+| Single-entity create, `isSecurityEnabled()` **true** (steady-state secure-by-default, null scope) | Administrators + Systems/Applications/Plugins | **4** |
 | Live scope-restricted with an explicit `scopeToken` | the 4 above **+** `scopeToken`=read | **5** |
 
 > ⚠️ **Test gotcha (verified against the security suite).** A record created through a normal domain
@@ -162,7 +158,7 @@ Uni<Long> createDefaultSecurity(Mutiny.StatelessSession session,
                                 UUID... identityToken);
 
 // Counts the default-security rows already linked to this record (idempotency gate).
-Uni<Long> countDefaultSecurity(Mutiny.Session session);
+Uni<Long> countDefaultSecurity(Mutiny.StatelessSession session);
 ```
 
 The `groupFolderTokens` map is keyed by the `IWarehouseCoreTable.SECURITY_*` constants. Each record
@@ -184,24 +180,32 @@ produces **7 rows** with this grant matrix `{create, update, delete, read}`:
 record's default-security rows:
 
 ```java
-Uni<Boolean> canRead(Mutiny.Session session, ISystems<?,?> system, UUID... identityToken);
-Uni<Boolean> canWrite(Mutiny.Session session, ISystems<?,?> system, UUID... identityToken);  // create OR update
+Uni<Boolean> canRead(Mutiny.StatelessSession session, ISystems<?,?> system, UUID... identityToken);
+Uni<Boolean> canWrite(Mutiny.StatelessSession session, ISystems<?,?> system, UUID... identityToken);  // create OR update
 ```
 
-They expand the supplied identity token(s) into the full applicable set via
+They expand eligible supplied identifying credentials into applicable tokens.
+Plugin credentials and Plugin ancestors are excluded; hierarchy membership is
+never a substitute for `PluginService` installation, consent and policy checks.
+For eligible users/Systems, expansion uses
 `ISecurityTokenService.getApplicableSecurityTokenIds(...)` (the token **plus every group/folder it
 belongs to, transitively** — a single `WITH RECURSIVE` query), then return `true` when the record has
 an in-date-range security row whose token is in that set with `ReadAllowed` (for `canRead`) or
 `CreateAllowed`/`UpdateAllowed` (for `canWrite`).
 
-Because a **system's** identity token (`ISystemsService.getSecurityIdentityToken`) sits under the
-`Systems` folder — which is granted create/update/read — a system can both read and write every
-default-secured record:
+A trusted System credential can match technical System-folder grants on a row.
+That is an internal service privilege, not delegated user access; private rows
+without those grants need their own explicit permissions. Plugin credentials are
+excluded even when compatibility grant rows refer to Plugins. A scope-restricted
+default alone does not grant a normal user access: user-data creation must also
+write the actual actor's private grants. Do not disable the call-scoped security
+flag to make user/plugin operations succeed.
 
 ```java
-UUID systemToken = systemsService.getSecurityIdentityToken(session, system).await()...;
-record.canRead(session, system, systemToken);   // true  — Systems folder grants read
-record.canWrite(session, system, systemToken);  // true  — Systems folder grants create/update
+// After current PluginService admission, inside the same stateless transaction:
+return record.canWrite(session, writerSystem, verifiedUser.identityToken())
+        .chain(allowed -> allowed ? authorizedMutation.get()
+                : Uni.createFrom().failure(new SecurityException("Row unavailable")));
 ```
 
 #### Query-level read trimming (`readableIds` + `IQueryBuilderDefault.canRead`)
@@ -304,7 +308,7 @@ Uni<Long> createScopeRestrictedSecurity(Mutiny.StatelessSession session, ISystem
 // Scope-restricted fan-out (LIVE session) — for a single just-created, still-uncommitted record
 // (the stateless batch variant cannot see an uncommitted row). Find-or-create per grant, idempotent.
 // A null scopeToken writes the Administrators + System/Application/Plugin hierarchy only.
-Uni<Void> createScopeRestrictedSecurity(Mutiny.Session session, ISystems<?,?> system,
+Uni<Void> createScopeRestrictedSecurity(Mutiny.StatelessSession session, ISystems<?,?> system,
                                         ISecurityToken<?,?> scopeToken, UUID... identity);
 ```
 
@@ -313,14 +317,14 @@ Uni<Void> createScopeRestrictedSecurity(Mutiny.Session session, ISystems<?,?> sy
 ```java
 // Multi-entity batch: resolve the group/folder tokens ONCE, then write the restricted matrix for
 // every (record → scopeToken) pair in one stateless transaction. null scope entries are skipped.
-Uni<Void> applyScopeRestrictedSecurity(Mutiny.Session session,
+Uni<Void> applyScopeRestrictedSecurity(Mutiny.StatelessSession session,
         Map<? extends IWarehouseCoreTable<?,?,?,?>, ? extends ISecurityToken<?,?>> recordScopes,
         ISystems<?,?> system, UUID... identityToken);
 
 // World-readable batch counterparts (public reference data):
-Uni<Void> applyDefaultSecurityToTable(Mutiny.Session session, IWarehouseCoreTable<?,?,?,?> table,
+Uni<Void> applyDefaultSecurityToTable(Mutiny.StatelessSession session, IWarehouseCoreTable<?,?,?,?> table,
                                       ISystems<?,?> system, UUID... identityToken);  // full-table, idempotent
-Uni<Void> applyDefaultSecurityToRows(Mutiny.Session session,
+Uni<Void> applyDefaultSecurityToRows(Mutiny.StatelessSession session,
         Collection<? extends IWarehouseCoreTable<?,?,?,?>> rows,
         ISystems<?,?> system, UUID... identityToken);  // scan-free, for just-created rows
 ```
@@ -407,11 +411,11 @@ geographyService.findPlanet(session, "Earth", system, token)
 // Other parent memberships are untouched (precise move). oldParent == null → exclusive reparent
 // (closes ALL current in-range parent edges first). enforceMembershipPolicy is checked on the new
 // parent BEFORE closing any edge (fails cleanly). Idempotent.
-Uni<Void> moveToken(Mutiny.Session session, ISecurityToken<?,?> oldParent, ISecurityToken<?,?> newParent,
+Uni<Void> moveToken(Mutiny.StatelessSession session, ISecurityToken<?,?> oldParent, ISecurityToken<?,?> newParent,
                     ISecurityToken<?,?> child, IClassification<?,?> classification, String... identifyingToken);
 
 // Name-keyed token lookup (the existing getSecurityToken keys on the token varchar, not the name).
-Uni<ISecurityToken<?,?>> getSecurityTokenByName(Mutiny.Session session, String name,
+Uni<ISecurityToken<?,?>> getSecurityTokenByName(Mutiny.StatelessSession session, String name,
                                                 ISystems<?,?> system, UUID... identityToken);
 ```
 
@@ -591,5 +595,3 @@ it does not go through this bridge. See `TestActivityMasterAuthBridge`.
 > Note: this supersedes the older "no bespoke call-scope identity mechanism" statement — the
 > authenticated identity now lives on the **call scope** (Vert.x `User` + mirrored identity token),
 > with `RoutingContext` mirroring as a best-effort convenience for HTTP.
-
-

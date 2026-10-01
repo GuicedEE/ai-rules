@@ -1,6 +1,6 @@
 # activitymaster: Domain and modules
 
-Read this reference when working on the topics below. Commands run from the skill directory.
+Read this reference when working on the topics below. Build commands use the stated DevSuite module or its POM; interaction examples use the verified host context.
 
 - [Core Architecture](#core-architecture)
 - [Module Structure](#module-structure)
@@ -185,12 +185,23 @@ Client library for cerial services:
 
 ## Adding a New Module
 
+Choose System or Plugin by security scope, not packaging. A user-scoped extension
+uses client `IMasterPlugin`/`MasterDefaultPlugin`, a Plugin identity under Plugins,
+core `PluginService` catalogue/party/consent/policy checks and normal domain row
+permissions. Its runtime identity provider defaults to deny and obtains fresh
+server-verified user credentials. Declare registered dependencies, descriptions,
+title/version and optional ResourceItem media; discovery never grants admission.
+Trusted enterprise updates provision catalogue/taxonomy with the actual core
+bootstrap credential, including later-added modules. Registration IDs and existing
+data survive forward conversion; historical System credentials remain retired.
+The [complete plugin contract](scoped-plugins.md) supplies APIs and examples.
+
 ### Step 1: Create Maven Module
 
 ```xml
 <parent>
   <groupId>com.activity-master</groupId>
-  <artifactId>activitymaster-parent</artifactId>
+  <artifactId>activitymaster-group</artifactId>
   <version>${project.version}</version>
 </parent>
 
@@ -201,8 +212,8 @@ Client library for cerial services:
 
 ```java
 module com.guicedee.activitymaster.{modulename} {
-    requires com.guicedee.activitymaster;
-    requires com.guicedee.activitymaster.client;
+    requires com.guicedee.activitymaster.fsdm;
+    requires com.guicedee.activitymaster.fsdm.client;
     requires com.entityassist;
     requires com.guicedee.persistence;
     requires com.guicedee.vertx;
@@ -259,7 +270,7 @@ public class {ModuleName}RestService {
                                       @PathParam("requestingSystemName") String systemName,
                                       {ModuleName}FindDTO findDto) {
         return SessionUtils.<{ModuleName}DTO>withActivityMaster(enterpriseName, systemName, tuple -> {
-            Mutiny.Session session = tuple.getItem1();
+            Mutiny.StatelessSession session = tuple.getItem1();
             // ... query logic
         });
     }
@@ -332,4 +343,3 @@ public class {ModuleName}Test {
     @Test void testCrud() { ... }
 }
 ```
-

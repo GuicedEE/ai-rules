@@ -1,6 +1,6 @@
 # activitymaster: Transports
 
-Read this reference when working on the topics below. Commands run from the skill directory.
+Read this reference when working on the topics below. Build commands use the stated DevSuite module or its POM; interaction examples use the verified host context.
 
 - [REST API Architecture](#rest-api-architecture)
 - [GraphQL Architecture](#graphql-architecture)
@@ -108,46 +108,20 @@ public enum ResourceItemDataIncludes {
 }
 ```
 
-### Fire-and-Forget Pattern
+### Plugin and domain transaction boundary
 
-REST create/update endpoints return immediately after creating the primary entity.
-Relationship persistence runs asynchronously via `SessionUtils.fireAndForget(...)`:
+Plugin/domain adapters resolve a fresh verified identity and bound invocation
+from the authenticated host. They return a Uni whose transaction checks delegation
+and ordinary row/domain permissions, then persists entities, relationships,
+private grants and audit before success. Do not return a DTO before those writes
+commit or move relationships to separate fire-and-forget sessions.
 
-```java
-@POST
-@Path("{requestingSystemName}/create")
-public Uni<EventDTO> create(..., EventCreateDTO dto) {
-    return SessionUtils.<ISystems<?, ?>>withActivityMaster(enterpriseName, systemName, tuple ->
-            Uni.createFrom().item(tuple.getItem3())
-    ).chain(system -> eventService.createEvent(null, primaryType, system)
-            .map(event -> {
-                UUID eventId = event.getId();
-                // Fire-and-forget: relationships persist in parallel sessions
-                if (hasAnyRelationship(dto)) {
-                    persistCreateRelationshipsAsync(enterpriseName, systemName, eventId, dto);
-                }
-                // Return immediately from DTO — no DB round-trip
-                return buildCreateResponseFromDto((Event) event, dto);
-            })
-    );
-}
-
-// Each relationship category gets its own session + transaction
-private void persistCreateRelationshipsAsync(String enterprise, String system, UUID id, CreateDTO dto) {
-    SessionUtils.fireAndForget(SessionUtils.withActivityMaster(enterprise, system, tuple -> {
-        Mutiny.Session s = tuple.getItem1();
-        ISystems<?, ?> sys = tuple.getItem3();
-        UUID[] token = tuple.getItem4();
-        return service.find(s, id).chain(entity -> {
-            Uni<Void> chain = Uni.createFrom().voidItem();
-            for (var entry : dto.classifications.entrySet()) {
-                chain = chain.chain(() -> entity.addOrUpdateClassification(s, entry.getKey(), entry.getValue(), sys, token).replaceWithVoid());
-            }
-            return chain;
-        });
-    }), "entity " + id + " classifications");
-}
-```
+The target owns its reviewed registration name; a path `requestingSystemName`
+is a selector, never user/plugin identity. GraphQL and event-bus payloads likewise
+cannot establish actor, credential or installation authority. Preserve optional
+Forum/Notification Invocation across transport identity conversions. Background
+jobs resolve current authorized users again. Network/provider work stays outside
+the database transaction. See the [plugin interaction examples](scoped-plugins.md).
 
 ### Pivot Query Pattern
 
@@ -268,7 +242,7 @@ public class GeographyGraphQLSchemaProvider implements IGraphQLSchemaProvider<Ge
 All GraphQL data fetchers use `SessionUtils.withActivityMaster` and bridge `Uni` → `Future`:
 
 ```java
-private DataFetcher<Future<List<Map<String, Object>>>> domain(Function<Mutiny.Session, QueryBuilderSCD> builderFn) {
+private DataFetcher<Future<List<Map<String, Object>>>> domain(Function<Mutiny.StatelessSession, QueryBuilderSCD> builderFn) {
     return env -> {
         Map<String, Object> input = env.getArgument("query");
         String enterprise = (String) input.get("enterprise");
@@ -342,4 +316,3 @@ Examples:
 - `geography.install.country` — body: ISO-3166 code
 - `geography.install.languages` — body: enterprise name
 - `geography.download.country` — body: ISO-3166 code
-

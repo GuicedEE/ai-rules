@@ -72,68 +72,18 @@ See [Conversation Master](conversations-notifications-seo.md#conversation-master
 
 ## Documents Module
 
-### Overview
-Document management with versioning, metadata, and access control.
+Document Master is a user-scoped plugin storing buckets as Arrangements, documents
+as ResourceItems and versions/metadata/ratings as existing FSDM relationships.
+It has no parallel document tables or streaming InputStream authorization API.
+See the self-contained [Documents contract](documents.md) for current methods,
+verified identity, installation/consent, version checks and revocation.
 
-### Entity Model
+## Marketplace Module
 
-```java
-@Entity
-@Table(name = "documents")
-public class Document extends BaseEntity<Document, Document.DocumentQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "document_type")
-    private String documentType;
-
-    @Column(name = "version")
-    private Integer version;
-
-    @Column(name = "file_path")
-    private String filePath;
-
-    @Column(name = "file_size")
-    private Long fileSize;
-
-    @Column(name = "mime_type")
-    private String mimeType;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise owner;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_document_id")
-    private Document parentDocument;
-}
-```
-
-### Service API
-
-```java
-public interface IDocumentsService {
-    Uni<Document> createDocument(Document document, InputStream fileData, String enterpriseId);
-    Uni<Document> updateDocument(String id, Document updates, SecurityToken token);
-    Uni<Document> createNewVersion(String documentId, InputStream fileData, SecurityToken token);
-    Uni<List<Document>> listDocumentVersions(String documentId, SecurityToken token);
-    Uni<InputStream> downloadDocument(String id, SecurityToken token);
-    Uni<Void> deleteDocument(String id, SecurityToken token);
-    Uni<List<Document>> searchDocuments(String query, SecurityToken token);
-}
-```
+Marketplace Master handles reviewed sellers, catalogue, carts/orders and settlement
+proof with FSDM Products, Arrangements, Events and ResourceItems. Products are loaded
+through the separately registered Marketplace Products plugin. See the complete
+[Marketplace contract](marketplace.md) for both capabilities and the payment boundary.
 
 ---
 
@@ -432,56 +382,18 @@ URLs. Existing enterprises must run updates after adding the flags module.
 
 ## Mail Module
 
-### Overview
-Email sending, templates, and delivery tracking.
+Mail Master is a built-in plugin with its own registration ID and a Plugin identity
+under Plugins. It declares Activity Master System and uses existing FSDM mail
+Events, private body/attachment ResourceItems, participant links and per-user
+Mailbox Arrangements. It adds no email-message table.
 
-### Entity Model
-
-```java
-@Entity
-@Table(name = "email_messages")
-public class EmailMessage extends BaseEntity<EmailMessage, EmailMessage.EmailMessageQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "subject")
-    private String subject;
-
-    @Column(name = "body", columnDefinition = "TEXT")
-    private String body;
-
-    @Column(name = "from_address")
-    private String fromAddress;
-
-    @Column(name = "to_addresses")
-    private String toAddresses;
-
-    @Column(name = "cc_addresses")
-    private String ccAddresses;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private EmailStatus status; // QUEUED, SENT, FAILED
-
-    @Column(name = "sent_at")
-    private LocalDateTime sentAt;
-
-    @Column(name = "error_message")
-    private String errorMessage;
-}
-```
-
-### Service API
-
-```java
-public interface IMailService {
-    Uni<EmailMessage> sendEmail(String to, String subject, String body);
-    Uni<EmailMessage> sendEmailFromTemplate(String to, String templateId, Map<String, Object> variables);
-    Uni<EmailMessage> sendEmailWithAttachments(String to, String subject, String body, List<String> fileIds);
-    Uni<EmailMessage> getEmailStatus(String id, SecurityToken token);
-    Uni<List<EmailMessage>> listSentEmails(String enterpriseId, SecurityToken token);
-}
-```
+The host binds `MailIdentityProvider` or supplies a verified `MailIdentity` to
+`IMailFsdmService.ingest`. The current user's party determines mailbox ownership;
+addresses and the compatibility mailbox label do not authenticate the actor.
+Installation, per-user consent, administrator policy, private writes and audit
+are checked/composed in one stateless transaction. SMTP/IMAP transport credentials
+remain distinct from FSDM user authority. See the self-contained [Mail contract](mail.md)
+and [plugin lifecycle/authorization contract](scoped-plugins.md).
 
 ---
 
@@ -499,61 +411,17 @@ See [SEO Master](conversations-notifications-seo.md#seo-master) for secured per-
 
 ## Payments Module
 
-### Overview
-Payment processing with support for multiple payment providers (Stripe, PayPal, etc.).
+Payment Master is a built-in Plugin declaring Activity Master System and Wallet
+Master. The host installs both plugins and obtains each user's dependency consent,
+in addition to current provider behavior grants and row permissions.
 
-### Entity Model
-
-```java
-@Entity
-@Table(name = "payments")
-public class Payment extends BaseEntity<Payment, Payment.PaymentQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
-
-    @Column(name = "currency")
-    private String currency;
-
-    @Column(name = "payment_method")
-    private String paymentMethod; // CARD, BANK_TRANSFER, PAYPAL
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus status; // PENDING, COMPLETED, FAILED, REFUNDED
-
-    @Column(name = "provider_transaction_id")
-    private String providerTransactionId;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "completed_at")
-    private LocalDateTime completedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "payer_id")
-    private Enterprise payer;
-
-    @ManyToOne
-    @JoinColumn(name = "payee_id")
-    private Enterprise payee;
-}
-```
-
-### Service API
-
-```java
-public interface IPaymentsService {
-    Uni<Payment> createPayment(String payerId, String payeeId, BigDecimal amount, String currency);
-    Uni<Payment> processPayment(String paymentId, String paymentMethod, SecurityToken token);
-    Uni<Payment> refundPayment(String paymentId, SecurityToken token);
-    Uni<Payment> getPaymentStatus(String id, SecurityToken token);
-    Uni<List<Payment>> listPayments(String enterpriseId, SecurityToken token);
-}
-```
+Payment intents are FSDM Events and classified relationships. Wallet alone owns
+balanced settlement. Bind `WalletIdentityProvider`, `PaymentHost` and allowlisted
+`PaymentGateways`; use `PaymentApi.start`, `get` and verified `confirm`. Callback
+verification and checkout run outside DB transactions, while settlement and Wallet
+posting are atomic. Redirects never credit a wallet. This module adds no payment
+entity table, generic refund API or automatic provider authorization. See the
+self-contained [Payment contract](payments.md).
 
 ---
 
@@ -678,69 +546,18 @@ User application state uses `IUserSessionService<?>` and JSON resource items lin
 
 ## Wallet Module
 
-### Overview
-Digital wallet for balance management, transactions, and credits.
+Wallet Master is a built-in Plugin declaring Activity Master System. The host
+binds `WalletIdentityProvider`, installs the catalogue registration on an authorized
+party, obtains each user's dependency consent and provisions explicit provider
+behavior grants. Every call and retry checks current admission and row permissions.
 
-### Entity Model
-
-```java
-@Entity
-@Table(name = "wallets")
-public class Wallet extends BaseEntity<Wallet, Wallet.WalletQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "balance", nullable = false)
-    private BigDecimal balance;
-
-    @Column(name = "currency")
-    private String currency;
-
-    @OneToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise owner;
-
-    @OneToMany(mappedBy = "wallet")
-    private List<WalletTransaction> transactions;
-}
-
-@Entity
-@Table(name = "wallet_transactions")
-public class WalletTransaction extends BaseEntity<WalletTransaction, WalletTransaction.WalletTransactionQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "amount")
-    private BigDecimal amount;
-
-    @Column(name = "transaction_type")
-    @Enumerated(EnumType.STRING)
-    private TransactionType type; // CREDIT, DEBIT
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "wallet_id")
-    private Wallet wallet;
-}
-```
-
-### Service API
-
-```java
-public interface IWalletService {
-    Uni<Wallet> createWallet(String enterpriseId, String currency);
-    Uni<Wallet> getWallet(String enterpriseId, SecurityToken token);
-    Uni<Wallet> creditWallet(String walletId, BigDecimal amount, String description, SecurityToken token);
-    Uni<Wallet> debitWallet(String walletId, BigDecimal amount, String description, SecurityToken token);
-    Uni<List<WalletTransaction>> getTransactionHistory(String walletId, SecurityToken token);
-    Uni<BigDecimal> getBalance(String walletId, SecurityToken token);
-}
-```
+Wallets and clearing accounts are typed FSDM Arrangements, business actions are
+Events, and posted core transaction entries are the authoritative balance ledger.
+`WalletApi` exposes create, balance, history and transfer/deposit/withdrawal through
+its owning REST/GraphQL adapters. Both movement arrangements require write access;
+clearing arrangements are separately host-provisioned. There is no wallet balance
+column or parallel wallet-account table. See the self-contained
+[Wallet and transaction contract](transactions.md).
 
 ---
 

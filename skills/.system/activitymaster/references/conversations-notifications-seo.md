@@ -4,7 +4,15 @@ These modules use existing FSDM rows and reactive `Uni` operations. The consumin
 
 ## Conversation Master
 
-A conversation is a typed Arrangement; `ArrangementXInvolvedParty` links members. Each message is an Event linked to the Arrangement and sender, with its plain-text body in a private ResourceItem. The host binds `ConversationIdentityProvider.current()` to a verified, call-scoped `ConversationIdentity(partyId, enterpriseId, context, identityToken)`. Work context owner is the authorized enterprise. Personal and Social context owner is the verified organic party. Never derive identity from request IDs or substitute the system token for the caller token. The default binding denies requests.
+A conversation is a typed Arrangement; `ArrangementXInvolvedParty` links members. Each message is an Event linked to the Arrangement and sender, with its plain-text body in a private ResourceItem. The host binds `ConversationIdentityProvider.current()` to a verified, call-scoped `ConversationIdentity(partyId, enterpriseId, context, identityToken, installationPartyId)`. Work context owner is the authorized enterprise. Personal and Social context owner is the verified organic party. Never derive identity from request IDs or substitute the system token for the caller token. The four-argument constructor defaults installationPartyId to partyId; the host
+must verify membership before binding an organization installation. The default
+binding denies requests. Conversation Master is an independent IMasterPlugin,
+declaring Core. Install it for the authorized party and obtain the acting user's
+consent to Core; every lower service operation checks current installation,
+consent and administrator policy before its existing context/membership/row
+checks. This includes reads and message history. A Plugin credential cannot act
+for a user. Forward module update 1174 converts legacy System identity while
+preserving registration and data; taxonomy update 1175 uses Core bootstrap only.
 
 Inject `ConversationApi` and use `create(enterprise, Create)`, `find(enterprise, id)`, `list(enterprise, offset, limit)`, `send(enterprise, id, Send)`, `messages(enterprise, id, offset, limit)`, and `leave(enterprise, id)`. `Create` carries `(realm, ownerId, participants)` and `Send` carries `(text)`. Results are `Conversation(id, realm, ownerId, participants)`, `Message(id, conversationId, senderId, text, createdAt)`, or `Page(items, offset, limit, hasMore)`. The lower `IConversationService` methods take the caller-owned `Mutiny.StatelessSession`, resolved system, and verified identity. Await every related write in the caller's transaction.
 
@@ -15,6 +23,19 @@ Limits: 50 participants, 65,536 UTF-16 message units, offset 0..10,000, limit 1.
 ## Notification Master
 
 A notification, state transition, and delivery attempt are separate Events. `EventXInvolvedParty` links publisher and recipients; classifications hold category, severity, subject, and context; a private `Notification Body` ResourceItem holds plain-text body and JSON payload. State is append-only: `UNREAD` means no state Event, while `READ`, `DISMISSED`, and `ACKNOWLEDGED` are recorded transitions. The host binds `NotificationIdentityProvider.current()` to a verified, call-scoped `NotificationIdentity(partyId, enterpriseId, context, identityToken)` with the same Work versus Personal/Social owner rule. The default binding denies. Path and payload IDs cannot identify the actor.
+
+For delegated notifications use the five-argument
+`NotificationIdentity(partyId, enterpriseId, context, identityToken, invocation)`.
+The compatible four-argument constructor has no invocation for direct host use.
+Preserve the initiating plugin and authorized installation party when converting
+Forum identity or composing a post/notice. Current plugin installation, declared
+Notification target, per-user consent and administrator policy are checked when
+invocation is present; they never replace publisher behavior grants or recipient
+row permissions. Forum's shared transaction checks each invoked target. See the
+[plugin contract](scoped-plugins.md). Conversation's own built-in admission does not automatically authorize calls from
+another plugin. SEO and other Masters still require explicit delegation integration
+before exposing new delegated paths. Preserve both initiating plugin context and
+the target plugin's own admission when composing such an integration.
 
 Publishing requires a current `notifications.publish` scoped provider behavior grant; delivery audit requires `notifications.audit`. Installation defines grant vocabulary but grants no provider or actor access. All other operations require a live recipient link. Return 404 for an inaccessible item to avoid disclosing existence. Notification, state, and delivery rows have restricted security and no default public grants.
 

@@ -89,7 +89,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 
 | Skill | Path | Use for |
 |-------|------|---------|
-| `activitymaster` | `skills/.system/activitymaster/SKILL.md` | FSDM services, geography flags via Image Master, forums, conversations, scoped grants and reactive persistence |
+| `activitymaster` | `skills/.system/activitymaster/SKILL.md` | FSDM services and user-scoped plugins: Mail, Wallet, Payments, Documents, Conversations, Marketplace, separate product loading, consent, revocation and stateless persistence |
 | `entityassist` | `skills/.system/entityassist/SKILL.md` | CRTP entities, fluent query builder, reactive CRUD with Mutiny |
 
 ### GuicedEE

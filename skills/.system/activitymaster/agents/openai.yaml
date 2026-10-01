@@ -1,4 +1,4 @@
 interface:
   display_name: "ActivityMaster"
-  short_description: "FSDM enterprise resource management platform"
-  default_prompt: "Use $activitymaster to work with FSDM domain services (Enterprise, Address, Events, Arrangements, ResourceItem, Classification), implement Forum Master subscriber management and atomic post notifications, build reactive persistence workflows, manage security tokens, link geography country flags for serving through Image Master, and implement enterprise resource management applications."
+  short_description: "FSDM services and user-scoped ActivityMaster plugins"
+  default_prompt: "Use $activitymaster to implement FSDM services and user-scoped plugins with verified host identity, party installation, consent, revocation, writer provenance and stateless transactions, including Mail, Wallet, Payments, Documents, Conversations and Marketplace with its separate product-loading plugin."

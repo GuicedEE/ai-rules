@@ -1,6 +1,6 @@
 # activitymaster: Practices
 
-Read this reference when working on the topics below. Commands run from the skill directory.
+Read this reference when working on the topics below. Build commands use the stated DevSuite module or its POM; interaction examples use the verified host context.
 
 - [Best Practices](#best-practices)
 - [Documentation Structure](#documentation-structure)
@@ -12,19 +12,16 @@ Read this reference when working on the topics below. Commands run from the skil
 
 Never use `await().indefinitely()` in service flows or REST handlers. Always return `Uni` and continue work via `chain(...)`/`invoke(...)` composition. The ONLY exception is event bus consumers running on worker threads.
 
-### 1. Security Token Propagation
+### 1. Runtime identity and plugin authority
 
-For system-context work, resolve context through `SessionUtils.withActivityMaster(...)` first, then pass the provided token(s) into downstream access-controlled operations:
-
-```java
-// ✅ Good
-SessionUtils.withActivityMaster("acme", "resource-sync", tuple ->
-    resourceItemService.sync(tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4()[0])
-);
-
-// ❌ Bad
-resourceItemService.sync(session, enterprise, system, null);  // No security context
-```
+Use `SessionUtils.withActivityMaster` for the enterprise, writer and stateless
+transaction. User/plugin operations pass the verified actor credential to normal
+FSDM row checks and preserve host-bound invocation context. Tuple or plugin tokens
+cannot replace it. Technical/core credentials serve trusted lifecycle provisioning.
+Check current installation, declared-target consent, administrator policy and
+provider/domain grants together; preserve ordinary membership/row permissions.
+Compose relationships, private grants and audit before commit, never detached
+success callbacks. See the self-contained [plugin contract](scoped-plugins.md).
 
 ### 2. ActiveFlag Management
 
@@ -79,25 +76,28 @@ public class MyTest {
 }
 ```
 
-### 6. REST Create Pattern — Return DTO Immediately
+### 6. REST mutations complete their transaction
 
-This pattern applies to core endpoints designed for asynchronous relationship persistence. Profile create/update instead compose save and readback before responding; session adapters must also await persistence (see [Profiles and user sessions](guide-profiles-and-user-sessions.md)).
+Plugin endpoints return success after admission, row/domain authorization,
+entity writes, relationships, private security and invocation audit have completed
+and the caller's stateless transaction has committed. Returning a DTO built from
+the input does not remove those requirements. Reactive `chain` awaits work without
+blocking the request thread; use it to compose all required persistence.
 
-For endpoints using this asynchronous contract, return a response built from the input DTO immediately. Relationship persistence happens asynchronously:
+For example, an authenticated Documents host supplies `verifiedIdentity` and the
+API wraps the entire service operation in `SessionUtils.withActivityMaster`:
 
 ```java
-// ✅ Good — immediate response, async relationship work
-return service.create(entity).map(created -> {
-    persistRelationshipsAsync(enterprise, system, created.getId(), dto);
-    return buildResponseFromDto(created, dto);  // no DB round-trip
-});
-
-// ❌ Bad — waiting for all relationships before responding
-return service.create(entity).chain(created ->
-    persistAllRelationships(created, dto)  // blocks response
-        .chain(() -> refetchFromDB(created.getId()))  // unnecessary round-trip
-);
+return SessionUtils.withActivityMaster(enterpriseName, DocumentSystem.NAME, tuple ->
+        documents.upload(tuple.getItem1(), tuple.getItem3(), verifiedIdentity,
+                bucketId, upload));
 ```
+
+A library already handed a session uses that same session directly. It must not
+open another transaction or detach relationship/security work with `subscribe`
+or `fireAndForget`. Any failed required write rolls back the action. External
+SMTP or payment-provider transport runs as a separate host workflow after commit;
+its initiation is distinct from delivery, capture or settlement completion.
 
 ### 7. On-Demand Data Loading — Never at Startup
 
@@ -281,11 +281,9 @@ echo $OAUTH2_ISSUER_URL
 echo $JWKS_URI
 ```
 
-Check token cache:
-```java
-String token = SYSTEM_TOKEN_CACHE.get();
-log.info("System token: {}", token);
-```
+Check the verified actor binding, credential classification and current grants.
+Log registration/party IDs or safe error categories, never identifying credentials
+or bearer/API secrets. A cached technical token is not current user authority.
 
 ### Hibernate Reactive Issues
 
@@ -316,4 +314,3 @@ If GraphQL schema fails to compile at startup:
 1. Check all `IGraphQLSchemaProvider` implementations parse independently
 2. Ensure feature modules use `extend type Query` (not `type Query`)
 3. Verify no duplicate type names across providers
-

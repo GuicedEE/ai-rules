@@ -249,9 +249,24 @@ records completion.
 | `SessionMasterInstall` (user-sessions) | `75` | 1 |
 | `CerialMasterInstall` (cerial) | `500` | 3 |
 | `GeographySystemInstall` (geography) | `1000` | 12 |
+| `PluginInstall` (core) | `1010` | 1 |
+| `BuiltInPluginsInstall` (core) | `1020` | 1 |
+| `PluginArchitectureInstall` (core) | `1030` | 1 |
+| `ConversationPluginInstall` / `ConversationInstall` | `1174` / `1175` | 1 each |
+| `DocumentPluginInstall` / `DocumentInstall` / `DocumentVersionInstall` | `1184` / `1185` / `1186` | 1 each |
+| `MarketplacePluginInstall` / `MarketplaceInstall` | `1187` / `1188` | 1 each |
 | `ImageSystemInstall` (images) | `1100` | 1 |
+| `WalletSystemInstall` (wallet) | `1200` | 5 |
+| `PaymentSystemInstall` (payments) | `1300` | 1 |
 | `MailMasterInstall` (mail) | `1500` | 4 |
 | `TimeServiceSetup` (core) | `Integer.MAX_VALUE - 200` | 1 |
+
+Plugin updates preserve registration IDs/data and catalogue media, archive legacy
+System credentials and register built-ins under Plugins. Their actual core bootstrap
+credential is for lifecycle work, never runtime user impersonation. Built-in domain
+updates also provision catalogues for later-added modules. No update grants party
+installation, user consent or behavior; host activation is a separate authorized
+flow. The [plugin contract](scoped-plugins.md) gives those APIs and revocation rules.
 
 
 ---

@@ -1,6 +1,6 @@
 # activitymaster: Lifecycle
 
-Read this reference when working on the topics below. Commands run from the skill directory.
+Read this reference when working on the topics below. Build commands use the stated DevSuite module or its POM; interaction examples use the verified host context.
 
 - [Lifecycle & Bootstrap](#lifecycle--bootstrap)
 - [On-Demand Data Loading Pattern](#on-demand-data-loading-pattern)
@@ -156,8 +156,16 @@ harmless upsert); it does not clear it.
 | user-sessions | `SessionMasterInstall` | `75` | 1 | Session type classifications |
 | cerial | `CerialMasterInstall` | `500` | 3 | Serial port classifications |
 | geography | `GeographySystemInstall` | `1000` | 12 | Geographic hierarchy **taxonomy only** |
+| core | `PluginInstall` | `1010` | 1 | Catalogue/declaration/installation/consent/policy/audit taxonomy |
+| core | `BuiltInPluginsInstall` | `1020` | 1 | Forward built-in identity conversion and catalogue provisioning |
+| core | `PluginArchitectureInstall` | `1030` | 1 | Forward discovery through the independent plugin SPI |
+| conversations | `ConversationPluginInstall` / `ConversationInstall` | `1174` / `1175` | 1 each | Forward plugin conversion / conversation taxonomy |
+| documents | `DocumentPluginInstall` / `DocumentInstall` / `DocumentVersionInstall` | `1184` / `1185` / `1186` | 1 each | Forward conversion / document and version taxonomy |
+| marketplace-master | `MarketplacePluginInstall` / `MarketplaceInstall` | `1187` / `1188` | 1 each | Separate marketplace/producer registrations / domain taxonomy |
 | images | `ImageSystemInstall` | `1100` | 1 | Image type classifications |
-| mail | `MailMasterInstall` | `1500` | 4 | Mail template classifications |
+| wallet | `WalletSystemInstall` | `1200` | 5 | Plugin catalogue, Wallet/Clearing, balanced posting taxonomy |
+| payments | `PaymentSystemInstall` | `1300` | 1 | Plugin catalogue and payment intent taxonomy |
+| mail | `MailMasterInstall` | `1500` | 4 | Plugin catalogue and mail Event/resource/mailbox taxonomy |
 | core | `TimeServiceSetup` | `Integer.MAX_VALUE - 200` | 1 | Time-related classifications — runs last |
 
 > Negative `sortOrder`s deliberately run the **core taxonomy first** (attribute classifications other
@@ -179,8 +187,8 @@ For modules with large reference datasets (geography, exchange rates, etc.), fol
 ```java
 // Service interface
 public interface IGeographyService<J extends IGeographyService<J>> {
-    Uni<Void> loadLanguages(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
-    Uni<Void> installCountry(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadLanguages(Mutiny.StatelessSession session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> installCountry(Mutiny.StatelessSession session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
 }
 
 // REST triggers the service
@@ -204,20 +212,20 @@ public String installLanguages(Message<String> message) {
 
 ### On-Demand Loader Gotchas (hard-won)
 
-These were discovered debugging the geography on-demand install (countries, languages, timezones). They apply to **any** FSDM loader/service that is handed a `Mutiny.Session` and creates + reads classifications in the same flow.
+These were discovered debugging the geography on-demand install (countries, languages, timezones). They apply to **any** FSDM loader/service that is handed a `Mutiny.StatelessSession` and creates + reads classifications in the same flow.
 
 1. **Never nest `SessionUtils.withActivityMaster(...)` inside a flow that already owns a session/transaction.**
-   `withActivityMaster` (and `withSessionTx`) **always opens a brand-new session and transaction**. A nested transaction cannot see the still-uncommitted rows written by the outer transaction, so a follow-up `find` fails with `NoResultException`. Service methods that receive a `Mutiny.Session` must operate **directly on that session**:
+   `withActivityMaster` (and `withSessionTx`) **always opens a brand-new session and transaction**. A nested transaction cannot see the still-uncommitted rows written by the outer transaction, so a follow-up `find` fails with `NoResultException`. Service methods that receive a `Mutiny.StatelessSession` must operate **directly on that session**:
    ```java
    // ❌ BAD — opens a new tx that can't see the caller's uncommitted writes
-   public Uni<...> createPlanet(Mutiny.Session session, ...) {
+   public Uni<...> createPlanet(Mutiny.StatelessSession session, ...) {
        return SessionUtils.withActivityMaster(enterprise, system.getName(), tuple -> {
            var s = tuple.getItem1(); // different session/tx!
            ...
        });
    }
    // ✅ GOOD — reuse the caller's session/tx
-   public Uni<...> createPlanet(Mutiny.Session session, ISystems<?,?> system, UUID... token) {
+   public Uni<...> createPlanet(Mutiny.StatelessSession session, ISystems<?,?> system, UUID... token) {
        var s = session;
        var enterprise = system.getEnterprise();
        ...
@@ -260,11 +268,30 @@ These were discovered debugging the geography on-demand install (countries, lang
    ```
    Rule: if an `IManageX` link-configuration / hook method needs a DB value, return a `Uni` and `chain`/`map` it — never `await` inside a hook invoked from a subscription.
 
-8. **Default security for bulk loads must be batched + stateless — never per-row.** The per-row `IWarehouseCoreTable.createDefaultSecurity(Mutiny.Session, system, token)` re-resolves the seven canonical group/folder tokens (Administrators, Everyone, Everywhere, Systems, Applications, Plugins, Guests) **and** issues find+persist round-trips for *every* row (~21 sequential round-trips/row). On a bulk load (thousands of geography rows) that is catastrophic. It is intentionally a **no-op** on the live session; use the batched `ISecurityTokenService` entry points instead, which resolve the seven tokens **once** and write on a `Mutiny.StatelessSession` (no growing persistence context):
-   - `applyDefaultSecurityToTable(session, prototypeTable, system, token)` — idempotent full-table pass (`getAll` + per-row count gate + one stateless batch). Good for bootstrap / re-installs.
-   - `applyDefaultSecurityToRows(session, rows, system, token)` — **scan-free, gate-free**; secures an explicit set of just-created rows in one stateless transaction. Preferred for bulk imports.
+8. **Keep bulk reference-data security separate from private plugin rows.**
+   Use the stateless `ISecurityTokenService.applyDefaultSecurityToRows` or
+   `applyDefaultSecurityToTable` batch paths for authorized reference-data imports;
+   repeated single-row token lookups are unsuitable for bulk work. The single-entity
+   `createDefaultSecurity` path is flag-driven and is not a no-op. A public/reference
+   batch matrix is not private user security. Plugin domain code must write restricted
+   row grants for the real actor and compose all security with its domain transaction.
+   In particular Mail archives initial default grants on new mail Event/resources/
+   mailbox and grants Administrators plus the actual user. Applicable-token expansion
+   excludes Plugin identities despite compatibility folder grant rows.
 
-   The geography loader uses a **per-session collector** to feed the scan-free variant: creators `record(session, geo)` the row they just persisted (synchronous, zero round-trips) instead of calling per-row security, and each load phase `flush(session, system, token)` secures the whole batch at the end (within the same session, before reads). Key the accumulator by `Mutiny.Session` so concurrent loads never interleave, and remove the entry on flush so nothing leaks across phases/enterprises. Grants applied: Administrators=CRUD, Everywhere=read, Systems/Applications/Plugins=create/update/read, Guests=read, Everyone=none.
+## Plugin upgrade and activation
+
+Plugin taxonomy 1010 and built-in conversion 1020/1030 run through the existing
+`ISystemUpdate` lifecycle, using caller-owned stateless transactions and the live
+core identifying bootstrap credential. Keep sort orders unique. The conversion
+preserves durable registration IDs/domain data and live catalogue media, retires
+legacy System credentials/hierarchy links and registers Plugin identities under
+Plugins. It does not rewrite legacy mailbox ownership or install/consent for users.
+Wallet 1200, Payments 1300 and Mail 1500 also provision their catalogue when added
+later. Use an authorized enterprise update for an existing tenant; module discovery
+alone is not activation. Then install on a real authorized party, obtain individual
+consent and provision required provider/domain grants. No plugin-specific schema
+migration or startup DDL is needed. See [the plugin lifecycle contract](scoped-plugins.md).
 
 ## Progress Reporting (IProgressable + SPI monitors)
 
@@ -307,7 +334,7 @@ Each load phase: reset the current counter, declare the **real** total from the 
 ```java
 public class GeographyService implements IProgressable, IGeographyService<GeographyService> {
 
-    public Uni<Void> loadProvincesASCII1(Mutiny.Session session, ISystems<?,?> system, UUID... token) {
+    public Uni<Void> loadProvincesASCII1(Mutiny.StatelessSession session, ISystems<?,?> system, UUID... token) {
         setCurrentTask(0);                                  // reset the phase
         return parse(...).chain(records -> {
             setTotalTasks(records.size());                  // ← real total, not a guess
@@ -342,4 +369,3 @@ public class GeographyService implements IProgressable, IGeographyService<Geogra
 > `IActivityMasterProgressMonitor.progressUpdate(source, message, currentTask, totalTasks)`, register
 > it via `ServiceLoader`, and every loader's progress streams to the subscribed group with live
 > `current/total` counts — no change to the loaders.
-

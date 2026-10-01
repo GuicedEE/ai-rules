@@ -137,7 +137,7 @@ Project-specific skills for the GuicedEE ecosystem:
 
 | Skill | Description |
 |-------|-------------|
-| [activitymaster](skills/.system/activitymaster/SKILL.md) | FSDM services, geography flags via Image Master, forums, conversations, scoped grants and reactive persistence |
+| [activitymaster](skills/.system/activitymaster/SKILL.md) | FSDM services and user-scoped plugins: Mail, Wallet, Payments, Documents, Conversations, Marketplace, separate product loading, consent, revocation and stateless persistence |
 | [entityassist](skills/.system/entityassist/SKILL.md) | CRTP entities, fluent query builder, reactive CRUD with Mutiny |
 | [guicedee-auth](skills/.system/guicedee-auth/SKILL.md) | Authentication and authorization (OAuth2, JWT, ABAC, OTP, Property File, LDAP, htpasswd, htdigest) |
 | [guicedee-cdi](skills/.system/guicedee-cdi/SKILL.md) | CDI integration |
