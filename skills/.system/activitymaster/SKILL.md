@@ -1,6 +1,6 @@
 ---
 name: activitymaster
-description: "Implement ActivityMaster/FSDM services, scoped plugins and transactions, profiles and user sessions, scope-token security, and reactive persistence."
+description: Implement ActivityMaster/FSDM services, conversations, forums, notifications, geography flags via Image Master, SEO, scoped grants, and stateless persistence.
 metadata:
   short-description: FSDM enterprise resource management platform
 ---
@@ -18,11 +18,16 @@ Open-source implementation of the Functional Service Data Model (FSDM) for enter
 - Resolve classifications with the data-concept-scoped lookup; classification names are not globally unique.
 - Use the canonical `Environment` resolver for configuration.
 - ActivityMaster owns scoped plugin concepts and persistence; management UI and authenticated plugin endpoints belong in a separate consuming module.
+- Country flags use `geo-country-flags`: store images through Image Master and link them to two-letter Geography countries with `CountryFlag` resource relationships. Cache bundled bytes only; resolve current FSDM rows and tokens for access.
 
 ## Workflow references
 
 Read the reference for the task you are working on. Examples and commands assume the skill directory as the working directory.
 
+- [Geography country flags and Image Master](references/geography-country-flags.md): `CountryFlagCatalog`, code validation, safe caching, FSDM links, installation/backfill, optional country resource SPI and image URLs. Read for country flags or geography-linked image work.
+
+- [Forum Master](references/forums.md): verified host identity, FSDM forums and posts, organic subscriber management, REST usage, and atomic notification publication. Read for forum work.
+- [Conversations, notifications, and SEO](references/conversations-notifications-seo.md): current FSDM models, verified identity, scoped grants, delivery, publishing, and SEO routes. Read for these modules.
 - [Domain and modules](references/guide-domain-and-modules.md): Core Architecture; Module Structure; Adding a New Module.
 - [Profiles and user sessions](references/guide-profiles-and-user-sessions.md): service contracts, profile REST/GraphQL usage, and session transport integration limits.
 - [Transports](references/guide-transports.md): REST API Architecture; GraphQL Architecture; Event Bus Architecture.

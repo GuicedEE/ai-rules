@@ -156,6 +156,7 @@ See [references/feature-modules.md](../references/feature-modules.md) for detail
 - **forums** — Discussion forums and threads
 - **geography** — On-demand GeoNames geographic data (countries, provinces, districts, towns, postal codes, timezones, languages) via REST/event bus/GraphQL
 - **images** — Image storage and processing
+- **geography-country-flags** - Country-linked Image Master resources; see the [flag interaction contract](geography-country-flags.md).
 - **mail** — Email integration and templates
 - **notifications** — Notification delivery system
 - **payments** — Payment processing and billing

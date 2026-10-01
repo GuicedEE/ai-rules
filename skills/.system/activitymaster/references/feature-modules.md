@@ -11,8 +11,10 @@ Complete reference for all ActivityMaster feature modules beyond the core FSDM s
 - [Forums Module](#forums-module)
 - [Geography Module](#geography-module)
 - [Images Module](#images-module)
+- [Geography Country Flags Module](#geography-country-flags-module)
 - [Mail Module](#mail-module)
 - [Notifications Module](#notifications-module)
+- [SEO Module](#seo-module)
 - [Payments Module](#payments-module)
 - [Profiles Module](#profiles-module)
 - [Tasks Module](#tasks-module)
@@ -32,17 +34,18 @@ Complete reference for all ActivityMaster feature modules beyond the core FSDM s
 - **cerial-client**: Client-side serialization
 
 ### Communication & Collaboration
-- **conversations**: Threaded messaging and chat
+- **conversations**: FSDM-backed party conversations and messages
 - **mail**: Email integration and templates
-- **notifications**: Multi-channel notification system
+- **notifications**: FSDM-backed recipient notifications and delivery
 
 ### Content Management
 - **documents**: Document storage and versioning
 - **files**: File upload, storage, and management
 - **images**: Image processing and optimization
+- **seo**: FSDM-backed SEO files and rendered routes
 
 ### Community & Social
-- **forums**: Discussion boards and topics
+- **forums**: FSDM forums, posts, and organic subscriptions
 - **profiles**: User profiles and preferences
 
 ### Task Management
@@ -55,6 +58,7 @@ Complete reference for all ActivityMaster feature modules beyond the core FSDM s
 
 ### Specialized
 - **geography**: Location services and spatial data
+- **geography-country-flags**: Country-linked flags served by Image Master
 - **realtor**: Real estate specific functionality
 - **user-sessions**: Session tracking and analytics
 
@@ -62,100 +66,7 @@ Complete reference for all ActivityMaster feature modules beyond the core FSDM s
 
 ## Conversations Module
 
-### Overview
-Threaded messaging and real-time chat system with support for direct messages, group conversations, and channels.
-
-### Entity Model
-
-```java
-@Entity
-@Table(name = "conversations")
-public class Conversation extends BaseEntity<Conversation, Conversation.ConversationQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "conversation_type")
-    @Enumerated(EnumType.STRING)
-    private ConversationType type; // DIRECT, GROUP, CHANNEL
-
-    @Column(name = "active_flag")
-    @Enumerated(EnumType.STRING)
-    private ActiveFlag activeFlag;
-
-    @ManyToMany
-    @JoinTable(name = "conversation_participants")
-    private List<Enterprise> participants;
-
-    @OneToMany(mappedBy = "conversation")
-    private List<Message> messages;
-}
-
-@Entity
-@Table(name = "messages")
-public class Message extends BaseEntity<Message, Message.MessageQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "sent_at")
-    private LocalDateTime sentAt;
-
-    @Column(name = "edited_at")
-    private LocalDateTime editedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "conversation_id")
-    private Conversation conversation;
-
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private Enterprise sender;
-
-    @ManyToOne
-    @JoinColumn(name = "reply_to_message_id")
-    private Message replyTo;
-}
-```
-
-### Service API
-
-```java
-public interface IConversationsService {
-    // Conversations
-    Uni<Conversation> createConversation(Conversation conversation, List<String> participantIds);
-    Uni<Conversation> addParticipant(String conversationId, String participantId, SecurityToken token);
-    Uni<Conversation> removeParticipant(String conversationId, String participantId, SecurityToken token);
-    Uni<List<Conversation>> listUserConversations(String userId, SecurityToken token);
-
-    // Messages
-    Uni<Message> sendMessage(String conversationId, String content, String senderId, SecurityToken token);
-    Uni<Message> replyToMessage(String messageId, String content, String senderId, SecurityToken token);
-    Uni<Message> editMessage(String messageId, String newContent, SecurityToken token);
-    Uni<Void> deleteMessage(String messageId, SecurityToken token);
-    Uni<List<Message>> getConversationMessages(String conversationId, int limit, int offset, SecurityToken token);
-}
-```
-
-### Usage Example
-
-```java
-// Create group conversation
-Conversation conversation = new Conversation()
-    .setTitle("Project Team Chat")
-    .setType(ConversationType.GROUP)
-    .setActiveFlag(ActiveFlag.Active);
-
-conversationsService.createConversation(conversation, List.of(userId1, userId2, userId3))
-    .chain(created ->
-        conversationsService.sendMessage(created.getId(), "Welcome to the team!", userId1, token)
-    )
-    .replaceWithVoid();
-```
+See [Conversation Master](conversations-notifications-seo.md#conversation-master) for the current FSDM model, verified identity, and API contract.
 
 ---
 
@@ -287,80 +198,28 @@ public interface IFilesService {
 
 ## Forums Module
 
-### Overview
-Discussion boards with topics, posts, and moderation features.
+Forum Master (`com.activity-master:forum-master`) stores forums as FSDM
+Arrangements, organic subscriber/moderator links as InvolvedParty relationships,
+and posts as Events with private ResourceItems. It has no separate forum tables.
 
-### Entity Model
+The host supplies verified identity through `ForumIdentityProvider`. Current
+subscribers can read and post; the creator alone can add, remove, or replace the
+subscriber list. An ordinary subscriber can leave their own membership. Personal
+forums contain only their creator; Social and Work forums support up to 50 parties.
 
-```java
-@Entity
-@Table(name = "forum_boards")
-public class ForumBoard extends BaseEntity<ForumBoard, ForumBoard.ForumBoardQueryBuilder, String> {
-    @Id
-    private String id;
+`ForumApi.post` publishes to current subscribers other than the poster. Post and
+notification persistence share one stateless transaction; notification identity
+and explicit publishing grants are required for a nonempty audience. Delivery
+starts after commit. Subscriber changes affect future notices.
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
-    @OneToMany(mappedBy = "board")
-    private List<ForumTopic> topics;
-}
-
-@Entity
-@Table(name = "forum_topics")
-public class ForumTopic extends BaseEntity<ForumTopic, ForumTopic.ForumTopicQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "is_locked")
-    private Boolean isLocked;
-
-    @Column(name = "is_pinned")
-    private Boolean isPinned;
-
-    @ManyToOne
-    @JoinColumn(name = "board_id")
-    private ForumBoard board;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by")
-    private Enterprise createdBy;
-
-    @OneToMany(mappedBy = "topic")
-    private List<ForumPost> posts;
-}
-
-@Entity
-@Table(name = "forum_posts")
-public class ForumPost extends BaseEntity<ForumPost, ForumPost.ForumPostQueryBuilder, String> {
-    @Id
-    private String id;
-
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "topic_id")
-    private ForumTopic topic;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Enterprise author;
-}
-```
-
----
+Read [Forum Master usage](forums.md) for Java and REST operations, context ownership,
+limits, host grants, effective-date membership history, and validation boundaries.
 
 ## Geography Module
+
+Optional country flag resources are attached through `IGeographyCountryResourceProvider`
+in the caller's stateless transaction. See [country flags](geography-country-flags.md)
+for the bundled catalog, installer/backfill and Image Master serving contract.
 
 ### Overview
 On-demand GeoNames geographic data management. Geography data is **never loaded at startup** — only the
@@ -412,36 +271,36 @@ public interface IGeographyService<J extends IGeographyService<J>> {
     String GeographySystemName = "Geography System";
 
     // Planet & Continent
-    Uni<IGeography<?, ?>> createPlanet(Mutiny.Session session, String value, String originalUniqueID, ISystems<?, ?> system, UUID... identityToken);
-    Uni<IGeography<?, ?>> createContinent(Mutiny.Session session, String planetName, GeographyContinent continent, ISystems<?, ?> system, String originalUniqueID, UUID... identityToken);
-    Uni<IGeography<?, ?>> findPlanet(Mutiny.Session session, String name, ISystems<?, ?> system, UUID... identityToken);
-    Uni<GeographyContinent> findContinent(Mutiny.Session session, GeographyContinent continent, ISystems<?, ?> system, UUID... identityToken);
+    Uni<IGeography<?, ?>> createPlanet(Mutiny.StatelessSession session, String value, String originalUniqueID, ISystems<?, ?> system, UUID... identityToken);
+    Uni<IGeography<?, ?>> createContinent(Mutiny.StatelessSession session, String planetName, GeographyContinent continent, ISystems<?, ?> system, String originalUniqueID, UUID... identityToken);
+    Uni<IGeography<?, ?>> findPlanet(Mutiny.StatelessSession session, String name, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyContinent> findContinent(Mutiny.StatelessSession session, GeographyContinent continent, ISystems<?, ?> system, UUID... identityToken);
 
     // Country
-    Uni<GeographyCountry> findCountry(Mutiny.Session session, GeographyCountry country, ISystems<?, ?> system, UUID... identityToken);
-    Uni<GeographyCountry> findCountryDetailed(Mutiny.Session session, String iso, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyCountry> findCountry(Mutiny.StatelessSession session, GeographyCountry country, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyCountry> findCountryDetailed(Mutiny.StatelessSession session, String iso, ISystems<?, ?> system, UUID... identityToken);
 
     // On-demand data loading
-    Uni<Void> loadLanguages(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
-    Uni<Void> loadCountryInfo(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
-    Uni<Void> loadFeatureCodes(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
-    Uni<Void> loadTimeZones(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
-    Uni<Void> loadProvincesASCII1(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
-    Uni<Void> loadDistrictsASCII2(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
-    Uni<Void> loadTownsAndCities(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
-    Uni<Void> loadPostalCodes(Mutiny.Session session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadLanguages(Mutiny.StatelessSession session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadCountryInfo(Mutiny.StatelessSession session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadFeatureCodes(Mutiny.StatelessSession session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadTimeZones(Mutiny.StatelessSession session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadProvincesASCII1(Mutiny.StatelessSession session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadDistrictsASCII2(Mutiny.StatelessSession session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadTownsAndCities(Mutiny.StatelessSession session, ISystems<?, ?> system, UUID... identityToken);
+    Uni<Void> loadPostalCodes(Mutiny.StatelessSession session, ISystems<?, ?> system, UUID... identityToken);
 
     // Per-country download and install
     Uni<Void> downloadCountryData(String countryCode, UUID... identityToken);
-    Uni<Void> installCountry(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
-    Uni<Void> loadCountryGeoData(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
-    Uni<Void> loadCountryPostalCodes(Mutiny.Session session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> installCountry(Mutiny.StatelessSession session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadCountryGeoData(Mutiny.StatelessSession session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
+    Uni<Void> loadCountryPostalCodes(Mutiny.StatelessSession session, ISystems<?, ?> system, String countryCode, UUID... identityToken);
 
     // Lookups
-    Uni<IGeography<?, ?>> findGeographyById(Mutiny.Session session, UUID geographyID, ISystems<?, ?> system, UUID... identityToken);
-    Uni<GeographyPostalCode> findPostalCode(Mutiny.Session session, GeographyPostalCode postalCode, ISystems<?, ?> system, UUID... identityToken);
-    Uni<GeographyTimezone> findTimezone(Mutiny.Session session, GeographyTimezone timezone, ISystems<?, ?> system, UUID... identityToken);
-    Uni<GeographyFeatureCode> findFeatureCode(Mutiny.Session session, String featureCode, ISystems<?, ?> system, UUID... identityToken);
+    Uni<IGeography<?, ?>> findGeographyById(Mutiny.StatelessSession session, UUID geographyID, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyPostalCode> findPostalCode(Mutiny.StatelessSession session, GeographyPostalCode postalCode, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyTimezone> findTimezone(Mutiny.StatelessSession session, GeographyTimezone timezone, ISystems<?, ?> system, UUID... identityToken);
+    Uni<GeographyFeatureCode> findFeatureCode(Mutiny.StatelessSession session, String featureCode, ISystems<?, ?> system, UUID... identityToken);
 }
 ```
 
@@ -516,7 +375,8 @@ installPublisher.request("ZA");  // request/reply
 ### Key Design Decisions
 
 1. **No data at startup** — Only the classification schema + planet + continents are created during `GeographySystemInstall`. All bulk CSV data loading is triggered on demand.
-2. **EntityAssist query builders** — All queries use the fluent builder pattern (`new Geography().builder(session).withName(...).get()`).
+2. **EntityAssist query builders** — All queries use the fluent builder pattern (
+ew Geography().builder(session).withName(...).get()`).
 3. **Direct session for optimization** — `session.find()` for PK lookups and `session.persist()` for inserts are kept for performance.
 4. **Per-country install** — Countries can be installed individually via `installCountry(session, system, "ZA")` which downloads GeoNames files if needed and loads provinces → districts → towns → postal codes.
 5. **Worker threads for events** — All event bus consumers use `worker = true` since data loading involves blocking IO (CSV parsing, HTTP downloads).
@@ -525,60 +385,48 @@ installPublisher.request("ZA");  // request/reply
 
 ## Images Module
 
-### Overview
-Image upload, processing, optimization, and thumbnail generation.
+Image Master (`com.activity-master:image-master`, JPMS
+`com.guicedee.activitymaster.imagemaster`) stores binaries as secured FSDM
+ResourceItems of type `Image`. Its service is `IImageService<?>`; image IDs are
+resource UUIDs. Storage and retrieval accept the caller's stateless session,
+system and tokens. The caller owns transaction boundaries.
 
-### Entity Model
+`storeImage` creates an image resource. `getImage` and `getOptimizedImage` retrieve
+by UUID; `getImageByClassification` and `getOptimizedImageByClassification` locate
+an image by classification/value. Positive dimensions bound image size while
+preserving aspect ratio. `ImageRestService` exposes upload, UUID and classification
+routes below `{enterprise}/image/{requestingSystemName}`. Reads detect the image
+media type, use private browser cache headers and return 404 for missing/unreadable
+bytes.
 
-```java
-@Entity
-@Table(name = "images")
-public class Image extends BaseEntity<Image, Image.ImageQueryBuilder, String> {
-    @Id
-    private String id;
+For geography-linked flags, use `geo-country-flags` and its Geography System scope.
+The [country flags and Image Master contract](geography-country-flags.md) includes
+module setup, exact routes, catalog behavior, security and validation boundaries.
 
-    @Column(name = "filename")
-    private String filename;
+---
 
-    @Column(name = "original_path")
-    private String originalPath;
+## Geography Country Flags Module
 
-    @Column(name = "thumbnail_path")
-    private String thumbnailPath;
+`com.activity-master:geo-country-flags` bundles country PNGs and attaches them to
+Geography country rows using their two-letter names. `CountryFlagCatalog` accepts
+exactly two ASCII letters, normalizes to uppercase and returns defensive byte
+copies. A valid absent code returns null. Bundled bytes may be cached; persisted
+rows and authorization remain ActivityMaster-owned.
 
-    @Column(name = "width")
-    private Integer width;
+`CountryFlagService.ensureFlag` uses Image Master to store an `Image` resource and
+creates a `GeographyXResourceItem` with classification `CountryFlag` and the country
+code as its value. The image receives `CountryFlagCountryCode` for Image Master
+classification lookup. The complete chain uses the caller's stateless transaction.
 
-    @Column(name = "height")
-    private Integer height;
+`CountryFlagsInstall` runs at order 1110 after Geography (1000) and Images (1100),
+creates taxonomy and backfills countries already installed in the enterprise.
+`IGeographyCountryResourceProvider` attaches flags during later `createCountry`
+calls, including country-info imports. No GeoNames or image download is triggered
+by the flag installer. Sequential repeats reuse the existing active link.
 
-    @Column(name = "file_size")
-    private Long fileSize;
-
-    @Column(name = "format")
-    private String format; // JPEG, PNG, WEBP
-
-    @Column(name = "uploaded_at")
-    private LocalDateTime uploadedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "uploaded_by")
-    private Enterprise uploadedBy;
-}
-```
-
-### Service API
-
-```java
-public interface IImagesService {
-    Uni<Image> uploadImage(String filename, InputStream data, String uploaderId);
-    Uni<Image> generateThumbnail(String imageId, int width, int height);
-    Uni<Image> resizeImage(String imageId, int width, int height);
-    Uni<Image> optimizeImage(String imageId);
-    Uni<InputStream> downloadImage(String id, SecurityToken token);
-    Uni<InputStream> downloadThumbnail(String id, SecurityToken token);
-}
-```
+Use the self-contained [country flags interaction contract](geography-country-flags.md)
+for service calls, deployment setup, code normalization, caching and Image Master
+URLs. Existing enterprises must run updates after adding the flags module.
 
 ---
 
@@ -639,59 +487,13 @@ public interface IMailService {
 
 ## Notifications Module
 
-### Overview
-Multi-channel notification system (push, email, SMS, in-app).
+See [Notification Master](conversations-notifications-seo.md#notification-master) for the current FSDM model, scoped grants, delivery channels, and API contract.
 
-### Entity Model
+---
 
-```java
-@Entity
-@Table(name = "notifications")
-public class Notification extends BaseEntity<Notification, Notification.NotificationQueryBuilder, String> {
-    @Id
-    private String id;
+## SEO Module
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "message")
-    private String message;
-
-    @Column(name = "notification_type")
-    @Enumerated(EnumType.STRING)
-    private NotificationType type; // PUSH, EMAIL, SMS, IN_APP
-
-    @Column(name = "priority")
-    @Enumerated(EnumType.STRING)
-    private NotificationPriority priority; // LOW, MEDIUM, HIGH, URGENT
-
-    @Column(name = "is_read")
-    private Boolean isRead;
-
-    @Column(name = "sent_at")
-    private LocalDateTime sentAt;
-
-    @Column(name = "read_at")
-    private LocalDateTime readAt;
-
-    @ManyToOne
-    @JoinColumn(name = "recipient_id")
-    private Enterprise recipient;
-}
-```
-
-### Service API
-
-```java
-public interface INotificationsService {
-    Uni<Notification> sendNotification(String recipientId, String title, String message, NotificationType type);
-    Uni<Notification> markAsRead(String notificationId, SecurityToken token);
-    Uni<Void> markAllAsRead(String userId, SecurityToken token);
-    Uni<List<Notification>> listUnreadNotifications(String userId, SecurityToken token);
-    Uni<List<Notification>> listAllNotifications(String userId, int limit, int offset, SecurityToken token);
-    Uni<Long> getUnreadCount(String userId, SecurityToken token);
-}
-```
+See [SEO Master](conversations-notifications-seo.md#seo-master) for secured per-host SEO files, dynamic FSDM content, publishing, and routes.
 
 ---
 
