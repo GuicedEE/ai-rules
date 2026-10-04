@@ -38,7 +38,7 @@ python -B -X utf8 scripts/tests/test_validate_skills.py
 Check an installed global collection using the same rules:
 
 ```powershell
-python -B -X utf8 scripts/validate-skills.py --root C:/Users/GedMarc/.agents/skills
+python -B -X utf8 scripts/validate-skills.py --root "$env:USERPROFILE/.agents/skills"
 ```
 
 Use `python3` on Linux/macOS. The checker invokes the bundled OpenAI validator, verifies existing
