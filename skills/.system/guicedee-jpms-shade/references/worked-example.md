@@ -45,7 +45,7 @@ com.graphqljava
 - `mvn -N install` of Versioner, StandaloneBOM, guicedee-bom (SNAPSHOTs must be refreshed first).
 - `mvn install` of `java-dataloader` then `graphql-java` shades → BUILD SUCCESS.
 - `jar --describe-module` showed both named modules with the expected `requires`/`exports`.
-- `mvn -o clean compile` of `graphql` → compiled with `[debug release 25 module-path]`, BUILD SUCCESS.
+- Historical `graphql` compilation succeeded with `[debug release 25 module-path]`. For current validation, use `mvn -o compile` and preserve existing build output.
 
 ## Key lesson
 The consumer's `module-info.java` already said `requires com.graphqljava; requires org.dataloader;`.

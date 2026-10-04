@@ -126,6 +126,14 @@ public class VertXStompEventBusBridgeIWebSocket implements IGuicedWebSocket {
 
 Bound by default in `JWebMPVertxBinder`.
 
+## Cluster delivery and private commands
+
+Keep the default JWebMP STOMP bridge's `publish("/toStomp/" + groupName, message)` for intentional broadcasts. Raw GuicedEE WebSocket groups use their existing unprefixed group addresses; these are distinct integrations. Cluster `publish` remains best-effort fan-out, without durable replay or exactly-once effects.
+
+Angular's `OwnerLocalCommandIngress` handles `/toBus/incoming` on the socket-owning node using a local-only request and local consumer. Apply `StompServerHandlerConfigurator` policy first; deliver command replies directly to the requesting connection's registered subscription. Browser GUID/`RequestContextId` provide correlation only; protected subscriptions and commands require verified identity and server-session-bound authorization.
+
+Storage commands are private to the originating connection through GUID-scoped addresses. Preserve public `dataReturns` broadcasts where the application intentionally shares them; do not make the entire STOMP bridge point-to-point to fix one private command path.
+
 ## User-Agent Detection
 
 Call-scoped `ReadableUserAgent`:

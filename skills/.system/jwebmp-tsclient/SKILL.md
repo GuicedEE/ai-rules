@@ -259,6 +259,14 @@ public interface INgRestClient<J extends INgRestClient<J>> extends IComponent<J>
 }
 ```
 
+## Generated EventBusService continuity
+
+The Java-authored `EventBusService` keeps an offline command queue capped at 256 entries and reports overflow explicitly. Reconnection restores listeners before queued commands flush; subscription IDs and registrations must remain idempotent across repeated connection callbacks. Cancel timers and clear state on explicit disconnect/destruction.
+
+A new STOMP connection has a new server session. Clear old protected capability state and acquire fresh authorization before secure subscriptions or commands resume. Session-bound tickets must never enter the ordinary offline queue or be replayed after reconnect. Do not automatically replay domain effects without application idempotency handling. `ContextIdService` GUIDs are correlation, not authenticated identities.
+
+Fix Java generation owners and render TypeScript again. Validate the actual emitted service with resolved TypeScript, RxJS, and StompJS imports; compiling a handwritten lookalike misses annotation/template defects. Exercise reconnect ordering and queue bounds, then use two isolated browser contexts against distinct HTTP/socket nodes to check private storage, subscription restoration, fresh capability issuance and authoritative snapshot recovery after owner loss. Record which runtime and packaged artifacts the fixture used.
+
 ## TypeScript Generation
 
 Plugin automatically generates:
@@ -285,7 +293,7 @@ module com.jwebmp.core.base.angular.client {
 ```xml
 <dependency>
   <groupId>com.jwebmp.plugins</groupId>
-  <artifactId>tsclient</artifactId>
+  <artifactId>typescript-client</artifactId>
 </dependency>
 ```
 

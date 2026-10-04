@@ -80,14 +80,13 @@ Install the updated BOMs first (they are SNAPSHOTs the shade module imports), th
 mvn -B -N install        # in Versioner, then StandaloneBOM, then GuicedEE/bom
 mvn -B install -DskipTests -Dmaven.javadoc.skip=true   # in each new shade module
 jar --describe-module --file target/<artifactId>-<ver>.jar   # confirm requires/exports
-mvn -B -o clean compile  # in the consumer module — must compile on the module path
+mvn -B -o compile  # in the consumer module — must compile on the module path
 ```
 Confirm `jar --describe-module` shows the expected named module with correct `requires`/`exports`,
 and that the consumer compiles with `[debug release N module-path]`.
 
 ## Pitfalls
-- **Build env (Windows)**: the repo `mvnw` wrapper may be broken; a system Maven 4
-  (`C:\Software\maven4`) + `JAVA_HOME=c:\software\jdk\25` works. Chain PowerShell commands with `;`.
+- **Build env (Windows)**: discover available tools with `Get-Command mvn.cmd, java.exe` and verify the repository's JDK requirement. Use separate invocations, quote Maven `-D` arguments, and preserve existing build output. Do not require a version-specific installation path or Maven `clean` for validation.
 - **Relocated deps need explicit `requires` for JDK modules.** When a library internally relocates
   its dependencies (e.g. graphql-java bundles Guava under `graphql.com.google.*` and ANTLR under
   `graphql.org.antlr.*`), those classes still use JDK APIs such as `java.util.logging`. As an
@@ -98,9 +97,16 @@ and that the consumer compiles with `[debug release N module-path]`.
   Compile + `jar --describe-module` will NOT catch this — only running the code does. Always run the
   consumer's integration tests after a shade.
 - **Missing version errors** in the shade module mean the updated StandaloneBOM was not installed yet.
-- **Split packages**: never let the shaded module and a separately-required module both export the
-  same package — exclude the transitive from one side.
+- **Split packages**: inspect all contained packages, including unexported ones. A private bundled copy can still conflict with another named module; exclude it or relocate it into a private namespace.
 - **Don't export relocated internals** — they are implementation detail and break encapsulation.
+
+## Hazelcast wrapper and effective artifact proof
+
+The verified Hazelcast wrapper lives at `GuicedEE/services/JCache/hazelcast`: artifact `com.guicedee.modules.services:hazelcast-all`, module `com.hazelcast.core`. Relocate its private `com.codahale.metrics` copy to `com.hazelcast.shaded.metrics` so it can coexist with the application's metrics module. Export the public `com.hazelcast.cache` API required by JCache integration; keep relocated internals private.
+
+Install the wrapper before rebuilding Hazelcast and its application consumer. Verify dependency resolution, the assembled module path, and a real multi-JVM packaged application run. `jar --describe-module` and compilation alone do not prove runtime exports, service discovery, or absence of split packages.
+
+When preserving `target`, several versioned JARs may coexist. Select the artifact name actually present on the tested module path, then compare its SHA-256 with the framework build output. Choosing the first glob match can report or test an obsolete JAR. Keep generated-source, focused-test, packaged-runtime, and live deployment evidence distinct.
 
 ## References
 - `references/templates.md` — copy-paste `pom.xml` and `module-info.java` templates + BOM snippets.

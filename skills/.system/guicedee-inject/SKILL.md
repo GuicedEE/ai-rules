@@ -58,9 +58,15 @@ provides com.guicedee.client.services.lifecycle.IGuiceModule with my.app.AppModu
 | `IGuicePreStartup` | After scan, before injector — grouped by `sortOrder()` | `List<Future<Boolean>>` |
 | `IGuiceModule` | During injector creation — standard Guice module | — |
 | `IGuicePostStartup` | After injector is ready — async, grouped by `sortOrder()` | `List<Uni<Boolean>>` |
-| `IGuicePreDestroy` | On shutdown — cleanup resources | `void` |
+| `IGuicePreDestroy` | Shutdown and startup rollback — ascending `shutdownSortOrder()`, then class name | `void` |
 
-All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` when a custom execution order is needed. `IGuiceModule` additionally declares `enabled()` (default `true`). `IDefaultService`, startup, shutdown, and configurator hooks do not declare `enabled()`; gate their work inside the hook body.
+All hooks extend `IDefaultService<J>` (CRTP). Startup uses `sortOrder()`; shutdown uses `shutdownSortOrder()` (defaulting to `sortOrder()`) with class-name tie-breaking. `IGuiceModule` additionally declares `enabled()` (default `true`). `IDefaultService`, startup, shutdown, and configurator hooks do not declare `enabled()`; gate their work inside the hook body.
+
+## Startup failure and dependency teardown
+
+Synchronous exceptions, failed asynchronous pre-startup futures, and startup timeouts abort injection and run ordered rollback for partially initialized resources. Do not log a failed cluster join and continue to advertise readiness. `GUICEDEE_STARTUP_TIMEOUT_SECONDS` controls pre-startup waiting (default 60 seconds).
+
+Assign shutdown order independently of startup order when dependency direction reverses. For clustering, await the asynchronous Vert.x close at `MAX_VALUE - 200` before owned Hazelcast shutdown at `MAX_VALUE - 100`. Cleanup must tolerate absent or partly started resources. Test failed joins and occupied event-bus ports as well as normal destruction, checking threads, instances, and readiness state.
 
 ## Logging
 
@@ -101,7 +107,7 @@ Pools auto-shutdown via `IGuicePreDestroy`.
 - Injection packages must `opens` to `com.google.guice`.
 - `IGuiceContext.registerModuleForScanning.add("my.module")` must be called before `instance()`.
 - Scanning is **off by default** and no built-in configurator enables it — call `IGuiceContext.instance().getConfig().setClasspathScanning(true).setAnnotationScanning(true).setMethodInfo(true).setFieldInfo(true)` (or `setServiceLoadWithClassPath(true)`) **before** `inject()`, or annotation discovery finds nothing. Tests that boot directly must do the same in `@BeforeAll`.
-- All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` when a custom execution order is needed. `IGuiceModule` additionally declares `enabled()` (default `true`). `IDefaultService`, startup, shutdown, and configurator hooks do not declare `enabled()`; gate their work inside the hook body.
+- All hooks extend `IDefaultService<J>` (CRTP). Startup uses `sortOrder()`; shutdown uses `shutdownSortOrder()` (defaulting to `sortOrder()`) with class-name tie-breaking. `IGuiceModule` additionally declares `enabled()` (default `true`). `IDefaultService`, startup, shutdown, and configurator hooks do not declare `enabled()`; gate their work inside the hook body.
 - Resolve env vars/system properties **only** via `com.guicedee.client.Environment.getSystemPropertyOrEnvironment(name, default)` — never `System.getenv`/`System.getProperty` and never a hand-rolled `env(...)` helper. It layers system properties → env vars → `.env.local` → `.env` → default and resolves `${VAR:-default}` placeholders.
 
 ## References

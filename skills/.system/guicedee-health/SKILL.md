@@ -96,6 +96,14 @@ IGuiceContext.instance().inject()
  └─ HealthRouterConfigurator (mounts endpoints on Router)
 ```
 
+## Cluster-aware readiness
+
+Gate readiness on `VertXPreStartup.ready()`. An unclustered application must not require Hazelcast peers. A clustered application additionally checks the running owned member and its explicitly configured application quorum; liveness describes process health separately.
+
+Core's continuity implementation is one application example: planned data-member count defaults to three, permits 2–64, and requires `floor(N / 2) + 1` observed members. Two planned nodes therefore require both nodes and do not retain majority availability after one loss. These numbers are Core policy, not defaults to impose on every GuicedEE application. Membership observations include failure-detection delay; describe that limit rather than claiming instantaneous partition exclusion.
+
+Verify before startup, after destruction, failed join, quorum loss, and quorum restoration. Readiness probes must preserve the application's existing persistence authority; Core's database boundary remains SELECT-only without locking reads or grant changes.
+
 ## Non-Negotiable Constraints
 
 - Module must `requires com.guicedee.health;`.

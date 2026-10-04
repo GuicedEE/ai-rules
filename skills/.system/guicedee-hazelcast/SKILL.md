@@ -11,7 +11,7 @@ Annotation-driven Hazelcast integration for GuicedEE using Vert.x 5 Hazelcast Cl
 
 ## Core Concept
 
-Declare server and client configuration with annotations — everything is discovered at startup via ClassGraph, wired through Guice, and automatically configures the Vert.x Hazelcast cluster manager for clustered event-bus and distributed data structures.
+Declare intentional server or client configuration with annotations or configuration SPIs. GuicedEE discovers it through ClassGraph, prepares it before Vert.x starts, and owns its lifecycle. Adding the dependency alone starts neither a cluster member nor a client.
 
 ## Required Flow
 
@@ -21,6 +21,7 @@ Declare server and client configuration with annotations — everything is disco
    @HazelcastServerOptions(
        clusterName = "my-cluster",
        startLocal = true,
+       clustered = true,
        joinType = HazelcastServerOptions.JoinType.NONE
    )
    package com.example.cluster;
@@ -63,7 +64,7 @@ Declare server and client configuration with annotations — everything is disco
 ## Annotations
 
 ### `@HazelcastServerOptions`
-Embedded server configuration: cluster name, instance name, port, port auto-increment, public address, interfaces, join type (MULTICAST/TCP/KUBERNETES/NONE), multicast settings, TCP members, Kubernetes DNS/namespace, lite member, startLocal, heartbeat, CP subsystem. Targets `TYPE` and `PACKAGE`.
+Embedded server configuration: cluster name, instance name, port, port auto-increment, public address, interfaces, join type (MULTICAST/TCP/KUBERNETES/NONE), multicast settings, TCP members, Kubernetes DNS/namespace, lite member, startLocal, clustered, heartbeat, CP subsystem. Targets `TYPE` and `PACKAGE`.
 
 ### `@HazelcastClientOptions`
 Client connection configuration: cluster name, instance name, addresses, connection timeout, heartbeat interval/timeout, invocation timeout, event threads, smart routing, reconnect mode (OFF/ON/ASYNC), backoff settings, labels. Targets `TYPE` and `PACKAGE`.
@@ -72,7 +73,7 @@ Client connection configuration: cluster name, instance name, addresses, connect
 
 | Binding | Key | Description |
 |---|---|---|
-| `HazelcastInstance` | (default) | Client instance singleton (via `HazelcastClientProvider`) |
+| `HazelcastInstance` | (default) | Running lifecycle-owned client, otherwise owned member; injection never creates another instance |
 | `CachingProvider` | (default) | JCache caching provider singleton |
 | `CacheManager` | (default) | JCache cache manager singleton |
 
@@ -81,18 +82,22 @@ Client connection configuration: cluster name, instance name, addresses, connect
 | Class | Method | Description |
 |---|---|---|
 | `HazelcastPreStartup` | `getInstance()` | Embedded server instance (if `startLocal=true`) |
-| `HazelcastPreStartup` | `getConfig()` | Server `Config` object |
+| `HazelcastPreStartup` | `getConfig()` | Prepared server `Config`; preparation itself does not join a cluster |
+| `HazelcastClusterConfigurator` | `member()` | Running owned member, including a member created by the Vert.x cluster manager |
 | `HazelcastClientPreStartup` | `getClientInstance()` | Client instance |
 | `HazelcastClientPreStartup` | `getConfig()` | Client `ClientConfig` object |
 
 ## Vert.x Cluster Integration
 
-When the `com.guicedee.guicedhazelcast` module is on the module path, `HazelcastClusterConfigurator` is automatically discovered via `ServiceLoader<VertxConfigurator>`. It:
-- Uses the existing Hazelcast instance if `startLocal=true`
-- Falls back to creating a `HazelcastClusterManager` from the server config
-- Triggers `VertXPreStartup` to use `buildClustered()` instead of `build()` for the Vert.x instance
+`HazelcastClusterConfigurator` is discovered under `VertxConfigurator`, but its `enabled()` controls whether Vert.x requests a manager:
 
-This enables clustered event-bus, distributed maps, locks, and counters across Vert.x nodes automatically.
+- Explicit `VERTX_CLUSTER_ENABLED=true` or `false` overrides activation; malformed values fail startup.
+- Without that override, a server annotation uses `clustered()` (default `true`). Without an annotation, intentional `startLocal` or a server configuration SPI preserves activation. A dependency with no intentional configuration remains unclustered.
+- `startLocal=true, clustered=false` supports an owned embedded cache member without clustering the Vert.x event bus. Disabling the event-bus cluster does not cancel an explicitly requested cache member.
+- Reuse the prepared `Config` and any already owned member. Do not construct a default `HazelcastClusterManager()` that can select a different configuration or create an extra member.
+- `HAZELCAST_CLIENT_ENABLED` independently gates client startup; absent an override, only intentional client annotations or configuration SPIs start it.
+
+Choose the cluster name, join method, membership bind/advertised address and Vert.x event-bus bind/advertised address explicitly for the deployment. These are separate network endpoints. Unconfigured preparation disables multicast and auto-detection.
 
 ## SPI Extension Points
 
@@ -136,9 +141,15 @@ public void updateUser(String userId, @CacheValue User user) { /* ... */ }
 public void evictUser(String userId) { /* ... */ }
 ```
 
+## Owned JCache and distributed state
+
+All `CachingProvider.getCacheManager` overloads must resolve against the lifecycle-owned instance. Bind the annotation implementation's `DefaultCacheResolverFactory` to that same `CacheManager`; its default static provider lookup can otherwise start another Hazelcast instance. Avoid opportunistic `Caching.getCachingProvider().getCacheManager()` calls.
+
+Keep socket objects, handlers, and node-local queues out of distributed maps. Store only bounded serializable lease metadata. Use a single atomic operation for global capacity checks and ticket redemption; separate get/check/put operations across several maps can oversubscribe or redeem twice. Backup, TTL, topology and partition behavior are application decisions. Hazelcast membership quorum is subject to failure-detection delay and does not establish instantaneous CP partition safety.
+
 ## Environment Variable Overrides
 
-Every annotation attribute can be overridden via system properties or environment variables:
+Most annotation attributes have system-property or environment overrides. Activation is special: use `VERTX_CLUSTER_ENABLED` for the server annotation's `clustered` flag and `HAZELCAST_CLIENT_ENABLED` for the independent client gate:
 
 ### Server: `HAZELCAST_{PROPERTY}`
 - `HAZELCAST_CLUSTER_NAME`, `HAZELCAST_INSTANCE_NAME`
@@ -153,27 +164,21 @@ Every annotation attribute can be overridden via system properties or environmen
 
 ## Startup Flow
 
-```
+```text
 IGuiceContext.instance().inject()
- └─ HazelcastPreStartup (server annotation scanning, sort=MIN+70)
-     ├─ Discovers @HazelcastServerOptions (classes and package-info.java)
-     ├─ Wraps with environment variable resolution (HAZELCAST_*)
-     ├─ Applies SPI hooks (IGuicedHazelcastServerConfig)
-     └─ Starts embedded instance if startLocal=true
- └─ HazelcastClientPreStartup (client annotation scanning, sort=MIN+71)
-     ├─ Discovers @HazelcastClientOptions
-     ├─ Wraps with environment variable resolution (HAZELCAST_CLIENT_*)
-     ├─ Applies SPI hooks (IGuicedHazelcastClientConfig)
-     └─ Connects to remote cluster
- └─ HazelcastClusterConfigurator (VertxConfigurator SPI)
-     └─ Configures Vert.x to use HazelcastClusterManager (triggers buildClustered())
- └─ HazelcastBinderGuice (Guice bindings)
-     ├─ Binds HazelcastInstance singleton
-     ├─ Binds CachingProvider and CacheManager (JCache)
-     └─ Installs CacheAnnotationsModule
- └─ HazelcastPreDestroy (shutdown, sort=MAX-100)
-     ├─ Shuts down client instance
-     └─ Shuts down server instance
+ ├─ MetricsPreStartup                       (MIN_VALUE + 36)
+ ├─ HazelcastPreStartup                     (MIN_VALUE + 37)
+ │   ├─ Discover annotation and prepare Config once; apply server SPIs
+ │   └─ Start an embedded member only when startLocal requests it
+ ├─ VertXPreStartup                         (MIN_VALUE + 38)
+ │   └─ Compose shared options; enabled manager selects clustered build
+ ├─ HazelcastClientPreStartup               (MIN_VALUE + 71)
+ │   └─ Start a client only when intentionally enabled
+ ├─ HazelcastBinderGuice
+ │   └─ Bind owned instance, CachingProvider, CacheManager, annotation resolver
+ └─ Ordered shutdown
+     ├─ Vert.x close awaited                (MAX_VALUE - 200)
+     └─ Owned client and member shutdown    (MAX_VALUE - 100)
 ```
 
 ## Non-Negotiable Constraints
@@ -181,6 +186,6 @@ IGuiceContext.instance().inject()
 - Module must `requires com.guicedee.guicedhazelcast;`.
 - Packages using injection must `opens` to `com.google.guice`.
 - `@HazelcastServerOptions` and `@HazelcastClientOptions` can be placed on `package-info.java` (preferred) or any class.
-- SPI implementations (`IGuicedHazelcastServerConfig`, `IGuicedHazelcastClientConfig`) must be registered in `module-info.java`.
+- SPI implementations (`IGuicedHazelcastServerConfig`, `IGuicedHazelcastClientConfig`) must be dual-registered in `module-info.java` and `META-INF/services/`.
 - Only one `@HazelcastServerOptions` and one `@HazelcastClientOptions` annotation should exist per application.
 

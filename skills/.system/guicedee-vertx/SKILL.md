@@ -9,7 +9,7 @@ Wire Vert.x 5 into the GuicedEE lifecycle with zero manual bootstrap.
 
 ## Core Concept
 
-Vert.x starts automatically via SPI — never create `Vertx` manually:
+Production Vert.x starts through the GuicedEE lifecycle SPI; use the injected instance. Explicit instances are appropriate in isolated runtime fixtures:
 
 ```
 IGuiceContext.instance().inject()
@@ -83,7 +83,7 @@ publisher.publishLocal(order); // local-only broadcast
 
 ## Non-Negotiable Constraints
 
-- Never create `Vertx` manually — use the injected instance from `VertXModule`.
+- In production, use the injected `Vertx` from `VertXModule`; isolated tests must own and close their explicit instances.
 - At most **one** `@VertX` annotation per application.
 - Consumer/publisher packages must `opens` to `com.google.guice` and `com.guicedee.vertx`.
 - DTO packages must `opens` to `tools.jackson.databind`.
@@ -92,6 +92,17 @@ publisher.publishLocal(order); // local-only broadcast
 - Use `worker = true` for any blocking or IO-bound consumer.
 - `package-info.java` is preferred for package-level annotations; classes work too.
 - Do not share packages between main and test source sets.
+
+## Clustering and socket continuity
+
+- An incidental Hazelcast dependency does not activate clustering. Resolve `VERTX_CLUSTER_ENABLED`, intentional server configuration, and `ClusterVertxConfigurator.enabled()` before calling `buildClustered()`. Disabled mode must start an ordinary Vert.x instance without creating a member or client.
+- `VertxConfigurator.options(VertxOptions)` customizes the one shared options object. Apply all options hooks before attaching that object to the builder once; then compose `builder(VertxBuilder)` hooks. Preserve metrics, event-bus bind/advertised endpoints, and pool sizes together.
+- Startup ordering is metrics `MIN_VALUE + 36`, prepared Hazelcast server configuration `+37`, then Vert.x `+38`. Startup failure must propagate to GuicedEE and roll back partially owned resources.
+- Shutdown uses `IGuicePreDestroy.shutdownSortOrder()`: await Vert.x close at `MAX_VALUE - 200` before owned Hazelcast resources at `MAX_VALUE - 100`. Do not call global Hazelcast shutdown APIs that affect unrelated instances.
+- Commands from a socket execute on its owning node through a local consumer/request. Keep cluster `publish` for intended public broadcasts; changing a shared broadcast bridge to `send` breaks fan-out.
+- Raw and STOMP sockets use `WebSocketBackpressure.close` for a two-second physical transport deadline when a peer stops reading. Preserve request capture before route wrappers; a WebSocket close-handshake timeout alone can wait indefinitely for a blocked close-frame flush.
+
+Read [Clustering and WebSocket continuity](references/clustering-continuity.md) when implementing activation, private delivery, capability leases, readiness, reconnects, or multi-JVM acceptance. It distinguishes framework behavior from Core-specific policy and records the tested artifact workflow.
 
 ## References
 

@@ -91,9 +91,19 @@ IGuiceContext.instance().inject()
          └─ server.listen()
 ```
 
+## WebSocket upgrade and slow-peer shutdown
+
+Preserve `WebSocketBackpressure.capture(request)` at the server's request-handler handoff to the configured router. Capture happens before Vert.x Web applies forwarded-header wrappers; routing a plain request can lose the underlying transport needed for bounded shutdown.
+
+`WebSocketBackpressure.close` supports raw `ServerWebSocket` and captured route upgrades. With Vert.x 5.2, the normal close timeout starts after the close frame flushes. A peer that stops reading can block that flush, so the helper separately schedules Netty transport closure after two seconds. Transport closure must trigger idempotent connection and subscription cleanup.
+
+The integration uses exported Vert.x `io.vertx.core.internal.http` interfaces and direct `io.netty.transport`/`io.netty.common` module dependencies. It requires neither reflective wrapper inspection nor JVM `--add-exports` flags. Captured transport lookup uses header-object identity, avoiding collisions from reused WebSocket keys, and is removed when the channel closes. Recheck these version-specific interfaces when upgrading Vert.x.
+
+Exercise both the direct server handler and public router upgrade with a real peer that stops reading. A successful close-handshake unit test does not prove this deadline.
+
 ## Non-Negotiable Constraints
 
-- Never create `HttpServer` manually — use the auto-started server from `VertxWebServerPostStartup`.
+- Production uses the lifecycle-owned server from `VertxWebServerPostStartup`; isolated tests may explicitly create and close their own servers.
 - Module must `requires com.guicedee.vertx.web;`.
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - `VertxRouterConfigurator` implementations control ordering via `sortOrder()`.

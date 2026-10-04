@@ -17,12 +17,14 @@ com.guicedee.vertx
  └── lombok                           (static, compile-only)
 ```
 
-The module `exports` two packages:
+Relevant exported packages include:
 
 - `com.guicedee.vertx` — annotations (`@VertxEventDefinition`, `@VertxEventOptions`), `VertxEventPublisher`, `VertXModule`
 - `com.guicedee.vertx.spi` — SPI interfaces, annotations, registry, codec, verticle builder
 
 Both packages are `opens` to `com.google.guice` for injection.
+
+The socket backpressure integration also declares direct (not transitive) `requires io.netty.transport;` and `requires io.netty.common;`. Verify those modules on the effective runtime module path.
 
 ## SPI Registrations (provided by this module)
 
@@ -39,5 +41,5 @@ Both packages are `opens` to `com.google.guice` for injection.
 
 | SPI | Purpose |
 |---|---|
-| `VertxConfigurator` | Customize `VertxBuilder` at startup |
+| `VertxConfigurator` | Compose shared `VertxOptions` first, then `VertxBuilder` hooks |
 | `VerticleStartup` | Register custom verticle bootstrap logic |

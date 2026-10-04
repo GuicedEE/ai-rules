@@ -93,6 +93,40 @@ TypeScriptCompiler
 public class MyApp extends NGApplication<MyApp> { }
 ```
 
+#### Production vs. development build overrides
+
+`@NgApp` carries **two separate** `NgBuildConfiguration` blocks — `production()`
+and `development()` — mapped straight to angular.json's
+`build.configurations.production` / `.development`. **Only the block matching
+the actual `ng build` invocation is applied.** If your build tooling (e.g. a
+`ShellApplication`/CLI wrapper) runs `ng build --configuration=production`,
+overrides placed under `development()` are silently ignored — angular.json's
+`defaultConfiguration` is commonly `"development"`, so an unqualified
+`ng build` with no `--configuration` flag uses `development()` instead, and
+`outputHashing`/`optimization` under `production()` never take effect either.
+Always confirm which configuration your build actually runs before placing
+overrides, and mirror the same block used for cache-busted (`outputHashing`)
+production deploys.
+
+```java
+@NgApp(value = "my-app", bootComponent = AppComponent.class,
+    // Applies only when the build runs `ng build --configuration=production`.
+    production = @NgBuildConfiguration(
+        outputHashing = NgBuildConfiguration.OutputHashing.ALL,
+        budgets = {
+            @NgBudget(type = NgBudget.Type.INITIAL, maximumError = "1m"),
+            // Raise anyComponentStyle when a component's compiled SCSS legitimately
+            // exceeds the CLI default (bundles fonts/icons/large layout rules, etc.).
+            @NgBudget(type = NgBudget.Type.ANY_COMPONENT_STYLE,
+                maximumWarning = "8kb", maximumError = "24kb")}))
+public class MyApp extends NGApplication<MyApp> { }
+```
+
+`NgBudget.Type` mirrors Angular CLI budget types: `ALL`, `ALL_SCRIPT`, `ANY`,
+`ANY_SCRIPT`, `ANY_COMPONENT_STYLE`, `BUNDLE` (requires `name()`), `INITIAL`.
+A "exceeded maximum budget" build error names the offending bundle/component —
+raise the matching budget type rather than suppressing optimization.
+
 ### @NgComponent
 
 ```java
@@ -151,41 +185,11 @@ caching, deduplication, deep-merge, retry, and `NONE/BEARER/BASIC/CUSTOM` auth.
 
 ## STOMP/WebSocket Communication
 
-### WebSocket Bridge Flow
+`/toBus/incoming` uses `OwnerLocalCommandIngress` and a local-only request to the socket owner. Replies and GUID-scoped storage responses go directly to that connection's registered subscriptions; ordinary `/toStomp/<group>` publishes retain cluster fan-out. GUIDs are correlation, not identity.
 
-```
-Angular Client (STOMP)
- └─ ws://host/eventbus
-     ├─ SEND /toBus/incoming    → Event bus consumer
-     │   ├─ Deserialize WebSocketMessageReceiver
-     │   ├─ Dispatch to IWebSocketMessageReceiver (ajax/data/dataSend)
-     │   ├─ Run in CallScope (WebSocket)
-     │   └─ Reply via event bus:
-     │       ├─ dataReturns → publish to per-key addresses
-     │       ├─ sessionStorage → publish to "SessionStorage"
-     │       └─ localStorage → publish to "LocalStorage"
-     └─ SUBSCRIBE /toStomp/*   ← Server pushes via StompEventBusPublisher
-```
+Compose `StompServerHandlerConfigurator` policies before protected ingress. Preserve bounded write queues, the two-second physical socket-close deadline, and idempotent end/close cleanup. Regenerate the Java-authored client, restore listeners before queued commands, and acquire fresh capabilities after reconnect.
 
-### Built-in Message Receivers
-
-| Receiver | Action | Purpose |
-|---|---|---|
-| `WebSocketAjaxCallReceiver` | `ajax` | Deserializes AjaxCall, fires event, returns AjaxResponse |
-| `WebSocketDataRequestCallReceiver` | `data` | Resolves INgDataService, calls getData() |
-| `WebSocketDataSendCallReceiver` | `dataSend` | Resolves INgDataService, calls receiveData() |
-| `WSAddToGroupMessageReceiver` | `AddToWebSocketGroup` | Adds session to WebSocket group |
-| `WSRemoveFromWebsocketGroupMessageReceiver` | `RemoveFromWebSocketGroup` | Removes session from group |
-
-### STOMP Configuration
-
-| Setting | Value | Notes |
-|---|---|---|
-| WebSocket path | `/eventbus` | STOMP over WebSocket endpoint |
-| Server heartbeat | `10000` ms | Server → client |
-| Client heartbeat | `50000` ms | Client → server (lenient for background tabs) |
-| Sub-protocols | `v10.stomp`, `v11.stomp`, `v12.stomp` | Advertised on HTTP upgrade |
-| Idle timeout | `0` (disabled) | Relies on STOMP heartbeats |
+Read [Angular STOMP continuity](references/stomp-continuity.md) for the wire diagram, policy SPI contract, receivers, exact limits, storage headers, reconnect requirements, and broadcast example.
 
 ## Angular Control-Flow Components
 
@@ -276,6 +280,29 @@ RouterModule.forRoot([
 ])
 ```
 
+### Lazy-loaded routes (code splitting)
+
+Set `lazy = true` to emit `loadComponent` instead of a static import, so the Angular
+builder splits the page (and dependencies only it uses) into its own `chunk-*.js`:
+
+```java
+@NgRoutable(path = "profile", sortOrder = 10, lazy = true)
+@NgComponent("app-profile")
+public class ProfilePage extends DivSimple<ProfilePage> implements INgComponent<ProfilePage> { }
+```
+
+Generates:
+```typescript
+{ loadComponent: () => import('../../…/ProfilePage/ProfilePage').then(m => m.ProfilePage), path: 'profile' }
+```
+
+- Keep the default/first-paint route (usually `path = ""`) eager.
+- A chunk is only split out if no other generated file imports the page statically
+  (link with `routerLink`/`AngularRoutingModule.applyRoute`, which uses only the path).
+- Servers that allow-list assets must serve `chunk-*.js`, and a nonce-based CSP needs
+  `'strict-dynamic'` so the nonce-trusted bundles can import chunks.
+- Check the build's "Lazy chunk files" table to confirm each page got its own chunk.
+
 ### RouterLink Component
 
 ```java
@@ -318,7 +345,7 @@ export const environment = {
 
 | Route | Method | Handler | Purpose |
 |---|---|---|---|
-| `/eventbus/*` | WebSocket | STOMP server | WebSocket → STOMP bridge |
+| `/eventbus` and `/eventbus/*` | WebSocket | STOMP server | Bare endpoint and route upgrade; retain server path validation |
 | `/assets/*` | GET | StaticHandler | Angular compiled assets (1-year cache) |
 | `/{file}.{ext}` | GET | StaticHandler | Root-level static files |
 | `/**` (SPA fallback) | GET | `sendFile(index.html)` | Angular Router routes |
@@ -365,28 +392,7 @@ The plugin manages Angular dependencies:
 
 ### Data Service with WebSocket
 
-```java
-@NgDataService
-public class LiveDataService implements INgDataService<LiveDataService> {
-    @Inject
-    private DataRepository repository;
-
-    @Override
-    public Object getData(AjaxCall<?> call, AjaxResponse<?> response) {
-        String entityId = call.getParameters().get("id");
-        return repository.findById(entityId);
-    }
-
-    @Override
-    public void receiveData(AjaxCall<?> call, AjaxResponse<?> response) {
-        String data = call.getParameters().get("data");
-        repository.save(data);
-
-        // Push update to all clients in group
-        StompEventBusPublisher.publish("/toStomp/updates", data);
-    }
-}
-```
+See the [data service broadcast example](references/stomp-continuity.md#data-service-with-websocket), including the publisher's Vert.x argument and unprefixed group name.
 
 ### Event Handling
 
@@ -478,3 +484,17 @@ ng build
 ```
 
 Dist output served automatically by Vert.x.
+
+**Production builds need an explicit configuration flag.** A bare `ng build`
+resolves to angular.json's `defaultConfiguration` (commonly `"development"`),
+which skips `outputHashing`/minification/optimization even if you configured
+them under `@NgApp(production = ...)`. For hashed, cache-busted, optimized
+output, run:
+
+```bash
+ng build --configuration=production
+```
+
+Any Java-side production-only checks (e.g. an existence check for a
+`/main.js` bundle) must also tolerate hashed filenames like
+`main-XYZ123.js` once hashing is enabled.

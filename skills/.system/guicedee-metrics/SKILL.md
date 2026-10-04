@@ -84,11 +84,17 @@ Every `@MetricsOptions` attribute can be overridden via system properties or env
 
 ```
 IGuiceContext.instance().inject()
- └─ MetricsPreStartup (scans for @MetricsOptions)
- └─ MetricsVertxConfigurator (configures DropwizardMetricsOptions on VertxBuilder)
+ └─ MetricsPreStartup (MIN_VALUE + 36; scans for @MetricsOptions)
+ └─ MetricsVertxConfigurator.options (sets DropwizardMetricsOptions on shared VertxOptions)
  └─ MetricsModule (binds MetricRegistry, interceptors, reporters)
  └─ PrometheusMetricsConfigurator (registers GET /metrics handler)
 ```
+
+## Compose metrics with clustering
+
+Customize metrics through `VertxConfigurator.options(VertxOptions)` on the shared options object; keep the builder hook composable. Calling `builder.with(new VertxOptions())` from a metrics configurator replaces previously prepared event-bus and pool configuration.
+
+Prepare metrics before Hazelcast (`MIN_VALUE + 37`) and Vert.x (`+38`). A composition test should inspect the built runtime and verify metrics enabled together with the chosen event-bus bind/advertised ports and event-loop/worker pool sizes. A metrics-only test cannot detect a configuration replacement that breaks clustering.
 
 ## Non-Negotiable Constraints
 

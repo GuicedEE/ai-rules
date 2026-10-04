@@ -65,7 +65,7 @@ public class WarmupCache implements IGuicePostStartup<WarmupCache> {
 
 ### `IGuicePreDestroy`
 
-Cleanup on JVM shutdown. Executed in `sortOrder()` order.
+Cleanup runs on JVM shutdown and failed-startup rollback. Hooks execute in ascending `shutdownSortOrder()` order with class-name tie-breaking. Its default delegates to `sortOrder()`; override it explicitly when shutdown dependency order differs from startup. Await asynchronous resource closure before the next dependency is destroyed.
 
 ```java
 public class ConnectionPoolShutdown implements IGuicePreDestroy<ConnectionPoolShutdown> {
@@ -75,7 +75,7 @@ public class ConnectionPoolShutdown implements IGuicePreDestroy<ConnectionPoolSh
     }
 
     @Override
-    public Integer sortOrder() { return Integer.MIN_VALUE + 10; }
+    public Integer shutdownSortOrder() { return Integer.MAX_VALUE - 200; }
 }
 ```
 

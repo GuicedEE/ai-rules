@@ -85,10 +85,16 @@ All values overridable via `VERTX_EVENT_LOOP_POOL_SIZE`, `VERTX_WORKER_POOL_SIZE
 
 ## SPI Extension Points
 
-### `VertxConfigurator` — customize `VertxBuilder`
+### `VertxConfigurator` — compose options and builder
 
 ```java
 public class MyVertxConfig implements VertxConfigurator {
+    @Override
+    public VertxOptions options(VertxOptions options) {
+        // Mutate the shared options without replacing metrics or event-bus settings.
+        return options;
+    }
+
     @Override
     public VertxBuilder builder(VertxBuilder builder) {
         return builder;
@@ -104,18 +110,21 @@ And in `META-INF/services/com.guicedee.vertx.spi.VertxConfigurator`.
 
 ### `ClusterVertxConfigurator` — add a cluster manager
 
-Extends `VertxConfigurator`. Implement `getClusterManager()`:
+Extends `VertxConfigurator`. Implement `getClusterManager()` and an explicit activation gate. The default `enabled()` is `true` for compatibility with intentional custom cluster managers; GuicedEE's Hazelcast integration resolves its own configuration gate. Reuse prepared configuration or an owned member:
 
 ```java
 public class HazelcastConfig implements ClusterVertxConfigurator {
     @Override
+    public boolean enabled() { return HazelcastPreStartup.clusterEnabled(); }
+
+    @Override
     public ClusterManager getClusterManager() {
-        return new HazelcastClusterManager();
+        return new HazelcastClusterManager(HazelcastPreStartup.prepare());
     }
 }
 ```
 
-Register under `com.guicedee.vertx.spi.VertxConfigurator`.
+Register under `com.guicedee.vertx.spi.VertxConfigurator` in JPMS and `META-INF/services`. Applications already using `com.guicedee.guicedhazelcast` should use its built-in configurator instead of registering a second Hazelcast manager. Apply every options hook first, attach shared options once, then compose builder hooks. See [continuity reference](clustering-continuity.md) for lifecycle and acceptance checks.
 
 ### `VerticleStartup` — custom verticle bootstrap
 

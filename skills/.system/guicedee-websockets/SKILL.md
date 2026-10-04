@@ -88,12 +88,22 @@ ws.broadcastMessageSync("chat:lobby", "Immediate message");
 Client connects (ws://...)
  → CallScoper enters @CallScope
  → Connection added to "Everyone" group
- → Per-connection EventBus consumer registered
+ → Socket joins local membership; one EventBus consumer serves each group
  → textMessageHandler installed
    → JSON deserialized to WebSocketMessageReceiver
    → Action lookup → IWebSocketMessageReceiver.receiveMessage()
  → closeHandler removes from all groups
 ```
+
+## Cluster groups and bounded cleanup
+
+Group broadcast publishes to the existing group event-bus address so other nodes receive it. Keep one consumer per group and idempotent socket membership; a fallback that loops only over the current JVM's sockets loses cluster fan-out. The current registry caps groups per node and recipients per group at 4096, and group names at 256 characters.
+
+Close and group removal clear membership, unregister empty-group consumers, and remove call-scope/socket context properties. Some Vert.x server sockets have no `textHandlerID`; use a server-generated UUID and explicit socket/context mapping rather than a null map key. Cleanup must be idempotent across normal close, exceptions, and overload.
+
+The current raw-socket path sets a 64 KiB write queue and rejects outgoing payloads above 1 MiB measured in UTF-8 bytes. A full queue closes with status 1013 using `WebSocketBackpressure.close`, including the two-second transport deadline. Route-upgraded sockets need capture at the HTTP request handoff. Prove physical closure and empty registries with an actual TCP peer that stops reading; a mocked `writeQueueFull()` result proves only branch handling.
+
+`RequestContextId`, browser GUID, and client session fields are correlation data. Authenticate and authorize each protected action from verified server context. Use explicit Vert.x/server constructors only in isolated fixtures with deterministic teardown; production uses injected lifecycle resources.
 
 ## Non-Negotiable Constraints
 
