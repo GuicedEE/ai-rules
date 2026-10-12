@@ -1,0 +1,4 @@
+interface:
+  display_name: "JWebMP Java Generator"
+  short_description: "Export component JSON and object trees as Java"
+  default_prompt: "Use $jwebmp-java-generator to export JWebMP component JSON or objects as Java source, configure class contributions, and save generated files for inspection."
