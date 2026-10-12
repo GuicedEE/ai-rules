@@ -7,7 +7,7 @@ metadata:
 
 # GuicedEE Persistence
 
-Reactive JPA persistence using Hibernate Reactive 7 and Vert.x 5 SQL clients, fully managed by the GuicedEE lifecycle.
+Reactive JPA persistence using Hibernate Reactive 4.x, Hibernate ORM 7.x, and Vert.x 5 SQL clients, managed by the GuicedEE lifecycle. Resolve exact versions from `Versioner` and `HibernateBOM`; ORM and Reactive use different release numbers.
 
 ## Core Concept
 
@@ -51,8 +51,13 @@ Extend `DatabaseModule`, point it at a `persistence.xml` unit, and the module wi
        requires com.guicedee.persistence;
        provides com.guicedee.client.services.lifecycle.IGuiceModule
            with my.app.MyDatabaseModule;
+       provides com.guicedee.client.services.lifecycle.IGuicePostStartup
+           with my.app.MyDatabaseModule;
+       provides com.guicedee.client.services.lifecycle.IGuicePreDestroy
+           with my.app.MyDatabaseModule;
    }
    ```
+   Add the same provider to each corresponding `META-INF/services/<SPI>` file for classpath launches. Do not self-register by calling service-loader accessors from the constructor; that can recursively instantiate the provider.
 5. Inject `Mutiny.SessionFactory` and use reactive sessions:
    ```java
    @Inject
@@ -122,7 +127,13 @@ Built-in `ConnectionBaseInfo` implementations:
 
 `${VAR_NAME}` placeholders in `persistence.xml` properties are resolved from system properties or environment variables. Default values supported with `${VAR_NAME:default}` syntax.
 
-## Non-Negotiable Constraints
+## Session, pool, and shutdown ownership
+
+`VertxPersistenceModule.getSqlClientByEntityManager(name)` resolves the named persistence unit's pool; an unknown unit does not authorize falling back to a different database. Session and transaction ownership remains with the caller's composed reactive operation. ActivityMaster consumers additionally use its stateless/FSDM contracts rather than assuming this generic stateful example applies to them.
+
+`DatabaseModule.shutdownSortOrder()` closes persistence resources before Vert.x (`MAX_VALUE - 1000`). The module implements startup and destroy hooks as well as `IGuiceModule`: register the hooks used by the application, in both service mechanisms. Validate partial startup and repeated cleanup against `PersistenceLifecycleTest`; do not equate compilation with a database transaction or schema-migration test.
+
+## Module requirements
 
 - Always use `ReactivePersistenceProvider` — standard JPA providers are not supported.
 - `persistence.xml` must exist in `META-INF/`.

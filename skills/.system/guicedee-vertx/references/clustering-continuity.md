@@ -18,7 +18,7 @@ This reference records behavior verified in DevSuite and NE1 Core on 2026-10-04 
 | Generated browser reconnect ordering | Java-authored `EventBusService` and `ContextIdService` |
 | Identity, tickets, snapshots, and persistence access | Application policy/backend, not framework GUID metadata |
 
-Use the existing lifecycle and bridge extension points. A second Vert.x instance, cluster manager, STOMP server, or generated client bypasses the actual owning path and can hide failures.
+Use the existing lifecycle and bridge extension points for application traffic. Do not add a second cluster manager, STOMP server, or generated client to work around that path. The web module's `ManagedHttpListenerGroup` deliberately owns a separate unclustered runtime for isolated management listeners; this does not replace the shared application event bus.
 
 ## Activation and resource ownership
 

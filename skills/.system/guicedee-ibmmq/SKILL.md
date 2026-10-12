@@ -18,7 +18,7 @@ Declare connections, queues/topics, consumers, and publishers with annotations â
 1. Add `com.guicedee:ibmmq` dependency.
 2. Define a connection on `package-info.java` (preferred) or any class:
    ```java
-   @com.guicedee.vertx.Verticle
+   @com.guicedee.vertx.spi.Verticle
    @IBMMQConnectionOptions(
        value = "my-connection",
        host = "localhost",

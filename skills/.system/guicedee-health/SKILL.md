@@ -98,6 +98,8 @@ IGuiceContext.instance().inject()
 
 ## Cluster-aware readiness
 
+For a separate management port, use `ManagedHttpListenerProvider` from `guicedee-web`. Its router is isolated and does not inherit global configurators; explicitly mount the intended health handlers. Registry health probes can target that listener through `@RegisteredService.healthUrl`. `HEALTH_DOWNSTREAM_ENABLED` controls downstream registry readiness, but an empty registry does not demonstrate that required peers are available.
+
 Gate readiness on `VertXPreStartup.ready()`. An unclustered application must not require Hazelcast peers. A clustered application additionally checks the running owned member and its explicitly configured application quorum; liveness describes process health separately.
 
 Core's continuity implementation is one application example: planned data-member count defaults to three, permits 2–64, and requires `floor(N / 2) + 1` observed members. Two planned nodes therefore require both nodes and do not retain majority availability after one loss. These numbers are Core policy, not defaults to impose on every GuicedEE application. Membership observations include failure-detection delay; describe that limit rather than claiming instantaneous partition exclusion.

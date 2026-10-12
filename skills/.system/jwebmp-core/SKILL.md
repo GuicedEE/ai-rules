@@ -11,6 +11,10 @@ Comprehensive guide for working with JWebMP Core — the strongly-typed HTML/CSS
 
 ## Core Concepts
 
+### Java source export
+
+For component JSON/object trees → Java files, use [JWebMP Java Generator](../jwebmp-java-generator/SKILL.md). Its reflection mappings preserve concrete component types, children, state and named behaviors; explicit annotations/configuration supply Java fields, methods and bodies. Keep the core marker interfaces/generic hierarchy intact. Export returns source in memory; call JavaExportFiles.write() to retain files. JavaGeneratorTest normally deletes its JUnit temporary output after each test.
+
 ### Dual Rendering Modes
 
 Every JWebMP component serves dual purposes:

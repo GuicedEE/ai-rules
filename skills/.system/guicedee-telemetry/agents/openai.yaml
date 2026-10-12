@@ -1,5 +1,5 @@
-tcinterface:
+interface:
   display_name: "GuicedEE Telemetry"
   short_description: "OpenTelemetry distributed tracing inside GuicedEE"
-  default_prompt: "Use $guicedee-telemetry to add GuicedTelemetry boundary spans, W3C context propagation, @Trace/@SpanAttribute AOP tracing, Uni lifecycle handling, and OTLP export in my GuicedEE module."
+  default_prompt: "Use $guicedee-telemetry to add GuicedTelemetry boundary spans, W3C propagation, @Trace/@SpanAttribute tracing, Uni/Future lifecycle handling, and OTLP export while preserving existing span ownership."
 

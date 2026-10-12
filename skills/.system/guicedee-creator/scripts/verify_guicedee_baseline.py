@@ -193,7 +193,7 @@ def discover_lifecycle_spi_implementations(source_root: Path) -> dict[str, dict[
     return found
 
 
-def has_sort_order_override(content: str) -> bool:
+def has_invalid_primitive_sort_order(content: str) -> bool:
     return bool(
         re.search(
             r"\b(?:@Override\s+)?(?:public\s+)?int\s+sortOrder\s*\(",
@@ -266,15 +266,15 @@ def check_lifecycle_spi_registrations(project_root: Path, main_module_info: Path
                     f"{impl} implements {spi} but is not listed in META-INF/services/{spi}."
                 )
 
-            if not has_sort_order_override(impl_content):
+            if has_invalid_primitive_sort_order(impl_content):
                 errors.append(
-                    f"{impl} implements {spi} but does not override sortOrder() from IDefaultService."
+                    f"{impl} declares int sortOrder(); IDefaultService requires Integer sortOrder()."
                 )
 
     if errors:
         return False, " | ".join(errors)
 
-    return True, "Lifecycle SPI implementations are registered and override sortOrder()."
+    return True, "Lifecycle SPI implementations are dual-registered; inherited sortOrder() defaults are allowed."
 
 
 def check_bootstrap_main(project_root: Path, expected_module_name: str | None) -> tuple[bool, str]:
@@ -309,10 +309,12 @@ def check_bootstrap_main(project_root: Path, expected_module_name: str | None) -
                 f'registered module "{module_match.group(1)}" does not match "{expected_module_name}"'
             )
 
-        if not re.search(
+        direct_inject = re.search(
             r"IGuiceContext\s*\.\s*instance\s*\(\s*\)\s*\.\s*inject\s*\(\s*\)\s*;", content
-        ):
-            issues.append("missing IGuiceContext.instance().inject()")
+        )
+        process_entry = re.search(r"\bGuiceApplication\s*\.\s*run\s*\(", content)
+        if not direct_inject and not process_entry:
+            issues.append("missing IGuiceContext.instance().inject() or GuiceApplication.run(...)")
 
         if not issues:
             rel = java_file.relative_to(project_root)

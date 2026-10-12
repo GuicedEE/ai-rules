@@ -24,7 +24,7 @@ module, use **`guicedee-installer`**.
 │   ├── pom.xml                  parent = platform; deps are version-less
 │   └── src/main/java/
 │       ├── module-info.java     requires the GuicedEE feature modules
-│       ├── <App>.java           main() → IGuiceContext.instance().inject()
+│       ├── <App>.java           main() → GuiceApplication.run(...)
 │       ├── <PlatformConfig>.java @TelemetryOptions + @MetricsOptions
 │   │   ├── rest/                @Path resources (@Trace/@Counted/@Timed)
 │   │   └── health/              @Readiness / @Liveness HealthCheck beans
@@ -48,9 +48,7 @@ module, use **`guicedee-installer`**.
    runs `maven-enforcer-plugin` requiring **Maven `[4.0.0-rc-5,)`** and **Java `[25,)`**.
    It declares **no versions on dependencies** — only the BOM import.
 2. **BOM** (`bom/pom.xml`, packaging `pom`): the *only* place upstream versions
-   live. It imports `com.guicedee:guicedee-bom`, `com.jwebmp:jwebmp-bom`,
-   `com.activity-master:activity-master-bom`, and `com.guicedee:tests-bom` (scope
-   `import`, type `pom`). Consuming modules never declare versions directly.
+   live. Import `com.guicedee:guicedee-bom` and the testing BOM; add JWebMP or ActivityMaster BOMs only when those frameworks are used (scope `import`, type `pom`). Importing a BOM imports dependency management, not its properties, plugins, or ordinary dependencies.
 3. **Service module** (`<svc>/pom.xml`, packaging `jar`): `<parent>` is the
    platform POM; dependencies are **version-less** (resolved by the BOM). Each
    GuicedEE feature is one `com.guicedee:<artifact>` dependency.
@@ -67,13 +65,12 @@ and Java templates.
    props, enforcer (Maven 4 + Java 25). Add the Maven 4 wrapper (`mvnw`/`mvnw.cmd`).
 3. **BOM submodule** — packaging `pom`, import the upstream BOMs and keep a single
    `<properties>` block of upstream versions (`guicedee.version`, `jwebmp.version`,
-   `activitymaster.version`). Add shared `<dependencies>` (e.g. lombok `provided`,
-   `junit-jupiter` test) here so every module inherits them.
+   `activitymaster.version` when applicable). Put actual shared dependency declarations in the parent or service POM; importing the BOM does not add them to consumers.
 4. **Service module(s)** — use **`guicedee-creator`** to scaffold each module
    (`pom.xml` + main/test `module-info.java` + bootstrap `main()`), then add the
    feature dependencies (version-less). Merge features by *requiring* their JPMS
-   modules — adding the dependency + `requires` is all that's needed; each module
-   self-registers its lifecycle hooks. See the merge matrix below.
+   modules. Feature modules register their lifecycle hooks; configure their
+   annotations, providers, and activation gates as required. See the matrix below.
 5. **Platform config class** — one scanned class carrying `@TelemetryOptions` and
    `@MetricsOptions` (see `guicedee-telemetry`, `guicedee-metrics`). Point
    `otlpEndpoint` at the collector (base URL `http://localhost:4318`).
@@ -86,39 +83,26 @@ and Java templates.
 ## Feature Merge Matrix
 
 Add the dependency **and** the `requires` to fuse a capability into a service.
-All are activated purely by being on the module path — no wiring code.
+Lifecycle discovery is automatic; configuration and activation gates still apply.
+An incidental Hazelcast dependency must not enable clustering.
 
 | Capability | Maven artifact (`com.guicedee:`) | `requires` module | Skill |
 |---|---|---|---|
 | Named service registry | `service-registry` | `com.guicedee.service.registry` | `guicedee-service-registry` |
-| Automatic discovery (K8s/SRV resolver) | `service-discovery` | `com.guicedee.vertx.servicediscovery` | `guicedee-service-registry` |
+| Configured discovery (K8s/SRV resolver) | `service-discovery` | `com.guicedee.vertx.servicediscovery` | `guicedee-service-registry` |
 | Self-registration + cloud autoconfig | `runtime-autoconfigure` | `com.guicedee.runtime.autoconfigure` | `guicedee-service-registry` |
 | Jakarta REST on Vert.x | `rest` | `com.guicedee.rest` | `guicedee-rest` |
 | Health probes | `health` | `com.guicedee.health` | `guicedee-health` |
-| OpenAPI + Swagger | `openapi` | `com.guicedee.modules.services.openapi` ⚠ shaded name | `guicedee-openapi` |
+| OpenAPI + Swagger | `openapi` | `com.guicedee.openapi` | `guicedee-openapi` |
 | Tracing/logs (OTel) | `guiced-telemetry` | `com.guicedee.telemetry` | `guicedee-telemetry` |
 | Metrics + Prometheus | `metrics` | `com.guicedee.metrics` (+ `com.codahale.metrics` for `@Counted`/`@Timed`) | `guicedee-metrics` |
-| Reactive web server | transitive via the above | `com.guicedee.vertx` | `guicedee-web` |
+| Reactive web server | `web` | `com.guicedee.vertx.web` | `guicedee-web` |
 
-> Many feature modules pull the Vert.x web server transitively (e.g. `health`).
-> Booting the Guice context starts the HTTP server and mounts every merged
-> feature's routes (`/registry/*`, `/health/*`, `/openapi.json`, `/metrics`).
+Feature routes become ready after asynchronous startup completes. The registry module itself does not supply an HTTP `/registry/*` API; applications implement that route when needed. Health, OpenAPI and metrics routes come from their respective modules and configuration.
 
-> **Service-to-service discovery is automatic — don't hand-list peers.** With
-> `service-registry` + `runtime-autoconfigure` + `service-discovery`, each service
-> self-registers and peers resolve by name (Vert.x K8s/SRV resolver + DNS-suffix
-> construction). Reserve `@RegisteredService` for genuinely external endpoints, and
-> never build a custom `IServiceRegistryProvider` just to enumerate your own
-> services. See `guicedee-service-registry` → *Automatic Discovery*.
+Self-registration is JVM-local. A DNS suffix constructs URLs for known names; configured resolver/provider integration discovers peers. Declare known peers or use an authoritative catalogue as described in `guicedee-service-registry`.
 
-> ⚠ **Shaded module names.** A few GuicedEE features ship as *shaded JPMS
-> service modules* whose module name differs from the obvious one. `openapi`'s
-> real module is **`com.guicedee.modules.services.openapi`**, **not**
-> `com.guicedee.openapi` — `requires com.guicedee.openapi` compiles against the
-> wrong (transitive) module and then fails jlink/boot-layer resolution. When a
-> `requires` won't resolve, inspect the jar's actual `module-info`
-> (`jar --describe-module --file <jar>`) and require that name. See
-> `guicedee-jpms-shade`.
+The OpenAPI feature module is `com.guicedee.openapi`; its shaded Swagger library is `com.guicedee.modules.services.openapi`. Inspect the actual JAR descriptor when diagnosing a module mismatch; the two have different responsibilities.
 
 ## Bootstrap & Runtime Config
 
@@ -126,19 +110,19 @@ The service `main()` registers its module for slim scanning and starts the
 context; server behaviour is driven by env vars / system properties:
 
 ```java
-LogUtils.addHighlightedConsoleLogger(Level.INFO);
-IGuiceContext.registerModule("<module.name>");
-System.setProperty("HTTP_ENABLED", "false");      // disable plain HTTP
-System.setProperty("HTTPS_ENABLED", "true");
-System.setProperty("HTTPS_KEYSTORE", "app.p12");  // PKCS#12 keystore on disk
-// Enable a full scan BEFORE inject() — off by default; no built-in configurator
-// turns it on. Without this, annotation discovery (REST @Path, @RegisteredService,
-// OpenAPI) finds nothing (e.g. "registry initialized with 0 services").
-IGuiceContext.instance().getConfig()
-    .setClasspathScanning(true).setAnnotationScanning(true)
-    .setMethodInfo(true).setFieldInfo(true);
-IGuiceContext.instance().inject();                // boots Vert.x + all features
+GuiceApplication.run(() -> {
+    LogUtils.addHighlightedConsoleLogger(Level.INFO);
+    IGuiceContext.registerModule("<module.name>");
+    System.setProperty("HTTP_ENABLED", "false");
+    System.setProperty("HTTPS_ENABLED", "true");
+    System.setProperty("HTTPS_KEYSTORE", "app.p12");
+    IGuiceContext.instance().getConfig()
+        .setClasspathScanning(true).setAnnotationScanning(true)
+        .setMethodInfo(true).setFieldInfo(true);
+});
 ```
+
+`GuiceApplication` comes from `com.guicedee:inject` / `com.guicedee.guicedinjection`. Use it only in executable mains: it awaits loading and owns process exit on failed startup. Embedded applications/tests use `IGuiceContext.instance().inject()` and observe `getLoadingFinished()` directly.
 
 Prefer `Environment.getSystemPropertyOrEnvironment(name, default)` for secrets
 (e.g. `HTTPS_KEYSTORE_PASSWORD`). See `guicedee-web` for HTTP/HTTPS options and
@@ -228,7 +212,7 @@ The Dockerfile just **copies the linked image and runs its launcher** — no
 ```dockerfile
 # build the reactor on the Alpine (musl) JDK so the linked runtime is musl-native
 FROM eclipse-temurin:25-jdk-alpine AS build
-# … install Maven 4, COPY ., mvn -DskipTests clean package …
+# … install Maven 4, COPY ., mvn -DskipTests package …
 
 FROM alpine:3.21 AS runtime
 RUN apk add --no-cache ca-certificates libstdc++
@@ -257,8 +241,8 @@ Rules:
 - Aggregator enforces **Maven 4** and **JDK 25+** via `maven-enforcer-plugin`;
   ship the **Maven 4 wrapper**.
 - List `bom` **first** in `<modules>` so its version resolves for siblings.
-- Each service merges features by **dependency + `requires`** only; never hand-wire
-  lifecycle — modules self-register.
+- Add feature dependencies and JPMS requirements, then configure activation gates
+  and providers. Use the existing lifecycle SPI for application extensions.
 - Package for deployment with a dedicated **`packaging: jlink`** module
   (`target/maven-jlink/default`); the Dockerfile copies that image and runs its
   baked-in launcher — **no loose jars, no `--module-path`/`--add-modules`**.

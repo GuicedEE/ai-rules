@@ -86,7 +86,13 @@ boolean exists = beanManager.containsBean(MyService.class);
 | `NamedAnnotationProvision` | `jakarta.inject.Named` → `Names.named()` |
 | `InjectorAnnotationsProvision` | `jakarta.inject.Inject` recognition |
 
-## Non-Negotiable Constraints
+## Scope boundaries
+
+The built-in `BindScopeProvision` maps `@Singleton` and `@ApplicationScoped` to a singleton in the local injector. It does not replicate objects across nodes or automatically implement CDI request/session lifetimes. Custom scopes need an actual `Scope` binding and application-owned entry/exit.
+
+The shaded Guice implementation supports a scope annotation on an injected constructor parameter or field. This wraps the existing binding scope and caches by consuming injection group, scope annotation, and dependency key. Method-injection and provider-method parameters do not have this local-scope behavior. Register custom scope meta-annotations through `ScopeAnnotationProvider` and concrete scope bindings through `BindScopeProvider`; a meta-annotation alone is insufficient.
+
+## Module requirements
 
 - Module must `requires com.guicedee.cdi;`.
 - The CDI module is loaded automatically — no `provides` needed in your application module.

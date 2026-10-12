@@ -181,6 +181,7 @@ Project-specific skills for the GuicedEE ecosystem:
 | [jwebmp-chartjs](skills/.system/jwebmp-chartjs/SKILL.md) | Chart.js charting |
 | [jwebmp-client](skills/.system/jwebmp-client/SKILL.md) | JWebMP client module |
 | [jwebmp-core](skills/.system/jwebmp-core/SKILL.md) | JWebMP core framework (HTML, CSS, events, page configurators) |
+| [jwebmp-java-generator](skills/.system/jwebmp-java-generator/SKILL.md) | Component JSON/object trees to Java source, class contributions, adapters, and retained inspection output |
 | [jwebmp-d3](skills/.system/jwebmp-d3/SKILL.md) | D3.js data visualization |
 | [jwebmp-datatables](skills/.system/jwebmp-datatables/SKILL.md) | DataTables advanced HTML tables |
 | [jwebmp-easing](skills/.system/jwebmp-easing/SKILL.md) | jQuery easing animations |
@@ -220,8 +221,8 @@ Project-specific skills for the GuicedEE ecosystem:
 
 The 2026-09-12 refresh imports changes to 26 existing skills and adds
 `azure-access-and-exposure-audit` and `jwebmp-website-aside-routing` from the global
-`~/.agents/skills/` collection. The repository now contains **117 skills: 39 curated
-and 78 system**. ActivityMaster lifecycle/resource guidance, GuicedEE runtime and
+`~/.agents/skills/` collection. The repository now contains **118 skills: 39 curated
+and 79 system**. ActivityMaster lifecycle/resource guidance, GuicedEE runtime and
 REST contracts, EntityAssist session guidance, and WebAwesome component APIs are
 included in the refresh.
 

@@ -181,6 +181,10 @@ IGuiceContext.instance().inject()
      └─ Owned client and member shutdown    (MAX_VALUE - 100)
 ```
 
+## Packaged configuration
+
+When changing the Hazelcast version, inspect both `hazelcast/src/main/resources/hazelcast.xml` and `services/Vert.x/vertx-hazelcast/src/main/resources/default-cluster.xml`, then the corresponding resources in the built JARs. Their schema version must be accepted by the resolved Hazelcast runtime. Preserve Vert.x internal map settings while updating the schema; an edited source XML does not prove that a shaded dependency contains the updated resource.
+
 ## Non-Negotiable Constraints
 
 - Module must `requires com.guicedee.guicedhazelcast;`.
@@ -188,4 +192,3 @@ IGuiceContext.instance().inject()
 - `@HazelcastServerOptions` and `@HazelcastClientOptions` can be placed on `package-info.java` (preferred) or any class.
 - SPI implementations (`IGuicedHazelcastServerConfig`, `IGuicedHazelcastClientConfig`) must be dual-registered in `module-info.java` and `META-INF/services/`.
 - Only one `@HazelcastServerOptions` and one `@HazelcastClientOptions` annotation should exist per application.
-

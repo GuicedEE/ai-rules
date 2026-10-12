@@ -1,6 +1,6 @@
 ---
 name: guicedee-telemetry
-description: "Instrument GuicedEE with OpenTelemetry spans, W3C context propagation, call-scope and Uni lifecycles, HTTP client/server boundaries, service discovery, persistence, and OTLP export."
+description: "Instrument GuicedEE with OpenTelemetry spans, W3C context propagation, call scopes, Uni/Future lifecycles, HTTP boundaries, and OTLP export."
 metadata:
   short-description: OpenTelemetry distributed tracing inside GuicedEE
 ---
@@ -48,25 +48,33 @@ public class OrdersTelemetryConfig {}
 
 ## Explicit boundary API
 
-`GuicedTelemetry` exposes `openTelemetry()`, `tracer(String)`, `currentSpan()`, `startSpan(String)`, `startClientSpan(String,String)`, `startServerSpan(String,String,MultiMap)`, `makeCurrent(Span)`, `inject(MultiMap)`, `extract(MultiMap)`, `end(Span,Throwable)`, `withSpan(Span,Uni<T>)`, and `finish(Span,Uni<T>)`.
+`GuicedTelemetry` exposes `openTelemetry()`, `tracer(String)`, `currentSpan()`, `startSpan(String)`, `startClientSpan(String,String)`, `startServerSpan(String,String,MultiMap)`, `makeCurrent(Span)`, `inject(MultiMap)`, `inject(Map<String,String>)`, `extract(MultiMap)`, and `end(Span,Throwable)`. Both `withSpan` and `finish` accept Mutiny `Uni<T>` and Vert.x `Future<T>`.
 
-For an HTTP client, create a `CLIENT` span, make it current while constructing the request, inject W3C headers, and close it from the asynchronous result:
+For a custom HTTP client, create a `CLIENT` span per subscription, make it current while constructing the request, inject W3C headers, and close it from the asynchronous result. GuicedEE `RestClient` already does this; do not wrap it with another boundary span:
 
 ```java
-Span span = GuicedTelemetry.startClientSpan("GET", url);
-try (Scope ignored = GuicedTelemetry.makeCurrent(span)) {
-    GuicedTelemetry.inject(request.headers());
-}
-return GuicedTelemetry.finish(span, responseUni);
+return Uni.createFrom().deferred(() -> {
+    Span span = GuicedTelemetry.startClientSpan("GET", url);
+    try (Scope ignored = GuicedTelemetry.makeCurrent(span)) {
+        GuicedTelemetry.inject(request.headers());
+        return GuicedTelemetry.finish(span, sendRequest());
+    } catch (RuntimeException | Error failure) {
+        GuicedTelemetry.end(span, failure);
+        throw failure;
+    }
+});
 ```
 
-For an HTTP server, extract the incoming parent and create a `SERVER` span:
+For a custom HTTP ingress with no existing server-span owner, extract the incoming parent and create a `SERVER` span. This example owns the resource operation's completion; a listener tracing the whole HTTP exchange should instead own completion at response end/close:
 
 ```java
 Span span = GuicedTelemetry.startServerSpan(
     context.request().method().name(), route, context.request().headers());
 try (Scope ignored = GuicedTelemetry.makeCurrent(span)) {
-    return invokeResource();
+    return GuicedTelemetry.finish(span, invokeResource()); // invokeResource returns Uni<T>
+} catch (RuntimeException | Error failure) {
+    GuicedTelemetry.end(span, failure);
+    throw failure;
 }
 ```
 
@@ -76,10 +84,19 @@ try (Scope ignored = GuicedTelemetry.makeCurrent(span)) {
 
 Use `withSpan(Span, Uni<T>)` when another component owns completion, such as a REST server response handler. It keeps the span current for the full reactive subscription so downstream REST clients create child spans. The response owner must end the server span exactly once.
 
-## GuicedEE module adoption
+## Existing automatic boundaries
 
 - `rest-client`: every outbound request creates a `CLIENT` span, records method, URL, and response status, injects the current context, and closes the span with the returned `Uni`.
-- `rest`: inbound route handlers should create a `SERVER` span with request headers and keep it current through resource invocation and asynchronous response completion.
+- `rest`: `OperationRegistry` creates the inbound `SERVER` span, makes it current through resource invocation, and owns completion at response end. Do not add a duplicate server span in the resource.
+
+Raw Vert.x routes and isolated listeners do not acquire this REST behavior simply by depending on `web`. Inspect the owning listener before adding a span. If it already owns the `SERVER` span, route-level work should use an `INTERNAL` child.
+
+For the Vert.x OpenTelemetry tracer, the NE1 Profile integration explicitly uses `builder.withTracer(new OpenTelemetryTracingFactory())` in a dual-registered `VertxConfigurator`. A discovered factory alone does not activate that path with the default tracing options. Keep the builder hook additive; `builder.with(new VertxOptions())` would discard prepared options. The tracer can own HTTP server/client spans, so check overlap with REST/RestClient instrumentation before combining them. In Profile, raw routes contribute internal children while the tracer owns the server span.
+
+## Guidance for additional integrations
+
+The following are integration patterns, not claims that every module is already instrumented:
+
 - `service-registry` and `service-discovery`: wrap registry resolution, health checks, and remote discovery calls in `INTERNAL` or `CLIENT` spans. Record the logical service name and resolved target; do not record credentials or tokens.
 - `persistence`: wrap session acquisition, transaction, query, and flush boundaries in `INTERNAL` spans. Record persistence unit, operation, and bounded query identity. Never record SQL parameters or entity payloads by default.
 - messaging and websocket modules: extract context at ingress, make the consumer span current while dispatching, and inject context for outbound messages.
@@ -95,7 +112,7 @@ public Uni<Order> place(@SpanAttribute("order.id") String orderId) { ... }
 
 `@Trace` creates an `INTERNAL` span. Class-level `@Trace` traces eligible methods. Parameters and return values annotated with `@SpanAttribute` are recorded; complex values are serialized for diagnostics. AOP requires non-final, non-private methods and packages opened to Guice.
 
-Nested AOP spans inherit the current OpenTelemetry context. GuicedEE `CallScoper` and its Mutiny integrations preserve scope state across Vert.x and `Uni` continuations; boundary code must still make the span current around the operation that creates asynchronous work.
+Nested AOP spans inherit the current OpenTelemetry context. The interceptor handles synchronous methods, `Uni`, and Vert.x `Future`, keeping asynchronous spans open until completion or failure and restoring the parent call-scope span afterward. Preserve that parent rather than clearing the trace binding during nested cleanup. GuicedEE `CallScoper` and its Mutiny integrations preserve scope state across Vert.x and `Uni` continuations; boundary code must still make the span current around the operation that creates asynchronous work.
 
 ## Testing contract
 

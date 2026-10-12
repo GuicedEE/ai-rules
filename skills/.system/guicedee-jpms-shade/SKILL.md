@@ -75,7 +75,7 @@ In the GuicedEE module that used the automatic module:
   module name, so `requires <module-name>` already resolves — now to a real named module.
 
 ### 6. Validate
-Install the updated BOMs first (they are SNAPSHOTs the shade module imports), then build:
+Install the updated BOMs first so the shade module resolves the current local management, then build:
 ```
 mvn -B -N install        # in Versioner, then StandaloneBOM, then GuicedEE/bom
 mvn -B install -DskipTests -Dmaven.javadoc.skip=true   # in each new shade module

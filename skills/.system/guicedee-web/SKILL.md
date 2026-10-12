@@ -20,7 +20,7 @@ Provides the `Router`, `HttpServer`, and `BodyHandler` plumbing that higher-leve
    ```java
    IGuiceContext.registerModuleForScanning.add("my.app");
    IGuiceContext.instance().inject();
-   // HTTP server is now listening on port 8080 (default)
+   // Startup is asynchronous; await getLoadingFinished() before asserting readiness.
    ```
 3. Add routes by implementing `VertxRouterConfigurator`:
    ```java
@@ -46,7 +46,7 @@ Provides the `Router`, `HttpServer`, and `BodyHandler` plumbing that higher-leve
 
 ## SPI Extension Points
 
-All SPIs are discovered via `ServiceLoader`. Register with JPMS `provides...with` or `META-INF/services`.
+All SPIs are discovered via `ServiceLoader`. Register with JPMS `provides...with` and `META-INF/services` for both launch modes.
 
 | SPI | When it runs | Purpose |
 |---|---|---|
@@ -91,6 +91,14 @@ IGuiceContext.instance().inject()
          └─ server.listen()
 ```
 
+## Isolated management listeners
+
+Use `ManagedHttpListenerProvider.listeners()` for additional lifecycle-owned listeners, such as an internal health or management port. Return a list of `ManagedHttpListener(name, options, vertx -> router)` records and dual-register the provider in `module-info.java` and `META-INF/services/com.guicedee.vertx.web.spi.ManagedHttpListenerProvider`.
+
+`ManagedHttpListenerGroup` deliberately creates a dedicated small Vert.x runtime to isolate its socket registry from the public server. It validates unique names and fixed ports, disables address/port reuse, rejects WebSocket upgrades, rolls back partially bound listeners on failure, and closes its runtime on shutdown. Build each router using the supplied Vert.x instance. Global router/server configurators are deliberately not applied; configure the listener's own routes and access policy explicitly.
+
+`ManagedHttpListenersLifecycle` starts at `MIN_VALUE + 800` and awaits binding. Executable mains can use `GuiceApplication.run(...)` from `inject` to await overall startup; embedded callers must observe `getLoadingFinished()` themselves.
+
 ## WebSocket upgrade and slow-peer shutdown
 
 Preserve `WebSocketBackpressure.capture(request)` at the server's request-handler handoff to the configured router. Capture happens before Vert.x Web applies forwarded-header wrappers; routing a plain request can lose the underlying transport needed for bounded shutdown.
@@ -103,7 +111,7 @@ Exercise both the direct server handler and public router upgrade with a real pe
 
 ## Non-Negotiable Constraints
 
-- Production uses the lifecycle-owned server from `VertxWebServerPostStartup`; isolated tests may explicitly create and close their own servers.
+- Public HTTP uses `VertxWebServerPostStartup`; additional isolated listeners use `ManagedHttpListenerProvider`. Isolated tests may explicitly create and close their own servers.
 - Module must `requires com.guicedee.vertx.web;`.
 - SPI implementations must be dual-registered (`module-info.java` + `META-INF/services/`).
 - `VertxRouterConfigurator` implementations control ordering via `sortOrder()`.

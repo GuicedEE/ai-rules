@@ -71,11 +71,15 @@ Request-scoped holder for the current `JsonWebToken`:
 - **Fallback:** Uses `ThreadLocal` when no call scope is active (unit tests, non-HTTP code)
 
 ```java
-// In a route handler or auth filter:
-User user = routingContext.user();
+// Synchronous work inside an authenticated handler and active call scope:
+JsonWebToken previous = MicroProfileJwtContext.getCurrent();
+User user = routingContext.user(); // already authenticated by the owning boundary
 MicroProfileJwtContext.setCurrent(new VertxJsonWebToken(user));
-// ... handle request ...
-MicroProfileJwtContext.clear();
+try {
+    // ... handle synchronous work ...
+} finally {
+    MicroProfileJwtContext.setCurrent(previous); // null clears; nested work restores parent
+}
 ```
 
 Or use the convenience method:
@@ -86,6 +90,8 @@ MicroProfileJwtPreStartup.setCurrentUser(routingContext.user());
 ### `ClaimValueProvider<T>`
 
 Guice `Provider<T>` that resolves a claim from the current `JsonWebToken` at injection time.
+
+Claim fields capture the value when the object is injected; a singleton's field does not refresh per request. Use request/call-scoped objects or resolve current values inside the active scope. For asynchronous work, preserve that scope until completion and clean up on every terminal path; the synchronous `try/finally` example is not an asynchronous lifetime wrapper. A manually constructed `User` or context assignment is not token verification.
 
 ### `MicroProfileJwtModule`
 
@@ -177,5 +183,5 @@ IGuiceContext.instance().inject()
 - `@Claim` works **without** `@Inject` (via SPI registration).
 - `MicroProfileJwtContext.clear()` **must** be called at end of request to prevent memory leaks.
 - The Vert.x auth JWT dependency (`io.vertx:vertx-auth-jwt`) is required at runtime for token verification.
-- `JsonWebToken` binding resolves from `MicroProfileJwtContext` — it is `null` outside a request scope.
+- `JsonWebToken` binding resolves from `MicroProfileJwtContext`; absent a scoped or fallback token it is `null`. The ThreadLocal fallback must also be cleared by its owner.
 - Claim name resolution: `@Claim("name")` → value attribute; `@Claim(standard = Claims.sub)` → standard enum name.

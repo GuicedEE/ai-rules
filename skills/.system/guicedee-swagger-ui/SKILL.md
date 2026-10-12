@@ -15,7 +15,7 @@ Add the dependency and a fully functional Swagger UI is mounted at `/swagger/` a
 
 ## Required Flow
 
-1. Add `com.guicedee:guiced-swagger-ui` dependency (pair with `openapi` for spec generation):
+1. Add `com.guicedee:swagger-ui` dependency (pair with `openapi` for spec generation):
    ```xml
    <dependency>
      <groupId>com.guicedee</groupId>

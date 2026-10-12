@@ -68,7 +68,15 @@ Synchronous exceptions, failed asynchronous pre-startup futures, and startup tim
 
 Assign shutdown order independently of startup order when dependency direction reverses. For clustering, await the asynchronous Vert.x close at `MAX_VALUE - 200` before owned Hazelcast shutdown at `MAX_VALUE - 100`. Cleanup must tolerate absent or partly started resources. Test failed joins and occupied event-bus ports as well as normal destruction, checking threads, instances, and readiness state.
 
-## Logging
+## Process startup and terminal shutdown
+
+For executable application entry points, `GuiceApplication.run(Runnable preparation)` waits for both injection and `getLoadingFinished()`. It returns after successful startup. It owns process exit on failure, so do not call it from embedded libraries or in-process unit tests. Its startup deadline defaults to 300 seconds and its failed-startup cleanup deadline to 45 seconds (`GUICEDEE_FAILED_STARTUP_CLEANUP_SECONDS`). The lower-level pre-startup future wait in `GuiceContext` defaults to 60 seconds; both startup waits read `GUICEDEE_STARTUP_TIMEOUT_SECONDS` when explicitly configured.
+
+`GuiceContext.destroy()` is terminal and idempotent. The first caller runs cleanup; concurrent callers await it and same-thread re-entry returns. Existing bindings remain available during cleanup, then the injector is cleared and new injection is rejected. Do not recreate the injector from a destroy hook or add application-specific process-kill workarounds. Use a fresh JVM for another full lifecycle.
+
+Implementation anchors: `GuicedEE/inject/.../GuiceApplication.java`, `GuiceContext.java`, and `ShutdownLifecycleTest`.
+
+## Logging setup
 
 ### `LogUtils` — programmatic setup
 

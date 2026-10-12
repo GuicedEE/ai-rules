@@ -9,7 +9,7 @@ Wire Vert.x 5 into the GuicedEE lifecycle with zero manual bootstrap.
 
 ## Core Concept
 
-Production Vert.x starts through the GuicedEE lifecycle SPI; use the injected instance. Explicit instances are appropriate in isolated runtime fixtures:
+Production Vert.x starts through the GuicedEE lifecycle SPI; use the injected instance for application work. The web module's `ManagedHttpListenerGroup` intentionally owns a separate runtime for isolated listeners; use its provider SPI rather than duplicating that lifecycle. Explicit instances are also appropriate in isolated runtime fixtures:
 
 ```
 IGuiceContext.instance().inject()
@@ -26,6 +26,10 @@ Bootstrap with:
 IGuiceContext.registerModuleForScanning.add("my.app");
 IGuiceContext.instance().inject();
 ```
+
+## Dependency ownership
+
+Resolve Vert.x through the GuicedEE BOM chain. `bom/Versioner/pom.xml` owns `vertx.version` (5.2.1 in the reviewed checkout); `guicedee-bom` imports `vertx-bom`, so consumers should not hard-pin individual Vert.x modules. SmallRye Mutiny Vert.x bindings have their own version train; their version number is not the Vert.x release number. Check the effective POM and resolved dependency tree, including Netty and shaded wrappers, when upgrading. Source compilation alone does not verify the packaged runtime or cluster/socket compatibility.
 
 ## Required Flow
 

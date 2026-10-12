@@ -54,8 +54,12 @@ Annotate your classes with standard `@Path`, `@GET`, `@POST`, etc. — routes ar
 4. Bootstrap GuicedEE — routes are registered automatically:
    ```java
    IGuiceContext.registerModuleForScanning.add("my.app");
+   IGuiceContext.instance().getConfig()
+       .setClasspathScanning(true).setAnnotationScanning(true)
+       .setMethodInfo(true).setFieldInfo(true);
    IGuiceContext.instance().inject();
    ```
+   Observe `getLoadingFinished()` before probing routes. Executable mains can use `GuiceApplication.run(...)` from `inject` to own startup failure and process exit.
 
 ## Supported Annotations
 

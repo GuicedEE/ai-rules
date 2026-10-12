@@ -148,7 +148,7 @@ COPY . .
 # The <svc>-jlink module links the self-contained image at
 # target/maven-jlink/default. BuildKit cache mount keeps repeat builds fast.
 RUN --mount=type=cache,target=/root/.m2/repository \
-    mvn -B -ntp -DskipTests clean package
+    mvn -B -ntp -DskipTests package
 
 # -----------------------------------------------------------------------------
 # Stage 2: minimal runtime image

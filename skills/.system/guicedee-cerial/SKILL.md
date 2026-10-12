@@ -76,6 +76,10 @@ Inject `@Named` `CerialPortConnection` singletons by port number, configure with
 
 `CerialIdleMonitor` detects silent connections via Vert.x periodic timer. Status transitions to `Silent` when idle beyond threshold.
 
+## Shutdown ownership
+
+`CerialPortConnection.onDestroy()` marks shutdown before cancelling reconnect and monitor timers. It detaches the native data listener before closing the port, with a bounded native-close wait. Preserve this sequence: an in-flight error callback must not schedule another reconnect during shutdown. `disconnect()` alone is not the terminal lifecycle operation.
+
 ## Health Check
 
 `CerialHealthCheck` implements `@Liveness`, `@Readiness`, `@Startup` and reports status of all active connections (requires `health` module).

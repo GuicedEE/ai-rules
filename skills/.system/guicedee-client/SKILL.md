@@ -41,7 +41,7 @@ All hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` when a cust
 | `IGuicePreStartup<J>` | After scan, before injector | Pre-startup tasks, returns `List<Future<Boolean>>` |
 | `IGuiceModule<J>` | During injector creation | Standard Guice `AbstractModule` |
 | `IGuicePostStartup<J>` | After injector ready | Post-startup tasks, returns `List<Uni<Boolean>>` |
-| `IGuicePreDestroy<J>` | On shutdown | Cleanup resources |
+| `IGuicePreDestroy<J>` | Shutdown or startup rollback | Cleanup in ascending `shutdownSortOrder()`, with class-name tie-breaking |
 
 ## Key Classes
 
@@ -87,7 +87,13 @@ boolean enabled   = Boolean.parseBoolean(
 - These are DIFFERENT types — do not confuse them.
 - Resolve env vars/system properties **only** through `Environment.getSystemPropertyOrEnvironment(name, default)` — never `System.getenv`/`System.getProperty` and never a hand-rolled `env(...)` helper.
 
-## Common JPMS Module Names
+## Call scopes and lifecycle ownership
+
+`CallScoper` carries JVM-local request values through supported callbacks and Mutiny continuations. `IOnCallScopeEnter` and `IOnCallScopeExit` are per-call hooks; a startup-only setting does not configure each request. Dual-register implementations in JPMS and `META-INF/services`. Scope values and correlation IDs do not authenticate another process or grant access to a distributed resource.
+
+Use `Integer sortOrder()` for startup and `Integer shutdownSortOrder()` for teardown; the latter defaults to `sortOrder()`. `IGuiceContext.destroy()` is terminal: cleanup may resolve existing bindings, but must not bootstrap a replacement injector.
+
+## JPMS dependency names
 
 When adding `requires` directives, use the correct module names:
 

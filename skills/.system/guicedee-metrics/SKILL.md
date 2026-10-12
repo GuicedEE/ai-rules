@@ -113,6 +113,9 @@ The shared `MetricRegistry` is injectable, so metrics can be asserted directly w
 @BeforeAll
 static void boot() {
     IGuiceContext.registerModule("my.app");
+    IGuiceContext.instance().getConfig()
+        .setClasspathScanning(true).setAnnotationScanning(true)
+        .setMethodInfo(true).setFieldInfo(true);
     IGuiceContext.instance().inject();
 }
 

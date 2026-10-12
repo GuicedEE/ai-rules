@@ -106,8 +106,7 @@ pins JDK 25, enforces Maven 4 + Java 25. No dependency versions here.
 ## 2. BOM POM
 
 `<platform>/bom/pom.xml` — packaging `pom`, the **only** place upstream versions
-live. Often a git submodule of its own. Shared dependencies declared here are
-inherited by every consuming module.
+live. Often a git submodule of its own. Imports bring dependency management only. Declare actual dependencies in the parent or service POM. The JWebMP and ActivityMaster imports below are optional; omit unused frameworks.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -122,24 +121,10 @@ inherited by every consuming module.
     <packaging>pom</packaging>
 
     <properties>
-        <guicedee.version>2.1.1-SNAPSHOT</guicedee.version>
+        <guicedee.version>2.3.0</guicedee.version>
         <activitymaster.version>3.0.0-SNAPSHOT</activitymaster.version>
         <jwebmp.version>2.0.3-SNAPSHOT</jwebmp.version>
     </properties>
-
-    <!-- Inherited by every module -->
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -196,6 +181,7 @@ dependencies are **version-less**. One feature = one `com.guicedee:<artifact>`.
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency><groupId>com.guicedee</groupId><artifactId>inject</artifactId></dependency>
         <dependency><groupId>com.guicedee</groupId><artifactId>service-registry</artifactId></dependency>
         <dependency><groupId>com.guicedee</groupId><artifactId>health</artifactId></dependency>
         <dependency><groupId>com.guicedee</groupId><artifactId>openapi</artifactId></dependency>
@@ -219,6 +205,7 @@ dependencies are **version-less**. One feature = one `com.guicedee:<artifact>`.
 
 ```java
 module <module.name> {
+    requires com.guicedee.guicedinjection;     // GuiceApplication process entry point
     requires transitive com.guicedee.service.registry;
     requires transitive com.guicedee.health;     // brings microprofile.health transitively
     requires transitive com.guicedee.openapi;     // serves /openapi.json + /openapi.yaml
@@ -271,19 +258,23 @@ public class PlatformConfig { }
 ## 6. Bootstrap main()
 
 ```java
-import com.guicedee.client.Environment;
+import com.guicedee.guicedinjection.GuiceApplication;
 import com.guicedee.client.IGuiceContext;
 import com.guicedee.client.utils.LogUtils;
 import org.apache.logging.log4j.Level;
 
 public class <App> {
     public static void main(String[] args) {
-        LogUtils.addHighlightedConsoleLogger(Level.INFO);
-        IGuiceContext.registerModule("<module.name>");
-        System.setProperty("HTTP_ENABLED", "false");
-        System.setProperty("HTTPS_ENABLED", "true");
-        System.setProperty("HTTPS_KEYSTORE", "app.p12");
-        IGuiceContext.instance().inject();   // boots Vert.x web server + all features
+        GuiceApplication.run(() -> {
+            LogUtils.addHighlightedConsoleLogger(Level.INFO);
+            IGuiceContext.registerModule("<module.name>");
+            System.setProperty("HTTP_ENABLED", "false");
+            System.setProperty("HTTPS_ENABLED", "true");
+            System.setProperty("HTTPS_KEYSTORE", "app.p12");
+            IGuiceContext.instance().getConfig()
+                .setClasspathScanning(true).setAnnotationScanning(true)
+                .setMethodInfo(true).setFieldInfo(true);
+        }); // awaits asynchronous startup; failed startup terminates the process
     }
 }
 ```
@@ -307,6 +298,7 @@ public class RegistryResource {
 
 ```java
 @Readiness
+// Illustrative check: replace unconditional UP with actual required dependency state.
 public class RegistryReadinessCheck implements HealthCheck {
     @Override public HealthCheckResponse call() {
         return HealthCheckResponse.named("<svc>").up()

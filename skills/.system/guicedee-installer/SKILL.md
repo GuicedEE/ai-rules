@@ -27,12 +27,12 @@ Upgrade an existing module to the same baseline expected by `guicedee-creator`.
 5. Create or repair bootstrap `main()` class with:
    - `LogUtils.addHighlightedConsoleLogger(Level.DEBUG)`
    - `IGuiceContext.registerModule("<mainModule>")`
-   - `IGuiceContext.instance().inject()`
+   - `GuiceApplication.run(preparation)` for executable mains, or `IGuiceContext.instance().inject()` with explicit loading completion handling for embedded startup (see `guicedee-inject`). Preserve the application's required scanning configuration.
 6. If lifecycle customization exists, ensure SPI implementations are correctly dual-registered:
    - `com.guicedee.client.services.lifecycle.IGuicePreStartup`
    - `com.guicedee.client.services.lifecycle.IGuiceModule`
    - `com.guicedee.client.services.lifecycle.IGuicePostStartup`
-   - Ensure each implementation overrides `sortOrder()` (from `IDefaultService<J>`)
+   - Use `Integer sortOrder()` when changing the inherited order; use `Integer shutdownSortOrder()` for distinct teardown ordering
    - registrations required in both `module-info.java` and `src/main/resources/META-INF/services/*`
 7. Apply package separation:
    - test module name defaults to `<mainModule>.test`
@@ -41,6 +41,7 @@ Upgrade an existing module to the same baseline expected by `guicedee-creator`.
 8. Run creator validator when available:
    - `python3 ../guicedee-creator/scripts/verify_guicedee_baseline.py --project-root .`
    - If not installed side-by-side, apply the checklist manually.
+   - The script reads local files, not Maven's effective model. Confirm inherited BOMs/plugins/versions with the effective POM before changing valid parent-managed configuration.
 
 ## Migration Rules
 - Prefer forward-only edits: change files to final target state in one pass.

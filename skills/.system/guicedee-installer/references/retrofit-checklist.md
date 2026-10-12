@@ -35,8 +35,8 @@ Example:
 
 ```xml
 <properties>
-    <junit.jupiter.version>6.0.3</junit.jupiter.version>
-    <mockito.version>5.12.0</mockito.version>
+    <junit.jupiter.version>6.1.3</junit.jupiter.version>
+    <mockito.version>5.24.0</mockito.version>
 </properties>
 
 <dependencies>
@@ -69,7 +69,8 @@ Example:
 - Ensure a `main()` entrypoint exists in `src/main/java` and includes:
   - `LogUtils.addHighlightedConsoleLogger(Level.DEBUG)`
   - `IGuiceContext.registerModule("<mainModule>")`
-  - `IGuiceContext.instance().inject()`
+  - `GuiceApplication.run(preparation)` for executable mains, or `IGuiceContext.instance().inject()` with loading completion handling for embedded startup
+  - Enable required scanning before injection; see `guicedee-inject`.
 - Ensure `<mainModule>` passed to `registerModule` matches main `module-info.java`.
 
 ## 6) Lifecycle SPI registration
@@ -81,7 +82,7 @@ If any implementation class uses these interfaces:
 Then each implementation must be declared in both:
 - `src/main/java/module-info.java` via `provides ... with ...`
 - `src/main/resources/META-INF/services/<spi-interface-fqcn>` with implementation FQCN lines
-- each implementation must override `sortOrder()` from `IDefaultService<J>`
+- override `Integer sortOrder()` from `IDefaultService<J>` only when changing the inherited order
 
 Behavior reminders:
 - `IGuicePreStartup` runs before module injection; Vert.x 5 is available.

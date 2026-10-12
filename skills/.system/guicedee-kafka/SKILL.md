@@ -45,8 +45,8 @@ Declare connections, topics, consumers, and publishers with annotations — ever
        @Inject @Named("order-events")
        private KafkaTopicPublisher orderPublisher;
 
-       public void placeOrder(String orderJson) {
-           orderPublisher.send("order-key", orderJson);
+       public Future<RecordMetadata> placeOrder(String orderJson) {
+           return orderPublisher.send("order-key", orderJson);
        }
    }
    ```
@@ -115,6 +115,8 @@ IGuiceContext.instance().inject()
      ├─ Closes all producers
      └─ Closes all admin clients
 ```
+
+`KafkaTopicPublisher.send` returns `io.vertx.core.Future<io.vertx.kafka.client.producer.RecordMetadata>`. Propagate that future when the caller needs broker send success/failure. Consumer auto-commit and completion of downstream business work are separate; check the configured offset policy before promising delivery guarantees.
 
 ## Non-Negotiable Constraints
 

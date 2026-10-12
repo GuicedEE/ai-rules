@@ -54,9 +54,12 @@ Add the dependency, annotate your Jakarta REST resources with **Swagger annotati
        requires com.guicedee.openapi;
    }
    ```
-4. Bootstrap GuicedEE — OpenAPI endpoints are live automatically:
+4. Bootstrap GuicedEE with annotation scanning enabled (see `guicedee-inject`). Await asynchronous loading before probing endpoints:
    ```java
    IGuiceContext.registerModuleForScanning.add("my.app");
+   IGuiceContext.instance().getConfig()
+       .setClasspathScanning(true).setAnnotationScanning(true)
+       .setMethodInfo(true).setFieldInfo(true);
    IGuiceContext.instance().inject();
    // GET /openapi.json → OpenAPI 3.1 JSON spec
    // GET /openapi.yaml → OpenAPI 3.1 YAML spec
@@ -64,7 +67,7 @@ Add the dependency, annotate your Jakarta REST resources with **Swagger annotati
 
 ## Companion: Swagger UI
 
-Add the `guiced-swagger-ui` module for a browsable UI at `/swagger/`:
+Add the `swagger-ui` module for a browsable UI at `/swagger/`:
 
 ```xml
 <dependency>
@@ -110,14 +113,17 @@ turns the `additionalProperties` JSON object into a `LinkedHashMap` and then
 
 **Fix — deserialize with Swagger's own configured mapper.** Use
 `io.swagger.v3.core.util.Json31.mapper()` (OpenAPI 3.1) or `Json.mapper()` (3.0),
-which register the proper `Schema` deserializers. Copy it before tweaking features
-so you don't mutate the shared singleton:
+which register the proper `Schema` deserializers. Rebuild the Jackson 3 mapper
+before tweaking features so you preserve the configured modules:
 
 ```java
 import io.swagger.v3.core.util.Json31;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.DeserializationFeature;
 
-ObjectMapper mapper = Json31.mapper().copy()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+ObjectMapper mapper = Json31.mapper().rebuild()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .build();
 
 OpenAPI remoteSpec = mapper.readValue(specJson, OpenAPI.class);
 ```
@@ -134,6 +140,7 @@ This corrects **all** `Map`/`additionalProperties` cases across every service at
 - Use the **Swagger** annotation package `io.swagger.v3.oas.annotations.*`; never the MicroProfile package.
 - Always give endpoints an explicit `@ApiResponse` with `@Schema(implementation = …)` for typed responses.
 - Module must `requires com.guicedee.openapi;`.
+- The feature module `com.guicedee.openapi` serves the endpoints. Its shaded Swagger dependency is a separate module, `com.guicedee.modules.services.openapi`; do not substitute that name for the feature module.
 - Requires `rest` module for Jakarta REST resource scanning.
 - The OpenAPI module is registered automatically — no `provides` needed.
 - Spec generation happens at startup via ClassGraph scanning.

@@ -9,6 +9,10 @@ metadata:
 
 Angular 21 TypeScript project generation and SPA hosting with STOMP/WebSocket bridge for JWebMP.
 
+## Java source export
+
+For component JSON/object trees → Java files, use [JWebMP Java Generator](../jwebmp-java-generator/SKILL.md). It reflects construction/state calls and accepts explicit Java class/body contributions. This Angular skill owns the subsequent Java → Angular/TypeScript pipeline. Generator tests use temporary directories unless source output is explicitly saved for inspection.
+
 ## Locale formatting and user preferences
 
 For `@NgLocale`, runtime `LocaleService` selection, pipe bindings, and validation,

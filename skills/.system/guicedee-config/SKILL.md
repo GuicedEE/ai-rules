@@ -45,8 +45,8 @@ Inject configuration values with `@ConfigProperty`, resolve from environment var
 
 | Source | Ordinal | Example |
 |---|---|---|
-| Environment variables | 300 (highest) | `MESSAGING_ENABLED=true` |
-| System properties | 200 | `-Dmessaging.enabled=true` |
+| System properties | 400 | `-Dmessaging.enabled=true` |
+| Environment variables | 300 | `MESSAGING_ENABLED=true` |
 | `META-INF/microprofile-config.properties` | 100 (lowest) | `messaging.enabled=true` |
 
 ### Key mapping
@@ -63,7 +63,7 @@ db.url=jdbc:postgresql://prod-host:5432/mydb
 %dev.db.url=jdbc:postgresql://localhost:5432/mydb
 ```
 
-Activate with `mp.config.profile=dev`.
+Activate with `smallrye.config.profile=dev`. Custom sources can override the default ordinals; inspect the resolved `ConfigValue` source when diagnosing precedence.
 
 ## Supported Injection Types
 
@@ -103,7 +103,13 @@ IGuiceContext.instance().inject()
  └─ MicroProfileConfigBinder (scans @ConfigProperty fields, creates Guice bindings)
 ```
 
-## Non-Negotiable Constraints
+## Configuration diagnostics
+
+`MicroProfileConfigContext` enriches configuration-load failures using `ConfigPropertiesValidator`: inspect the reported resource URL, line, column, malformed Unicode escape, or encoding before editing a different module's configuration. Every dependency can contribute `META-INF/microprofile-config.properties`.
+
+MicroProfile/SmallRye configuration and `com.guicedee.client.Environment` are separate resolution paths. Do not assume a working-directory `.env.local` lookup from `Environment` automatically describes the MicroProfile source list. Use the owning API and inspect its resolved source.
+
+## Module requirements
 
 - Module must `requires com.guicedee.microprofile.config;`.
 - Classes with `@ConfigProperty` fields must be in packages opened to `com.google.guice`.

@@ -70,19 +70,17 @@ package com.example.auth;
 
 ```java
 @OAuth2Options(
-    flow = OAuth2Options.FlowType.AUTH_CODE,
+    flow = com.guicedee.vertx.auth.oauth2.OAuth2Flow.AUTH_CODE,
     clientId = "${OAUTH2_CLIENT_ID}",
     clientSecret = "${OAUTH2_CLIENT_SECRET}",
-    site = "https://accounts.google.com",
-    tokenPath = "/o/oauth2/token",
-    authorizationPath = "/o/oauth2/auth",
-    discoveryUrl = "${OAUTH2_DISCOVERY_URL}",
-    callbackPath = "/callback"
+    wellKnownProvider = WellKnownProvider.OPENID_CONNECT,
+    site = "${OIDC_ISSUER}",
+    redirectUri = "https://app.example.com/callback"
 )
 package com.example.auth;
 ```
 
-**Env overrides:** `VERTX_AUTH_OAUTH2_CLIENT_ID`, `VERTX_AUTH_OAUTH2_CLIENT_SECRET`, `VERTX_AUTH_OAUTH2_SITE`, `VERTX_AUTH_OAUTH2_DISCOVERY_URL`
+**Env overrides:** `VERTX_AUTH_OAUTH2_CLIENT_ID`, `VERTX_AUTH_OAUTH2_CLIENT_SECRET`, `VERTX_AUTH_OAUTH2_SITE`, `VERTX_AUTH_OAUTH2_WELL_KNOWN_PROVIDER`. `OAuth2Options` uses `OAuth2Flow`, `WellKnownProvider`, `site`, `tenant`, `redirectUri`, and `jwtOptions`; it has no `FlowType`, `discoveryUrl`, or `callbackPath` members. `KEYCLOAK` and `OPENID_CONNECT` select provider discovery. Register `com.guicedee.vertx` for scanning when the application's scan allowlist would otherwise exclude these provider implementations.
 
 **Guice binding:** `OAuth2Auth`
 
@@ -280,7 +278,7 @@ All string attributes support `${ENV_VAR}` placeholders.
 
 - Auth providers are **opt-in** — only activated when their annotation is found.
 - Each provider's Vert.x dependency must be on the module path.
-- Module must `requires static` the auth module (e.g., `requires io.vertx.auth.jwt;`).
+- Applications that use a provider at runtime need its module resolved (e.g., `requires io.vertx.auth.jwt;`). The framework's optional `requires static` declarations do not guarantee an application resolves it.
 - SPI implementations must be dual-registered (`module-info.java` provides + `META-INF/services/`).
 - Auth packages must `opens` to `com.google.guice` and `tools.jackson.databind`.
 - OTP **requires** `IOtpAuthenticatorService` SPI — no storage = no auth.

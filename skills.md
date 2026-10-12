@@ -11,7 +11,7 @@ Skills are organized into two tiers:
 
 Each skill is a self-contained folder with a required `SKILL.md` (YAML frontmatter + Markdown instructions) and optional `agents/`, `references/`, `scripts/`, and `assets/` subdirectories.
 
-The catalog contains **117 skills: 39 curated and 78 system**. Refreshed from the global `~/.agents/skills/` collection on 2026-09-12, including bundled references, scripts, and agent metadata. Repository-only skills remain available.
+The catalog contains **118 skills: 39 curated and 79 system**. Refreshed from the global `~/.agents/skills/` collection on 2026-09-12, including bundled references, scripts, and agent metadata. Repository-only skills remain available. JWebMP Java Generator guidance was added on 2026-10-05.
 
 Descriptions are kept concise for discovery; larger guides route to workflow references. Run
 `python -B -X utf8 scripts/validate-skills.py` after edits. See
@@ -133,6 +133,7 @@ Project-specific skills for the GuicedEE / JWebMP / ActivityMaster ecosystem:
 | Skill | Path | Use for |
 |-------|------|---------|
 | `jwebmp-core` | `skills/.system/jwebmp-core/SKILL.md` | JWebMP core framework (HTML, CSS, events, page configurators) |
+| `jwebmp-java-generator` | `skills/.system/jwebmp-java-generator/SKILL.md` | Component JSON/object trees to Java source, class contributions, adapters, and retained inspection output |
 | `jwebmp-client` | `skills/.system/jwebmp-client/SKILL.md` | JWebMP client module |
 | `jwebmp-vertx` | `skills/.system/jwebmp-vertx/SKILL.md` | JWebMP Vert.x event bus runtime |
 | `jwebmp-tsclient` | `skills/.system/jwebmp-tsclient/SKILL.md` | TypeScript generation, locale, and translation services |

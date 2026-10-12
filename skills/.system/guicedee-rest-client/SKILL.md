@@ -79,7 +79,7 @@ client.send(body, headers, queryParams); // with headers and query params
 client.publish(body);                    // fire-and-forget (no response)
 ```
 
-All methods return `Uni<Receive>`.
+`send` returns `Uni<Receive>`; `publish` returns `Uni<Void>`. Both are lazy: return/compose the `Uni` or subscribe at an owning boundary. `publish` discards the response value; merely calling it does not dispatch a request.
 
 ## Path Parameters
 

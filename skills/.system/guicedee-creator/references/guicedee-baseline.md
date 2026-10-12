@@ -17,8 +17,9 @@ distributionUrl=https://dlcdn.apache.org/maven/maven-4/4.0.0-rc-5/binaries/apach
     <maven.compiler.release>25</maven.compiler.release>
     <maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.target>25</maven.compiler.target>
-    <junit.jupiter.version>6.0.3</junit.jupiter.version>
-    <mockito.version>5.12.0</mockito.version>
+    <guicedee.version>2.3.0</guicedee.version>
+    <junit.jupiter.version>6.1.3</junit.jupiter.version>
+    <mockito.version>5.24.0</mockito.version>
 </properties>
 ```
 
@@ -68,7 +69,20 @@ distributionUrl=https://dlcdn.apache.org/maven/maven-4/4.0.0-rc-5/binaries/apach
 </build>
 ```
 
+### Runtime dependency
+
+An executable using the process bootstrap needs `com.guicedee:inject`, with its version managed by the BOM:
+
+```xml
+<dependency>
+    <groupId>com.guicedee</groupId>
+    <artifactId>inject</artifactId>
+</dependency>
+```
+
 ### Testing dependencies (JUnit Jupiter + Mockito)
+
+The example versions match the reviewed Versioner. When a platform parent/BOM already manages tests, use its managed versions rather than introducing duplicate pins.
 `pom.xml` must include this dependency at minimum:
 
 ```xml
@@ -117,6 +131,9 @@ Add Playwright only when browser-level automation is needed.
 ```java
 module com.example.my.module {
     requires com.google.guice;
+    requires com.guicedee.guicedinjection;
+    requires com.guicedee.client;
+    requires org.apache.logging.log4j;
 
     // Open package(s) as needed for reflection/injection/serialization/runtime hooks.
     opens com.example.my.module.core to com.google.guice, tools.jackson.databind, com.guicedee.vertx;
@@ -146,22 +163,26 @@ Create an application entrypoint under `src/main/java` that initializes logging 
 package com.example.my.module.bootstrap;
 
 import com.guicedee.client.IGuiceContext;
-import com.guicedee.logging.LogUtils;
+import com.guicedee.client.utils.LogUtils;
+import com.guicedee.guicedinjection.GuiceApplication;
 import org.apache.logging.log4j.Level;
 
 public class Main {
     public static void main(String[] args) {
-        // Configure Logging
-        LogUtils.addHighlightedConsoleLogger(Level.DEBUG);
-        // Register Slim Classpath Scanning and Modularization
-        IGuiceContext.registerModule("com.example.my.module");
-        // Start Guice Context
-        IGuiceContext.instance().inject();
+        GuiceApplication.run(() -> {
+            LogUtils.addHighlightedConsoleLogger(Level.DEBUG);
+            IGuiceContext.registerModule("com.example.my.module");
+            IGuiceContext.instance().getConfig()
+                .setClasspathScanning(true).setAnnotationScanning(true)
+                .setMethodInfo(true).setFieldInfo(true);
+        });
     }
 }
 ```
 
 Rule: the string passed to `IGuiceContext.registerModule(...)` must match the main module name from `src/main/java/module-info.java`.
+
+Use the process wrapper only for executable mains. Embedded applications and tests call `inject()` and observe `getLoadingFinished()` themselves; failed startup must not terminate their host process.
 
 ## Lifecycle SPI customization (optional but strict when used)
 
@@ -180,7 +201,7 @@ All lifecycle hooks extend `IDefaultService<J>` (CRTP); override `sortOrder()` t
 
 ```java
 @Override
-public int sortOrder() {
+public Integer sortOrder() {
     return 100;
 }
 ```

@@ -29,7 +29,7 @@ Create a new module with GuicedEE baseline constraints and validate them determi
 6. Create a bootstrap main class with:
    - `LogUtils.addHighlightedConsoleLogger(Level.DEBUG)`
    - `IGuiceContext.registerModule("<moduleName>")`
-   - `IGuiceContext.instance().inject()`
+   - `GuiceApplication.run(preparation)` for executable mains, or `IGuiceContext.instance().inject()` for embedded startup. The process wrapper awaits asynchronous loading and exits on failed startup; tests must not invoke that exit-owning path. Enable the scanning required by the application's annotations during preparation (see `guicedee-inject`).
 7. If lifecycle/injection sequence customization is needed, implement lifecycle SPI classes:
    - `com.guicedee.client.services.lifecycle.IGuicePreStartup`
    - `com.guicedee.client.services.lifecycle.IGuiceModule`
@@ -59,19 +59,22 @@ Create a new module with GuicedEE baseline constraints and validate them determi
 - Every test package must include an `opens <package> to org.junit.platform.commons;` directive.
 - Injection packages must `opens` to `com.google.guice`.
 - DTO/JSON deserialization packages must `opens` to `tools.jackson.databind`.
-- The bundled Jackson opens regression checks run with `python -B scripts/test_verify_guicedee_baseline.py` from this skill directory; retained `com.fasterxml.jackson.annotation` imports still require the Jackson 3 databind open target.
+- The bundled Jackson opens and lifecycle registration regression checks run with `python -B scripts/test_verify_guicedee_baseline.py` from this skill directory; retained `com.fasterxml.jackson.annotation` imports still require the Jackson 3 databind open target.
 - Vert.x packages must `opens` to `com.guicedee.vertx`.
 - Safe default for main module packages: open used packages to all required targets (`com.google.guice`, `tools.jackson.databind`, `com.guicedee.vertx`).
 - Safe default for test module packages: also include `org.junit.platform.commons`.
 - A bootstrap `main()` class must exist in `src/main/java` and register the current module name.
 - Lifecycle SPI implementations must be registered in both `module-info.java` and `META-INF/services`.
-- Lifecycle SPI implementations must override `sortOrder()` (from `IDefaultService<J>`).
+- Override `Integer sortOrder()` only when the inherited lifecycle order needs changing. Primitive `int` is not a valid override. Use `Integer shutdownSortOrder()` when teardown requires a different order.
 - Testing baseline must include JUnit Jupiter `6.0.3+` and Mockito.
 - Playwright is optional and should be added for browser/E2E automation use cases.
 - Package names cannot be duplicated between main and test modules.
 - Test packages must use `.test` suffix.
 
 ## Validation Command
+
+The bundled validator checks local POM/source conventions; it does not resolve inherited Maven models or compile Java. For platform children with inherited BOMs, plugins, or test versions, compare its findings with `mvn help:effective-pom` and a resolved dependency tree. Do not duplicate managed versions merely to satisfy a local-file check. Maven compilation and appropriate module tests remain separate validation.
+
 ```bash
 python3 scripts/verify_guicedee_baseline.py --project-root .
 ```

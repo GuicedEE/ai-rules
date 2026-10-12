@@ -15,7 +15,7 @@ Build SOAP services using standard JAX-WS annotations (`@WebService`, `@WebMetho
 
 ## Required Flow
 
-1. Add `com.guicedee:guiced-webservices` dependency.
+1. Add `com.guicedee:web-services` and `requires com.guicedee.webservices;`.
 2. Define the service contract:
    ```java
    @WebService(targetNamespace = "http://example.com/hello", name = "HelloService")
@@ -36,7 +36,7 @@ Build SOAP services using standard JAX-WS annotations (`@WebService`, `@WebMetho
        public String sayHello(String name) { return "Hello " + name; }
    }
    ```
-4. Publish the endpoint during startup via `IGuicePostStartup`.
+4. Enable scanning of the implementation package. `WebServicePostStartup` discovers concrete `@WebService` classes, obtains Guice-managed instances, and publishes through CXF's Vert.x transport. Use `WSContext` for explicit endpoint registration when scanning is insufficient; do not publish a duplicate endpoint from another startup hook.
 5. For WSDL-first, use the CXF codegen plugin (`cxf-codegen-plugin`).
 
 ## Features

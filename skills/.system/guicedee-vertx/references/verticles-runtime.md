@@ -177,8 +177,8 @@ module my.app {
 ### `package-info.java`
 
 ```java
-@VertX(workerPoolSize = 32)
-@EventBusOptions(preferNativeTransport = true)
+@VertX(workerPoolSize = 32, preferNativeTransport = true)
+@EventBusOptions(host = "127.0.0.1")
 package my.app;
 
 import com.guicedee.vertx.spi.VertX;

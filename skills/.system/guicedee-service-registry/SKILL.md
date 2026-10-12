@@ -90,7 +90,7 @@ Each `@RegisteredService` can specify its own `healthPath`:
 @RegisteredService(name = "standard-service")  // uses registry default "/health/ready"
 ```
 
-`ServiceEntry.healthUrl()` concatenates `url + healthPath` to get the full health check URL.
+`ServiceEntry.healthUrl()` uses explicit `healthUrl` metadata when present; otherwise it normalizes the service URL and health path.
 
 ## Self-Registration
 
@@ -99,46 +99,22 @@ When `registerSelf = true` (default) and `runtime-autoconfigure` is on classpath
 - Registers self with status UP and metadata `{self: "true"}`
 - Self entries are skipped during health checks
 
-## Automatic Discovery (preferred — do not hand-roll)
+## Discovery and instance ownership
 
-GuicedEE discovers peers **automatically**; do **not** maintain a hand-written peer
-list or build a custom `IServiceRegistryProvider` just to enumerate known services.
-Three built-in mechanisms cooperate:
+The registry is JVM-local state. Self-registration adds this process to its own registry; it does not publish a network catalogue or enumerate peers. DNS-suffix construction forms a URL for an already known name. Declare known peers with `@RegisteredService`, or use `IServiceRegistryProvider` to read the deployment's authoritative catalogue.
 
-1. **Self-registration** (`registerSelf = true` + `runtime-autoconfigure`) — every
-   service advertises its own identity/host/port at startup. No peer declares another.
-2. **DNS-suffix URL construction** — when a name has no explicit URL, the registry
-   builds `https://{name}.{dnsSuffix}` from the first available of
-   `CONTAINER_APP_ENV_DNS_SUFFIX` (Azure Container Apps), `runtime-autoconfigure`
-   `dnsSuffix`, or `SERVICE_REGISTRY_DNS_SUFFIX` (manual fallback).
-3. **`service-discovery` module** (`com.guicedee.vertx.servicediscovery`) — a Vert.x
-   service resolver (Kubernetes / SRV aware) that resolves service names to live
-   addresses at call time. Add the dependency + `requires
-   com.guicedee.vertx.servicediscovery`; it self-activates via lifecycle SPIs (no
-   wiring). This is the "automatic discovery" backbone for clustered/K8s deployments.
+The separate `service-discovery` module resolves configured services through `@ServiceResolverOptions` or its provider SPI. Adding the dependency activates lifecycle discovery of that configuration; it does not supply the names, network configuration, or an automatically replicated registry. Check resolver configuration before assuming another process is discoverable.
 
-```java
-// Idiomatic: declare ONLY options; rely on self-registration + discovery for peers.
-@ServiceRegistryOptions(healthCheckInterval = 30, registerSelf = true, useHttps = true)
-package com.myapp;
-```
-
-> **When to still use `@RegisteredService`.** Only for genuinely *external* / third-party
-> endpoints that cannot self-register (a legacy API, a public site). Never to list your
-> own platform's GuicedEE services — those self-register and are discovered.
-
-> **Local-dev caveat.** With no cloud platform and no DNS suffix, `runtime-autoconfigure`
-> cannot resolve a public URL, so the self entry may carry an empty URL and a periodic
-> health check can show it `DOWN`. This is expected for plain local runs — real discovery
-> happens in the target environment. Set `SERVICE_REGISTRY_DNS_SUFFIX` locally if you want
-> name → URL construction, or run the cluster (K8s/compose) where the resolver applies.
+Use `registerInstance`, `unregisterInstance`, and `updateInstanceStatus` for revision-specific entries. `healthyInstances` and `latestHealthyInstance` expose candidates; `ServiceEntry.isHealthy()` includes both `UP` and `DEGRADED`. Choose an explicit policy when a caller requires strictly `UP`. Registration and service health do not establish application identity, user consent, or authorization.
 
 ## Health Checks
 
-- Periodic HTTP GET to `{url}{healthPath}` using Vert.x WebClient
-- 2xx/3xx → UP, 503 → DEGRADED, other → DOWN, connection failure → DOWN
-- Configurable interval (default 30s) and timeout (default 5000ms)
-- `trustAll = true` by default (for dev clusters)
+- Periodic HTTP GET to `ServiceEntry.healthUrl()`; self entries are skipped.
+- Interval defaults to 30 seconds and timeout to 5000 ms. Repeated failures back off up to 32 intervals.
+- TLS verification is enabled (`trustAll=false`, `verifyHost=true`); redirects are disabled.
+- Evaluation uses the expected status/content type and, for JSON health responses, MicroProfile health status/checks. Inspect `ServiceRegistryPostStartup` when diagnosing unexpected `UNKNOWN`/`DEGRADED` results rather than equating all successful HTTP responses with readiness.
+- `@RegisteredService(healthUrl="...")` supports a separate health listener. It must be an absolute HTTP(S) URL with a host, valid port, and no credentials, query, or fragment. The public service URL remains the request destination.
+- The optional downstream readiness integration is controlled by `HEALTH_DOWNSTREAM_ENABLED`. An absent registry or empty catalogue is reported as up; it does not prove that required peers exist or that cluster quorum is ready.
 
 ## Integration with rest-client
 
@@ -163,7 +139,7 @@ The rest-client auto-resolves from service registry (no hard dependency):
 | Module | Maven artifact / module name | What It Adds |
 |---|---|---|
 | `runtime-autoconfigure` | `com.guicedee:runtime-autoconfigure` (`com.guicedee.runtime.autoconfigure`) | Self-registration + DNS suffix auto-detection across cloud platforms (AWS, Azure, GCP, K8s, Fly.io, Render, …) |
-| `service-discovery` | `com.guicedee:service-discovery` (`com.guicedee.vertx.servicediscovery`) | **Automatic** Vert.x service resolution (Kubernetes / SRV aware) via the `IServiceResolverProvider` SPI; self-activates through lifecycle hooks |
+| `service-discovery` | `com.guicedee:service-discovery` (`com.guicedee.vertx.servicediscovery`) | Configured Vert.x service resolution via `@ServiceResolverOptions` / `IServiceResolverProvider`; configuration is loaded through lifecycle hooks |
 
 ## @ServiceRegistryOptions Attributes
 
@@ -183,6 +159,9 @@ The rest-client auto-resolves from service registry (no hard dependency):
 | `name` | (required) | Simple logical service name |
 | `url` | `""` | Full URL (empty = auto-construct from DNS suffix). Supports `${ENV_VAR}` |
 | `healthPath` | `""` | Health path override (empty = use registry default) |
+| `healthUrl` | `""` | Explicit absolute health listener URL |
+| `expectedStatusCode` | `200` | Expected health response status |
+| `expectedContentType` | `"application/json"` | Health response evaluation mode |
 | `aliases` | `{}` | Alternative names that resolve to this service |
 | `externalUrls` | `{}` | External/public URLs (custom domains). Supports `${ENV_VAR}` |
 | `externalUrl` | `""` | Single external URL shorthand. Supports `${ENV_VAR}` |
@@ -206,13 +185,7 @@ Register in `module-info.java`:
 provides IServiceRegistryProvider with AzureCatalogProvider;
 ```
 
-> **Don't reach for this SPI to list your own services.** It exists to bridge a *real
-> external catalog* (Azure Resource Graph, Consul, a CMDB). Implementing one that just
-> reads a static/env-driven peer list (e.g. `NE1_REGISTRY_PEERS=name=url;…`) is an
-> anti-pattern — it re-invents what self-registration + the `service-discovery` resolver +
-> DNS-suffix construction already do automatically. Prefer those (see *Automatic
-> Discovery*); use a custom provider only when integrating an authoritative external
-> registry.
+Also register the provider in `META-INF/services/com.guicedee.service.registry.IServiceRegistryProvider` for classpath launches. Keep one owner for the peer catalogue and avoid duplicating discovery mechanisms with conflicting entries.
 
 ## Non-Negotiable Constraints
 

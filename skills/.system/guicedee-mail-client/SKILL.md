@@ -36,8 +36,8 @@ Declare SMTP connections with annotations — everything is discovered at startu
        @Inject @Named("notifications")
        private MailService mailService;
 
-       public void sendWelcome(String to) {
-           mailService.sendHtml(to, "Welcome!", "<h1>Welcome aboard!</h1>");
+       public Future<MailResult> sendWelcome(String to) {
+           return mailService.sendHtml(to, "Welcome!", "<h1>Welcome aboard!</h1>");
        }
    }
    ```
@@ -114,6 +114,8 @@ IGuiceContext.instance().inject()
 | `sendHtml(from, to, subject, html)` | Send HTML with explicit from |
 | `sendMultipart(from, to, subject, text, html)` | Send multipart (text + HTML) |
 | `getMailClient()` | Access underlying Vert.x MailClient |
+
+All send methods return `io.vertx.core.Future<io.vertx.ext.mail.MailResult>`. Return or compose that future so the caller observes failure; invoking a send method does not prove successful delivery. `sendMultipart` takes `List<String>` recipients.
 
 ## Non-Negotiable Constraints
 

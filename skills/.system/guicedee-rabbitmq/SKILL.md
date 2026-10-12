@@ -99,6 +99,10 @@ IGuiceContext.instance().inject()
      └─ Starts consumer listeners
 ```
 
+## Publisher completion
+
+`QueuePublisher.publish(String)` returns `void`. Its current implementation handles publish and optional confirm callbacks internally; returning from the method does not report broker acceptance to the caller. Where business logic must await acceptance, use or extend an API exposing that completion rather than wrapping the void call in an already-completed future.
+
 ## Non-Negotiable Constraints
 
 - Module must `requires com.guicedee.rabbit;`.
