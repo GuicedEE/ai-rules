@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-openapi",
+  "version": "2.4.0",
+  "description": "Generate and serve GuicedEE OpenAPI specs from Jakarta REST resources and Swagger annotations.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

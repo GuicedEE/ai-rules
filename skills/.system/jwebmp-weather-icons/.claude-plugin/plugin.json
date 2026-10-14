@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-weather-icons",
+  "version": "2.4.0",
+  "description": "Display weather icon fonts in JWebMP interfaces.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

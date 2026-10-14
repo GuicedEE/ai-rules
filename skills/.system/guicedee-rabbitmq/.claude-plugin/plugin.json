@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-rabbitmq",
+  "version": "2.4.0",
+  "description": "Configure GuicedEE RabbitMQ exchanges, queues, connections, consumers, publishers, and delivery options.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

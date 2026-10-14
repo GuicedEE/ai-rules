@@ -1,0 +1,6 @@
+name: jwebmp-fullcalendar
+version: 2.4.0
+description: Build JWebMP FullCalendar event calendars, scheduling views, event interactions,
+  timezones, and localization.
+license: Apache-2.0
+dependencies: {}

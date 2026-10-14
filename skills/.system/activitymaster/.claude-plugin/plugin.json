@@ -1,0 +1,9 @@
+{
+  "name": "activitymaster",
+  "version": "2.4.0",
+  "description": "Implement ActivityMaster FSDM services and user-scoped plugins, including Mail, Wallet, Payments, Documents, Conversations, Marketplace, security, lifecycle and stateless persistence.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

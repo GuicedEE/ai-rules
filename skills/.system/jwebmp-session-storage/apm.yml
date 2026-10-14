@@ -1,0 +1,6 @@
+name: jwebmp-session-storage
+version: 2.4.0
+description: Store temporary JWebMP browser data for the current tab/session using
+  Session Storage.
+license: Apache-2.0
+dependencies: {}

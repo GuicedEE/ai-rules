@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-creator",
+  "version": "2.4.0",
+  "description": "Scaffold new GuicedEE Maven modules with BOM imports, Maven/JDK baselines, and separate JPMS main/test packages.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

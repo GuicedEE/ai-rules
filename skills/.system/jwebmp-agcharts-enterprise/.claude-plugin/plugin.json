@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-agcharts-enterprise",
+  "version": "2.4.0",
+  "description": "Add licensed AG Charts Enterprise visualizations to JWebMP, including financial charts, heatmaps, treemaps, and sankey diagrams.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

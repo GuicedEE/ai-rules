@@ -1,0 +1,6 @@
+name: structured-skill-creator
+version: 2.4.0
+description: Create or update skills under `skills/` with strict compliance to the
+  local structured template and validation workflow.
+license: Apache-2.0
+dependencies: {}

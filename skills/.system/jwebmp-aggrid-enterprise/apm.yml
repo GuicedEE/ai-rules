@@ -1,0 +1,6 @@
+name: jwebmp-aggrid-enterprise
+version: 2.4.0
+description: 'Add licensed AG Grid Enterprise features to JWebMP: grouping, pivoting,
+  master/detail, server-side rows, and Excel export.'
+license: Apache-2.0
+dependencies: {}

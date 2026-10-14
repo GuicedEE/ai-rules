@@ -1,0 +1,6 @@
+name: jwebmp-easing
+version: 2.4.0
+description: Configure jQuery easing functions for JWebMP animations, transitions,
+  and scrolling effects.
+license: Apache-2.0
+dependencies: {}

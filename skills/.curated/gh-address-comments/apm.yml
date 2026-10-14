@@ -1,0 +1,6 @@
+name: gh-address-comments
+version: 2.4.0
+description: Address review and issue comments on the current branch's GitHub PR using
+  gh CLI.
+license: Apache-2.0
+dependencies: {}

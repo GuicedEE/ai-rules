@@ -1,0 +1,9 @@
+{
+  "name": "playwright",
+  "version": "2.4.0",
+  "description": "Automate real browsers from the terminal for navigation, forms, screenshots, extraction, and UI debugging using playwright-cli.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

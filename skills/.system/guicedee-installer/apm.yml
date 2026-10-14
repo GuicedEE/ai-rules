@@ -1,0 +1,6 @@
+name: guicedee-installer
+version: 2.4.0
+description: Retrofit existing Maven modules with GuicedEE BOMs, Maven/JDK baselines,
+  and JPMS main/test boundaries.
+license: Apache-2.0
+dependencies: {}

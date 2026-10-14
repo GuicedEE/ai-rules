@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-easy-pie-chart",
+  "version": "2.4.0",
+  "description": "Embed animated Easy Pie Chart pie and doughnut widgets in JWebMP.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

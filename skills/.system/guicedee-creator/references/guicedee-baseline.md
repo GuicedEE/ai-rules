@@ -17,7 +17,7 @@ distributionUrl=https://dlcdn.apache.org/maven/maven-4/4.0.0-rc-5/binaries/apach
     <maven.compiler.release>25</maven.compiler.release>
     <maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.target>25</maven.compiler.target>
-    <guicedee.version>2.3.0</guicedee.version>
+    <guicedee.version>2.4.0</guicedee.version>
     <junit.jupiter.version>6.1.3</junit.jupiter.version>
     <mockito.version>5.24.0</mockito.version>
 </properties>

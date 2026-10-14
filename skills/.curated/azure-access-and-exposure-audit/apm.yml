@@ -1,0 +1,6 @@
+name: azure-access-and-exposure-audit
+version: 2.4.0
+description: Audit Azure network exposure and harden ACLs, or diagnose RBAC/PIM access,
+  activation, and approval failures with PowerShell or bash.
+license: Apache-2.0
+dependencies: {}

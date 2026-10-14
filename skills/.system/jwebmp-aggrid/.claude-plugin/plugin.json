@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-aggrid",
+  "version": "2.4.0",
+  "description": "Build JWebMP AG Grid community tables with Java column models, filtering, sorting, pagination, selection, and data binding.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

@@ -1,0 +1,1424 @@
+{
+  "name": "guicedee-ai-rules",
+  "interface": {
+    "displayName": "guicedee-ai-rules"
+  },
+  "plugins": [
+    {
+      "name": "aggrid",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/aggrid"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "api-integration-specialist",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/api-integration-specialist"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "arm-to-terraform-migration",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/arm-to-terraform-migration"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "azure-access-and-exposure-audit",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/azure-access-and-exposure-audit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "changelog-generator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/changelog-generator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "code-reviewer",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/code-reviewer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/dispatching-parallel-agents"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "figma",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/figma"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/finishing-a-development-branch"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "gh-address-comments",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/gh-address-comments"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "gh-fix-ci",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/gh-fix-ci"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "git-commit-helper",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/git-commit-helper"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "git-commit-signing",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/git-commit-signing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "information-architect",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/information-architect"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "playwright",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/playwright"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "screenshot",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/screenshot"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "security-best-practices",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/security-best-practices"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "security-compliance",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/security-compliance"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "security-ownership-map",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/security-ownership-map"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "senior-architect",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/senior-architect"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "senior-backend",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/senior-backend"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "senior-devops",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/senior-devops"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "senior-prompt-engineer",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/senior-prompt-engineer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "senior-qa",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/senior-qa"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "senior-secops",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/senior-secops"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "skill-adopter",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/skill-adopter"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "structured-skill-creator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/structured-skill-creator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "systematic-debugging",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/systematic-debugging"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-code-generator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-code-generator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-doc-generator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-doc-generator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-module-scaffold",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-module-scaffold"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-plan-analyzer",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-plan-analyzer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-project-generator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-project-generator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-resource-fetch",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-resource-fetch"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-security-scanner",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-security-scanner"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-state-manager",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-state-manager"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "terraform-validator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/terraform-validator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "test-driven-development",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/test-driven-development"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "using-git-worktrees",
+      "source": {
+        "source": "local",
+        "path": "./skills/.curated/using-git-worktrees"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "activitymaster",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/activitymaster"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "entityassist",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/entityassist"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-auth",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-auth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-cdi",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-cdi"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-cerial",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-cerial"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-client",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-client"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-cloud-app",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-cloud-app"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-config",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-config"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-creator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-creator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-hazelcast",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-hazelcast"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-health",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-health"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-ibmmq",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-ibmmq"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-inject",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-inject"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-installer",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-installer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-jpms-shade",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-jpms-shade"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-jwt",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-jwt"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-kafka",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-kafka"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-mail-client",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-mail-client"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-metrics",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-metrics"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-openapi",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-openapi"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-persistence",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-persistence"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-rabbitmq",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-rabbitmq"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-rest",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-rest"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-rest-client",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-rest-client"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-service-registry",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-service-registry"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-swagger-ui",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-swagger-ui"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-telemetry",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-telemetry"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-vertx",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-vertx"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-web",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-web"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-webservices",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-webservices"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-websockets",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/guicedee-websockets"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-agcharts",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-agcharts"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-agcharts-enterprise",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-agcharts-enterprise"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-aggrid",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-aggrid"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-aggrid-enterprise",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-aggrid-enterprise"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-angular"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular-forms",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-angular-forms"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular-graphql",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-angular-graphql"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular-material",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-angular-material"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-bootstrap",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-bootstrap"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-c3",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-c3"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-chartjs",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-chartjs"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-client",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-client"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-core",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-core"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-d3",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-d3"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-datatables",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-datatables"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-easing",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-easing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-easy-pie-chart",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-easy-pie-chart"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fontawesome",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-fontawesome"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fontawesome-pro",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-fontawesome-pro"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fullcalendar",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-fullcalendar"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fullcalendar-pro",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-fullcalendar-pro"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-globalize",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-globalize"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-glyph-icons",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-glyph-icons"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-java-generator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-java-generator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-jqplot",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-jqplot"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-jquery",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-jquery"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-jquery-ui",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-jquery-ui"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-local-storage",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-local-storage"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-markdown",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-markdown"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-material-design-icons",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-material-design-icons"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-material-icons",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-material-icons"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-plus-as-tab",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-plus-as-tab"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-prettify",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-prettify"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-prism",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-prism"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-session-storage",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-session-storage"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-skycons",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-skycons"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-themify-icons",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-themify-icons"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-toastr",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-toastr"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-tsclient",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-tsclient"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-vertx",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-vertx"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-waves-effect",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-waves-effect"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-waypoints",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-waypoints"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-weather-icons",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-weather-icons"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-webawesome",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-webawesome"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-webawesome-pro",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-webawesome-pro"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-website-aside-routing",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/jwebmp-website-aside-routing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "skill-creator",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/skill-creator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "skill-installer",
+      "source": {
+        "source": "local",
+        "path": "./skills/.system/skill-installer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    }
+  ]
+}

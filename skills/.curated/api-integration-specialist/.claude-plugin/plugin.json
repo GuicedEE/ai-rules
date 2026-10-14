@@ -1,0 +1,9 @@
+{
+  "name": "api-integration-specialist",
+  "version": "2.4.0",
+  "description": "Integrate external REST/GraphQL APIs or webhooks, including authentication, retries, rate limits, and request/response mapping.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

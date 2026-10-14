@@ -1,0 +1,9 @@
+{
+  "name": "terraform-security-scanner",
+  "version": "2.4.0",
+  "description": "Comprehensive security scanning for Terraform code including secrets detection, compliance checks, and vulnerability assessment",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

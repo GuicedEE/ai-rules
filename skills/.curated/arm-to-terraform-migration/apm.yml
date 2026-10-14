@@ -1,0 +1,6 @@
+name: arm-to-terraform-migration
+version: 2.4.0
+description: Convert Azure ARM templates to Terraform HCL configuration with full
+  resource mapping and dependency preservation
+license: Apache-2.0
+dependencies: {}

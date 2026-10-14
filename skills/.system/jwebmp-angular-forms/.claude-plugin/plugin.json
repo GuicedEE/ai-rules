@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-angular-forms",
+  "version": "2.4.0",
+  "description": "Build JWebMP Angular reactive or template-driven forms with bindings, validation, and submission handling.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-persistence",
+  "version": "2.4.0",
+  "description": "Configure GuicedEE DatabaseModule, Hibernate Reactive session factories, persistence units, and multiple databases.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

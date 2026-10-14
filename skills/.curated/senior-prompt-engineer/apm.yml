@@ -1,0 +1,6 @@
+name: senior-prompt-engineer
+version: 2.4.0
+description: Write, refactor, and evaluate assistant prompts, tool-use instructions,
+  and agent workflows; diagnose LLM behavior regressions.
+license: Apache-2.0
+dependencies: {}

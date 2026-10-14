@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-webawesome-pro",
+  "version": "2.4.0",
+  "description": "Use JWebMP WebAwesome Pro comboboxes, date pickers, uploads, charts, video, premium icons, and toast notifications.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

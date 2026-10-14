@@ -1,0 +1,9 @@
+{
+  "name": "screenshot",
+  "version": "2.4.0",
+  "description": "Capture desktop, window, or region screenshots when explicitly requested or when tool-specific capture is unavailable.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

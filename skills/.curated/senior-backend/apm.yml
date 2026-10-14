@@ -1,0 +1,6 @@
+name: senior-backend
+version: 2.4.0
+description: Build or review backend APIs and services, including data models, authentication,
+  migrations, performance, and observability.
+license: Apache-2.0
+dependencies: {}

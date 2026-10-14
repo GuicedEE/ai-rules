@@ -1,0 +1,6 @@
+name: jwebmp-chartjs
+version: 2.4.0
+description: Build responsive Chart.js charts in JWebMP with Java options, data series,
+  animations, and plugins.
+license: Apache-2.0
+dependencies: {}

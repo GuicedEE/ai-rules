@@ -1,0 +1,9 @@
+{
+  "name": "senior-devops",
+  "version": "2.4.0",
+  "description": "Design CI/CD, infrastructure, deployments, monitoring, and runbooks, or assess operational readiness.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

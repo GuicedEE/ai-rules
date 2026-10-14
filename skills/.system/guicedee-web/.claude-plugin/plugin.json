@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-web",
+  "version": "2.4.0",
+  "description": "Configure GuicedEE Vert.x HTTP/HTTPS servers, routers, middleware, TLS, and server configurator SPIs.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

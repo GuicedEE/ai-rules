@@ -1,0 +1,6 @@
+name: guicedee-jpms-shade
+version: 2.4.0
+description: Wrap non-modular JARs as GuicedEE JPMS service modules for jlink, including
+  shade/moditect setup, BOM registration, and consumers.
+license: Apache-2.0
+dependencies: {}

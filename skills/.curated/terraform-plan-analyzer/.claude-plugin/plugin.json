@@ -1,0 +1,9 @@
+{
+  "name": "terraform-plan-analyzer",
+  "version": "2.4.0",
+  "description": "Parse, explain, and analyze terraform plan output for impact assessment, cost estimation, and risk evaluation",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

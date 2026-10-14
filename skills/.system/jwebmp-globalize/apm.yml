@@ -1,0 +1,6 @@
+name: jwebmp-globalize
+version: 2.4.0
+description: Localize JWebMP content and format numbers, currencies, and dates with
+  Globalize.
+license: Apache-2.0
+dependencies: {}

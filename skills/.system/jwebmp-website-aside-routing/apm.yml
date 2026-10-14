@@ -1,0 +1,6 @@
+name: jwebmp-website-aside-routing
+version: 2.4.0
+description: Synchronize JWebMP WaPage main and named aside routes for per-page side
+  panels and "On this page" navigation.
+license: Apache-2.0
+dependencies: {}

@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-webawesome",
+  "version": "2.4.0",
+  "description": "Build and style JWebMP WebAwesome components, WaPage layouts, forms, overlays, and theme tokens.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

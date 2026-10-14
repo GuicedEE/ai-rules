@@ -1,0 +1,5 @@
+name: jwebmp-material-design-icons
+version: 2.4.0
+description: Add Google Material Design Icons to JWebMP interfaces.
+license: Apache-2.0
+dependencies: {}

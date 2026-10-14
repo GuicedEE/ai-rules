@@ -1,0 +1,6 @@
+name: dispatching-parallel-agents
+version: 2.4.0
+description: Split complex work into independent tasks and coordinate parallel agents
+  with clear ownership, context, and consolidated results.
+license: Apache-2.0
+dependencies: {}

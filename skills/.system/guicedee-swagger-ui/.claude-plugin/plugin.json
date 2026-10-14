@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-swagger-ui",
+  "version": "2.4.0",
+  "description": "Add the browsable Swagger UI to a GuicedEE application's generated OpenAPI specification.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

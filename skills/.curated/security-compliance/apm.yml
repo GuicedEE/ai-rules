@@ -1,0 +1,6 @@
+name: security-compliance
+version: 2.4.0
+description: Assess security posture, threat models, and compliance evidence for SOC2,
+  ISO27001, GDPR, or HIPAA requirements.
+license: Apache-2.0
+dependencies: {}

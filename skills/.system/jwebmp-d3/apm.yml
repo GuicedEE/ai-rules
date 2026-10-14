@@ -1,0 +1,6 @@
+name: jwebmp-d3
+version: 2.4.0
+description: Build custom D3 visualizations in JWebMP using selections, scales, axes,
+  and transitions.
+license: Apache-2.0
+dependencies: {}

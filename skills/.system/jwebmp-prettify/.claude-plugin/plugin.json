@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-prettify",
+  "version": "2.4.0",
+  "description": "Highlight code snippets in JWebMP with Google Prettify.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

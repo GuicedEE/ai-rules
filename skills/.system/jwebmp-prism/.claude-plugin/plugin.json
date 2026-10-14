@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-prism",
+  "version": "2.4.0",
+  "description": "Highlight JWebMP code blocks with Prism themes, line numbers, and copy controls.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

@@ -1,0 +1,6 @@
+name: jwebmp-toastr
+version: 2.4.0
+description: Show non-blocking toast notifications in JWebMP using the jQuery Toastr
+  integration.
+license: Apache-2.0
+dependencies: {}

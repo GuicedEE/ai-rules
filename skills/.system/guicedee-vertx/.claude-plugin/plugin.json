@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-vertx",
+  "version": "2.4.0",
+  "description": "Build GuicedEE Vert.x event-bus consumers, publishers, codecs, verticles, clustering, and reactive runtime extensions.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

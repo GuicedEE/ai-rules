@@ -37,6 +37,70 @@ skill-name/
 
 ## Enterprise Usage
 
+### APM marketplace
+
+This repository is the `guicedee-ai-rules` Agent Package Manager marketplace.
+Its 118 skills are individually installable; existing skill paths remain valid.
+Install [APM](https://microsoft.github.io/apm/getting-started/installation/) 0.33.0
+or newer with the official installer for your platform:
+
+Windows (PowerShell):
+
+```powershell
+irm https://aka.ms/apm-windows | iex
+```
+
+Linux and macOS:
+
+```bash
+curl -sSL https://aka.ms/apm-unix | sh
+```
+
+Open a new terminal after installation. The marketplace commands are the same
+on all three platforms. Run these
+commands in your application project after the marketplace changes are published:
+
+```bash
+apm --version
+apm marketplace add GuicedEE/ai-rules
+apm install guicedee-inject@guicedee-ai-rules
+apm install jwebmp-core@guicedee-ai-rules
+```
+
+APM detects the project's assistant. Use `--target codex`, `--target claude`, or
+`--target copilot` on `apm install` to select one explicitly. Follow APM's project
+lockfile workflow to retain reproducible installs.
+
+For a local preview before publication, export a plain directory after packing.
+APM 0.33.0 reads Git-backed directory marketplaces from committed blobs; the
+export makes the current working files available without committing:
+
+```bash
+python scripts/build-marketplace.py --export
+apm marketplace add /absolute/path/to/ai-rules/target/marketplace-preview
+apm install guicedee-inject@guicedee-ai-rules
+```
+
+The root `apm.yml` is the marketplace source. Generated indexes are
+`.claude-plugin/marketplace.json` (APM, Claude Code and Copilot) and
+`.agents/plugins/marketplace.json` (Codex). Per-skill `apm.yml` and
+`.claude-plugin/plugin.json` files expose each canonical skill without duplicating
+its instructions, scripts or references. Version 2.4.0 aligns this initial
+marketplace metadata with the GuicedEE release.
+
+After adding or changing a skill, regenerate and validate with Python/PyYAML and APM:
+
+```bash
+python scripts/build-marketplace.py
+apm marketplace check
+apm pack --offline
+apm pack --offline --check-clean --check-versions
+```
+
+The generator refreshes metadata from each `SKILL.md`. Review generated changes
+alongside the skill changes before publishing the repository. Catalog generation
+does not commit, tag or push. See [APM marketplace authoring](https://microsoft.github.io/apm/producer/publish-to-a-marketplace/).
+
 ### Consuming as a Git submodule
 
 ```bash

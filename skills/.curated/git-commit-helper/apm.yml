@@ -1,0 +1,6 @@
+name: git-commit-helper
+version: 2.4.0
+description: Draft conventional commit messages and organize changes into commits
+  with clear intent and scope.
+license: Apache-2.0
+dependencies: {}

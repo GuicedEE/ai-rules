@@ -1,0 +1,5 @@
+name: jwebmp-waves-effect
+version: 2.4.0
+description: Add Waves Material Design ripple effects to JWebMP interactions.
+license: Apache-2.0
+dependencies: {}

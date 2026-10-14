@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-material-icons",
+  "version": "2.4.0",
+  "description": "Use the older Google Material Icons integration in JWebMP.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

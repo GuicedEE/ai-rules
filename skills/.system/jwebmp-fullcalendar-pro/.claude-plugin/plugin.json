@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-fullcalendar-pro",
+  "version": "2.4.0",
+  "description": "Add licensed FullCalendar Premium resource scheduling and timeline views to JWebMP calendars.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

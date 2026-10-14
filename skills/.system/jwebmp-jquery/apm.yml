@@ -1,0 +1,6 @@
+name: jwebmp-jquery
+version: 2.4.0
+description: Use JWebMP's jQuery integration for DOM manipulation, events, effects,
+  AJAX, and plugin dependencies.
+license: Apache-2.0
+dependencies: {}

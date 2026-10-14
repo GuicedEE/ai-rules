@@ -1,0 +1,6 @@
+name: entityassist
+version: 2.4.0
+description: Build EntityAssist CRTP entities and reactive query DSLs, including CRUD,
+  joins, aggregates, transactions, and stateless sessions.
+license: Apache-2.0
+dependencies: {}

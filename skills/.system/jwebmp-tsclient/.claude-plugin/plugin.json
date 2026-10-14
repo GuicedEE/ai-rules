@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-tsclient",
+  "version": "2.4.0",
+  "description": "Define JWebMP TypeScript generation, npm dependencies, Angular annotations, and typed NgRestClient services from Java.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

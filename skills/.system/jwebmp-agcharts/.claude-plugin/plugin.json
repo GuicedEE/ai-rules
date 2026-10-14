@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-agcharts",
+  "version": "2.4.0",
+  "description": "Build JWebMP AG Charts community visualizations with Java chart options, generated TypeScript, data binding, and themes.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

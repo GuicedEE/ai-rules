@@ -1,0 +1,6 @@
+name: senior-qa
+version: 2.4.0
+description: Plan risk-based testing, assess coverage, investigate flaky tests, and
+  define release verification criteria.
+license: Apache-2.0
+dependencies: {}

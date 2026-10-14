@@ -1,0 +1,9 @@
+{
+  "name": "terraform-module-scaffold",
+  "version": "2.4.0",
+  "description": "Create production-ready, reusable Terraform modules with complete documentation, examples, and tests",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

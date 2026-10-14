@@ -1,0 +1,6 @@
+name: terraform-code-generator
+version: 2.4.0
+description: Auto-generate Terraform resource blocks by fetching latest schemas from
+  Terraform Registry in real-time
+license: Apache-2.0
+dependencies: {}

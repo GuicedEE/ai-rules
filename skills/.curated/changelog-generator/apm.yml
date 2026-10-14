@@ -1,0 +1,6 @@
+name: changelog-generator
+version: 2.4.0
+description: Turn Git commit history into user-facing changelogs and release notes,
+  grouping changes and explaining their impact.
+license: Apache-2.0
+dependencies: {}

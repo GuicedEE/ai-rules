@@ -1,0 +1,6 @@
+name: security-best-practices
+version: 2.4.0
+description: Review or improve Python, JavaScript/TypeScript, or Go security only
+  when explicitly requested; excludes general reviews and debugging.
+license: Apache-2.0
+dependencies: {}

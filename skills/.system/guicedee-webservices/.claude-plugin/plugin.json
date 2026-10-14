@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-webservices",
+  "version": "2.4.0",
+  "description": "Build GuicedEE SOAP/JAX-WS services with CXF, WSDL bindings, interceptors, MTOM, and WS-Security.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

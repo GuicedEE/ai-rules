@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-rest-client",
+  "version": "2.4.0",
+  "description": "Make outbound GuicedEE REST calls with typed RestClient/Endpoint bindings, authentication, and service-registry resolution.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

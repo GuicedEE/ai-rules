@@ -1,0 +1,6 @@
+name: jwebmp-angular
+version: 2.4.0
+description: Generate Angular apps from JWebMP Java annotations; configure components,
+  routes, services, control flow, and STOMP messaging.
+license: Apache-2.0
+dependencies: {}

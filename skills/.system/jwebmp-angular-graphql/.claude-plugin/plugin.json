@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-angular-graphql",
+  "version": "2.4.0",
+  "description": "Generate typed Apollo Angular services from JWebMP NgGraphQL annotations for GraphQL queries, mutations, and subscriptions.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

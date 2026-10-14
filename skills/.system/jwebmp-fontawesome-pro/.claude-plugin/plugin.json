@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-fontawesome-pro",
+  "version": "2.4.0",
+  "description": "Use licensed Font Awesome 7.3.1 Pro and Pro+ family catalogs, styles, and icon kits in JWebMP.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

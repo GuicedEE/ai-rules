@@ -1,0 +1,6 @@
+name: gh-fix-ci
+version: 2.4.0
+description: Diagnose and fix failing GitHub Actions PR checks with gh. For external
+  CI providers, report the details URL only.
+license: Apache-2.0
+dependencies: {}

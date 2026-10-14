@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-waypoints",
+  "version": "2.4.0",
+  "description": "Trigger JWebMP scroll interactions when elements reach viewport waypoints.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-local-storage",
+  "version": "2.4.0",
+  "description": "Persist JWebMP browser data or preferences across sessions using Local Storage.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

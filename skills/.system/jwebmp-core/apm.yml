@@ -1,0 +1,6 @@
+name: jwebmp-core
+version: 2.4.0
+description: Build Java-authored JWebMP HTML components, typed CSS, fluent layouts,
+  page configuration, and server-side events.
+license: Apache-2.0
+dependencies: {}

@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-cloud-app",
+  "version": "2.4.0",
+  "description": "Scaffold GuicedEE cloud applications with parent/BOM/service modules and a local observability stack.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

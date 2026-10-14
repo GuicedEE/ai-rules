@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-skycons",
+  "version": "2.4.0",
+  "description": "Render animated weather icons in JWebMP with Skycons.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

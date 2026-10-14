@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-themify-icons",
+  "version": "2.4.0",
+  "description": "Add Themify icon fonts to JWebMP interfaces.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

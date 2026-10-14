@@ -1,0 +1,9 @@
+{
+  "name": "security-ownership-map",
+  "version": "2.4.0",
+  "description": "Use Git history for explicitly requested security ownership, sensitive-code hotspots, or bus-factor analysis; excludes general maintainer lists.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

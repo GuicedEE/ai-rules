@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-auth",
+  "version": "2.4.0",
+  "description": "Configure GuicedEE authentication providers, authorization annotations, and custom auth SPIs for REST and reactive services.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

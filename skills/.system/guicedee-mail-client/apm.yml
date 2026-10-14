@@ -1,0 +1,6 @@
+name: guicedee-mail-client
+version: 2.4.0
+description: Configure GuicedEE SMTP connections and MailService for email, attachments,
+  TLS, and DKIM.
+license: Apache-2.0
+dependencies: {}

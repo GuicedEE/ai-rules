@@ -1,0 +1,6 @@
+name: terraform-doc-generator
+version: 2.4.0
+description: Auto-generate comprehensive README.md documentation for Terraform modules
+  with usage examples, inputs, outputs, and requirements
+license: Apache-2.0
+dependencies: {}

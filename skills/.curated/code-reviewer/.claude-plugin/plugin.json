@@ -1,0 +1,9 @@
+{
+  "name": "code-reviewer",
+  "version": "2.4.0",
+  "description": "Review PRs and patches for actionable correctness, API/UX, performance, security, and maintainability findings.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "terraform-project-generator",
+  "version": "2.4.0",
+  "description": "Generate complete Terraform project structure with main.tf, variables.tf, outputs.tf, backend.tf, and terraform.tf following best practices",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

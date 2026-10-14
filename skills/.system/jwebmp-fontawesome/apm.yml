@@ -1,0 +1,6 @@
+name: jwebmp-fontawesome
+version: 2.4.0
+description: Use current Free Solid, Regular, and Brands icon enums with JWebMP FontAwesome
+  or WebAwesome icons.
+license: Apache-2.0
+dependencies: {}

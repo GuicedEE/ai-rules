@@ -1,0 +1,6 @@
+name: systematic-debugging
+version: 2.4.0
+description: Investigate bugs, test failures, and unexpected behavior by establishing
+  the cause before proposing a fix.
+license: Apache-2.0
+dependencies: {}

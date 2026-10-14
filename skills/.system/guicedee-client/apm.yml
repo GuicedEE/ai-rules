@@ -1,0 +1,6 @@
+name: guicedee-client
+version: 2.4.0
+description: Implement GuicedEE lifecycle/SPIs, IGuiceContext, call scopes, and Environment
+  configuration without depending on the full runtime.
+license: Apache-2.0
+dependencies: {}

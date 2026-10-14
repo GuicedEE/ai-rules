@@ -1,0 +1,6 @@
+name: jwebmp-angular-material
+version: 2.4.0
+description: Build JWebMP Angular Material interfaces with themed, accessible Material
+  Design components.
+license: Apache-2.0
+dependencies: {}

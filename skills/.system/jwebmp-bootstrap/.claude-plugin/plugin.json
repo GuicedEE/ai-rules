@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-bootstrap",
+  "version": "2.4.0",
+  "description": "Build responsive JWebMP layouts and components using the Bootstrap integration.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

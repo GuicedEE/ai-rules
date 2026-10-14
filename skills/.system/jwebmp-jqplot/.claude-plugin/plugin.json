@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-jqplot",
+  "version": "2.4.0",
+  "description": "Build jqPlot line, bar, pie, and dashboard charts in JWebMP.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

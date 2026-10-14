@@ -1,0 +1,9 @@
+{
+  "name": "test-driven-development",
+  "version": "2.4.0",
+  "description": "Apply red-green-refactor when using test-driven development for behavior changes, bug fixes, or refactoring.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

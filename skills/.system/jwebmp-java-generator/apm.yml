@@ -1,0 +1,6 @@
+name: jwebmp-java-generator
+version: 2.4.0
+description: Export JWebMP component JSON or object trees as Java source; configure
+  class snippets, extend reflection mappings, and inspect generated test files.
+license: Apache-2.0
+dependencies: {}

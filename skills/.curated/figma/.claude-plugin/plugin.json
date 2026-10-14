@@ -1,0 +1,9 @@
+{
+  "name": "figma",
+  "version": "2.4.0",
+  "description": "Fetch Figma designs, assets, and screenshots through MCP; implement Figma URLs/node IDs in code or troubleshoot the Figma connection.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

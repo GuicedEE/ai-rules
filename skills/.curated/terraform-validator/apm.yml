@@ -1,0 +1,6 @@
+name: terraform-validator
+version: 2.4.0
+description: Validate Terraform code for syntax errors, best practices, security issues,
+  and compliance with standards
+license: Apache-2.0
+dependencies: {}

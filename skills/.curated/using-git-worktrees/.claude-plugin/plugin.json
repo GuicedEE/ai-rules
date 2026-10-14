@@ -1,0 +1,9 @@
+{
+  "name": "using-git-worktrees",
+  "version": "2.4.0",
+  "description": "Create isolated Git worktrees when starting work that needs separation from the current workspace.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

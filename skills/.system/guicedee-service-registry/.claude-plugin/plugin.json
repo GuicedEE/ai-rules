@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-service-registry",
+  "version": "2.4.0",
+  "description": "Register GuicedEE services by name, resolve their URLs and aliases, and configure health-aware service discovery.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

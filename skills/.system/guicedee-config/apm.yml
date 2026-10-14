@@ -1,0 +1,6 @@
+name: guicedee-config
+version: 2.4.0
+description: Inject MicroProfile Config values in GuicedEE with SmallRye, custom sources/converters,
+  profiles, and ConfigProperty.
+license: Apache-2.0
+dependencies: {}

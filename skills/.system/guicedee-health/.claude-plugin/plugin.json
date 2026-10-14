@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-health",
+  "version": "2.4.0",
+  "description": "Implement GuicedEE MicroProfile Health checks, liveness/readiness/startup probes, and health endpoints.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

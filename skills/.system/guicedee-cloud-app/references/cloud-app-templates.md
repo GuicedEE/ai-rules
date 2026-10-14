@@ -121,7 +121,7 @@ live. Often a git submodule of its own. Imports bring dependency management only
     <packaging>pom</packaging>
 
     <properties>
-        <guicedee.version>2.3.0</guicedee.version>
+        <guicedee.version>2.4.0</guicedee.version>
         <activitymaster.version>3.0.0-SNAPSHOT</activitymaster.version>
         <jwebmp.version>2.0.3-SNAPSHOT</jwebmp.version>
     </properties>

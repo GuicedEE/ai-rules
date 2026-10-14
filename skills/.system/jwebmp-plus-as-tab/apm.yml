@@ -1,0 +1,6 @@
+name: jwebmp-plus-as-tab
+version: 2.4.0
+description: Configure JWebMP's Plus As Tab integration for keyboard navigation with
+  the plus key.
+license: Apache-2.0
+dependencies: {}

@@ -1,0 +1,9 @@
+{
+  "name": "terraform-state-manager",
+  "version": "2.4.0",
+  "description": "Analyze, inspect, and safely manipulate Terraform state files with drift detection and resource management",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

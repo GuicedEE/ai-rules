@@ -1,0 +1,9 @@
+{
+  "name": "skill-creator",
+  "version": "2.4.0",
+  "description": "Create or update a Codex skill with appropriately scoped instructions and any needed supporting resources.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

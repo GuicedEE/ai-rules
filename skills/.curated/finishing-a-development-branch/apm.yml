@@ -1,0 +1,6 @@
+name: finishing-a-development-branch
+version: 2.4.0
+description: Use when preparing to finish a development branch. Ensure tests pass,
+  changes are clean, and the branch is ready for review or merge.
+license: Apache-2.0
+dependencies: {}

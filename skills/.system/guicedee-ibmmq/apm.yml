@@ -1,0 +1,6 @@
+name: guicedee-ibmmq
+version: 2.4.0
+description: Configure GuicedEE IBM MQ/JMS connections, queue/topic consumers and
+  publishers, transactions, and lifecycle handling.
+license: Apache-2.0
+dependencies: {}

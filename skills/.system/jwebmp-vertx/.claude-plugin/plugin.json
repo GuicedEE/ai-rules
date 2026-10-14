@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-vertx",
+  "version": "2.4.0",
+  "description": "Connect JWebMP pages to Vert.x HTTP routing, AJAX, data/CSS endpoints, WebSocket broadcasts, and call scopes.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

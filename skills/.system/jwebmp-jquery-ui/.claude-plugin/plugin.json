@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-jquery-ui",
+  "version": "2.4.0",
+  "description": "Add jQuery UI widgets and drag/drop, resize, sort, or datepicker interactions to JWebMP.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

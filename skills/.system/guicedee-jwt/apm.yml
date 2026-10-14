@@ -1,0 +1,6 @@
+name: guicedee-jwt
+version: 2.4.0
+description: Bridge Vert.x authentication to MicroProfile JWT in GuicedEE, inject
+  Claim values, and propagate JWT context.
+license: Apache-2.0
+dependencies: {}

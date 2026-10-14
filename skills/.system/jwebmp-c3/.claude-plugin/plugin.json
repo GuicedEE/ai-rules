@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-c3",
+  "version": "2.4.0",
+  "description": "Build C3 charts and time-series dashboards through JWebMP's D3-based C3 integration.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

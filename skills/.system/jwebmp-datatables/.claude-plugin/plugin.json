@@ -1,0 +1,9 @@
+{
+  "name": "jwebmp-datatables",
+  "version": "2.4.0",
+  "description": "Build searchable, sortable, paginated JWebMP tables through the DataTables.net integration.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

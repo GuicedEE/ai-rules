@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-websockets",
+  "version": "2.4.0",
+  "description": "Implement GuicedEE WebSocket receivers, action routing, call-scoped connections, groups, and broadcasts.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

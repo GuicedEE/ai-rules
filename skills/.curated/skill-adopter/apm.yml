@@ -1,0 +1,6 @@
+name: skill-adopter
+version: 2.4.0
+description: Select enterprise skills for a project's stack and generate or refresh
+  native Codex, Copilot, Cursor, Junie, Claude, or Roo configuration.
+license: Apache-2.0
+dependencies: {}

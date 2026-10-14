@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-hazelcast",
+  "version": "2.4.0",
+  "description": "Configure GuicedEE Hazelcast clustering, distributed data structures, Vert.x cluster managers, and JCache.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

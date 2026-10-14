@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-metrics",
+  "version": "2.4.0",
+  "description": "Instrument GuicedEE with MicroProfile/Vert.x metrics, custom counters/timers, and Prometheus reporting.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

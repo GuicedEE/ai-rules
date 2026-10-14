@@ -1,0 +1,9 @@
+{
+  "name": "git-commit-signing",
+  "version": "2.4.0",
+  "description": "Configure or troubleshoot repository Git signing with GPG, SSH, or S/MIME and the correct work/personal identity.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

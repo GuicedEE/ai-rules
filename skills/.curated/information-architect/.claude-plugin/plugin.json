@@ -1,0 +1,9 @@
+{
+  "name": "information-architect",
+  "version": "2.4.0",
+  "description": "Design app, website, or documentation navigation, labels, taxonomy, content models, and page hierarchy.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

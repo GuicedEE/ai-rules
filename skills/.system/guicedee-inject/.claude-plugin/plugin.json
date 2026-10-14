@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-inject",
+  "version": "2.4.0",
+  "description": "Bootstrap or debug GuicedEE scanning, Guice injection, lifecycle hooks, module registration, logging, and job pools.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

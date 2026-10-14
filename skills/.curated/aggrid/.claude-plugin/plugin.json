@@ -1,0 +1,9 @@
+{
+  "name": "aggrid",
+  "version": "2.4.0",
+  "description": "Implement, upgrade, or debug AG Grid in JavaScript/TypeScript frameworks using its MCP server. For Java-authored JWebMP grids, use jwebmp-aggrid.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

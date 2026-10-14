@@ -1,0 +1,9 @@
+{
+  "name": "terraform-resource-fetch",
+  "version": "2.4.0",
+  "description": "Fetch latest Terraform provider resources and documentation from Terraform Registry",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

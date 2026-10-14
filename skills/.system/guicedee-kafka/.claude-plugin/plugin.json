@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-kafka",
+  "version": "2.4.0",
+  "description": "Configure GuicedEE Kafka topics, consumers, publishers, connections, offsets, and partition lifecycle handling.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

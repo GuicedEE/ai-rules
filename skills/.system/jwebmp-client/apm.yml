@@ -1,0 +1,6 @@
+name: jwebmp-client
+version: 2.4.0
+description: Implement JWebMP AJAX/page contracts, component interfaces, interceptors,
+  and page configurator SPIs.
+license: Apache-2.0
+dependencies: {}

@@ -1,0 +1,6 @@
+name: skill-installer
+version: 2.4.0
+description: Install skills from curated catalogs or GitHub repositories, including
+  private repos; list available skills on request.
+license: Apache-2.0
+dependencies: {}

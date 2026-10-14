@@ -1,0 +1,6 @@
+name: senior-architect
+version: 2.4.0
+description: Design or review software architecture, API/data models, scalability
+  tradeoffs, ADRs, and Mermaid diagrams.
+license: Apache-2.0
+dependencies: {}

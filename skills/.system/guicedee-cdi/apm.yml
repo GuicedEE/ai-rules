@@ -1,0 +1,6 @@
+name: guicedee-cdi
+version: 2.4.0
+description: Bridge Jakarta CDI annotations, scopes, BeanManager lookups, and CDI
+  libraries into GuicedEE's Guice container.
+license: Apache-2.0
+dependencies: {}

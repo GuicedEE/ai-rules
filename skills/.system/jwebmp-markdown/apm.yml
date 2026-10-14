@@ -1,0 +1,5 @@
+name: jwebmp-markdown
+version: 2.4.0
+description: Render Markdown content as JWebMP HTML components.
+license: Apache-2.0
+dependencies: {}

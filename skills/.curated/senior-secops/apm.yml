@@ -1,0 +1,6 @@
+name: senior-secops
+version: 2.4.0
+description: Triage security alerts and vulnerabilities, investigate suspicious logs,
+  and develop incident-response playbooks.
+license: Apache-2.0
+dependencies: {}

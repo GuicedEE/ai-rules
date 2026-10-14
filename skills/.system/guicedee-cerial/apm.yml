@@ -1,0 +1,6 @@
+name: guicedee-cerial
+version: 2.4.0
+description: Connect serial devices through GuicedEE/jSerialComm; configure ports,
+  framing, reconnects, and device health.
+license: Apache-2.0
+dependencies: {}

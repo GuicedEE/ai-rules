@@ -1,0 +1,9 @@
+{
+  "name": "guicedee-telemetry",
+  "version": "2.4.0",
+  "description": "Instrument GuicedEE with OpenTelemetry spans, W3C context propagation, call scopes, Uni/Future lifecycles, HTTP boundaries, and OTLP export.",
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}
