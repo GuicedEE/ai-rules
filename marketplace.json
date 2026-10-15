@@ -1,0 +1,835 @@
+{
+  "name": "guicedee-ai-rules",
+  "owner": {
+    "name": "GuicedEE",
+    "url": "https://github.com/GuicedEE"
+  },
+  "plugins": [
+    {
+      "name": "aggrid",
+      "description": "Implement, upgrade, or debug AG Grid in JavaScript/TypeScript frameworks using its MCP server. For Java-authored JWebMP grids, use jwebmp-aggrid.",
+      "source": "./skills/.curated/aggrid",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "api-integration-specialist",
+      "description": "Integrate external REST/GraphQL APIs or webhooks, including authentication, retries, rate limits, and request/response mapping.",
+      "source": "./skills/.curated/api-integration-specialist",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "arm-to-terraform-migration",
+      "description": "Convert Azure ARM templates to Terraform HCL configuration with full resource mapping and dependency preservation",
+      "source": "./skills/.curated/arm-to-terraform-migration",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "azure-access-and-exposure-audit",
+      "description": "Audit Azure network exposure and harden ACLs, or diagnose RBAC/PIM access, activation, and approval failures with PowerShell or bash.",
+      "source": "./skills/.curated/azure-access-and-exposure-audit",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "changelog-generator",
+      "description": "Turn Git commit history into user-facing changelogs and release notes, grouping changes and explaining their impact.",
+      "source": "./skills/.curated/changelog-generator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "code-reviewer",
+      "description": "Review PRs and patches for actionable correctness, API/UX, performance, security, and maintainability findings.",
+      "source": "./skills/.curated/code-reviewer",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "description": "Split complex work into independent tasks and coordinate parallel agents with clear ownership, context, and consolidated results.",
+      "source": "./skills/.curated/dispatching-parallel-agents",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "figma",
+      "description": "Fetch Figma designs, assets, and screenshots through MCP; implement Figma URLs/node IDs in code or troubleshoot the Figma connection.",
+      "source": "./skills/.curated/figma",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "description": "Use when preparing to finish a development branch. Ensure tests pass, changes are clean, and the branch is ready for review or merge.",
+      "source": "./skills/.curated/finishing-a-development-branch",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "gh-address-comments",
+      "description": "Address review and issue comments on the current branch's GitHub PR using gh CLI.",
+      "source": "./skills/.curated/gh-address-comments",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "gh-fix-ci",
+      "description": "Diagnose and fix failing GitHub Actions PR checks with gh. For external CI providers, report the details URL only.",
+      "source": "./skills/.curated/gh-fix-ci",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "git-commit-helper",
+      "description": "Draft conventional commit messages and organize changes into commits with clear intent and scope.",
+      "source": "./skills/.curated/git-commit-helper",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "git-commit-signing",
+      "description": "Configure or troubleshoot repository Git signing with GPG, SSH, or S/MIME and the correct work/personal identity.",
+      "source": "./skills/.curated/git-commit-signing",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "information-architect",
+      "description": "Design app, website, or documentation navigation, labels, taxonomy, content models, and page hierarchy.",
+      "source": "./skills/.curated/information-architect",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "playwright",
+      "description": "Automate real browsers from the terminal for navigation, forms, screenshots, extraction, and UI debugging using playwright-cli.",
+      "source": "./skills/.curated/playwright",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "screenshot",
+      "description": "Capture desktop, window, or region screenshots when explicitly requested or when tool-specific capture is unavailable.",
+      "source": "./skills/.curated/screenshot",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "security-best-practices",
+      "description": "Review or improve Python, JavaScript/TypeScript, or Go security only when explicitly requested; excludes general reviews and debugging.",
+      "source": "./skills/.curated/security-best-practices",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "security-compliance",
+      "description": "Assess security posture, threat models, and compliance evidence for SOC2, ISO27001, GDPR, or HIPAA requirements.",
+      "source": "./skills/.curated/security-compliance",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "security-ownership-map",
+      "description": "Use Git history for explicitly requested security ownership, sensitive-code hotspots, or bus-factor analysis; excludes general maintainer lists.",
+      "source": "./skills/.curated/security-ownership-map",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "senior-architect",
+      "description": "Design or review software architecture, API/data models, scalability tradeoffs, ADRs, and Mermaid diagrams.",
+      "source": "./skills/.curated/senior-architect",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "senior-backend",
+      "description": "Build or review backend APIs and services, including data models, authentication, migrations, performance, and observability.",
+      "source": "./skills/.curated/senior-backend",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "senior-devops",
+      "description": "Design CI/CD, infrastructure, deployments, monitoring, and runbooks, or assess operational readiness.",
+      "source": "./skills/.curated/senior-devops",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "senior-prompt-engineer",
+      "description": "Write, refactor, and evaluate assistant prompts, tool-use instructions, and agent workflows; diagnose LLM behavior regressions.",
+      "source": "./skills/.curated/senior-prompt-engineer",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "senior-qa",
+      "description": "Plan risk-based testing, assess coverage, investigate flaky tests, and define release verification criteria.",
+      "source": "./skills/.curated/senior-qa",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "senior-secops",
+      "description": "Triage security alerts and vulnerabilities, investigate suspicious logs, and develop incident-response playbooks.",
+      "source": "./skills/.curated/senior-secops",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "skill-adopter",
+      "description": "Select enterprise skills for a project's stack and generate or refresh native Codex, Copilot, Cursor, Junie, Claude, or Roo configuration.",
+      "source": "./skills/.curated/skill-adopter",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "structured-skill-creator",
+      "description": "Create or update skills under `skills/` with strict compliance to the local structured template and validation workflow.",
+      "source": "./skills/.curated/structured-skill-creator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "systematic-debugging",
+      "description": "Investigate bugs, test failures, and unexpected behavior by establishing the cause before proposing a fix.",
+      "source": "./skills/.curated/systematic-debugging",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-code-generator",
+      "description": "Auto-generate Terraform resource blocks by fetching latest schemas from Terraform Registry in real-time",
+      "source": "./skills/.curated/terraform-code-generator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-doc-generator",
+      "description": "Auto-generate comprehensive README.md documentation for Terraform modules with usage examples, inputs, outputs, and requirements",
+      "source": "./skills/.curated/terraform-doc-generator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-module-scaffold",
+      "description": "Create production-ready, reusable Terraform modules with complete documentation, examples, and tests",
+      "source": "./skills/.curated/terraform-module-scaffold",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-plan-analyzer",
+      "description": "Parse, explain, and analyze terraform plan output for impact assessment, cost estimation, and risk evaluation",
+      "source": "./skills/.curated/terraform-plan-analyzer",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-project-generator",
+      "description": "Generate complete Terraform project structure with main.tf, variables.tf, outputs.tf, backend.tf, and terraform.tf following best practices",
+      "source": "./skills/.curated/terraform-project-generator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-resource-fetch",
+      "description": "Fetch latest Terraform provider resources and documentation from Terraform Registry",
+      "source": "./skills/.curated/terraform-resource-fetch",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-security-scanner",
+      "description": "Comprehensive security scanning for Terraform code including secrets detection, compliance checks, and vulnerability assessment",
+      "source": "./skills/.curated/terraform-security-scanner",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-state-manager",
+      "description": "Analyze, inspect, and safely manipulate Terraform state files with drift detection and resource management",
+      "source": "./skills/.curated/terraform-state-manager",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "terraform-validator",
+      "description": "Validate Terraform code for syntax errors, best practices, security issues, and compliance with standards",
+      "source": "./skills/.curated/terraform-validator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "test-driven-development",
+      "description": "Apply red-green-refactor when using test-driven development for behavior changes, bug fixes, or refactoring.",
+      "source": "./skills/.curated/test-driven-development",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "using-git-worktrees",
+      "description": "Create isolated Git worktrees when starting work that needs separation from the current workspace.",
+      "source": "./skills/.curated/using-git-worktrees",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "activitymaster",
+      "description": "Implement ActivityMaster FSDM services and user-scoped plugins, including Mail, Wallet, Payments, Documents, Conversations, Marketplace, security, lifecycle and stateless persistence.",
+      "source": "./skills/.system/activitymaster",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "entityassist",
+      "description": "Build EntityAssist CRTP entities and reactive query DSLs, including CRUD, joins, aggregates, transactions, and stateless sessions.",
+      "source": "./skills/.system/entityassist",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-auth",
+      "description": "Configure GuicedEE authentication providers, authorization annotations, and custom auth SPIs for REST and reactive services.",
+      "source": "./skills/.system/guicedee-auth",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-cdi",
+      "description": "Bridge Jakarta CDI annotations, scopes, BeanManager lookups, and CDI libraries into GuicedEE's Guice container.",
+      "source": "./skills/.system/guicedee-cdi",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-cerial",
+      "description": "Connect serial devices through GuicedEE/jSerialComm; configure ports, framing, reconnects, and device health.",
+      "source": "./skills/.system/guicedee-cerial",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-client",
+      "description": "Implement GuicedEE lifecycle/SPIs, IGuiceContext, call scopes, and Environment configuration without depending on the full runtime.",
+      "source": "./skills/.system/guicedee-client",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-cloud-app",
+      "description": "Scaffold GuicedEE cloud applications with parent/BOM/service modules and a local observability stack.",
+      "source": "./skills/.system/guicedee-cloud-app",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-config",
+      "description": "Inject MicroProfile Config values in GuicedEE with SmallRye, custom sources/converters, profiles, and ConfigProperty.",
+      "source": "./skills/.system/guicedee-config",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-creator",
+      "description": "Scaffold new GuicedEE Maven modules with BOM imports, Maven/JDK baselines, and separate JPMS main/test packages.",
+      "source": "./skills/.system/guicedee-creator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-hazelcast",
+      "description": "Configure GuicedEE Hazelcast clustering, distributed data structures, Vert.x cluster managers, and JCache.",
+      "source": "./skills/.system/guicedee-hazelcast",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-health",
+      "description": "Implement GuicedEE MicroProfile Health checks, liveness/readiness/startup probes, and health endpoints.",
+      "source": "./skills/.system/guicedee-health",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-ibmmq",
+      "description": "Configure GuicedEE IBM MQ/JMS connections, queue/topic consumers and publishers, transactions, and lifecycle handling.",
+      "source": "./skills/.system/guicedee-ibmmq",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-inject",
+      "description": "Bootstrap or debug GuicedEE scanning, Guice injection, lifecycle hooks, module registration, logging, and job pools.",
+      "source": "./skills/.system/guicedee-inject",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-installer",
+      "description": "Retrofit existing Maven modules with GuicedEE BOMs, Maven/JDK baselines, and JPMS main/test boundaries.",
+      "source": "./skills/.system/guicedee-installer",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-jpms-shade",
+      "description": "Wrap non-modular JARs as GuicedEE JPMS service modules for jlink, including shade/moditect setup, BOM registration, and consumers.",
+      "source": "./skills/.system/guicedee-jpms-shade",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-jwt",
+      "description": "Bridge Vert.x authentication to MicroProfile JWT in GuicedEE, inject Claim values, and propagate JWT context.",
+      "source": "./skills/.system/guicedee-jwt",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-kafka",
+      "description": "Configure GuicedEE Kafka topics, consumers, publishers, connections, offsets, and partition lifecycle handling.",
+      "source": "./skills/.system/guicedee-kafka",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-mail-client",
+      "description": "Configure GuicedEE SMTP connections and MailService for email, attachments, TLS, and DKIM.",
+      "source": "./skills/.system/guicedee-mail-client",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-metrics",
+      "description": "Instrument GuicedEE with MicroProfile/Vert.x metrics, custom counters/timers, and Prometheus reporting.",
+      "source": "./skills/.system/guicedee-metrics",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-openapi",
+      "description": "Generate and serve GuicedEE OpenAPI specs from Jakarta REST resources and Swagger annotations.",
+      "source": "./skills/.system/guicedee-openapi",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-persistence",
+      "description": "Configure GuicedEE DatabaseModule, Hibernate Reactive session factories, persistence units, and multiple databases.",
+      "source": "./skills/.system/guicedee-persistence",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-rabbitmq",
+      "description": "Configure GuicedEE RabbitMQ exchanges, queues, connections, consumers, publishers, and delivery options.",
+      "source": "./skills/.system/guicedee-rabbitmq",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-rest",
+      "description": "Build GuicedEE Jakarta REST endpoints with parameter binding, content negotiation, Guice resources, and Vert.x routing.",
+      "source": "./skills/.system/guicedee-rest",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-rest-client",
+      "description": "Make outbound GuicedEE REST calls with typed RestClient/Endpoint bindings, authentication, and service-registry resolution.",
+      "source": "./skills/.system/guicedee-rest-client",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-service-registry",
+      "description": "Register GuicedEE services by name, resolve their URLs and aliases, and configure health-aware service discovery.",
+      "source": "./skills/.system/guicedee-service-registry",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-swagger-ui",
+      "description": "Add the browsable Swagger UI to a GuicedEE application's generated OpenAPI specification.",
+      "source": "./skills/.system/guicedee-swagger-ui",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-telemetry",
+      "description": "Instrument GuicedEE with OpenTelemetry spans, W3C context propagation, call scopes, Uni/Future lifecycles, HTTP boundaries, and OTLP export.",
+      "source": "./skills/.system/guicedee-telemetry",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-vertx",
+      "description": "Build GuicedEE Vert.x event-bus consumers, publishers, codecs, verticles, clustering, and reactive runtime extensions.",
+      "source": "./skills/.system/guicedee-vertx",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-web",
+      "description": "Configure GuicedEE Vert.x HTTP/HTTPS servers, routers, middleware, TLS, and server configurator SPIs.",
+      "source": "./skills/.system/guicedee-web",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-webservices",
+      "description": "Build GuicedEE SOAP/JAX-WS services with CXF, WSDL bindings, interceptors, MTOM, and WS-Security.",
+      "source": "./skills/.system/guicedee-webservices",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "guicedee-websockets",
+      "description": "Implement GuicedEE WebSocket receivers, action routing, call-scoped connections, groups, and broadcasts.",
+      "source": "./skills/.system/guicedee-websockets",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-agcharts",
+      "description": "Build JWebMP AG Charts community visualizations with Java chart options, generated TypeScript, data binding, and themes.",
+      "source": "./skills/.system/jwebmp-agcharts",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-agcharts-enterprise",
+      "description": "Add licensed AG Charts Enterprise visualizations to JWebMP, including financial charts, heatmaps, treemaps, and sankey diagrams.",
+      "source": "./skills/.system/jwebmp-agcharts-enterprise",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-aggrid",
+      "description": "Build JWebMP AG Grid community tables with Java column models, filtering, sorting, pagination, selection, and data binding.",
+      "source": "./skills/.system/jwebmp-aggrid",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-aggrid-enterprise",
+      "description": "Add licensed AG Grid Enterprise features to JWebMP: grouping, pivoting, master/detail, server-side rows, and Excel export.",
+      "source": "./skills/.system/jwebmp-aggrid-enterprise",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular",
+      "description": "Generate Angular apps from JWebMP Java annotations; configure components, routes, services, control flow, and STOMP messaging.",
+      "source": "./skills/.system/jwebmp-angular",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular-forms",
+      "description": "Build JWebMP Angular reactive or template-driven forms with bindings, validation, and submission handling.",
+      "source": "./skills/.system/jwebmp-angular-forms",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular-graphql",
+      "description": "Generate typed Apollo Angular services from JWebMP NgGraphQL annotations for GraphQL queries, mutations, and subscriptions.",
+      "source": "./skills/.system/jwebmp-angular-graphql",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-angular-material",
+      "description": "Build JWebMP Angular Material interfaces with themed, accessible Material Design components.",
+      "source": "./skills/.system/jwebmp-angular-material",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-bootstrap",
+      "description": "Build responsive JWebMP layouts and components using the Bootstrap integration.",
+      "source": "./skills/.system/jwebmp-bootstrap",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-c3",
+      "description": "Build C3 charts and time-series dashboards through JWebMP's D3-based C3 integration.",
+      "source": "./skills/.system/jwebmp-c3",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-chartjs",
+      "description": "Build responsive Chart.js charts in JWebMP with Java options, data series, animations, and plugins.",
+      "source": "./skills/.system/jwebmp-chartjs",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-client",
+      "description": "Implement JWebMP AJAX/page contracts, component interfaces, interceptors, and page configurator SPIs.",
+      "source": "./skills/.system/jwebmp-client",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-core",
+      "description": "Build Java-authored JWebMP HTML components, typed CSS, fluent layouts, page configuration, and server-side events.",
+      "source": "./skills/.system/jwebmp-core",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-d3",
+      "description": "Build custom D3 visualizations in JWebMP using selections, scales, axes, and transitions.",
+      "source": "./skills/.system/jwebmp-d3",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-datatables",
+      "description": "Build searchable, sortable, paginated JWebMP tables through the DataTables.net integration.",
+      "source": "./skills/.system/jwebmp-datatables",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-easing",
+      "description": "Configure jQuery easing functions for JWebMP animations, transitions, and scrolling effects.",
+      "source": "./skills/.system/jwebmp-easing",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-easy-pie-chart",
+      "description": "Embed animated Easy Pie Chart pie and doughnut widgets in JWebMP.",
+      "source": "./skills/.system/jwebmp-easy-pie-chart",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fontawesome",
+      "description": "Use current Free Solid, Regular, and Brands icon enums with JWebMP FontAwesome or WebAwesome icons.",
+      "source": "./skills/.system/jwebmp-fontawesome",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fontawesome-pro",
+      "description": "Use licensed Font Awesome 7.3.1 Pro and Pro+ family catalogs, styles, and icon kits in JWebMP.",
+      "source": "./skills/.system/jwebmp-fontawesome-pro",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fullcalendar",
+      "description": "Build JWebMP FullCalendar event calendars, scheduling views, event interactions, timezones, and localization.",
+      "source": "./skills/.system/jwebmp-fullcalendar",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-fullcalendar-pro",
+      "description": "Add licensed FullCalendar Premium resource scheduling and timeline views to JWebMP calendars.",
+      "source": "./skills/.system/jwebmp-fullcalendar-pro",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-globalize",
+      "description": "Localize JWebMP content and format numbers, currencies, and dates with Globalize.",
+      "source": "./skills/.system/jwebmp-globalize",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-glyph-icons",
+      "description": "Add Glyph Icons to Bootstrap-based JWebMP interfaces.",
+      "source": "./skills/.system/jwebmp-glyph-icons",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-java-generator",
+      "description": "Export JWebMP component JSON or object trees as Java source; configure class snippets, extend reflection mappings, and inspect generated test files.",
+      "source": "./skills/.system/jwebmp-java-generator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-jqplot",
+      "description": "Build jqPlot line, bar, pie, and dashboard charts in JWebMP.",
+      "source": "./skills/.system/jwebmp-jqplot",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-jquery",
+      "description": "Use JWebMP's jQuery integration for DOM manipulation, events, effects, AJAX, and plugin dependencies.",
+      "source": "./skills/.system/jwebmp-jquery",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-jquery-ui",
+      "description": "Add jQuery UI widgets and drag/drop, resize, sort, or datepicker interactions to JWebMP.",
+      "source": "./skills/.system/jwebmp-jquery-ui",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-local-storage",
+      "description": "Persist JWebMP browser data or preferences across sessions using Local Storage.",
+      "source": "./skills/.system/jwebmp-local-storage",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-markdown",
+      "description": "Render Markdown content as JWebMP HTML components.",
+      "source": "./skills/.system/jwebmp-markdown",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-material-design-icons",
+      "description": "Add Google Material Design Icons to JWebMP interfaces.",
+      "source": "./skills/.system/jwebmp-material-design-icons",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-material-icons",
+      "description": "Use the older Google Material Icons integration in JWebMP.",
+      "source": "./skills/.system/jwebmp-material-icons",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-plus-as-tab",
+      "description": "Configure JWebMP's Plus As Tab integration for keyboard navigation with the plus key.",
+      "source": "./skills/.system/jwebmp-plus-as-tab",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-prettify",
+      "description": "Highlight code snippets in JWebMP with Google Prettify.",
+      "source": "./skills/.system/jwebmp-prettify",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-prism",
+      "description": "Highlight JWebMP code blocks with Prism themes, line numbers, and copy controls.",
+      "source": "./skills/.system/jwebmp-prism",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-session-storage",
+      "description": "Store temporary JWebMP browser data for the current tab/session using Session Storage.",
+      "source": "./skills/.system/jwebmp-session-storage",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-skycons",
+      "description": "Render animated weather icons in JWebMP with Skycons.",
+      "source": "./skills/.system/jwebmp-skycons",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-themify-icons",
+      "description": "Add Themify icon fonts to JWebMP interfaces.",
+      "source": "./skills/.system/jwebmp-themify-icons",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-toastr",
+      "description": "Show non-blocking toast notifications in JWebMP using the jQuery Toastr integration.",
+      "source": "./skills/.system/jwebmp-toastr",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-tsclient",
+      "description": "Define JWebMP TypeScript generation, npm dependencies, Angular annotations, and typed NgRestClient services from Java.",
+      "source": "./skills/.system/jwebmp-tsclient",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-vertx",
+      "description": "Connect JWebMP pages to Vert.x HTTP routing, AJAX, data/CSS endpoints, WebSocket broadcasts, and call scopes.",
+      "source": "./skills/.system/jwebmp-vertx",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-waves-effect",
+      "description": "Add Waves Material Design ripple effects to JWebMP interactions.",
+      "source": "./skills/.system/jwebmp-waves-effect",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-waypoints",
+      "description": "Trigger JWebMP scroll interactions when elements reach viewport waypoints.",
+      "source": "./skills/.system/jwebmp-waypoints",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-weather-icons",
+      "description": "Display weather icon fonts in JWebMP interfaces.",
+      "source": "./skills/.system/jwebmp-weather-icons",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-webawesome",
+      "description": "Build and style JWebMP WebAwesome components, WaPage layouts, forms, overlays, and theme tokens.",
+      "source": "./skills/.system/jwebmp-webawesome",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-webawesome-pro",
+      "description": "Use JWebMP WebAwesome Pro comboboxes, date pickers, uploads, charts, video, premium icons, and toast notifications.",
+      "source": "./skills/.system/jwebmp-webawesome-pro",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "jwebmp-website-aside-routing",
+      "description": "Synchronize JWebMP WaPage main and named aside routes for per-page side panels and \"On this page\" navigation.",
+      "source": "./skills/.system/jwebmp-website-aside-routing",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "skill-creator",
+      "description": "Create or update a Codex skill with appropriately scoped instructions and any needed supporting resources.",
+      "source": "./skills/.system/skill-creator",
+      "version": "2.4.0",
+      "category": "Development"
+    },
+    {
+      "name": "skill-installer",
+      "description": "Install skills from curated catalogs or GitHub repositories, including private repos; list available skills on request.",
+      "source": "./skills/.system/skill-installer",
+      "version": "2.4.0",
+      "category": "Development"
+    }
+  ]
+}

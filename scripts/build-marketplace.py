@@ -36,6 +36,9 @@ def main():
                        marketplace=dict(owner=dict(name="GuicedEE", url="https://github.com/GuicedEE"),
                                         outputs=dict(claude={}, codex={}), packages=packages))
     (ROOT / "apm.yml").write_text(yaml.safe_dump(marketplace, sort_keys=False), encoding="utf-8")
+    index = dict(name=marketplace["name"], owner=marketplace["marketplace"]["owner"],
+                 plugins=packages)
+    (ROOT / "marketplace.json").write_text(json.dumps(index, indent=2) + "\n", encoding="utf-8")
     print(f"Generated APM metadata for {len(packages)} skills. Run apm pack next.")
 
 
@@ -44,7 +47,7 @@ def export():
     destination.mkdir(parents=True, exist_ok=True)
     for name in ("skills", ".claude-plugin", ".agents"):
         shutil.copytree(ROOT / name, destination / name, dirs_exist_ok=True)
-    for name in ("apm.yml", "README.md", "LICENSE"):
+    for name in ("apm.yml", "marketplace.json", "README.md", "LICENSE"):
         shutil.copyfile(ROOT / name, destination / name)
     print(f"Exported marketplace preview: {destination}")
 
