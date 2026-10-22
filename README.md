@@ -81,7 +81,8 @@ apm marketplace add /absolute/path/to/ai-rules/target/marketplace-preview
 apm install guicedee-inject@guicedee-ai-rules
 ```
 
-The root `apm.yml` is the marketplace source. Generated indexes are
+The root `apm.yml` is the marketplace source. The root `marketplace.json`
+provides the portable plugin catalog. Generated client indexes are
 `.claude-plugin/marketplace.json` (APM, Claude Code and Copilot) and
 `.agents/plugins/marketplace.json` (Codex). Per-skill `apm.yml` and
 `.claude-plugin/plugin.json` files expose each canonical skill without duplicating
